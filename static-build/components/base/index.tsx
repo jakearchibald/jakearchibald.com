@@ -21,6 +21,7 @@ interface Props {
   authorAction?: string;
   extraHead?: VNode;
   extraBody?: VNode;
+  pageClass?: string;
 }
 
 const BasePage: FunctionalComponent<Props> = ({
@@ -29,9 +30,10 @@ const BasePage: FunctionalComponent<Props> = ({
   extraHead,
   extraBody,
   authorAction,
+  pageClass,
 }: RenderableProps<Props>) => {
   return (
-    <html lang="en">
+    <html lang="en" class={pageClass ? pageClass : ''}>
       <head>
         <title>{title} - JakeArchibald.com</title>
         <meta
@@ -40,7 +42,6 @@ const BasePage: FunctionalComponent<Props> = ({
         ></meta>
         <link rel="stylesheet" href={styles} />
         <script type="module" async src={analyticsBundleURL}></script>
-        <link rel="stylesheet" href="{% static 'css/all.css' %}" />
         <link
           rel="alternate"
           type="application/rss+xml"

@@ -39,8 +39,19 @@ export function writeFiles(toOutput: OutputMap) {
         throw err;
       }
     }),
-  ).catch(err => {
+  ).catch((err) => {
     console.error(err);
     process.exit(1);
   });
+}
+
+export function getPostPath(post: Post): string {
+  const postDate = new Date(post.date);
+  return `${postDate.getUTCFullYear()}/${(postDate.getUTCMonth() + 1)
+    .toString()
+    .padStart(2, '0')}/${post.slug}/`;
+}
+
+export function getPostUrl(post: Post): string {
+  return '/' + getPostPath(post);
 }

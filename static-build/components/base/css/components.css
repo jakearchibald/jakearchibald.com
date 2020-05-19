@@ -85,7 +85,8 @@
   }
 }
 
-.h-2 .article-content h2,
+.h-2,
+.article-content h2,
 .who-page > section > h1 {
   background: #009d81;
   color: #fff;
@@ -595,17 +596,9 @@
       width: 200px;
       margin: 5px 20px 20px 0;
     }
-  }
-
-  & .preview-image-sizer {
-    position: relative;
-
     & img {
-      position: absolute;
-      top: 0;
-      left: 0;
       width: 100%;
-      height: 100%;
+      height: auto;
     }
   }
 }

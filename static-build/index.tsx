@@ -14,12 +14,27 @@ import { h } from 'preact';
 
 import { renderPage, writeFiles } from './utils';
 import IndexPage from './pages/index';
+import posts from 'post-data:';
+
+const indexPageSize = 10;
+const paginatedPosts = Array.from(
+  { length: Math.ceil(posts.length / indexPageSize) },
+  (_, i) => posts.slice(indexPageSize * i, indexPageSize * i + indexPageSize),
+);
 
 interface Output {
   [outputPath: string]: string;
 }
-const toOutput: Output = {
-  'index.html': renderPage(<IndexPage />),
-};
+const toOutput: Output = {};
+
+for (const [i, posts] of paginatedPosts.entries()) {
+  toOutput[i === 0 ? `index.html` : `${i + 1}.html`] = renderPage(
+    <IndexPage
+      posts={posts}
+      pageNum={i + 1}
+      totalPages={paginatedPosts.length}
+    />,
+  );
+}
 
 writeFiles(toOutput);

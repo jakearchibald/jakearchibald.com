@@ -23,3 +23,19 @@ declare module 'css-bundle:*' {
   export default url;
   export const inline: string;
 }
+
+interface Post {
+  content: string;
+  slug: string;
+  title: string;
+  date: string;
+  mindframe: string;
+  summary: string;
+  meta: string;
+  image: string | null;
+}
+
+declare module 'post-data:' {
+  const data: Post[];
+  export default data;
+}

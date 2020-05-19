@@ -10,17 +10,106 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { h, FunctionalComponent } from 'preact';
+import { h, FunctionalComponent, Fragment } from 'preact';
 import BasePage from 'static-build/components/base';
+import { getPostUrl } from 'static-build/utils';
+import date from 'date-and-time';
 
-interface Props {}
+interface PaginationProps {
+  pageNum: number;
+  totalPages: number;
+}
 
-const IndexPage: FunctionalComponent<Props> = ({}: Props) => {
-  return (
-    <BasePage title="Home">
-      <p>Hello!</p>
-    </BasePage>
-  );
-};
+const Pagination: FunctionalComponent<PaginationProps> = ({
+  pageNum,
+  totalPages,
+}: PaginationProps) => (
+  <ol class="pagination">
+    {pageNum === 1 ? (
+      <li>
+        <span class="disabled prev">Previous</span>
+      </li>
+    ) : (
+      <li>
+        <a href={pageNum === 2 ? './' : (pageNum - 1).toString()} class="prev">
+          Previous<span class="arrow"></span>
+        </a>
+      </li>
+    )}
+    {Array.from({ length: totalPages }, (_, i) =>
+      i + 1 === pageNum ? (
+        <li>
+          <span class="current page">{i + 1}</span>
+        </li>
+      ) : (
+        <li>
+          <a href={i === 0 ? './' : (i + 1).toString()} class="page">
+            {i + 1}
+          </a>
+        </li>
+      ),
+    )}
+    {pageNum === totalPages ? (
+      <li>
+        <span class="disabled next">Next</span>
+      </li>
+    ) : (
+      <li>
+        <a href={(pageNum + 1).toString()} class="next">
+          Next<span class="arrow"></span>
+        </a>
+      </li>
+    )}
+  </ol>
+);
 
+interface Props {
+  posts: Post[];
+  pageNum: number;
+  totalPages: number;
+}
+
+const IndexPage: FunctionalComponent<Props> = ({
+  posts,
+  pageNum,
+  totalPages,
+}: Props) => (
+  <BasePage title="Blog" pageClass="blog-index" authorAction=" wrote…">
+    <div class="content-n-side">
+      <div class="content">
+        {posts.map((post, i) => (
+          <article class={`post-preview ${i === 0 ? 'first' : ''}`}>
+            <header class="preview-header width-padding">
+              <h1 class="h-2">
+                <a href={getPostUrl(post)}>{post.title}</a>
+              </h1>
+              <time
+                class="article-date"
+                dateTime={date.format(new Date(post.date), 'YYYY-DD-MM')}
+              >
+                Posted {date.format(new Date(post.date), 'DD MMMM YYYY')}
+                {post.mindframe}
+              </time>
+            </header>
+            <div class="article-content">
+              {post.image && (
+                <div class="preview-image">
+                  <a href={getPostUrl(post)}>
+                    <img src={post.image} alt="" />
+                  </a>
+                </div>
+              )}
+              <div dangerouslySetInnerHTML={{ __html: post.summary }}></div>
+              <p>
+                <a href={getPostUrl(post)}>Read on…</a>
+              </p>
+            </div>
+          </article>
+        ))}
+        <Pagination pageNum={pageNum} totalPages={totalPages} />
+      </div>
+      <div class="side"></div>
+    </div>
+  </BasePage>
+);
 export default IndexPage;

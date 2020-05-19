@@ -21,7 +21,9 @@ import cssPlugin from './lib/css-plugin';
 import assetPlugin from './lib/asset-plugin';
 import assetStringPlugin from './lib/asset-string-plugin';
 import resolveDirsPlugin from './lib/resolve-dirs-plugin';
+import postData from './lib/post-data-plugin';
 import runScript from './lib/run-script';
+import markdownPlugin from './lib/markdown-plugin';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -37,6 +39,7 @@ export default async function ({ watch }) {
     assetPlugin(),
     assetStringPlugin(),
     cssPlugin(),
+    markdownPlugin(),
   ];
   const dir = '.tmp/build';
   const staticPath = 'static/[name]-[hash][extname]';
@@ -72,6 +75,7 @@ export default async function ({ watch }) {
         resolveFileUrl,
       ),
       ...commonPlugins(),
+      postData(),
       nodeExternalPlugin(),
       runScript(dir + '/index.js'),
     ],
