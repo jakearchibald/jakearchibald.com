@@ -38,7 +38,7 @@ export default async function ({ watch }) {
     resolveDirsPlugin(['static-build', 'client', 'tests', 'shared']),
     assetPlugin(),
     assetStringPlugin(),
-    cssPlugin(),
+    cssPlugin(resolveFileUrl),
     markdownPlugin(),
   ];
   const dir = '.tmp/build';

@@ -15,6 +15,7 @@ import { h } from 'preact';
 import { renderPage, writeFiles } from './utils';
 import IndexPage from './pages/index';
 import posts from 'post-data:';
+import WhoPage from './pages/who';
 
 const indexPageSize = 10;
 const paginatedPosts = Array.from(
@@ -25,7 +26,9 @@ const paginatedPosts = Array.from(
 interface Output {
   [outputPath: string]: string;
 }
-const toOutput: Output = {};
+const toOutput: Output = {
+  'who/index.html': renderPage(<WhoPage />),
+};
 
 for (const [i, posts] of paginatedPosts.entries()) {
   toOutput[i === 0 ? `index.html` : `${i + 1}.html`] = renderPage(

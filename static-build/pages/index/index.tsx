@@ -10,10 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { h, FunctionalComponent, Fragment } from 'preact';
+import { h, FunctionalComponent } from 'preact';
 import BasePage from 'static-build/components/base';
 import { getPostUrl } from 'static-build/utils';
 import date from 'date-and-time';
+import Who from 'static-build/components/who';
 
 interface PaginationProps {
   pageNum: number;
@@ -108,7 +109,9 @@ const IndexPage: FunctionalComponent<Props> = ({
         ))}
         <Pagination pageNum={pageNum} totalPages={totalPages} />
       </div>
-      <div class="side"></div>
+      <div class="side">
+        <Who />
+      </div>
     </div>
   </BasePage>
 );

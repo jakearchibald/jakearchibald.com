@@ -22,6 +22,7 @@ interface Props {
   extraHead?: VNode;
   extraBody?: VNode;
   pageClass?: string;
+  hideWho?: boolean;
 }
 
 const BasePage: FunctionalComponent<Props> = ({
@@ -31,6 +32,7 @@ const BasePage: FunctionalComponent<Props> = ({
   extraBody,
   authorAction,
   pageClass,
+  hideWho,
 }: RenderableProps<Props>) => {
   return (
     <html lang="en" class={pageClass ? pageClass : ''}>
@@ -60,9 +62,11 @@ const BasePage: FunctionalComponent<Props> = ({
             <a href="/" class="title">
               Jake Archibald<span class="js-action">{authorAction}</span>
             </a>
-            <a href="/who/" class="who">
-              who?
-            </a>
+            {!hideWho && (
+              <a href="/who/" class="who">
+                who?
+              </a>
+            )}
           </div>
         </header>
         <div class="container">{children}</div>

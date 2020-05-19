@@ -48,13 +48,10 @@
     }
 
     @media screen and (min-width: $side-introduction-width) {
-      position: absolute;
+      display: none;
+      /*position: absolute;
       right: 25%;
-      padding-right: 90px;
-
-      .js & {
-        display: none;
-      }
+      padding-right: 90px;*/
     }
   }
 }
