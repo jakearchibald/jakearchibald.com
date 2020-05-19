@@ -1,0 +1,50 @@
+{
+  "name": "jpeg-talk",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c && node lib/move-output.js",
+    "debug": "node --inspect-brk node_modules/.bin/rollup -c",
+    "dev": "rollup -cw & npm run serve",
+    "serve": "serve --config server.json .tmp/build/static"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^7.1.3",
+    "@types/prismjs": "^1.16.0",
+    "cssnano": "^4.1.10",
+    "del": "^5.1.0",
+    "glob": "^7.1.6",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.2",
+    "lodash.camelcase": "^4.3.0",
+    "postcss": "^7.0.28",
+    "postcss-import": "^12.0.1",
+    "postcss-modules": "^2.0.0",
+    "postcss-nested": "^4.2.1",
+    "postcss-simple-vars": "^5.0.2",
+    "postcss-url": "^8.0.0",
+    "preact": "^10.4.1",
+    "preact-render-to-string": "^5.1.6",
+    "prettier": "^2.0.5",
+    "rollup": "^2.7.6",
+    "rollup-plugin-terser": "^5.3.0",
+    "serve": "^11.3.0",
+    "typescript": "^3.8.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,json,md,ts,tsx}": [
+      "prettier --write"
+    ]
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "dependencies": {
+    "mkdirp": "^1.0.4",
+    "yaml": "^1.10.0"
+  }
+}

@@ -1,0 +1,68 @@
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://themes.googleusercontent.com/static/fonts/inconsolata/v6/BjAYBlHtW3CJxDcjzrnZCCwlidHJgAgmTjOEEzwu1L8.ttf)
+    format('truetype');
+  font-display: optional;
+}
+@font-face {
+  font-family: 'PT Serif';
+  font-style: normal;
+  font-weight: 400;
+  src: url(https://themes.googleusercontent.com/static/fonts/ptserif/v5/EgBlzoNBIHxNPCMwXaAhYHYhjbSpvc47ee6xR_80Hnw.ttf)
+    format('truetype');
+  font-display: optional;
+}
+
+html {
+  overflow-y: scroll;
+  background: #f1f1f1;
+  font-size: 15px;
+  font-family: sans-serif;
+  line-height: 1.9;
+
+  @media screen and (min-width: $mobile-boundry) {
+    font-size: 16px;
+    color: #444;
+  }
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+figure {
+  margin: 0;
+}
+
+img {
+  max-width: 100%;
+}
+
+p {
+  margin: 1.2em 0;
+}
+
+a:link,
+a:visited {
+  text-decoration: none;
+  color: #cc2100;
+}
+
+a:active,
+a:hover,
+a:focus {
+  color: #ff8f00;
+}
+
+a:active {
+  text-decoration: underline;
+}
+
+/* required to keep IE happy */
+svg {
+  overflow: hidden;
+}

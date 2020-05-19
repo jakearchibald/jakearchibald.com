@@ -1,0 +1,20 @@
+/* who page */
+.who-page {
+  & figure {
+    & img {
+      display: block;
+      margin: 0 auto;
+    }
+  }
+  & .icon-list {
+    columns: 100px;
+    margin: 16px 0;
+  }
+}
+
+/* blog index */
+.blog-index {
+  & .post-preview.first .h-2 {
+    background: #ff8400;
+  }
+}
