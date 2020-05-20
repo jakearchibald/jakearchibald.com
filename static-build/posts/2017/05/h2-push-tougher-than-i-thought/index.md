@@ -10,11 +10,10 @@ summary: "\"HTTP/2 push will solve that\" is something I've heard a lot when it
   HTTP/2 push is more complicated and low-level than I initially thought, but
   what really caught me off-guard is how inconsistent it is between browsers –
   I'd assumed it was a done deal & totally ready for production."
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: There are lots of edge cases I hadn't considered, and it's very
   inconsistent between browsers. Here's what I found…
-
 ---
 
 "HTTP/2 push will solve that" is something I've heard a lot when it comes to page load performance problems, but I didn't know much about it, so I decided to dig in.
@@ -49,7 +48,7 @@ The above is probably like those flow diagrams people use to try and explain Git
   .chat {
     margin: 0 0 0 -32px;
     padding-left: 32px;
-  } 
+  }
 }
 
 .chat-item,
@@ -173,11 +172,11 @@ HTTP/2 push is a low-level networking feature – anything that uses the network
 
 I gave this a spin by pushing resources and trying to collect them with:
 
-* `fetch()`
-* `XMLHttpRequest`
-* `<link rel="stylesheet" href="…">`
-* `<script src="…">`
-* `<iframe src="…">`
+- `fetch()`
+- `XMLHttpRequest`
+- `<link rel="stylesheet" href="…">`
+- `<script src="…">`
+- `<iframe src="…">`
 
 I also slowed the delivery of the body of the pushed resources to see if browsers would match items that were still being pushed. The fairly scrappy test suite is [on github](https://github.com/jakearchibald/http2-push-test).
 
@@ -209,19 +208,19 @@ I also slowed the delivery of the body of the pushed resources to see if browser
 }
 
 .browser-support .result.chrome {
-  background-image: url('/static/imgs/browser-icons/chrome.png');
+  background-image: url('asset-url:static-build/imgs/browser-icons/chrome.png');
 }
 
 .browser-support .result.safari {
-  background-image: url('/static/imgs/browser-icons/safari.png');
+  background-image: url('asset-url:static-build/imgs/browser-icons/safari.png');
 }
 
 .browser-support .result.firefox {
-  background-image: url('/static/imgs/browser-icons/firefox.png');
+  background-image: url('asset-url:static-build/imgs/browser-icons/firefox.png');
 }
 
 .browser-support .result.edge {
-  background-image: url('/static/imgs/browser-icons/edge.png');
+  background-image: url('asset-url:static-build/imgs/browser-icons/edge.png');
 }
 
 .browser-support .result.good {
@@ -266,7 +265,7 @@ I also slowed the delivery of the body of the pushed resources to see if browser
 
 **Edge** didn't retrieve the item from the push cache when using `fetch()`, `XMLHttpRequest`, or `<iframe>` ([issue, including video](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/12142852/)).
 
-**Safari** is a weird one. When it will/won't use the push cache seems like a flip of a coin. Safari defers to OSX's network stack, which is closed-source, but I *think* some of the bugs are in Safari-land. It seems like it opens too many connections and pushed items end up being distributed between them. This means you only get a cache hit if the request is lucky enough to use same connection – but it's really above my brain-grade ([issue, including video](https://bugs.webkit.org/show_bug.cgi?id=172639)).
+**Safari** is a weird one. When it will/won't use the push cache seems like a flip of a coin. Safari defers to OSX's network stack, which is closed-source, but I _think_ some of the bugs are in Safari-land. It seems like it opens too many connections and pushed items end up being distributed between them. This means you only get a cache hit if the request is lucky enough to use same connection – but it's really above my brain-grade ([issue, including video](https://bugs.webkit.org/show_bug.cgi?id=172639)).
 
 All browsers (except Safari when it's being weird) will use matching pushed items even if they're still in-progress of being pushed. That's pretty good.
 
@@ -367,7 +366,7 @@ Don't rely on items hanging around in the push cache for a long time. Push is be
 
 Each connection has its own push cache, but multiple pages can use a single connection, meaning multiple pages may share a push cache.
 
-In practice, this means if you push a resource along with a navigation response (eg an HTML page), it *isn't* exclusively available to that page (I'm going to use "pages" throughout the rest of this post, but in reality this includes other contexts that can fetch resources, such as workers).
+In practice, this means if you push a resource along with a navigation response (eg an HTML page), it _isn't_ exclusively available to that page (I'm going to use "pages" throughout the rest of this post, but in reality this includes other contexts that can fetch resources, such as workers).
 
 <ul class="browser-support">
   <li class="result chrome good">
@@ -394,7 +393,7 @@ Watch out for this when you're pushing stuff like JSON data along with a page �
 
 This behaviour can become an advantage, as resources you push along with a page can be picked up by requests made from an installing service worker.
 
-Edge's behaviour isn't optimal, but it isn't anything to worry about right now. Once Edge has service worker support, it *could* become an issue.
+Edge's behaviour isn't optimal, but it isn't anything to worry about right now. Once Edge has service worker support, it _could_ become an issue.
 
 Again, I would avoid pushing resources for Safari users.
 
@@ -415,13 +414,13 @@ Ensure your requests use the same credentials mode. In most cases this means ens
 To fetch with credentials, use:
 
 ```js
-fetch(url, {credentials: 'include'});
+fetch(url, { credentials: 'include' });
 ```
 
-You can't add credentials to a cross-origin font request, but you *can* remove them from the stylesheet:
+You can't add credentials to a cross-origin font request, but you _can_ remove them from the stylesheet:
 
 ```html
-<link rel="stylesheet" href="…" crossorigin>
+<link rel="stylesheet" href="…" crossorigin />
 ```
 
 …this means both the stylesheet & font request will go down the same connection. However, if that stylesheet also applies background images, those requests are always credentialed, so you'll end up with another connection again. The only solution here is a service worker, which can change how the fetch is performed per request.
@@ -457,7 +456,7 @@ Once the browser uses something in the push cache, it's removed. It may end up i
   </li>
 </ul>
 
-**Safari** suffers from race conditions here. If a resource is fetched multiple times while it's pushing, it'll get the pushed item multiple times ([issue, including video](https://bugs.webkit.org/show_bug.cgi?id=172639)). If it's fetched twice *after* the item has finished pushing, it behaves correctly – the first will return from the push cache, whereas the second won't.
+**Safari** suffers from race conditions here. If a resource is fetched multiple times while it's pushing, it'll get the pushed item multiple times ([issue, including video](https://bugs.webkit.org/show_bug.cgi?id=172639)). If it's fetched twice _after_ the item has finished pushing, it behaves correctly – the first will return from the push cache, whereas the second won't.
 
 ## Recommendations
 
@@ -486,13 +485,13 @@ When you push content, you do it without much negotiation with the client. This 
 
 The spec isn't strict here, so my judgements here are based on what's useful to developers.
 
-**Chrome** will reject pushes if it already has the item in the *push cache*. It rejects with `PROTOCOL_ERROR` rather than `CANCEL` or `REFUSED_STREAM`, but that's a minor thing ([issue](https://bugs.chromium.org/p/chromium/issues/detail?id=726725)). Unfortunately it doesn't reject items it already has in the HTTP cache. It sounds like this is almost fixed, but I haven't been able to test it ([issue](https://bugs.chromium.org/p/chromium/issues/detail?id=232040)).
+**Chrome** will reject pushes if it already has the item in the _push cache_. It rejects with `PROTOCOL_ERROR` rather than `CANCEL` or `REFUSED_STREAM`, but that's a minor thing ([issue](https://bugs.chromium.org/p/chromium/issues/detail?id=726725)). Unfortunately it doesn't reject items it already has in the HTTP cache. It sounds like this is almost fixed, but I haven't been able to test it ([issue](https://bugs.chromium.org/p/chromium/issues/detail?id=232040)).
 
-**Safari** will reject pushes if it already has the item in the *push cache*, but only if the item in the push cache is 'fresh' according to cache headers (eg max-age), *unless* the user hit refresh. This is different to Chrome, but I don't think it's 'wrong'. Unfortunately, like Chrome, it doesn't reject items it already has in the HTTP cache ([issue](https://bugs.webkit.org/show_bug.cgi?id=172646)).
+**Safari** will reject pushes if it already has the item in the _push cache_, but only if the item in the push cache is 'fresh' according to cache headers (eg max-age), _unless_ the user hit refresh. This is different to Chrome, but I don't think it's 'wrong'. Unfortunately, like Chrome, it doesn't reject items it already has in the HTTP cache ([issue](https://bugs.webkit.org/show_bug.cgi?id=172646)).
 
-**Firefox** will reject pushes if it already has the item in the *push cache*, but then it also drops the item it already had in the push cache, leaving it with nothing! This makes it pretty unreliable, and difficult to defend against ([issue, including video](https://bugzilla.mozilla.org/show_bug.cgi?id=1368080)). Firefox also doesn't reject items it already has in the HTTP cache ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1367551)).
+**Firefox** will reject pushes if it already has the item in the _push cache_, but then it also drops the item it already had in the push cache, leaving it with nothing! This makes it pretty unreliable, and difficult to defend against ([issue, including video](https://bugzilla.mozilla.org/show_bug.cgi?id=1368080)). Firefox also doesn't reject items it already has in the HTTP cache ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1367551)).
 
-**Edge** doesn't reject pushes for items already in the push cache, but it *does* reject if the item is in the HTTP cache.
+**Edge** doesn't reject pushes for items already in the push cache, but it _does_ reject if the item is in the HTTP cache.
 
 ## Recommendations
 
@@ -543,7 +542,7 @@ As the owners of developers.google.com/web, we could get our server to push a re
 
 Of course, we wouldn't do that, we love Android. I'm just saying… Android: if you mess with the web, we'll fuck you up.
 
-Ok ok, I jest, but the above actually works. You can't push assets for *any origin*, but you can push assets for origins which your connection is "authoritative" for.
+Ok ok, I jest, but the above actually works. You can't push assets for _any origin_, but you can push assets for origins which your connection is "authoritative" for.
 
 If you look at the certificate for developers.google.com, you can see it's authoritative for all sorts of Google origins, including android.com.
 
@@ -602,7 +601,7 @@ Instead of pushing resources, you can ask the browser to preload them using HTML
   as="font"
   crossorigin
   type="font/woff2"
->
+/>
 ```
 
 Or a page header:
@@ -611,19 +610,19 @@ Or a page header:
 Link: <https://fonts.example.com/font.woff2>; rel=preload; as=font; crossorigin; type='font/woff2'
 ```
 
-* `href` – the URL to preload
-* `as` – the [destination](https://fetch.spec.whatwg.org/#concept-request-destination) of the response. This means the browser can set the right headers and apply the correct CSP policies.
-* `crossorigin` – Optional. Indicates that the request should be a CORS request. The CORS request will be sent without credentials unless `crossorigin="use-credentials"`.
-* `type` – Optional. Allows the browser to ignore the preload if the provided MIME type is unsupported.
+- `href` – the URL to preload
+- `as` – the [destination](https://fetch.spec.whatwg.org/#concept-request-destination) of the response. This means the browser can set the right headers and apply the correct CSP policies.
+- `crossorigin` – Optional. Indicates that the request should be a CORS request. The CORS request will be sent without credentials unless `crossorigin="use-credentials"`.
+- `type` – Optional. Allows the browser to ignore the preload if the provided MIME type is unsupported.
 
 Once the browser sees a preload link, it fetches it. The functionality is similar to HTTP/2 push, in that:
 
-* Anything can be preloaded.
-* `no-cache` & `no-store` items can be preloaded.
-* Your request will only match a preloaded item if its credentials mode is the same.
-* Cached items can only be used once, although they may be in the HTTP cache for future fetches.
-* Items should be matched using HTTP semantics, aside from freshness.
-* You can preload items from other origins.
+- Anything can be preloaded.
+- `no-cache` & `no-store` items can be preloaded.
+- Your request will only match a preloaded item if its credentials mode is the same.
+- Cached items can only be used once, although they may be in the HTTP cache for future fetches.
+- Items should be matched using HTTP semantics, aside from freshness.
+- You can preload items from other origins.
 
 But also different:
 

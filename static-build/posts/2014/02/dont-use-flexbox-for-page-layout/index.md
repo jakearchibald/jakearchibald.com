@@ -6,9 +6,8 @@ summary: When I was building this blog I tried to use
   because I wanted to look cool and modern in front of my peers. However, like
   all of my other attempts to look cool and modern, it didn't really work.
 mindframe: only 5 months after the previous post
-image: ""
-meta: ""
-
+image: ''
+meta: ''
 ---
 
 When I was building this blog I tried to use [flexbox](http://dev.w3.org/csswg/css-flexbox/) for the overall page layout because I wanted to look cool and modern in front of my peers. However, like all of my other attempts to look cool and modern, it didn't really work.
@@ -22,7 +21,7 @@ Why? Well, take my hand and follow me into the next section…
 Here's a basic three column design:
 
 <figure class="full-figure">
-  <img src="/static/posts/flexbox-vs-grid/site.png" alt="Three column layout">
+  <img src="asset-url:./site.png" alt="Three column layout">
   <figcaption>The Holy Grail, apparently</figcaption>
 </figure>
 
@@ -78,9 +77,7 @@ Here's a simplified version of the same layout:
 ```css
 .container {
   display: grid;
-  grid-template-columns:
-    (nav)   minmax(118px, 160px),
-    (main)  minmax(612px, 1fr),
+  grid-template-columns: (nav) minmax(118px, 160px), (main) minmax(612px, 1fr),
     (aside) minmax(182px, 242px);
 }
 
@@ -111,12 +108,10 @@ Here are some examples that break that:
 .container {
   display: grid;
   grid-template-columns:
-    /* Size defined by content, so will change with content */
-    (foo)   max-content,
-    /* Same again */ 
-    (bar)   min-content,
-    /* Computes to minmax(min-content, max-content), so same again */
-    (hello) auto;
+    /* Size defined by content, so will change with content */ (foo) max-content,
+    /* Same again */ (bar) min-content,
+    /* Computes to minmax(min-content, max-content), so same again */ (hello)
+      auto;
 }
 
 aside {
@@ -139,5 +134,5 @@ Flexbox and grid play well together, and are a huge step forward from the float 
 
 # Further reading
 
-* [Solving rendering performance problems](/2013/solving-rendering-perf-puzzles/)
-* [Progressive enhancement is faster](/2013/progressive-enhancement-is-faster/) - the benefits of progressive rendering
+- [Solving rendering performance problems](/2013/solving-rendering-perf-puzzles/)
+- [Progressive enhancement is faster](/2013/progressive-enhancement-is-faster/) - the benefits of progressive rendering

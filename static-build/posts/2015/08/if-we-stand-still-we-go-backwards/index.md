@@ -11,10 +11,9 @@ summary: "Recently, [ppk claimed the web is going too fast in the wrong
 
   I got a bit snarky about it on Twitter, which isn't really fair, so here's a
   more considered response:"
-mindframe: ""
+mindframe: ''
 image: null
-meta: ""
-
+meta: ''
 ---
 
 Recently, [ppk claimed the web is going too fast in the wrong direction](http://www.quirksmode.org/blog/archives/2015/07/stop_pushing_th.html), and asked for a year's moratorium on web features. I was so angry I ran straight to a dictionary to find out what "moratorium" meant. Turns out it means "suspension".
@@ -36,8 +35,12 @@ Let's compare that to the pre-HTML5 "hello world":
 ```html
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-  <head><title>Hello</title></head>
-  <body><div>World</div></body>
+  <head>
+    <title>Hello</title>
+  </head>
+  <body>
+    <div>World</div>
+  </body>
 </html>
 ```
 
@@ -69,26 +72,26 @@ Is the web platform too big? For one person, yes. Is it a problem? No. No one ca
 
 A couple of years ago, I ran a [little quiz on browser requests](https://youtu.be/WiOl0Y06xV4?t=2m56s). The top scorer was usually below the 50% mark, not because the audience were idiots, far from it, they were competent web developers, some of them experts. It just wasn't stuff everyone needed to instantly recall, it was stuff you'd be able to work out as and when needed, using developer tools (just as I did when making the quiz).
 
-A few years ago, the sum-total of my "offline web" knowledge was "there is a thing called appcache that does it", and that was enough. I didn't have to learn any more about it until a project came along that would benefit from it. Of course I now know that *every* project benefits from offline, right? Right?
+A few years ago, the sum-total of my "offline web" knowledge was "there is a thing called appcache that does it", and that was enough. I didn't have to learn any more about it until a project came along that would benefit from it. Of course I now know that _every_ project benefits from offline, right? Right?
 
 ## Just because it's there, doesn't mean you must learn it and use it
 
 Here's a picture I took of some planes doing a thing:
 
 <figure class="full-figure">
-<img src="/static/posts/stand-still/original.jpg" alt="Picture of planes, badly cropped, low contrast">
+<img src="asset-url:./original.jpg" alt="Picture of planes, badly cropped, low contrast">
 </figure>
 
 It could be better, so let's get Photoshop on the case. When faced with Photoshop's expansive set of tools, it's a common beginner mistake to throw everything at it:
 
 <figure class="full-figure">
-<img src="/static/posts/stand-still/bay.jpg" alt="A mess of filters and effects">
+<img src="asset-url:./bay.jpg" alt="A mess of filters and effects">
 </figure>
 
 This may be Michael Bay's wet dream, but he's the exception. However, I could use a subset of features more subtly:
 
 <figure class="full-figure">
-<img src="/static/posts/stand-still/subtle.jpg" alt="Cropped, with subtle contrast added">
+<img src="asset-url:./subtle.jpg" alt="Cropped, with subtle contrast added">
 </figure>
 
 Same goes for the web. You don't need to achieve 100% browser code coverage in a single page. Use what's right for the project. The best user experience is the simplest thing that achieves the user's goals.
@@ -127,7 +130,7 @@ The great thing about the web is it doesn't hit 1.0 and stop, it's continual. Ta
 
 We shouldn't get snobby about features that appeared on other platforms first. Native apps are looking to gain the web's advantages too, they're figuring out linking, and at some point they're going to figure out progressive loading and get rid of the install process. If we stop, we lose.
 
-The web is feature-rich, and it's great. Media queries, touch events, flexbox, service worker, push messaging, web audio, canvas… these are all features you may use to improve user experience. I'm not sure which of these fall into ppk's "this far, no further" basket, but you don't *have* to use any of them. You are welcome to draw a line in the sand and refuse to learn new web features from this day forth. But if a competitor does use them, and uses them to create a better user experience than the one you offer, you lose. But users win.
+The web is feature-rich, and it's great. Media queries, touch events, flexbox, service worker, push messaging, web audio, canvas… these are all features you may use to improve user experience. I'm not sure which of these fall into ppk's "this far, no further" basket, but you don't _have_ to use any of them. You are welcome to draw a line in the sand and refuse to learn new web features from this day forth. But if a competitor does use them, and uses them to create a better user experience than the one you offer, you lose. But users win.
 
 **Update:** [Opera's Bruce Lawson responded to ppk](https://dev.opera.com/blog/on-a-moratorium-on-new-browser-features/) at almost the same time I did. I think I published first by like 5 minutes, so I win. In your face Bruce!
 

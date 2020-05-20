@@ -3,16 +3,15 @@ title: Using ServiceWorker in Chrome today
 date: 2014-09-24 00:25:27
 summary: The implementation for ServiceWorker has been landing in Chrome Canary
   over the past few months, and there's now enough of it to do some cool shit!
-mindframe: ""
+mindframe: ''
 image: null
-meta: ""
-
+meta: ''
 ---
 
 The implementation for ServiceWorker has been landing in Chrome Canary over the past few months, and there's now enough of it to do some cool shit!
 
 <figure class="full-figure">
-<img src="/static/posts/using-serviceworker-today/cool-shit.png" alt style="margin: 20px auto">
+<img src="asset-url:./cool-shit.png" alt style="margin: 20px auto">
 <figcaption>Unnecessary representation of "cool shit"</figcaption>
 </figure>
 
@@ -26,10 +25,10 @@ I'm biased, but I think ServiceWorker changes the scope of the web more than any
 
 If you want more of an overview on ServiceWorker, check out:
 
-* [ServiceWorker is coming, look busy](https://www.youtube.com/watch?v=SmZ9XcTpMS4) - 30min talk
-* [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - feature support status across browsers
-* [ServiceWorker first draft](/2014/service-worker-first-draft/) - blog post
-* [ServiceWorker API](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API) - on MDN
+- [ServiceWorker is coming, look busy](https://www.youtube.com/watch?v=SmZ9XcTpMS4) - 30min talk
+- [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - feature support status across browsers
+- [ServiceWorker first draft](/2014/service-worker-first-draft/) - blog post
+- [ServiceWorker API](https://developer.mozilla.org/en-US/docs/Web/API/ServiceWorker_API) - on MDN
 
 # In Canary today
 
@@ -38,7 +37,7 @@ Google & Mozilla are actively developing ServiceWorker. The developer tooling in
 If you want to hack around with ServiceWorker, open [Chrome Canary](https://www.google.co.uk/intl/en/chrome/browser/canary.html), go to `chrome://flags` and enable "experimental Web Platform features". Give the browser a restart, and you're ready to go!
 
 <figure class="full-figure">
-<img src="/static/posts/using-serviceworker-today/about-flags.png" alt>
+<img src="asset-url:./about-flags.png" alt>
 <figcaption>Enable experimental Web Platform features</figcaption>
 </figure>
 
@@ -64,11 +63,14 @@ With the ServiceWorker, we get to first-render over a second faster, and our fir
 To begin, you need to register for a ServiceWorker from your page:
 
 ```js
-navigator.serviceWorker.register('/worker.js').then(function(reg) {
-  console.log('◕‿◕', reg);
-}, function(err) {
-  console.log('ಠ_ಠ', err);
-});
+navigator.serviceWorker.register('/worker.js').then(
+  function (reg) {
+    console.log('◕‿◕', reg);
+  },
+  function (err) {
+    console.log('ಠ_ಠ', err);
+  },
+);
 ```
 
 As you can see, `.register` take a URL for your worker script and returns a promise. The ServiceWorker script must be on the same origin as your page.
@@ -78,13 +80,18 @@ If you're new to promises, check out the [HTML5Rocks article](http://www.html5ro
 You can also limit the scope of the ServiceWorker to a subset of your origin:
 
 ```js
-navigator.serviceWorker.register('/worker.js', {
-  scope: '/trained-to-thrill/'
-}).then(function(reg) {
-  console.log('◕‿◕', reg);
-}, function(err) {
-  console.log('ಠ_ಠ', err);
-});
+navigator.serviceWorker
+  .register('/worker.js', {
+    scope: '/trained-to-thrill/',
+  })
+  .then(
+    function (reg) {
+      console.log('◕‿◕', reg);
+    },
+    function (err) {
+      console.log('ಠ_ಠ', err);
+    },
+  );
 ```
 
 This is particularly useful for origins that contain many separate sites, such as Github pages.
@@ -93,23 +100,23 @@ This is particularly useful for origins that contain many separate sites, such a
 
 Using ServiceWorker you can hijack connections, respond differently, & filter responses. Powerful stuff. While you would use these powers for good, a man-in-the-middle might not. To avoid this, you can only register for ServiceWorkers on pages served over HTTPS, so we know the ServiceWorker the browser receives hasn't been tampered with during its journey through the network.
 
-Github Pages are served over HTTPS, so they're a great place to host demos. 
+Github Pages are served over HTTPS, so they're a great place to host demos.
 
 # Devtools
 
 It's early days for Chrome's ServiceWorker devtools, but what we have today is better than we ever had with AppCache. Go to `chrome://serviceworker-internals`, you'll get a list of all the ServiceWorker registrations the browser is aware of along with the state of each worker within it. Click "Inspect" to open a devtools window for the worker, this allows you to set breakpoints & test code in the console.
 
 <figure class="full-figure">
-<img src="/static/posts/using-serviceworker-today/serviceworker-internals.png" alt>
+<img src="asset-url:./serviceworker-internals.png" alt>
 <figcaption>chrome://serviceworker-intervals</figcaption>
 </figure>
 
-* **Installation Status** - This is useful during updates.
-* **Running Status / Start / Stop** - The ServiceWorker closes when it isn't needed to save memory, this gives you control over that.
-* **Sync/Push** - These fire events in the ServiceWorker. They're not particularly useful right now.
-* **Inspect** - Launch a devtools window for the worker. This lets you set breakpoints & interact with the console.
-* **Unregister** - Throw the ServiceWorker away.
-* **Opens the DevTools window … on start** - What it says on the tin. Useful for debugging startup issues.
+- **Installation Status** - This is useful during updates.
+- **Running Status / Start / Stop** - The ServiceWorker closes when it isn't needed to save memory, this gives you control over that.
+- **Sync/Push** - These fire events in the ServiceWorker. They're not particularly useful right now.
+- **Inspect** - Launch a devtools window for the worker. This lets you set breakpoints & interact with the console.
+- **Unregister** - Throw the ServiceWorker away.
+- **Opens the DevTools window … on start** - What it says on the tin. Useful for debugging startup issues.
 
 Also, shift+refresh loads the current page without the ServiceWorker, this is useful for checking CSS and page script changes without having to wait for a background update.
 
@@ -120,19 +127,19 @@ Let's start with:
 ```js
 // The SW will be shutdown when not in use to save memory,
 // be aware that any global state is likely to disappear
-console.log("SW startup");
+console.log('SW startup');
 
-self.addEventListener('install', function(event) {
-  console.log("SW installed");
+self.addEventListener('install', function (event) {
+  console.log('SW installed');
 });
 
-self.addEventListener('activate', function(event) {
-  console.log("SW activated");
+self.addEventListener('activate', function (event) {
+  console.log('SW activated');
 });
 
-self.addEventListener('fetch', function(event) {
-  console.log("Caught a fetch!");
-  event.respondWith(new Response("Hello world!"));
+self.addEventListener('fetch', function (event) {
+  console.log('Caught a fetch!');
+  event.respondWith(new Response('Hello world!'));
 });
 ```
 
@@ -146,9 +153,9 @@ This is what you call to hijack the fetch and respond differently. It must be ca
 
 You'll likely get your response from:
 
-* `new Response(body, opts)` - manually created as above. This API is in the [fetch spec](https://fetch.spec.whatwg.org/#response-class).
-* `fetch(urlOrRequest)` - the network. This API is also in the [fetch spec](https://fetch.spec.whatwg.org/#fetch-method).
-* `caches.match(urlOrRequest)` - the cache. We'll pick this up later in the article.
+- `new Response(body, opts)` - manually created as above. This API is in the [fetch spec](https://fetch.spec.whatwg.org/#response-class).
+- `fetch(urlOrRequest)` - the network. This API is also in the [fetch spec](https://fetch.spec.whatwg.org/#fetch-method).
+- `caches.match(urlOrRequest)` - the cache. We'll pick this up later in the article.
 
 `event.request` gives you information about the request, so you can do what you want per request. Also, since `match` and `fetch` are promise-based, you can combine them. Fallback from cache, to network, to a manually created response, for instance.
 
@@ -167,13 +174,13 @@ You navigate through this using the install & activate events:
 This is called when the browser sees this version of the ServiceWorker for the first time. You can pass a promise to `event.waitUntil` to extend this part of the lifecycle:
 
 ```js
-self.addEventListener('install', function(event) {
-  console.log("Installing…");
+self.addEventListener('install', function (event) {
+  console.log('Installing…');
 
   event.waitUntil(
-    somethingThatReturnsAPromise().then(function() {
-      console.log("Installed!");
-    })
+    somethingThatReturnsAPromise().then(function () {
+      console.log('Installed!');
+    }),
   );
 });
 ```
@@ -191,13 +198,13 @@ By default, the old version will remain in control until no pages are open withi
 This happens when the old version is gone. Here you can make changes that would have broken the old version, such as deleting old caches and migrating data.
 
 ```js
-self.addEventListener('activate', function(event) {
-  console.log("Activating…");
+self.addEventListener('activate', function (event) {
+  console.log('Activating…');
 
   event.waitUntil(
-    somethingThatReturnsAPromise().then(function() {
-      console.log("Activated!");
-    })
+    somethingThatReturnsAPromise().then(function () {
+      console.log('Activated!');
+    }),
   );
 });
 ```
@@ -232,25 +239,25 @@ ServiceWorker comes with a caching API, letting you create stores of responses k
 ```js
 importScripts('serviceworker-cache-polyfill.js');
 
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   // pre cache a load of stuff:
   event.waitUntil(
-    cachesPolyfill.open('myapp-static-v1').then(function(cache) {
+    cachesPolyfill.open('myapp-static-v1').then(function (cache) {
       return cache.addAll([
         '/',
         '/styles/all.css',
         '/styles/imgs/bg.png',
-        '/scripts/all.js'
+        '/scripts/all.js',
       ]);
-    })
-  )
+    }),
+  );
 });
 
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    cachesPolyfill.match(event.request).then(function(response) {
+    cachesPolyfill.match(event.request).then(function (response) {
       return response || fetch(event.request);
-    })
+    }),
   );
 });
 ```
@@ -260,7 +267,7 @@ self.addEventListener('fetch', function(event) {
 The cache polyfill is backed by IndexedDB, so you can kinda sorta use devtools to see what's in the cache.
 
 <figure class="full-figure">
-<img src="/static/posts/using-serviceworker-today/idb-cache.png" alt>
+<img src="asset-url:./idb-cache.png" alt>
 <figcaption>Cache polyfill in IndexedDB</figcaption>
 </figure>
 
@@ -274,8 +281,8 @@ When you use `fetch`, those request won't contain credentials such as cookies. I
 
 ```js
 fetch(url, {
-  credentials: 'include'
-})
+  credentials: 'include',
+});
 ```
 
 This behaviour is on purpose, and is arguably better than XHR's more complex default of sending credentials if the URL is same-origin, but omiting them otherwise. Fetch's behaviour is more like other CORS requests, such as `<img crossorigin>`, which never sends cookies unless you opt-in with `<img crossorigin="use-credentials">` However, I'm concerned this is going to catch developers out. Interested to hear your feedback on this!
@@ -289,12 +296,12 @@ This got in the way a little when building Trained-To-Thrill. I wanted to fetch 
 ## The cache polyfill cannot store opaque responses
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   if (/\.jpg$/.test(event.request.url)) {
     event.respondWith(
       fetch('https://www.google.co.uk/….gif', {
-        mode: 'no-cors'
-      })
+        mode: 'no-cors',
+      }),
     );
   }
 });

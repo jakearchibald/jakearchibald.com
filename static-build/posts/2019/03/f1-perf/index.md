@@ -3,10 +3,9 @@ title: Who has the fastest website in F1?
 date: 2019-03-19 12:00:29
 summary: Can I predict the winners of the 2019 F1 season by looking at the
   performance of their websites? No. But I'm gonna anyway.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: ''
+meta: ''
 ---
 
 I was trying to make my predictions for the new Formula One season by studying the aerodynamics of the cars, their cornering speeds, their ability to run with different amounts of fuel. Then it hit me: I have no idea what I'm doing.
@@ -102,7 +101,7 @@ I like WebPageTest as it runs on a real devices, and provides screenshots and a 
 </style>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mercedes-film.png" alt="">
+  <img src="asset-url:./mercedes-film.png" alt="">
 </figure>
 
 In terms of user experience, we've got 6.8s of nothing, then a spinner until 13.7s. Showing a spinner is definitely better than showing nothing, but only just. A full-page spinner is basically an admission of being too slow and apologising to the user. But can it be avoided in this case?
@@ -110,7 +109,7 @@ In terms of user experience, we've got 6.8s of nothing, then a spinner until 13.
 WebPageTest's waterfall diagram allows us to match this up with network and main thread activity:
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
 You don't need to use WebPageTest to get this kind of overview. [Chrome DevTools' "Performance" panel](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/) can give you the same data.
@@ -118,7 +117,7 @@ You don't need to use WebPageTest to get this kind of overview. [Chrome DevTools
 Notice how the waterfall has 'steps'. As in, entry 23 is on another step from the things before, and step 50 is on yet another step.
 
 <figure class="full-figure focus-img grad-both" style="height: 103px">
-  <img style="top: -385px" src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img style="top: -385px" src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
 This suggests that something before those things prevented them from downloading earlier. Usually this means the browser didn't know in advance that it needed that resource.
@@ -130,13 +129,32 @@ The green line appears after the first 'step' of items in the waterfall. That su
 ```html
 <head>
   …
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/en/wp-includes/js/jquery/jquery.js?ver=1.12.4'></script>
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/en/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1'></script>
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/gtm4wp-form-move-tracker.js?ver=1.8.1'></script>
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/gtm4wp-social-tracker.js?ver=1.8.1'></script>
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/analytics-talk-content-tracking.js?ver=1.8.1'></script>
-  <script type='text/javascript' src='https://www.mercedesamgf1.com/wp-content/plugins/events-calendar-pro/src/resources/js/widget-this-week.min.js?ver=4.0.6'></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/en/wp-includes/js/jquery/jquery.js?ver=1.12.4"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/en/wp-includes/js/jquery/jquery-migrate.min.js?ver=1.4.1"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/gtm4wp-form-move-tracker.js?ver=1.8.1"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/gtm4wp-social-tracker.js?ver=1.8.1"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/wp-content/plugins/duracelltomi-google-tag-manager/js/analytics-talk-content-tracking.js?ver=1.8.1"
+  ></script>
+  <script
+    type="text/javascript"
+    src="https://www.mercedesamgf1.com/wp-content/plugins/events-calendar-pro/src/resources/js/widget-this-week.min.js?ver=4.0.6"
+  ></script>
   …
+</head>
 ```
 
 These **block rendering by default**. Adding the `defer` attribute prevents them blocking rendering, but still lets them download early. [Ire Aderinokun wrote an excellent article on this](https://bitsofco.de/async-vs-defer/) if you want to know more.
@@ -149,8 +167,8 @@ For instance, interactive elements like the carousel could display the first ite
 
 <figure class="full-figure">
   <picture>
-    <source type="image/webp" srcset="/static/posts/f1-perf-audit/before-after-js.webp">
-    <img src="/static/posts/f1-perf-audit/before-after-js.jpg" alt="">
+    <source type="image/webp" srcset="asset-url:./before-after-js.webp">
+    <img src="asset-url:./before-after-js.jpg" alt="">
   </picture>
 </figure>
 
@@ -163,7 +181,7 @@ Looking at the page source, the HTML contains a lot of content, so they're alrea
 The **render-blocking scripts weigh in around 150k**, which includes two versions of jQuery. There's **over 100k of CSS** too. CSS also blocks rendering by default, but you want it to block for initial styles, else the user will see a flicker of the unstyled page before the CSS loads.
 
 <figure class="full-figure">
-  <img src="/static/posts/f1-perf-audit/code-coverage.png" alt="">
+  <img src="asset-url:./code-coverage.png" alt="">
 </figure>
 
 [Chrome Devtools' code coverage tool](https://developers.google.com/web/tools/chrome-devtools/network/) says over **80% of the CSS is unused for first render**, along with **75% of the JS.** These should be split up so the page is only loading what it needs. For JavaScript, modern build tools like [webpack](https://webpack.js.org/), [rollup.js](https://rollupjs.org/guide/en), and [Parcel](https://parceljs.org/) support code-splitting for JavaScript.
@@ -173,27 +191,27 @@ Splitting CSS isn't as easy. Keeping CSS tightly coupled with their components m
 There are tools that automate extracting 'above the fold' CSS. I've had mixed results with these, but they might work for you.
 
 <figure class="full-figure focus-img grad-both" style="height: 134px">
-  <img style="top: -574px" src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img style="top: -574px" src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
-The second 'step' of the waterfall contains some render-altering fonts. The browser doesn't know it needs fonts until it finds some text that needs them. That means the CSS downloads, the page is laid out, *then* the browser realises it needs some fonts. `<link rel="preload" as="font" href="…">` in the `<head>` would be a quick-win here. This means the browser will download the fonts within the first step of the waterfall. For more info on preloading, check out [Yoav Weiss' article](https://www.smashingmagazine.com/2016/02/preload-what-is-it-good-for/).
+The second 'step' of the waterfall contains some render-altering fonts. The browser doesn't know it needs fonts until it finds some text that needs them. That means the CSS downloads, the page is laid out, _then_ the browser realises it needs some fonts. `<link rel="preload" as="font" href="…">` in the `<head>` would be a quick-win here. This means the browser will download the fonts within the first step of the waterfall. For more info on preloading, check out [Yoav Weiss' article](https://www.smashingmagazine.com/2016/02/preload-what-is-it-good-for/).
 
-Also, the **fonts weigh in around 350k**, which is pretty heavy. 280k of this is in TTF. TTF is uncompressed, so it should at least be gzipped, or even better use woff2, which would knock around 180k off the size. [`font-display: optional`](https://css-tricks.com/really-dislike-fout-font-display-optional-might-jam/) could be considered here, but given it's part of corporate identity, *sighhhhhhhh* it might not get past the brand folks.
+Also, the **fonts weigh in around 350k**, which is pretty heavy. 280k of this is in TTF. TTF is uncompressed, so it should at least be gzipped, or even better use woff2, which would knock around 180k off the size. [`font-display: optional`](https://css-tricks.com/really-dislike-fout-font-display-optional-might-jam/) could be considered here, but given it's part of corporate identity, _sighhhhhhhh_ it might not get past the brand folks.
 
 <figure class="full-figure focus-img grad-both" style="height: 106px">
-  <img style="top: -632px" src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img style="top: -632px" src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
 There's another render-blocking script in this part of the waterfall. The download starts late because it's at the bottom of the HTML, so it should be moved to the `<head>` and given the `defer` attribute.
 
 <figure class="full-figure focus-img grad-top" style="height: 106px">
-  <img style="top: -1792px; left: -232px" src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img style="top: -1792px; left: -232px" src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
 Then, the Moto 4 gets **locked up for 3 seconds**. You can see this from the red bar at the bottom of the waterfall. WebPageTest shows little pink lines next to script when they're using main-thread time. If you scroll up to row 19, you can see it's responsible for a lot of this jank.
 
 <figure class="full-figure focus-img grad-both" style="height: 106px">
-  <img style="top: -634px; left: -232px" src="/static/posts/f1-perf-audit/mercedes-waterfall.png" alt="">
+  <img style="top: -634px; left: -232px" src="asset-url:./mercedes-waterfall.png" alt="">
 </figure>
 
 ## Second lap
@@ -201,11 +219,11 @@ Then, the Moto 4 gets **locked up for 3 seconds**. You can see this from the red
 Let's take a look at the second load:
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mercedes-film-2.png" alt="">
+  <img src="asset-url:./mercedes-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mercedes-waterfall-2.png" alt="">
+  <img src="asset-url:./mercedes-waterfall-2.png" alt="">
 </figure>
 
 Aside from the HTML, none of the resources have `Cache-Control` headers. But browser heuristics step in, and as a result the cache is used for most assets anyway. This is kinda cheating, and unlikely to reflect reality, but hey, I can't change the rules now. For a refresher on caching, [check out my article on best practices](/2016/caching-best-practices/).
@@ -387,7 +405,7 @@ They have a new driver this year, and a slightly different livery, so this site 
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/ferrari-film.png" alt="">
+  <img src="asset-url:./ferrari-film.png" alt="">
 </figure>
 
 In terms of user experience there's **33s of nothing**, some content at 34.3s, but things move around until 36s. This is around twice as long as Mercedes, so things aren't looking good.
@@ -395,7 +413,7 @@ In terms of user experience there's **33s of nothing**, some content at 34.3s, b
 Let's dive in:
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/ferrari-waterfall.png" alt="">
+  <img src="asset-url:./ferrari-waterfall.png" alt="">
 </figure>
 
 Wow that's a lot of requests! But, Ferrari use HTTP/2, so it isn't such a big deal. I should mention, this article is a real workout for your scrolling finger.
@@ -403,7 +421,7 @@ Wow that's a lot of requests! But, Ferrari use HTTP/2, so it isn't such a big de
 The stand-out issue is that huge row 16. It's a **render-blocking script**.
 
 <figure class="full-figure focus-img grad-both" style="height: 134px">
-  <img style="top: -261px" src="/static/posts/f1-perf-audit/ferrari-waterfall.png" alt="">
+  <img style="top: -261px" src="asset-url:./ferrari-waterfall.png" alt="">
 </figure>
 
 It's also on another server, so it **needs to set up a new HTTP connection**, which takes time. You can see this in the waterfall by the thinner green/orange/purple line which signifies the various stages of setting up a connection.
@@ -413,22 +431,22 @@ However, the biggest issue with that script, is **it's 1.8mb**. There's also an 
 The **CSS is 66k and 90% unused**, so this could benefit from splitting. There are a few fonts that would benefit from `<link rel="preload">` but they're pretty small. Let's face it, everything is small compared to the JS. Oddly, Chrome's coverage tool claims 90% of the JS is used on page load, which beggars belief.
 
 <figure class="full-figure">
-  <img src="/static/posts/f1-perf-audit/code-coverage-ferrari.png" alt="">
+  <img src="asset-url:./code-coverage-ferrari.png" alt="">
 </figure>
 
 I dug into their JavaScript and saw a lot of locale data in there, which should be split out, but then I saw a large chunk of base64. You'll never guess what it is. It's this:
 
 <figure class="full-figure">
-  <img src="/static/posts/f1-perf-audit/ferrari-banner.png" alt="">
+  <img src="asset-url:./ferrari-banner.png" alt="">
 </figure>
 
 No, not the whole thing. The logo. No, not the whole logo, that's SVG. But the horse, the horse is a base64 PNG within the SVG:
 
 <figure class="full-figure">
-  <img src="/static/posts/f1-perf-audit/horse-composite.jpg" alt="">
+  <img src="asset-url:./horse-composite.jpg" alt="">
 </figure>
 
-Look at it. It's beautiful. **It's 2300x2300. It's 1.7mb.** 90% of their performance problem is a *massive bloody horse*. That logo appears across the main Ferrari site too, so it's probably something the creator of the F1 site had little control over. I wonder if they knew.
+Look at it. It's beautiful. **It's 2300x2300. It's 1.7mb.** 90% of their performance problem is a _massive bloody horse_. That logo appears across the main Ferrari site too, so it's probably something the creator of the F1 site had little control over. I wonder if they knew.
 
 Again, there seems to be server rendering going on, but it's rendered useless by the script.
 
@@ -437,11 +455,11 @@ There also seems to be multiple versions of the same image downloading.
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/ferrari-film-2.png" alt="">
+  <img src="asset-url:./ferrari-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/ferrari-waterfall-2.png" alt="">
+  <img src="asset-url:./ferrari-waterfall-2.png" alt="">
 </figure>
 
 The site has ok caching headers, so I'm surprised to see the browser revalidating some of those requests.
@@ -500,13 +518,13 @@ Red Bull aren't a car company. They sell drinks of a flavour I can only describe
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/redbull-film.png" alt="">
+  <img src="asset-url:./redbull-film.png" alt="">
 </figure>
 
 The user experience is 4.9s of nothing, but the result is a broken UI. Things sort themselves out at around 6.5s. There's a font switch at 9.5s, and a horrendous cookie warning at 16s. But, I'd call this visually ready at 6.5s.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/redbull-waterfall.png" alt="">
+  <img src="asset-url:./redbull-waterfall.png" alt="">
 </figure>
 
 Unfortunately we can't call this page ready at 6.5s, as the main thread is **locked up until 11s**. Still, this takes it into 1st place by a couple of seconds.
@@ -516,7 +534,7 @@ The story here is very similar to the previous sites. The page contains what loo
 **The CSS is 90% unused, and the JS is ~75% unused**, so code-splitting and including only what's needed for this page would have a huge benefit. This might help with the main thread lock-ups too.
 
 <figure class="full-figure focus-img grad-both" style="height: 134px">
-  <img style="top: -530px" src="/static/posts/f1-perf-audit/redbull-waterfall.png" alt="">
+  <img style="top: -530px" src="asset-url:./redbull-waterfall.png" alt="">
 </figure>
 
 Again, the **fonts start loading way too late**. `<link rel="preload">` would be a quick win here.
@@ -526,17 +544,17 @@ The icon font times-out, which causes a broken render. There isn't really a good
 The site does use `<link rel="preload">`, but it's mostly used for JS and CSS, which don't really need preloading as they're already in the `<head>`. Worse, they preload a different version of the scripts to the ones they use on the page, so they're **doubling the download**. Chrome's console shows a warning about this.
 
 <figure class="full-figure">
-  <img src="/static/posts/f1-perf-audit/console-warning.png" alt="">
+  <img src="asset-url:./console-warning.png" alt="">
 </figure>
 
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/redbull-film-2.png" alt="">
+  <img src="asset-url:./redbull-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/redbull-waterfall-2.png" alt="">
+  <img src="asset-url:./redbull-waterfall-2.png" alt="">
 </figure>
 
 Thanks to decent caching, we get a render really quickly. However, **JS bogs down the main thread** for many seconds afterwards, so the page isn't really interactive until the 4.8s mark.
@@ -591,13 +609,13 @@ Back to folks that make cars. Car adverts tend to be awful, but I reckon Renault
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/renault-film.png" alt="">
+  <img src="asset-url:./renault-film.png" alt="">
 </figure>
 
 The user gets 5.8s of nothing, then a broken render until 7.8s, but the **intended content of the page doesn't arrive until 26.5s.** Also, asking for notification permission on load should be a black flag situation, but I'll be kind and ignore it.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/renault-waterfall.png" alt="">
+  <img src="asset-url:./renault-waterfall.png" alt="">
 </figure>
 
 As with previous sites, **render-blocking scripts** account for the first 5.8s of nothing. These should use `defer`. However, this script doesn't get the page into an interactive state, it delivers a broken render.
@@ -605,7 +623,7 @@ As with previous sites, **render-blocking scripts** account for the first 5.8s o
 Then, something interesting happens. The scripts that are needed to set up the page are at the bottom of the HTML, so the browser gives these **important scripts a low priority**.
 
 <figure class="full-figure focus-img grad-both" style="height: 114px">
-  <img style="top: -346px; width: 100%" src="/static/posts/f1-perf-audit/renault-waterfall.png" alt="">
+  <img style="top: -346px; width: 100%" src="asset-url:./renault-waterfall.png" alt="">
 </figure>
 
 You can see from the waterfall that the browser starts the download kinda late, but not that late. The darker area of the bars indicates the resource is actively downloading, but in this case the scripts are left waiting until other things such as images download. To fix this, these important scripts should be in the `<head>` and use the `defer` attribute. The page should be fixed so the before-JS render is usable.
@@ -613,7 +631,7 @@ You can see from the waterfall that the browser starts the download kinda late, 
 **The CSS is 85% unused, and the JS is ~55% unused**, so it would benefit from splitting.
 
 <figure class="full-figure focus-img grad-both" style="height: 114px">
-  <img style="top: -269px; width: 100%" src="/static/posts/f1-perf-audit/renault-waterfall.png" alt="">
+  <img style="top: -269px; width: 100%" src="asset-url:./renault-waterfall.png" alt="">
 </figure>
 
 As with the other pages the **fonts load late**. It's especially bad here as images steal all the bandwidth (more on that in a second). Preloading fonts is a huge & quick win, and icon fonts should be replaced with SVG.
@@ -621,11 +639,11 @@ As with the other pages the **fonts load late**. It's especially bad here as ima
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/renault-film-2.png" alt="">
+  <img src="asset-url:./renault-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/renault-waterfall-2.png" alt="">
+  <img src="asset-url:./renault-waterfall-2.png" alt="">
 </figure>
 
 The caching is pretty good here, but a few **uncached scripts** push the complete render back to 5.9s. The first lap fixes would help here, along with some `Cache-Control` headers.
@@ -682,7 +700,7 @@ Their car looks pretty different this year with the arrival of a new sponsor, Ri
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/haas-film.png" alt="">
+  <img src="asset-url:./haas-film.png" alt="">
 </figure>
 
 The user gets **4.5s of nothing**, and then it's interactive! Pretty good!
@@ -690,7 +708,7 @@ The user gets **4.5s of nothing**, and then it's interactive! Pretty good!
 It takes a long time for that first image to show, but hey, it doesn't block interactivity.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/haas-waterfall.png" alt="">
+  <img src="asset-url:./haas-waterfall.png" alt="">
 </figure>
 
 It terms of improvements, it's a similar story. There's a server render, but it's blocked by **render-blocking scripts** in the `<head>`.
@@ -704,11 +722,11 @@ Again, **font preloading would help** here.
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/haas-film-2.png" alt="">
+  <img src="asset-url:./haas-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/haas-waterfall-2.png" alt="">
+  <img src="asset-url:./haas-waterfall-2.png" alt="">
 </figure>
 
 A good caching setup reduces the amount of network traffic. However a combination of image decoding, JavaScript, and layout hits hard, **locking up the main thread** until the 8 second mark.
@@ -762,25 +780,25 @@ McLaren do sell the occasional car, but they're a racing team through and throug
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mclaren-film.png" alt="">
+  <img src="asset-url:./mclaren-film.png" alt="">
 </figure>
 
 In terms of user experience, the user gets nothing for the first 10.6 seconds, but the **content jumps around until 24.3 seconds**.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mclaren-waterfall.png" alt="">
+  <img src="asset-url:./mclaren-waterfall.png" alt="">
 </figure>
 
 The first problem we see in the waterfall is the amount of **additional connections needed**. Their content is spread across many servers.
 
 <figure class="full-figure focus-img grad-both" style="height: 114px">
-  <img style="top: -74px;" src="/static/posts/f1-perf-audit/mclaren-waterfall.png" alt="">
+  <img style="top: -74px;" src="asset-url:./mclaren-waterfall.png" alt="">
 </figure>
 
 Their **main CSS is 81k, but 90% unused** for the initial render. Ideally the stuff needed for first render would be inlined, and the rest lazy-loaded.
 
 <figure class="full-figure focus-img grad-both" style="height: 114px">
-  <img style="top: -136px;" src="/static/posts/f1-perf-audit/mclaren-waterfall.png" alt="">
+  <img style="top: -136px;" src="asset-url:./mclaren-waterfall.png" alt="">
 </figure>
 
 Then there's a request for some fonts CSS (row 6). It's on yet another server, so we get another connection, and it **serves a redirect** to yet another server (row 10).
@@ -800,11 +818,11 @@ This is the first site so far that serves its content in JavaScript rather than 
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mclaren-film-2.png" alt="">
+  <img src="asset-url:./mclaren-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/mclaren-waterfall-2.png" alt="">
+  <img src="asset-url:./mclaren-waterfall-2.png" alt="">
 </figure>
 
 Caching headers are mostly absent, but browser heuristics make it look better than it is. The number of connections needed still hits hard, as does the JS processing time.
@@ -862,13 +880,13 @@ Lance Stroll wanted to be a racing driver, so daddy bought him an entire F1 team
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/racingpoint-film.png" alt="">
+  <img src="asset-url:./racingpoint-film.png" alt="">
 </figure>
 
 The user gets nothing for 45s, but the intended top-of-page content **isn't ready until the 70s mark**.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/racingpoint-waterfall.png" alt="">
+  <img src="asset-url:./racingpoint-waterfall.png" alt="">
 </figure>
 
 Also, the main thread is **too busy for interaction until 76s**.
@@ -876,13 +894,13 @@ Also, the main thread is **too busy for interaction until 76s**.
 The page starts by downloading **300k of CSS that's served without minification, and without gzip**. Minifying and gzipping would be a quick win here, but with **over 90% of the CSS unused**, it'd be better to split it up and serve just what this page needs.
 
 <figure class="full-figure focus-img grad-both" style="height: 114px">
-  <img style="top: -38px;" src="/static/posts/f1-perf-audit/racingpoint-waterfall.png" alt="">
+  <img style="top: -38px;" src="asset-url:./racingpoint-waterfall.png" alt="">
 </figure>
 
 Also, this CSS imports more CSS, from Google Fonts, so it pays the cost of **another connection**. But the main problem is the browser doesn't know it needs the fonts CSS until the main CSS downloads, and by that time there's a lot of stuff **fighting for bandwidth**.
 
 <figure class="full-figure focus-img grad-both" style="height: 164px">
-  <img style="top: -992px;" src="/static/posts/f1-perf-audit/racingpoint-waterfall.png" alt="">
+  <img style="top: -992px;" src="asset-url:./racingpoint-waterfall.png" alt="">
 </figure>
 
 `<link rel="preload">` would be a huge and quick win here, to get that CSS downloading much earlier. It's the CSS that's currently blocking first render.
@@ -890,7 +908,7 @@ Also, this CSS imports more CSS, from Google Fonts, so it pays the cost of **ano
 The site also suffers from **late-loading scripts**.
 
 <figure class="full-figure focus-img grad-both" style="height: 106px">
-  <img style="top: -622px;" src="/static/posts/f1-perf-audit/racingpoint-waterfall.png" alt="">
+  <img style="top: -622px;" src="asset-url:./racingpoint-waterfall.png" alt="">
 </figure>
 
 These scripts are at the bottom of the `<body>`, so they don't block rendering. However, if this JS is going to pop-in content at the top of the page, that space should be reserved so it doesn't move content around. Ideally a server-render of the carousel's first frame should be provided, which the JS can enhance. Also, these scripts should be in the `<head>` with `defer` so they start downloading earlier. Like the CSS, they **lack minification and gzipping**, which are quick wins. The **JS is also 64% unused**, so could be split up.
@@ -902,11 +920,11 @@ The main thread is then locked up for a bit. I haven't dug into why, but I suspe
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/racingpoint-film-2.png" alt="">
+  <img src="asset-url:./racingpoint-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/racingpoint-waterfall-2.png" alt="">
+  <img src="asset-url:./racingpoint-waterfall-2.png" alt="">
 </figure>
 
 The site has **pretty good caching headers**, so very little is redownloaded second time around. However, we don't get the main content until 8.2s due to **main thread contention**. This is a mixture of JavaScript, but mostly (I suspect) image decoding.
@@ -965,19 +983,19 @@ Alfa Romeo make cars, but they don't really make the one they race. The engine i
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/alfa-film.png" alt="">
+  <img src="asset-url:./alfa-film.png" alt="">
 </figure>
 
 The user gets nothing for 7.9s, but they only get **a spinner until 15.6s**. You have to scroll to get content, but I'll count this as interactive.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/alfa-waterfall.png" alt="">
+  <img src="asset-url:./alfa-waterfall.png" alt="">
 </figure>
 
 The render is **blocked until the Google Fonts CSS downloads**, which points to a similar problem as Racing Point.
 
 <figure class="full-figure focus-img grad-both" style="height: 194px">
-  <img style="top: -46px;" src="/static/posts/f1-perf-audit/alfa-waterfall.png" alt="">
+  <img style="top: -46px;" src="asset-url:./alfa-waterfall.png" alt="">
 </figure>
 
 And yep, their main CSS (row 2) imports the Google Fonts CSS (row 9). This should be preloaded to allow the two to download in parallel. It's especially bad here, as the font they're downloading is Roboto, which already exists on Android, so no fonts are actually needed.
@@ -987,7 +1005,7 @@ The main CSS is pretty small, but still **85% unused**, so splitting and perhaps
 After parsing the HTML, the browser discovers a load of images it needs to download, then a couple of scripts at the bottom of the page.
 
 <figure class="full-figure focus-img grad-both" style="height: 109px">
-  <img style="top: -946px; width: 100%" src="/static/posts/f1-perf-audit/alfa-waterfall.png" alt="">
+  <img style="top: -946px; width: 100%" src="asset-url:./alfa-waterfall.png" alt="">
 </figure>
 
 However, these scripts are essential to the rendering of the page, so they're **loading far too late**. A quick win would be to move them to the `<head>` (they already have `defer`). This would save around 8 seconds.
@@ -999,11 +1017,11 @@ This page shouldn't need a spinner. Instead, it could have a before-JS render. T
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/alfa-film-2.png" alt="">
+  <img src="asset-url:./alfa-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/alfa-waterfall-2.png" alt="">
+  <img src="asset-url:./alfa-waterfall-2.png" alt="">
 </figure>
 
 The site makes **excellent use of caching**, but the JS-driven rendering slows things down. The **main thread is jammed** for a few seconds thanks to a combination of JavaScript and image decoding, getting to render in 4.5s.
@@ -1062,13 +1080,13 @@ It's the "stinky medicine" folks again. They fund two 'independent' teams in F1,
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/toro-film.png" alt="">
+  <img src="asset-url:./toro-film.png" alt="">
 </figure>
 
 In terms of user experience, the user gets 4.7s of nothing. But, text doesn't start to appear until 5.4s. Then, more text appears gradually, and **seems complete at 5.8s**. Not bad!
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/toro-waterfall.png" alt="">
+  <img src="asset-url:./toro-waterfall.png" alt="">
 </figure>
 
 Unfortunately the main thread is **blocked until 8s**. This looks like image decoding, but I'm not sure.
@@ -1080,7 +1098,7 @@ The **CSS is 90% unused**, and the **JS is over 50% unused**. Splitting would he
 The biggest performance problem this site has is fonts. That's why the text comes in late.
 
 <figure class="full-figure focus-img grad-both" style="height: 134px">
-  <img style="top: -716px;" src="/static/posts/f1-perf-audit/toro-waterfall.png" alt="">
+  <img style="top: -716px;" src="asset-url:./toro-waterfall.png" alt="">
 </figure>
 
 The **fonts are late-loading**, so preloading them would have a huge benefit here.
@@ -1090,11 +1108,11 @@ The fonts are also a little big. Using **woff2 would be a quick win** here, but 
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/toro-film-2.png" alt="">
+  <img src="asset-url:./toro-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/toro-waterfall-2.png" alt="">
+  <img src="asset-url:./toro-waterfall-2.png" alt="">
 </figure>
 
 We get content at 5s, but the **main thread is locked until 7s.** Again, I think this is down to images.
@@ -1150,19 +1168,19 @@ Williams are probably my favouite team. They're relatively small, independent, a
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/williams-film.png" alt="">
+  <img src="asset-url:./williams-film.png" alt="">
 </figure>
 
 In terms of user experience, the user sees **nothing until 7.9s**, but then they have visible content.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/williams-waterfall.png" alt="">
+  <img src="asset-url:./williams-waterfall.png" alt="">
 </figure>
 
 The first thing that stands out here is all the additional connections.
 
 <figure class="full-figure focus-img grad-both" style="height: 144px">
-  <img style="top: -50px;" src="/static/posts/f1-perf-audit/williams-waterfall.png" alt="">
+  <img style="top: -50px;" src="asset-url:./williams-waterfall.png" alt="">
 </figure>
 
 I thought this meant they were using a lot of different servers, but a closer look shows they're **using old HTTP/1**. This means the browser has to set up separate connections for concurrent downloads. A switch to HTTP/2 would be a big win.
@@ -1172,7 +1190,7 @@ But look, those fonts are arriving nice and early. A quick look at their source 
 Then we get their CSS, which is fairly small but still **90% unused**. Splitting and inlining these would show a big improvement.
 
 <figure class="full-figure focus-img grad-both" style="height: 194px">
-  <img style="top: -160px; left: -160px" src="/static/posts/f1-perf-audit/williams-waterfall.png" alt="">
+  <img style="top: -160px; left: -160px" src="asset-url:./williams-waterfall.png" alt="">
 </figure>
 
 Then we get a few **render-blocking scripts** in the head. These should be `defer`d to allow the server render to show before JS loads. The page is pretty much static so this shouldn't be too hard.
@@ -1182,11 +1200,11 @@ Their main JS loads at the end of the document, and it's a **whopping 430k**. Th
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/williams-film-2.png" alt="">
+  <img src="asset-url:./williams-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/williams-waterfall-2.png" alt="">
+  <img src="asset-url:./williams-waterfall-2.png" alt="">
 </figure>
 
 The **caching headers are good**, so very few requests are made on the second run. However, HTTP/1 slows down the initial request, then that massive script arrives from the cache and takes up **1.5s of main thread time**. In total, it takes 6.2s to render.
@@ -1243,13 +1261,13 @@ I'm going to throw the official fantasy F1 site into the mix too. It's my blog I
 ## First lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/fantasy-film.png" alt="">
+  <img src="asset-url:./fantasy-film.png" alt="">
 </figure>
 
 In terms of user experience, the user gets nothing until 12s. But the text for the main call-to-action doesn't display until **14.5s**.
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/fantasy-waterfall.png" alt="">
+  <img src="asset-url:./fantasy-waterfall.png" alt="">
 </figure>
 
 The **main thread looks blocked** until at least the 15s mark.
@@ -1261,7 +1279,7 @@ Initial render is blocked on CSS and **render-blocking scripts**.
 Because the render is JavaScript driven, the browser doesn't know much about the resources it needs to download until Ember renders the page. That's why we see a load of requests begin around the 9.5s mark:
 
 <figure class="full-figure focus-img grad-both" style="height: 234px">
-  <img style="top: -361px; left: -230px" src="/static/posts/f1-perf-audit/fantasy-waterfall.png" alt="">
+  <img style="top: -361px; left: -230px" src="asset-url:./fantasy-waterfall.png" alt="">
 </figure>
 
 The page would benefit massively from a server render. But, given there isn't really any interactivity on this page, they could consider removing the JS all together, or preloading it for when it is needed. It certainly doesn't need 700k of JS. [Netflix removed React from their landing page](/2017/netflix-and-react/) and saw a huge speed boost. The same could be done here.
@@ -1271,7 +1289,7 @@ The **CSS is 95% unused**, so it could be split up so this page can use the nece
 The button text appears late because of **late-loading fonts**. Which is also excasserbated by the JavaScript-render.
 
 <figure class="full-figure focus-img grad-both" style="height: 135px">
-  <img style="top: -451px; width: 100%" src="/static/posts/f1-perf-audit/fantasy-waterfall.png" alt="">
+  <img style="top: -451px; width: 100%" src="asset-url:./fantasy-waterfall.png" alt="">
 </figure>
 
 As with other pages, this page would benefit hugely from font preloading. Also some of the fonts are TTFs. They're gzipped, but **woff2 would be much smaller**.
@@ -1279,11 +1297,11 @@ As with other pages, this page would benefit hugely from font preloading. Also s
 ## Second lap
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/fantasy-film-2.png" alt="">
+  <img src="asset-url:./fantasy-film-2.png" alt="">
 </figure>
 
 <figure class="full-figure scrollable-img">
-  <img src="/static/posts/f1-perf-audit/fantasy-waterfall-2.png" alt="">
+  <img src="asset-url:./fantasy-waterfall-2.png" alt="">
 </figure>
 
 The JS URLs look versioned, but their `Cache-Control` header requires the browser to check for an update every time. You can see that in the 304 responses in the waterfall.

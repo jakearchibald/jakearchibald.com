@@ -5,11 +5,10 @@ summary: A few days ago [Netflix
   tweeted](https://twitter.com/NetflixUIE/status/923374215041912833) that they'd
   removed client-side React.js from their landing page and they saw a 50%
   performance improvement. It caused a bit of a stir.
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: Netflix improved performance by deferring react on the client, but this
   doesn't reflect badly on React.
-
 ---
 
 A few days ago [Netflix tweeted](https://twitter.com/NetflixUIE/status/923374215041912833) that they'd removed client-side React.js from their landing page and they saw a 50% performance improvement. It caused a bit of a stir.
@@ -42,7 +41,7 @@ Unfortunately, it's a feature we often engineer-away with single page apps, by c
 I used to joke about Photoshop, where you'd be shown this:
 
 <figure class="full-figure">
-<img src="/static/posts/netflix-react/photoshop-splash.png" alt="Photoshop splash screen">
+<img src="asset-url:./photoshop-splash.png" alt="Photoshop splash screen">
 </figure>
 
 Once this appeared, it was time to go for a coffee, go for a run, practice juggling, perhaps even acknowledge the humans around you, because Photoshop was busy doing some serious behind-the-scenes work and there was nothing you could do about it.
@@ -50,7 +49,7 @@ Once this appeared, it was time to go for a coffee, go for a run, practice juggl
 A splash screen is a gravestone commemorating the death of an app's performance. Adobe even used that space to list all of those responsible. But what did you get once all the loading completed?
 
 <figure class="full-figure">
-<img src="/static/posts/netflix-react/photoshop-open.png" alt="Photoshop opened">
+<img src="asset-url:./photoshop-open.png" alt="Photoshop opened">
 </figure>
 
 That. It looks like the whole app, but I can't use the whole app right now. My first interaction here is pretty limited. I can create a blank canvas, or open an existing image. Those two interactions don't justify a lot of up-front loading.

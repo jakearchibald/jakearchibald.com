@@ -3,15 +3,14 @@ title: I discovered a browser bug
 date: 2018-06-20 14:17:41
 summary: I accidentally discovered a huge browser security bug. Here's what it
   does, and how I discovered it…
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: ''
+meta: ''
 ---
 
 I accidentally discovered a huge browser bug a few months ago and I'm pretty excited about it. Security engineers always seem like the "cool kids" to me, so I'm hoping that now I can be part of the club, and y'know, get into the special parties or whatever.
 
-I've noticed that a lot of these security disclosure things are only available as PDFs. Personally, I prefer the web, but if you're a SecOps PDF addict, check out [the PDF version of this post](/static/posts/wavethrough/wavethrough.pdf).
+I've noticed that a lot of these security disclosure things are only available as PDFs. Personally, I prefer the web, but if you're a SecOps PDF addict, check out [the PDF version of this post](asset-url:./wavethrough.pdf).
 
 Oh, I guess the vulnerability needs an extremely tenuous name and logo right? Here goes:
 
@@ -32,7 +31,7 @@ As I said, I stumbled into this whole thing by accident. Here's how it happened 
 If you have a service worker like this:
 
 ```js
-addEventListener('fetch', event => {
+addEventListener('fetch', (event) => {
   event.respondWith(fetch(event.request));
 });
 ```
@@ -80,7 +79,7 @@ It isn't just images either. Classic non-module scripts, CSS, and media elements
 So, back to our pass-through service worker:
 
 ```js
-addEventListener('fetch', event => {
+addEventListener('fetch', (event) => {
   event.respondWith(fetch(event.request));
 });
 ```
@@ -93,13 +92,13 @@ Why is this header filtered? Well, no one standardised how they were supposed to
 
 They're standardised in HTTP, but not by HTML. We know what the headers look like, and when they should appear, but there's nothing to say what a browser should actually do with them.
 
-* Should all media requests be range requests, or just additional requests?
-* What happens if the returned range ends sooner/later than what the browser asked for?
-* What happens if the returned range starts sooner/later than what the browser asked for?
-* What happens if a range is requested but the server returns a normal 200 response?
-* What happens if a range is requested but the server returns a redirect?
-* What happens if the underlying content appears to have changed between requests?
-* What happens if a normal request is made but a 206 partial is returned?
+- Should all media requests be range requests, or just additional requests?
+- What happens if the returned range ends sooner/later than what the browser asked for?
+- What happens if the returned range starts sooner/later than what the browser asked for?
+- What happens if a range is requested but the server returns a normal 200 response?
+- What happens if a range is requested but the server returns a redirect?
+- What happens if the underlying content appears to have changed between requests?
+- What happens if a normal request is made but a 206 partial is returned?
 
 None of this is defined, so browsers all kinda do different things. Yay.
 
@@ -268,9 +267,8 @@ Beta and nightly versions of Firefox at the time allowed the redirect, combine t
 Because I set the frequency, bit depth, and channel count of the audio in the header, I could determine the length of the cross-origin resource from the audio length using ✨basic maths✨.
 
 ```js
-const contentLength = audio.duration *
-  /* WAV frequency */ 44100 +
-  /* WAV header length */ 44;
+const contentLength =
+  audio.duration * /* WAV frequency */ 44100 + /* WAV header length */ 44;
 ```
 
 <figure class="full-figure">
@@ -284,7 +282,7 @@ And here's [a link to the attack](https://jewel-chair.glitch.me/exploit.html?url
 
 Leaking the length of a resource may not sound like a big deal, but consider an endpoint like `gender.json`. The content length can give a lot away. Also see [Timing attacks in the Modern Web](https://tom.vg/papers/timing-attacks_ccs2015.pdf) (PDF, heh) which demonstrates the amount of information content-length can leak.
 
-Firefox handled this *brilliantly*. Within three hours [Paul Adenot](https://twitter.com/padenot?lang=en) replied to [the bug report](https://bugzilla.mozilla.org/show_bug.cgi?id=1441153#c4), confirming it, and digged into other potential leaks (there weren't any). I was able to engage with engineers directly on how the issue should be fixed, which was important as I was planning how to standardise the mitigation.
+Firefox handled this _brilliantly_. Within three hours [Paul Adenot](https://twitter.com/padenot?lang=en) replied to [the bug report](https://bugzilla.mozilla.org/show_bug.cgi?id=1441153#c4), confirming it, and digged into other potential leaks (there weren't any). I was able to engage with engineers directly on how the issue should be fixed, which was important as I was planning how to standardise the mitigation.
 
 Since this was a regression caught in beta, Firefox were able to patch it before it reached stable.
 
@@ -305,7 +303,7 @@ const source = ac.createMediaElementSource(audio);
 const scriptNode = ac.createScriptProcessor(256, 1, 1);
 const datas = [];
 
-scriptNode.onaudioprocess = event => {
+scriptNode.onaudioprocess = (event) => {
   const inputData = event.inputBuffer.getChannelData(0);
   // Store the audio data
   if (!audio.paused) datas.push(inputData.slice());
@@ -315,7 +313,7 @@ scriptNode.onaudioprocess = event => {
 source.connect(scriptNode);
 scriptNode.connect(ac.destination);
 
-audio.addEventListener('ended', event => {
+audio.addEventListener('ended', (event) => {
   source.disconnect(scriptNode);
   scriptNode.disconnect(ac.destination);
 
@@ -325,13 +323,18 @@ audio.addEventListener('ended', event => {
     // Each sample is -1 to 1.
     // In the original wav it was 16-bits per sample,
     // so I map each value to a signed 16-bit value.
-    const ints = Array.from(data).map(num => Math.round(num * 32768));
+    const ints = Array.from(data).map((num) => Math.round(num * 32768));
     // Then put that into a typed array.
     const int16 = new Int16Array(ints);
     // But, assuming utf-8, I need unsigned 8-bit chunks:
     const bytes = new Uint8Array(int16.buffer);
     // Now I can create a string from that.
-    return str + Array.from(bytes).map(b => String.fromCharCode(b)).join('')
+    return (
+      str +
+      Array.from(bytes)
+        .map((b) => String.fromCharCode(b))
+        .join('')
+    );
   }, '');
 
   // Output the data.
@@ -348,7 +351,7 @@ And here's what that looks like:
 
 The text you see is the content of BBC News. Since the request is made with cookies, the content is the "logged in" view, although I wasn't logged in for the demo.
 
-It's kinda pathetic how excited I got about this, but this is a *huge* bug. It means you could visit my site in Edge, and I could read your emails, I could read your Facebook feed, all without you knowing.
+It's kinda pathetic how excited I got about this, but this is a _huge_ bug. It means you could visit my site in Edge, and I could read your emails, I could read your Facebook feed, all without you knowing.
 
 And here's [a link to the attack](http://jewel-chair.glitch.me/exploit.html?url=http://www.bbc.co.uk/news&initialLen=90000&totalLength=*&freq=44100&bits=16&useWebAudio=1). If this works in your version of Edge, **update your browser immediately**.
 
@@ -358,7 +361,7 @@ You're about to witness a boy in his mid-30s having a massive entitled whinge. I
 
 I filed the issue in [Edge's bug tracker](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/) on March 1st and notified secure@microsoft.com. I got an email from Microsoft security later that day saying that they don't have access to Edge's bug tracker, and asked if I could paste the details into an email for them. So yeah, Microsoft's security team don't have visibility into Edge security issues. Anyway, I sent them the details of the exploit over plain email. **Update:** Turns out when you file a security bug with Edge, you get a special URL only the reporter can access. I didn't know this was the case, and it didn't seem like the security contact at MS knew either.
 
-The next day they said they couldn't investigate the issue unless I provided the source code. C'mon folks, the "view source" button is right there. Anyway, I sent them the source. Then there was *20 days of silence*.
+The next day they said they couldn't investigate the issue unless I provided the source code. C'mon folks, the "view source" button is right there. Anyway, I sent them the source. Then there was _20 days of silence_.
 
 At this point I had no idea if they were able to understand the issue, or if they knew how serious it was. I pointed out that the attack could be used to read people's private messages, but received no response.
 
@@ -393,7 +396,7 @@ I've been working to improve standards here. Range requests are now [able to pas
 Also, [CORB has been added to fetch](https://fetch.spec.whatwg.org/#corb). The aim here is to reduce the capabilities of no-cors while retaining compatibility with the web. For instance:
 
 ```html
-<img src="https://facebook.com/secret-data.json">
+<img src="https://facebook.com/secret-data.json" />
 ```
 
 Previously, the above would fail to load, but the response would be in the same process as the rest of the page. This is really bad thing given Spectre and Meltdown. But CORB will prevent that resource entering the page process, since its content (JSON) isn't something that can be loaded by any no-cors API.

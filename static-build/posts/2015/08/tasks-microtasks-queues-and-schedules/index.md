@@ -8,8 +8,7 @@ summary: When I told my colleague [Matt Gaunt](https://twitter.com/gauntface) I
   enjoy it, ok?
 mindframe: "- hold onto your butts for this one, it's spec-heavy"
 image: null
-meta: ""
-
+meta: ''
 ---
 
 When I told my colleague [Matt Gaunt](https://twitter.com/gauntface) I was thinking of writing a piece on microtask queueing and execution within the browser's event loop, he said "I'll be honest with you Jake, I'm not going to read that". Well, I've written it anyway, so we're all going to sit here and enjoy it, ok?
@@ -21,15 +20,17 @@ Take this little bit of JavaScript:
 ```js
 console.log('script start');
 
-setTimeout(function() {
+setTimeout(function () {
   console.log('setTimeout');
 }, 0);
 
-Promise.resolve().then(function() {
-  console.log('promise1');
-}).then(function() {
-  console.log('promise2');
-});
+Promise.resolve()
+  .then(function () {
+    console.log('promise1');
+  })
+  .then(function () {
+    console.log('promise2');
+  });
 
 console.log('script end');
 ```
@@ -90,13 +91,13 @@ To understand this you need to know how the event loop handles tasks and microta
 
 Each 'thread' gets its own **event loop**, so each web worker gets its own, so it can execute independently, whereas all windows on the same origin share an event loop as they can synchronously communicate. The event loop runs continually, executing any tasks queued. An event loop has multiple task sources which guarantees execution order within that source (specs [such as IndexedDB](http://w3c.github.io/IndexedDB/#database-access-task-source) define their own), but the browser gets to pick which source to take a task from on each turn of the loop. This allows the browser to give preference to performance sensitive tasks such as user-input. Ok ok, stay with me…
 
-**Tasks** are scheduled so the browser can get from its internals into JavaScript/DOM land and ensures these actions happen sequentially. Between tasks, the browser *may* render updates. Getting from a mouse click to an event callback requires scheduling a task, as does parsing HTML, and in the above example, `setTimeout`.
+**Tasks** are scheduled so the browser can get from its internals into JavaScript/DOM land and ensures these actions happen sequentially. Between tasks, the browser _may_ render updates. Getting from a mouse click to an event callback requires scheduling a task, as does parsing HTML, and in the above example, `setTimeout`.
 
 `setTimeout` waits for a given delay then schedules a new task for its callback. This is why `setTimeout` is logged after `script end`, as logging `script end` is part of the first task, and `setTimeout` is logged in a separate task. Right, we're almost through this, but I need you to stay strong for this next bit…
 
 **Microtasks** are usually scheduled for things that should happen straight after the currently executing script, such as reacting to a batch of actions, or to make something async without taking the penalty of a whole new task. The microtask queue is processed after callbacks as long as no other JavaScript is mid-execution, and at the end of each task. Any additional microtasks queued during microtasks are added to the end of the queue and also processed. Microtasks include mutation observer callbacks, and as in the above example, promise callbacks.
 
-Once a promise settles, or if it has already settled, it queues a *microtask* for its reactionary callbacks. This ensures promise callbacks are async even if the promise has already settled. So calling `.then(yey, nay)` against a settled promise immediately queues a microtask. This is why `promise1` and `promise2` are logged after `script end`, as the currently running script must finish before microtasks are handled. `promise1` and `promise2` are logged before `setTimeout`, as microtasks always happen before the next task.
+Once a promise settles, or if it has already settled, it queues a _microtask_ for its reactionary callbacks. This ensures promise callbacks are async even if the promise has already settled. So calling `.then(yey, nay)` against a settled promise immediately queues a microtask. This is why `promise1` and `promise2` are logged after `script end`, as the currently running script must finish before microtasks are handled. `promise1` and `promise2` are logged before `setTimeout`, as microtasks always happen before the next task.
 
 So, step by step:
 
@@ -121,7 +122,7 @@ So, step by step:
   }
 }
 
-.event-loop-walkthrough .codehilite {
+.event-loop-walkthrough .code-example {
   margin: 0;
   padding: 0 12px;
   position: relative;
@@ -280,21 +281,27 @@ So, step by step:
 <div class="event-loop-walkthrough event-loop-walkthrough-1">
   <div class="js-source">
     <div class="line-highlight"></div>
-<div class="codehilite"><pre><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'script start'</span><span class="p">);</span>
 
-<span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'setTimeout'</span><span class="p">);</span>
-<span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+```js
+console.log('script start');
 
-<span class="nx">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'promise1'</span><span class="p">);</span>
-<span class="p">}).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'promise2'</span><span class="p">);</span>
-<span class="p">});</span>
+setTimeout(function () {
+  console.log('setTimeout');
+}, 0);
 
-<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'script end'</span><span class="p">);</span>
-</pre></div>
+Promise.resolve()
+  .then(function () {
+    console.log('promise1');
+  })
+  .then(function () {
+    console.log('promise2');
+  });
+
+console.log('script end');
+```
+
   </div>
+
   <table>
     <tr class="task-queue">
       <th>Tasks</th>
@@ -409,9 +416,9 @@ So, step by step:
     this._jsStack = this._el.querySelector('.js-stack .event-loop-items');
     this._log = this._el.querySelector('.event-loop-log .event-loop-items');
     this._codeBar = this._el.querySelector('.line-highlight');
-    this._codePane = this._el.querySelector('.codehilite');
+    this._codePane = this._el.querySelector('.code-example');
     this._commentary = this._el.querySelector('.event-loop-commentary-item');
-    
+
     var onClick = function(event) {
       var className = event.target.getAttribute('class');
       if (className === 'prev-btn') {
@@ -431,7 +438,7 @@ So, step by step:
     this._el.addEventListener('click', onClick);
     this._el.addEventListener('mousedown', onClick);
   };
-  
+
   EventLoopAnimation.prototype.forward = function(animate) {
     this._queue = this._queue.then(function() {
       var state = this._states[this._currentPos];
@@ -640,22 +647,22 @@ new EventLoopAnimation(document.querySelector('.event-loop-walkthrough-1'))
   .state().moveToLine(3)
   .state().commentary("setTimeout callbacks are queued as tasks")
   .state().hideCommentary().pushTask()
-  .state().moveToLine(7)
+  .state().moveToLine(8)
   .state().commentary("Promise callbacks are queued as microtasks")
   .state().hideCommentary().pushMicrotask()
-  .state().moveToLine(13)
+  .state().moveToLine(15)
   .state().pushLog()
   .state().hideCodeBar().popStack()
   .state().commentary("At the end of a task, we process microtasks")
   .state().hideCommentary().activateMicrotask()
-  .state().showCodeBar().moveToLine(8).pushStack('Promise callback')
+  .state().showCodeBar().moveToLine(9).pushStack('Promise callback')
   .state().pushLog()
   .state().hideCodeBar().commentary("This promise callback returns 'undefined', which queues the next promise callback as a microtask")
   .state().hideCommentary().pushMicrotask()
   .state().popStack().commentary("This microtask is done so we move onto the next one in the queue")
   .state().hideCommentary()
   .state().shiftMicrotask().activateMicrotask()
-  .state().showCodeBar().moveToLine(10).pushStack('Promise callback')
+  .state().showCodeBar().moveToLine(12).pushStack('Promise callback')
   .state().pushLog()
   .state().hideCodeBar().popStack().shiftMicrotask()
   .state().commentary("And that's this task done! The browser may update rendering")
@@ -669,7 +676,7 @@ new EventLoopAnimation(document.querySelector('.event-loop-walkthrough-1'))
   ;
 </script>
 
-Yes that's right, I created an animated step-by-step diagram. How did you spend *your* Saturday? Went out in the *sun* with your *friends*? Well *I didn't*. Um, in case it isn't clear from my amazing UI design, click the arrows above to advance.
+Yes that's right, I created an animated step-by-step diagram. How did you spend _your_ Saturday? Went out in the _sun_ with your _friends_? Well _I didn't_. Um, in case it isn't clear from my amazing UI design, click the arrows above to advance.
 
 ## What are some browsers doing differently?
 
@@ -691,7 +698,7 @@ The certain way, is to look up the spec. For instance, [step 14 of `setTimeout`]
 
 As mentioned, in ECMAScript land, they call microtasks "jobs". In [step 8.a of `PerformPromiseThen`](http://www.ecma-international.org/ecma-262/6.0/#sec-performpromisethen), `EnqueueJob` is called to queue a microtask.
 
-Now, let's look at a more complicated example. *Cut to a concerned apprentice* "No, they're not ready!". Ignore him, you're ready. Let's do this…
+Now, let's look at a more complicated example. _Cut to a concerned apprentice_ "No, they're not ready!". Ignore him, you're ready. Let's do this…
 
 # Level 1 bossfight
 
@@ -712,24 +719,24 @@ var inner = document.querySelector('.inner');
 
 // Let's listen for attribute changes on the
 // outer element
-new MutationObserver(function() {
+new MutationObserver(function () {
   console.log('mutate');
 }).observe(outer, {
-  attributes: true
+  attributes: true,
 });
 
 // Here's a click listener…
 function onClick() {
   console.log('click');
-  
-  setTimeout(function() {
+
+  setTimeout(function () {
     console.log('timeout');
   }, 0);
-  
-  Promise.resolve().then(function() {
+
+  Promise.resolve().then(function () {
     console.log('promise');
   });
-  
+
   outer.setAttribute('data-random', Math.random());
 }
 
@@ -738,7 +745,7 @@ inner.addEventListener('click', onClick);
 outer.addEventListener('click', onClick);
 ```
 
-Go on, give it a go before peeking at the answer. *Clue:* Logs can happen more than once.
+Go on, give it a go before peeking at the answer. _Clue:_ Logs can happen more than once.
 
 # Test it
 
@@ -800,15 +807,15 @@ new MutationObserver(function() {
 // Here's a click listener…
 function onClick() {
   log2('click');
-  
+
   setTimeout(function() {
     log2('timeout');
   },0);
-  
+
   Promise.resolve().then(function() {
     log2('promise');
   });
-  
+
   outer.setAttribute('data-random', Math.random());
 }
 
@@ -869,7 +876,7 @@ Was your guess different? If so, you may still be right. Unfortunately the brows
 <section>
   <ul class="browser-results">
     <li>
-      <img src="/static/imgs/browser-icons/chrome.png" alt="Chrome">
+      <img src="asset-url:static-build/imgs/browser-icons/chrome.png" alt="Chrome">
       <ul>
         <li>click</li>
         <li>promise</li>
@@ -882,7 +889,7 @@ Was your guess different? If so, you may still be right. Unfortunately the brows
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/firefox.png" alt="Firefox">
+      <img src="asset-url:static-build/imgs/browser-icons/firefox.png" alt="Firefox">
       <ul>
         <li>click</li>
         <li>mutate</li>
@@ -895,7 +902,7 @@ Was your guess different? If so, you may still be right. Unfortunately the brows
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/safari.png" alt="Safari">
+      <img src="asset-url:static-build/imgs/browser-icons/safari.png" alt="Safari">
       <ul>
         <li>click</li>
         <li>mutate</li>
@@ -908,7 +915,7 @@ Was your guess different? If so, you may still be right. Unfortunately the brows
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/edge.png" alt="Edge">
+      <img src="asset-url:static-build/imgs/browser-icons/edge.png" alt="Edge">
       <ul>
         <li>click</li>
         <li>click</li>
@@ -929,37 +936,40 @@ Dispatching the 'click' event is a task. Mutation observer and promise callbacks
 <div class="event-loop-walkthrough event-loop-walkthrough-2">
   <div class="js-source">
     <div class="line-highlight"></div>
-<div class="codehilite"><pre><span class="c1">// Let's get hold of those elements</span>
-<span class="kd">var</span> <span class="nx">outer</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.outer'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">inner</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.inner'</span><span class="p">);</span>
 
-<span class="c1">// Let's listen for attribute changes on the</span>
-<span class="c1">// outer element</span>
-<span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mutate'</span><span class="p">);</span>
-<span class="p">}).</span><span class="nx">observe</span><span class="p">(</span><span class="nx">outer</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">attributes</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
+```js
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
 
-<span class="c1">// Here's a click listener…</span>
-<span class="kd">function</span> <span class="nx">onClick</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'click'</span><span class="p">);</span>
+// Let's listen for attribute changes on the
+// outer element
+new MutationObserver(function () {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true,
+});
 
-  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'timeout'</span><span class="p">);</span>
-  <span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+// Here's a click listener…
+function onClick() {
+  console.log('click');
 
-  <span class="nx">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'promise'</span><span class="p">);</span>
-  <span class="p">});</span>
+  setTimeout(function () {
+    console.log('timeout');
+  }, 0);
 
-  <span class="nx">outer</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">'data-random'</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">());</span>
-<span class="p">}</span>
+  Promise.resolve().then(function () {
+    console.log('promise');
+  });
 
-<span class="c1">// …which we'll attach to both elements</span>
-<span class="nx">inner</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="nx">onClick</span><span class="p">);</span>
-<span class="nx">outer</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="nx">onClick</span><span class="p">);</span>
-</pre></div>
+  outer.setAttribute('data-random', Math.random());
+}
+
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+```
+
   </div>
   <table>
     <tr class="task-queue">
@@ -1122,7 +1132,7 @@ And here's what the browsers say:
 <section>
   <ul class="browser-results">
     <li>
-      <img src="/static/imgs/browser-icons/chrome.png" alt="Chrome">
+      <img src="asset-url:static-build/imgs/browser-icons/chrome.png" alt="Chrome">
       <ul>
         <li>click</li>
         <li>click</li>
@@ -1134,7 +1144,7 @@ And here's what the browsers say:
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/firefox.png" alt="Firefox">
+      <img src="asset-url:static-build/imgs/browser-icons/firefox.png" alt="Firefox">
       <ul>
         <li>click</li>
         <li>click</li>
@@ -1146,7 +1156,7 @@ And here's what the browsers say:
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/safari.png" alt="Safari">
+      <img src="asset-url:static-build/imgs/browser-icons/safari.png" alt="Safari">
       <ul>
         <li>click</li>
         <li>click</li>
@@ -1158,7 +1168,7 @@ And here's what the browsers say:
       </ul>
     </li>
     <li>
-      <img src="/static/imgs/browser-icons/edge.png" alt="Edge">
+      <img src="asset-url:static-build/imgs/browser-icons/edge.png" alt="Edge">
       <ul>
         <li>click</li>
         <li>click</li>
@@ -1181,39 +1191,42 @@ Here's how it should happen:
 <div class="event-loop-walkthrough event-loop-walkthrough-3">
   <div class="js-source">
     <div class="line-highlight"></div>
-<div class="codehilite"><pre><span class="c1">// Let's get hold of those elements</span>
-<span class="kd">var</span> <span class="nx">outer</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.outer'</span><span class="p">);</span>
-<span class="kd">var</span> <span class="nx">inner</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">querySelector</span><span class="p">(</span><span class="s1">'.inner'</span><span class="p">);</span>
 
-<span class="c1">// Let's listen for attribute changes on the</span>
-<span class="c1">// outer element</span>
-<span class="k">new</span> <span class="nx">MutationObserver</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'mutate'</span><span class="p">);</span>
-<span class="p">}).</span><span class="nx">observe</span><span class="p">(</span><span class="nx">outer</span><span class="p">,</span> <span class="p">{</span>
-  <span class="nx">attributes</span><span class="o">:</span> <span class="kc">true</span>
-<span class="p">});</span>
+```js
+// Let's get hold of those elements
+var outer = document.querySelector('.outer');
+var inner = document.querySelector('.inner');
 
-<span class="c1">// Here's a click listener…</span>
-<span class="kd">function</span> <span class="nx">onClick</span><span class="p">()</span> <span class="p">{</span>
-  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'click'</span><span class="p">);</span>
+// Let's listen for attribute changes on the
+// outer element
+new MutationObserver(function () {
+  console.log('mutate');
+}).observe(outer, {
+  attributes: true,
+});
 
-  <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'timeout'</span><span class="p">);</span>
-  <span class="p">},</span> <span class="mi">0</span><span class="p">);</span>
+// Here's a click listener…
+function onClick() {
+  console.log('click');
 
-  <span class="nx">Promise</span><span class="p">.</span><span class="nx">resolve</span><span class="p">().</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">'promise'</span><span class="p">);</span>
-  <span class="p">});</span>
+  setTimeout(function () {
+    console.log('timeout');
+  }, 0);
 
-  <span class="nx">outer</span><span class="p">.</span><span class="nx">setAttribute</span><span class="p">(</span><span class="s1">'data-random'</span><span class="p">,</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">random</span><span class="p">());</span>
-<span class="p">}</span>
+  Promise.resolve().then(function () {
+    console.log('promise');
+  });
 
-<span class="c1">// …which we'll attach to both elements</span>
-<span class="nx">inner</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="nx">onClick</span><span class="p">);</span>
-<span class="nx">outer</span><span class="p">.</span><span class="nx">addEventListener</span><span class="p">(</span><span class="s1">'click'</span><span class="p">,</span> <span class="nx">onClick</span><span class="p">);</span>
+  outer.setAttribute('data-random', Math.random());
+}
 
-<span class="nx">inner</span><span class="p">.</span><span class="nx">click</span><span class="p">();</span>
-</pre></div>
+// …which we'll attach to both elements
+inner.addEventListener('click', onClick);
+outer.addEventListener('click', onClick);
+
+inner.click();
+```
+
   </div>
   <table>
     <tr class="task-queue">
@@ -1332,7 +1345,7 @@ Previously, this meant that microtasks ran between listener callbacks, but `.cli
 
 # Does any of this matter?
 
-Yeah, it'll bite you in obscure places (ouch). I encountered this while trying to create [a simple wrapper library for IndexedDB that uses promises](https://github.com/jakearchibald/indexeddb-promised/blob/master/lib/idb.js) rather than weird `IDBRequest` objects. It [*almost* makes IDB fun to use](https://github.com/jakearchibald/indexeddb-promised/blob/master/test/idb.js#L36).
+Yeah, it'll bite you in obscure places (ouch). I encountered this while trying to create [a simple wrapper library for IndexedDB that uses promises](https://github.com/jakearchibald/indexeddb-promised/blob/master/lib/idb.js) rather than weird `IDBRequest` objects. It [_almost_ makes IDB fun to use](https://github.com/jakearchibald/indexeddb-promised/blob/master/test/idb.js#L36).
 
 When IDB fires a success event, the related [transaction object becomes inactive after dispatching](http://w3c.github.io/IndexedDB/#fire-a-success-event) (step 4). If I create a promise that resolves when this event fires, the callbacks should run before step 4 while the transaction is still active, but that doesn't happen in browsers other than Chrome, rendering the library kinda useless.
 
@@ -1344,10 +1357,10 @@ Hopefully we'll start to see some interoperability here soon.
 
 In summary:
 
-* Tasks execute in order, and the browser may render between them
-* Microtasks execute in order, and are executed:
-    * after every callback, as long as no other JavaScript is mid-execution
-    * at the end of each task
+- Tasks execute in order, and the browser may render between them
+- Microtasks execute in order, and are executed:
+  - after every callback, as long as no other JavaScript is mid-execution
+  - at the end of each task
 
 Hopefully you now know your way around the event loop, or at least have an excuse to go and have a lie down.
 

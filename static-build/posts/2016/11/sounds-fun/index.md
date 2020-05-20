@@ -4,10 +4,9 @@ date: 2016-11-29 11:42:42
 summary: I played with the [web audio
   API](https://webaudio.github.io/web-audio-api/) for the first time recently,
   so I thought I'd write up what I learned. I think that's my job or something.
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: Queueing, synchronising, and looping audio using the web audio API.
-
 ---
 
 I played with the [web audio API](https://webaudio.github.io/web-audio-api/) for the first time recently, so I thought I'd write up what I learned. I think that's my job or something.
@@ -23,15 +22,15 @@ const context = new AudioContext();
 // Fetch the file
 fetch('sound.mp4')
   // Read it into memory as an arrayBuffer
-  .then(response => response.arrayBuffer())
+  .then((response) => response.arrayBuffer())
   // Turn it from mp3/aac/whatever into raw audio data
-  .then(arrayBuffer => context.decodeAudioData(arrayBuffer))
-  .then(audioBuffer => {
+  .then((arrayBuffer) => context.decodeAudioData(arrayBuffer))
+  .then((audioBuffer) => {
     // Now we're ready to play!
   });
 ```
 
-Unfortunately we need to work around a few things in Safari. We need to use `webkitAudioContext` - Safari doesn't support the unprefixed version. It doesn't support `fetch` yet (it's [in development](https://webkit.org/status/#specification-fetch-api)) so we'll [need to use XHR](https://gist.github.com/jakearchibald/b7d63a48db6484e1b5701331ed8c7a02)). And  `decodeAudioData` doesn't support promises, so we'll [need to polyfill that](https://gist.github.com/jakearchibald/131d7101b134b6f7bed1d8320e4da599).
+Unfortunately we need to work around a few things in Safari. We need to use `webkitAudioContext` - Safari doesn't support the unprefixed version. It doesn't support `fetch` yet (it's [in development](https://webkit.org/status/#specification-fetch-api)) so we'll [need to use XHR](https://gist.github.com/jakearchibald/b7d63a48db6484e1b5701331ed8c7a02)). And `decodeAudioData` doesn't support promises, so we'll [need to polyfill that](https://gist.github.com/jakearchibald/131d7101b134b6f7bed1d8320e4da599).
 
 But once we've got our audio buffer, we can play it:
 
@@ -59,7 +58,7 @@ Job done!
     .audio-container {
       margin-left: -32px;
       margin-right: 0;
-    }  
+    }
   }
 
   .audio-output {
@@ -118,7 +117,7 @@ Job done!
   @media (min-width: 530px) {
     .audio-buttons {
       padding-left: 32px;
-    }  
+    }
   }
   .audio-container progress {
     width: 100%;
@@ -129,7 +128,7 @@ function bufferFetch(url, progressCb) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'arraybuffer';
-    xhr.onload = () => resolve(xhr.response); 
+    xhr.onload = () => resolve(xhr.response);
     xhr.onerror = () => reject(Error('Fetch failed'));
     if (progressCb) xhr.onprogress = event => progressCb(event.loaded / event.total);
     xhr.open('GET', url);
@@ -196,7 +195,7 @@ const loop1 = {
   buffer: null,
   startOffset: 0,
   downloadProgress: 0,
-  url: '/static/posts/sounds-fun/loop1.mp4'
+  url: 'asset-url:./loop1.mp4'
 };
 
 const loop2 = {
@@ -205,7 +204,7 @@ const loop2 = {
   buffer: null,
   startOffset: 0,
   downloadProgress: 0,
-  url: '/static/posts/sounds-fun/loop2.mp4'
+  url: 'asset-url:./loop2.mp4'
 };
 
 const stab = {
@@ -213,7 +212,7 @@ const stab = {
   size: 110755,
   startOffset: 0,
   downloadProgress: 0,
-  url: '/static/posts/sounds-fun/stab.mp4'
+  url: 'asset-url:./stab.mp4'
 };
 
 const singleLoop = {
@@ -221,7 +220,7 @@ const singleLoop = {
   buffer: null,
   startOffset: 0,
   downloadProgress: 0,
-  url: '/static/posts/sounds-fun/sonic.mp4'
+  url: 'asset-url:./sonic.mp4'
 };
 
 function dispatchStateChange() {
@@ -357,7 +356,7 @@ At Chrome Dev Summit [Paul](https://twitter.com/aerotwist) & I ran a web-based i
 <figcaption>CSS properties on the Big Web Quiz</figcaption>
 </figure>
 
-We tried to make it as ridiculous as possible, and the music was a big part of that. The music was produced by [Plan8](http://plan8.se/), and it only took them a day to compose (we misread the licence on a piece of music we were going to use, so the deadline was *our* fault. Anyway, the music they made is way better). They also have JS libraries for scheduling audio, but hey I was in the mood for some procrastination, so I did it myself.
+We tried to make it as ridiculous as possible, and the music was a big part of that. The music was produced by [Plan8](http://plan8.se/), and it only took them a day to compose (we misread the licence on a piece of music we were going to use, so the deadline was _our_ fault. Anyway, the music they made is way better). They also have JS libraries for scheduling audio, but hey I was in the mood for some procrastination, so I did it myself.
 
 # Switching between clips
 
@@ -404,22 +403,17 @@ phase2Source.start();
     const buttonsEl = document.querySelector('.bwq-simple-buttons');
     const outputEls = document.querySelectorAll('.bwq-simple .audio-output');
     const playheadEls = document.querySelectorAll('.bwq-simple .play-head');
-
     let loop1Source;
     let loop1Start;
-
     let loop2Source;
     let loop2Start;
-
     let stabSource;
     let stabStart;
-
     function updateButtonsUi() {
       const loops = [loop1, loop2, stab];
       const notLoaded = loops.filter(item => !item.buffer);
       const allLoading = loops.every(item => item.downloadProgress > 0);
       const remaining = notLoaded.reduce((total, item) => total + item.size, 0);
-      
       if (notLoaded.length) {
         if (allLoading) {
           let progress = buttonsEl.firstElementChild;
@@ -430,18 +424,15 @@ phase2Source.start();
           progress.value = loops.reduce((total, loop) => total + loop.downloadProgress, 0) / loops.length;
           return;
         }
-
         buttonsEl.innerHTML = `
           <button class="btn bwq-load">Download audio (${humanSize(remaining)})</button>
         `;
         return;
       }
-
       if (!audioDrawn) {
         drawAll();
         audioDrawn = true;
       }
-
       if (uiState == 'stopped' || uiState == 'stab') {
         buttonsEl.innerHTML = `
           <button class="btn bwq-play">Play</button>
@@ -463,7 +454,6 @@ phase2Source.start();
         return;
       }
     }
-
     function updatePlayheadUi() {
       if (uiState == 'stopped') {
         for (let el of Array.from(playheadEls)) {
@@ -471,12 +461,10 @@ phase2Source.start();
         }
         return;
       }
-
       let container;
       let playHead;
       let buffer;
       let start;
-
       if (loop1Source) {
         container = outputEls[0];
         playHead = playheadEls[0];
@@ -493,35 +481,28 @@ phase2Source.start();
         buffer = stab.buffer;
         start = stabStart;
       }
-
       const rect = container.getBoundingClientRect();
       for (let el of Array.from(playheadEls)) {
         el.style.display = 'none';
       }
-
       let posInTrack = context.currentTime - start;
       if (posInTrack > buffer.duration) {
         if (uiState == 'stab') return;
         posInTrack = posInTrack % buffer.duration;
       }
-
       const pos = Math.max(posInTrack / buffer.duration, 0);
-
       playHead.style.display = 'block';
       playHead.style.transform = `translate(${rect.width * pos}px, 0)`;
       requestAnimationFrame(updatePlayheadUi);
     }
-
     window.addEventListener('app-statechange', updateButtonsUi);
     updateButtonsUi();
-
     function drawAll() {
       const canvases = document.querySelectorAll('.bwq-simple canvas');
       drawAudio(canvases[0], loop1.buffer);
       drawAudio(canvases[1], loop2.buffer);
       drawAudio(canvases[2], stab.buffer);
     }
-
     function start() {
       loop1Source = context.createBufferSource();
       loop1Source.onended = event => {
@@ -534,7 +515,6 @@ phase2Source.start();
       loop1Start = context.currentTime;
       loop1Source.start();
     }
-
     function stepItUp() {
       loop2Source = context.createBufferSource();
       loop2Source.onended = event => {
@@ -544,22 +524,18 @@ phase2Source.start();
       loop2Source.loop = true;
       loop2Source.loopStart = loop2.startOffset;
       loop2Source.connect(context.destination);
-      
       loop2Source.start();
       loop1Source.stop();
       loop2Start = context.currentTime;
     }
-
     function playStab() {
       const stabSource = context.createBufferSource();
       stabSource.buffer = stab.buffer;
       stabSource.connect(context.destination);
-
       stabSource.start();
       loop2Source.stop();
       stabStart = context.currentTime;
     }
-
     function stop() {
       if (loop1Source) {
         try {
@@ -570,19 +546,16 @@ phase2Source.start();
         try {
           loop2Source.stop();
         } catch (_) {}
-      } 
+      }
     }
-
     buttonsEl.addEventListener('click', event => {
       const button = event.target;
       if (!button) return;
-
       if (button.classList.contains('bwq-load')) {
         uiState = 'stopped';
         [loop1, loop2, stab].filter(item => !item.buffer).map(item => downloadAudio(item));
         return;
       }
-
       if (button.classList.contains('bwq-play')) {
         start();
         uiState = 'loop1';
@@ -590,21 +563,18 @@ phase2Source.start();
         updatePlayheadUi();
         return;
       }
-
       if (button.classList.contains('bwq-stop')) {
         stop();
         uiState = 'stopped';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-step-up')) {
         stepItUp();
         uiState = 'loop2';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-stab')) {
         playStab();
         uiState = 'stab';
@@ -612,7 +582,7 @@ phase2Source.start();
         return;
       }
     });
-  })();
+})();
 </script>
 
 This doesn't really work. Switching between phases is jarring for a few reasons…
@@ -659,7 +629,7 @@ Here's the start/end of an AAC clip decoded by your browser:
   </div>
 </div>
 <script>
-bufferFetch('/static/posts/sounds-fun/tiny-clip.mp4').then(ab => context.decodeAudioData(ab)).then(buffer => {
+bufferFetch('asset-url:./tiny-clip.mp4').then(ab => context.decodeAudioData(ab)).then(buffer => {
   const canvases = document.querySelectorAll('.aac-decode canvas');
   drawAudio(canvases[0], buffer, 0, 7000);
   drawAudio(canvases[1], buffer, -7000);
@@ -712,7 +682,7 @@ function findStartGapDuration(audioBuffer) {
   // Hmm, the clip is entirely silent
   return audioBuffer.duration;
 }
-``` 
+```
 
 Once we have the gap, we can use source's second parameter to start playback at that point, after the silence:
 
@@ -761,22 +731,17 @@ And here's the result:
     const buttonsEl = document.querySelector('.bwq-better-buttons');
     const outputEls = document.querySelectorAll('.bwq-better .audio-output');
     const playheadEls = document.querySelectorAll('.bwq-better .play-head');
-
     let loop1Source;
     let loop1Start;
-
     let loop2Source;
     let loop2Start;
-
     let stabSource;
     let stabStart;
-
     function updateButtonsUi() {
       const loops = [loop1, loop2, stab];
       const notLoaded = loops.filter(item => !item.buffer);
       const allLoading = loops.every(item => item.downloadProgress > 0);
       const remaining = notLoaded.reduce((total, item) => total + item.size, 0);
-      
       if (notLoaded.length) {
         if (allLoading) {
           let progress = buttonsEl.firstElementChild;
@@ -787,18 +752,15 @@ And here's the result:
           progress.value = loops.reduce((total, loop) => total + loop.downloadProgress, 0) / loops.length;
           return;
         }
-
         buttonsEl.innerHTML = `
           <button class="btn bwq-load">Download audio (${humanSize(remaining)})</button>
         `;
         return;
       }
-
       if (!audioDrawn) {
         drawAll();
         audioDrawn = true;
       }
-
       if (uiState == 'stopped' || uiState == 'stab') {
         buttonsEl.innerHTML = `
           <button class="btn bwq-play">Play</button>
@@ -820,7 +782,6 @@ And here's the result:
         return;
       }
     }
-
     function updatePlayheadUi() {
       if (uiState == 'stopped') {
         for (let el of Array.from(playheadEls)) {
@@ -828,12 +789,10 @@ And here's the result:
         }
         return;
       }
-
       let container;
       let playHead;
       let buffer;
       let start;
-
       if (loop1Source) {
         container = outputEls[0];
         playHead = playheadEls[0];
@@ -850,35 +809,28 @@ And here's the result:
         buffer = stab.buffer;
         start = stabStart;
       }
-
       const rect = container.getBoundingClientRect();
       for (let el of Array.from(playheadEls)) {
         el.style.display = 'none';
       }
-
       let posInTrack = context.currentTime - start;
       if (posInTrack > buffer.duration) {
         if (uiState == 'stab') return;
         posInTrack = posInTrack % buffer.duration;
       }
-
       const pos = Math.max(posInTrack / buffer.duration, 0);
-
       playHead.style.display = 'block';
       playHead.style.transform = `translate(${rect.width * pos}px, 0)`;
       requestAnimationFrame(updatePlayheadUi);
     }
-
     window.addEventListener('app-statechange', updateButtonsUi);
     updateButtonsUi();
-
     function drawAll() {
       const canvases = document.querySelectorAll('.bwq-better canvas');
       drawAudio(canvases[0], loop1.buffer);
       drawAudio(canvases[1], loop2.buffer);
       drawAudio(canvases[2], stab.buffer);
     }
-
     function start() {
       loop1Source = context.createBufferSource();
       loop1Source.onended = event => {
@@ -891,7 +843,6 @@ And here's the result:
       loop1Start = context.currentTime + safetyOffset;
       loop1Source.start(loop1Start, loop1.startOffset);
     }
-
     function stepItUp() {
       loop2Source = context.createBufferSource();
       loop2Source.onended = event => {
@@ -901,24 +852,20 @@ And here's the result:
       loop2Source.loop = true;
       loop2Source.loopStart = loop2.startOffset;
       loop2Source.connect(context.destination);
-      
       const startTime = context.currentTime + safetyOffset;
       loop2Source.start(startTime, loop2.startOffset);
       loop1Source.stop(startTime);
       loop2Start = startTime;
     }
-
     function playStab() {
       const stabSource = context.createBufferSource();
       stabSource.buffer = stab.buffer;
       stabSource.connect(context.destination);
-
       const startTime = context.currentTime + safetyOffset;
       stabSource.start(startTime, stab.startOffset);
       loop2Source.stop(startTime);
       stabStart = startTime;
     }
-
     function stop() {
       if (loop1Source) {
         try {
@@ -929,19 +876,16 @@ And here's the result:
         try {
           loop2Source.stop();
         } catch (_) {}
-      } 
+      }
     }
-
     buttonsEl.addEventListener('click', event => {
       const button = event.target;
       if (!button) return;
-
       if (button.classList.contains('bwq-load')) {
         uiState = 'stopped';
         [loop1, loop2, stab].filter(item => !item.buffer).map(item => downloadAudio(item));
         return;
       }
-
       if (button.classList.contains('bwq-play')) {
         start();
         uiState = 'loop1';
@@ -949,21 +893,18 @@ And here's the result:
         updatePlayheadUi();
         return;
       }
-
       if (button.classList.contains('bwq-stop')) {
         stop();
         uiState = 'stopped';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-step-up')) {
         stepItUp();
         uiState = 'loop2';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-stab')) {
         playStab();
         uiState = 'stab';
@@ -971,7 +912,7 @@ And here's the result:
         return;
       }
     });
-  })();
+})();
 </script>
 
 Better, but not perfect. Depending on when you press the button, the switch from phase 2 to the end stab can feel mistimed, but we can fix that…
@@ -982,11 +923,11 @@ Ideally we want the phases to switch right at the end of a musical bar. Phase 1 
 
 ```js
 function getBarDuration(bpm, beatsPerBar) {
-  return 60 / bpm * beatsPerBar;
+  return (60 / bpm) * beatsPerBar;
 }
 
-const phase1BarDuration = getBarDuration(110, 4); 
-const phase2BarDuration = getBarDuration(123, 4); 
+const phase1BarDuration = getBarDuration(110, 4);
+const phase2BarDuration = getBarDuration(123, 4);
 ```
 
 We want to switch the phases at the end of the next bar, unless that's less than our `safetyBuffer`, in which case we want to switch at the end of the following bar.
@@ -1009,10 +950,14 @@ function getPhaseSwitchTime(currentTime, phaseStartTime, barDuration) {
 Unfortunately the web audio API doesn't tell us the current playblack position of a source ([it might eventually](https://github.com/WebAudio/web-audio-api/issues/296)), so we have to track that ourselves:
 
 ```js
-const phase1StartTime = context.currentTime + safetyBuffer; 
+const phase1StartTime = context.currentTime + safetyBuffer;
 phase1Source.start(phase1StartTime, phase1StartGap);
 // Then later…
-const phase2StartTime = getPhaseSwitchTime(context.currentTime, phase1StartTime, phase1BarDuration);
+const phase2StartTime = getPhaseSwitchTime(
+  context.currentTime,
+  phase1StartTime,
+  phase1BarDuration,
+);
 phase1Source.stop(phase2StartTime);
 phase2Source.start(phase2StartTime, phase2StartGap);
 ```
@@ -1043,31 +988,24 @@ Job done! Here it is:
     const buttonsEl = document.querySelector('.bwq-perfect-buttons');
     const outputEls = document.querySelectorAll('.bwq-perfect .audio-output');
     const playheadEls = document.querySelectorAll('.bwq-perfect .play-head');
-
     let loop1Source;
     let loop1Start;
-
     let loop2Source;
     let loop2Start;
-
     let stabSource;
     let stabStart;
-
     function getBarSwitchTime(currentTime, loopStart, loopBarLength) {
       const loopPlaytime = currentTime - loopStart;
       const timeInBar = loopPlaytime % loopBarLength;
       let untilSwitch = loopBarLength - timeInBar;
       if (untilSwitch < safetyOffset) untilSwitch += loopBarLength;
-
       return untilSwitch + currentTime;
     }
-
     function updateButtonsUi() {
       const loops = [loop1, loop2, stab];
       const notLoaded = loops.filter(item => !item.buffer);
       const allLoading = loops.every(item => item.downloadProgress > 0);
       const remaining = notLoaded.reduce((total, item) => total + item.size, 0);
-      
       if (notLoaded.length) {
         if (allLoading) {
           let progress = buttonsEl.firstElementChild;
@@ -1078,18 +1016,15 @@ Job done! Here it is:
           progress.value = loops.reduce((total, loop) => total + loop.downloadProgress, 0) / loops.length;
           return;
         }
-
         buttonsEl.innerHTML = `
           <button class="btn bwq-load">Download audio (${humanSize(remaining)})</button>
         `;
         return;
       }
-
       if (!audioDrawn) {
         drawAll();
         audioDrawn = true;
       }
-
       if (uiState == 'stopped' || uiState == 'stab') {
         buttonsEl.innerHTML = `
           <button class="btn bwq-play">Play</button>
@@ -1111,7 +1046,6 @@ Job done! Here it is:
         return;
       }
     }
-
     function updatePlayheadUi() {
       if (uiState == 'stopped') {
         for (let el of Array.from(playheadEls)) {
@@ -1119,12 +1053,10 @@ Job done! Here it is:
         }
         return;
       }
-
       let container;
       let playHead;
       let buffer;
       let start;
-
       if (loop1Source) {
         container = outputEls[0];
         playHead = playheadEls[0];
@@ -1141,39 +1073,31 @@ Job done! Here it is:
         buffer = stab.buffer;
         start = stabStart;
       }
-
       const rect = container.getBoundingClientRect();
       for (let el of Array.from(playheadEls)) {
         el.style.display = 'none';
       }
-
       let posInTrack = context.currentTime - start;
       if (posInTrack > buffer.duration) {
         if (uiState == 'stab') return;
         posInTrack = posInTrack % buffer.duration;
       }
-
       const pos = Math.max(posInTrack / buffer.duration, 0);
-
       playHead.style.display = 'block';
       playHead.style.transform = `translate(${rect.width * pos}px, 0)`;
       requestAnimationFrame(updatePlayheadUi);
     }
-
     window.addEventListener('app-statechange', updateButtonsUi);
     updateButtonsUi();
-
     function drawBarLines(canvas, loop) {
       const context = canvas.getContext('2d');
       context.fillStyle = 'rgba(255, 255, 255, 0.2)';
       const width = Math.floor(loop.barLength / loop.buffer.duration * canvas.width);
-
       for (let i = loop.startOffset + loop.barLength; i < loop.buffer.duration; i += loop.barLength * 2) {
         const x = Math.floor((i / loop.buffer.duration) * canvas.width);
         context.fillRect(x, 0, width, canvas.height);
       }
     }
-
     function drawAll() {
       const canvases = document.querySelectorAll('.bwq-perfect canvas');
       drawAudio(canvases[0], loop1.buffer);
@@ -1182,7 +1106,6 @@ Job done! Here it is:
       drawBarLines(canvases[1], loop2);
       drawAudio(canvases[2], stab.buffer);
     }
-
     function start() {
       loop1Source = context.createBufferSource();
       loop1Source.onended = event => {
@@ -1195,7 +1118,6 @@ Job done! Here it is:
       loop1Start = context.currentTime + safetyOffset;
       loop1Source.start(loop1Start, loop1.startOffset);
     }
-
     function stepItUp() {
       loop2Source = context.createBufferSource();
       loop2Source.onended = event => {
@@ -1205,24 +1127,20 @@ Job done! Here it is:
       loop2Source.loop = true;
       loop2Source.loopStart = loop2.startOffset;
       loop2Source.connect(context.destination);
-      
       const startTime = getBarSwitchTime(context.currentTime, loop1Start, loop1.barLength);
       loop2Source.start(startTime, loop2.startOffset);
       loop1Source.stop(startTime);
       loop2Start = startTime;
     }
-
     function playStab() {
       const stabSource = context.createBufferSource();
       stabSource.buffer = stab.buffer;
       stabSource.connect(context.destination);
-
       const startTime = getBarSwitchTime(context.currentTime, loop2Start, loop2.barLength);
       stabSource.start(startTime, stab.startOffset);
       loop2Source.stop(startTime);
       stabStart = startTime;
     }
-
     function stop() {
       if (loop1Source) {
         try {
@@ -1233,19 +1151,16 @@ Job done! Here it is:
         try {
           loop2Source.stop();
         } catch (_) {}
-      } 
+      }
     }
-
     buttonsEl.addEventListener('click', event => {
       const button = event.target;
       if (!button) return;
-
       if (button.classList.contains('bwq-load')) {
         uiState = 'stopped';
         [loop1, loop2, stab].filter(item => !item.buffer).map(item => downloadAudio(item));
         return;
       }
-
       if (button.classList.contains('bwq-play')) {
         start();
         uiState = 'loop1';
@@ -1253,21 +1168,18 @@ Job done! Here it is:
         updatePlayheadUi();
         return;
       }
-
       if (button.classList.contains('bwq-stop')) {
         stop();
         uiState = 'stopped';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-step-up')) {
         stepItUp();
         uiState = 'loop2';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('bwq-stab')) {
         playStab();
         uiState = 'stab';
@@ -1275,7 +1187,7 @@ Job done! Here it is:
         return;
       }
     });
-  })();
+})();
 </script>
 
 Sometimes switching between clips can cause a click if the samples don't join at a zero value. If you get this, you can use a [gain node](https://developer.mozilla.org/en-US/docs/Web/API/GainNode) to create a really short, imperceptible, fade-out and fade-in.
@@ -1299,20 +1211,16 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
     const buttonsEl = document.querySelector('.single-loop-buttons');
     const playheadEl = document.querySelector('.single-loop .play-head');
     const loopEl = document.querySelector('.single-loop .loop');
-
     const samplePhases = [
       {start: 328948,  end: 656828},
       {start: 985007,  end: 1314119},
       {start: 1643272, end: 1972421},
       {start: 1972421, end: 2137288},
     ];
-
     let phases;
     let currentPhase = 0;
-
     let loopSource;
     let loopStart;
-
     function updateButtonsUi() {
       if (!singleLoop.buffer) {
         if (singleLoop.downloadProgress) {
@@ -1324,13 +1232,11 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
           progress.value = singleLoop.downloadProgress;
           return;
         }
-
         buttonsEl.innerHTML = `
           <button class="btn single-loop-load">Download audio (${humanSize(singleLoop.size)})</button>
         `;
         return;
       }
-
       if (!audioDrawn) {
         drawAudio(document.querySelector('.single-loop canvas'), singleLoop.buffer);
         phases = samplePhases.map(obj => ({
@@ -1339,7 +1245,6 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
         }));
         audioDrawn = true;
       }
-
       if (uiState == 'stopped') {
         buttonsEl.innerHTML = `
           <button class="btn single-loop-play">Play</button>
@@ -1354,20 +1259,16 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
         return;
       }
     }
-
     let lastTime;
     let posInTrack;
-
     function updatePlayheadUi() {
       if (uiState == 'stopped') {
         playheadEl.style.display = 'none';
         return;
       }
-
       const time = context.currentTime;
       posInTrack += time - lastTime;
       lastTime = time;
-
       if (posInTrack > loopSource.loopEnd) {
         posInTrack = loopSource.loopStart + (posInTrack - loopSource.loopEnd);
       }
@@ -1377,10 +1278,8 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
       playheadEl.style.display = 'block';
       requestAnimationFrame(updatePlayheadUi);
     }
-
     window.addEventListener('app-statechange', updateButtonsUi);
     updateButtonsUi();
-
     function start() {
       const buffer = singleLoop.buffer;
       currentPhase = 0;
@@ -1396,29 +1295,24 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
       loopEl.style.display = 'block';
       drawLoop(loopEl, phases[currentPhase].start / buffer.duration, (phases[currentPhase].end - phases[currentPhase].start) / buffer.duration);
     }
-
     function nextPhase() {
       const buffer = singleLoop.buffer;
       currentPhase++;
-
       if (currentPhase != phases.length) {
         loopSource.loopStart = phases[currentPhase].start;
         loopSource.loopEnd = phases[currentPhase].end;
         drawLoop(loopEl, phases[currentPhase].start / buffer.duration, (phases[currentPhase].end - phases[currentPhase].start) / buffer.duration);
         return;
       }
-
       currentPhase = 1;
       loopSource.loopStart = phases[currentPhase].start;
       loopSource.loopEnd = 2631045 / 48000 + singleLoop.startOffset;
       drawLoop(loopEl, phases[currentPhase].start / buffer.duration, buffer.duration);
-
       setTimeout(() => {
         loopSource.loopEnd = phases[currentPhase].end;
         drawLoop(loopEl, phases[currentPhase].start / buffer.duration, (phases[currentPhase].end - phases[currentPhase].start) / buffer.duration);
       }, 658624 / 48);
     }
-
     function stop() {
       loopEl.style.display = 'none';
       if (loopSource) {
@@ -1427,16 +1321,13 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
         } catch (_) {}
       }
     }
-
     buttonsEl.addEventListener('click', event => {
       const button = event.target;
       if (!button) return;
-
       if (button.classList.contains('single-loop-load')) {
         downloadAudio(singleLoop);
         return;
       }
-
       if (button.classList.contains('single-loop-play')) {
         start();
         uiState = 'playing';
@@ -1444,20 +1335,18 @@ Switching multiple clips isn't the only way to create multi-phase audio. BEHOLD[
         updatePlayheadUi();
         return;
       }
-
       if (button.classList.contains('single-loop-stop')) {
         stop();
         uiState = 'stopped';
         updateButtonsUi();
         return;
       }
-
       if (button.classList.contains('single-loop-next')) {
         nextPhase();
         return;
       }
     });
-  })();
+})();
 </script>
 
 Credit: [Sonic 2, chemical plant zone, Protostar remix](https://soundcloud.com/psdub/sonic-chemical-plant-zone).
@@ -1493,28 +1382,28 @@ Although discovering the loop points is easier said than done.
 
 Tools like [Audacity](http://www.audacityteam.org/) (free) and [Adobe Audition](http://www.adobe.com/Audition) (not so free) are great for chopping and looping audio.
 
-Once we've found the loop points, we need to find the *sample* they start & end on. This is the most accurate measurement we'll get.
+Once we've found the loop points, we need to find the _sample_ they start & end on. This is the most accurate measurement we'll get.
 
 <figure class="full-figure">
-  <img src="/static/posts/sounds-fun/audacity.png" alt="">
+  <img src="asset-url:./audacity.png" alt="">
   <figcaption>Selecting by sample in Audacity</figcaption>
 </figure>
 
 ```js
 const loopPoints = [
-  {start: 328948,  end: 656828},
-  {start: 985007,  end: 1314119},
-  {start: 1643272, end: 1972421},
-  {start: 1972421, end: 2137288},
+  { start: 328948, end: 656828 },
+  { start: 985007, end: 1314119 },
+  { start: 1643272, end: 1972421 },
+  { start: 1972421, end: 2137288 },
 ];
 ```
 
 But `loopStart` and `loopEnd` want the time in seconds, so we convert them:
 
 ```js
-const loopPointTimes = loopPoints.map(loop => ({
+const loopPointTimes = loopPoints.map((loop) => ({
   start: loop.start / 48000 + sonicStartGap,
-  end: loop.end / 48000 + sonicStartGap
+  end: loop.end / 48000 + sonicStartGap,
 }));
 ```
 
@@ -1522,7 +1411,7 @@ const loopPointTimes = loopPoints.map(loop => ({
 
 # Looping back to an earlier point
 
-At the end of the demo above, the clip loops back to an earlier point. Unfortunately, if you set `loopEnd` to a point earlier than the current playback point, it immediately goes back to `loopStart`, whereas we want it to play through to the end, *then* go back to an earlier loop.
+At the end of the demo above, the clip loops back to an earlier point. Unfortunately, if you set `loopEnd` to a point earlier than the current playback point, it immediately goes back to `loopStart`, whereas we want it to play through to the end, _then_ go back to an earlier loop.
 
 The least hacky way to do this would be to stop `sonicSource` looping, and queue up a new `sonicSource2` to start looping once `sonicSource` reaches its natural finish.
 
@@ -1532,7 +1421,7 @@ To work around this we make two changes to the loop. We loop from the start of t
 
 ```js
 // Current loop start
-const currentLoopStart = sonicSource.loopStart; 
+const currentLoopStart = sonicSource.loopStart;
 // The earlier loop we want to move to.
 const targetLoop = loopPointTimes[1];
 // The point we want to reach before looping back.

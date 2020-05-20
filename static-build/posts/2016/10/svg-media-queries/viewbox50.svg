@@ -1,0 +1,18 @@
+<svg viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg">
+  <style>
+    circle {
+      fill: red;
+    }
+    @media (min-width: 1px) {
+      circle {
+        fill: green;
+      }
+    }
+    @media (min-width: 100px) {
+      circle {
+        fill: blue;
+      }
+    }
+  </style>
+  <circle cx="25" cy="25" r="25"/>
+</svg>

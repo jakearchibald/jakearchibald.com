@@ -11,8 +11,7 @@ summary: "I like using diagrams as a way of showing information flow or browser
   it's done:"
 mindframe: using tired fingers
 image: null
-meta: ""
-
+meta: ''
 ---
 
 <style>
@@ -138,7 +137,11 @@ I like using diagrams as a way of showing information flow or browser behaviour,
 Paths in SVG are defined in a format that competes with regex in terms of illegibility:
 
 ```html
-<path fill="none" stroke="deeppink" stroke-width="14" stroke-miterlimit="0"
+<path
+  fill="none"
+  stroke="deeppink"
+  stroke-width="14"
+  stroke-miterlimit="0"
   d="M11.6 269s-19.7-42.4 6.06-68.2 48.5-6.06 59.1 12.1l-3.03 28.8 209-227s45.5-21.2 60.6 1.52c15.2 22.7-3.03 47-3.03 47l-225 229s33.1-12 48.5 7.58c50 63.6-50 97-62.1 37.9"
 />
 ```
@@ -152,9 +155,13 @@ The prospect of animating this data so the line progressively draws is, well, te
 <div class="squiggle-container squiggle-interactive"><svg xmlns="http://www.w3.org/2000/svg" height="98" width="581" viewbox="0 0 581 98"><path d="M62.9 14.9c-25-7.74-56.6 4.8-60.4 24.3-3.73 19.6 21.6 35 39.6 37.6 42.8 6.2 72.9-53.4 116-58.9 65-18.2 191 101 215 28.8 5-16.7-7-49.1-34-44-34 11.5-31 46.5-14 69.3 9.38 12.6 24.2 20.6 39.8 22.9 91.4 9.05 102-98.9 176-86.7 18.8 3.81 33 17.3 36.7 34.6 2.01 10.2.124 21.1-5.18 30.1" stroke="#000" stroke-width="4.3" fill="none"/></svg></div>
 
 ```html
-<path stroke="#000" stroke-width="4.3" fill="none" d="…"
-  stroke-dasharray=""
-  stroke-dashoffset=""
+<path
+  stroke="#000"
+  stroke-width="4.3"
+  fill="none"
+  d="…"
+  stroke-dasharray="0"
+  stroke-dashoffset="0"
 />
 ```
 
@@ -183,16 +190,19 @@ The prospect of animating this data so the line progressively draws is, well, te
     var code = squiggleContainer;
     do {
       code = code.nextSibling
-    } while (!code.classList || !code.classList.contains('codehilite'));
+    } while (!code.classList || !code.classList.contains('code-example'));
     return code;
   }());
   // this is brittle, but fuck it
-  var dasharrayCode = squiggleCode.querySelectorAll('.s')[4];
-  var dashoffsetCode = squiggleCode.querySelectorAll('.s')[5];
+  const nodeIterator = document.createNodeIterator(squiggleCode, NodeFilter.SHOW_TEXT, {
+    acceptNode: node => node.nodeValue === '0',
+  });
+  var dasharrayCode = nodeIterator.nextNode();
+  var dashoffsetCode = nodeIterator.nextNode();
 
   function updateCode(dasharray, dashoffset) {
-    dasharrayCode.textContent = "\"" + dasharray + "\"";
-    dashoffsetCode.textContent = "\"" + dashoffset + "\"";
+    dasharrayCode.nodeValue = dasharray;
+    dashoffsetCode.nodeValue = dashoffset;
   }
   function updateSvg(dasharray, dashoffset) {
     path.setAttribute('stroke-dasharray', dasharray);
@@ -215,7 +225,7 @@ The prospect of animating this data so the line progressively draws is, well, te
       arrayVal = arrayVal.toFixed(2);
       array = arrayVal + " " + arrayVal;
     }
-    
+
     var offset = (offsetSlider.value * pathLen).toFixed(2);
     updateSvg(array, offset);
     updateCode(array, offset);
@@ -229,7 +239,7 @@ The prospect of animating this data so the line progressively draws is, well, te
     arraySlider.onchange = change;
     offsetSlider.onchange = change;
   }
-  
+
   change();
 }());
 </script>
@@ -257,8 +267,7 @@ In the first example I used SVG attributes to define the dash, but you can do th
 var path = document.querySelector('.squiggle-animated path');
 var length = path.getTotalLength();
 // Clear any previous transition
-path.style.transition = path.style.WebkitTransition =
-  'none';
+path.style.transition = path.style.WebkitTransition = 'none';
 // Set up the starting positions
 path.style.strokeDasharray = length + ' ' + length;
 path.style.strokeDashoffset = length;
@@ -281,7 +290,7 @@ path.style.strokeDashoffset = '0';
 <script>
 (function() {
   if (!supportsInlineSvg) return;
-  var code = document.querySelectorAll('.codehilite');
+  var code = document.querySelectorAll('.code-example');
   var button = document.querySelector('.squiggle-go');
   code = code[code.length-1].textContent;
 
@@ -308,5 +317,5 @@ So far we've been using `stroke-dasharray` to create a bit of line followed by a
 
 # Further reading
 
-* [`visibility: visible` undoes a parent element's `visibility: hidden`](/2014/visible-undoes-hidden/)
-* [Don't use flexbox for overall page layout](/2014/dont-use-flexbox-for-page-layout/)
+- [`visibility: visible` undoes a parent element's `visibility: hidden`](/2014/visible-undoes-hidden/)
+- [Don't use flexbox for overall page layout](/2014/dont-use-flexbox-for-page-layout/)

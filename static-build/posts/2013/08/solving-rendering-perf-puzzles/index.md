@@ -158,7 +158,7 @@ I wanted to show a quick demo of text on a path in SVG, then animate it appearin
 As the animation continues it gets slower and slower. I opened up Chrome Devtools and made a [timeline recording](https://developers.google.com/chrome-developer-tools/docs/timeline):
 
 <figure class="full-figure">
-<img alt="" src="/static/posts/svg-perf/timeline2.png">
+<img alt="" src="asset-url:./timeline2.png">
 <figcaption>Layout costs increasing over time</figcaption>
 </figure>
 
@@ -167,8 +167,8 @@ The animation starts at a healthy 60fps, then falls to 30, 20, 15, 12, 10 and so
 To render web content the browser first parses the markup, then performs "Recalculate style" to determine which styles apply to each element after the CSS cascade, style attributes, presentational attributes, default styles etc etc. Once this is complete, the browser performs a "Layout" to determine how these styles interact to give each element their final x, y, width and height. At some point later, the browser will "paint" to create pixel data for an area of the document, then finally "composite" to combine parts that were drawn separately. You'll see all these events (and more) fly past in Chrome Devtools' timeline. It's pretty rare for the critical path to be majorly disturbed by layout, but that's what's happening here.
 
 <figure class="full-figure critical-path">
-<div class="critical-bubble"><img alt="You layout too much and smell of old biscuits" src="/static/posts/svg-perf/critical1.png"></div>
-<img alt="" src="/static/posts/svg-perf/path.jpg">
+<div class="critical-bubble"><img alt="You layout too much and smell of old biscuits" src="asset-url:./critical1.png"></div>
+<img alt="" src="asset-url:./path.jpg">
 <figcaption>The critical path</figcaption>
 </figure>
 
@@ -323,7 +323,7 @@ I was really hoping to finish this blog post here. I mean, we've definitely impr
 Anyway, what's the timeline showing now?
 
 <figure class="full-figure">
-<img alt="" src="/static/posts/svg-perf/timeline3.png">
+<img alt="" src="asset-url:./timeline3.png">
 <figcaption>Increasing gap between paint & composite</figcaption>
 </figure>
 
@@ -347,8 +347,8 @@ I'm a good web citizen, so I opened a ticket about the [lack of SVG paint tracki
 The critical path is happy with layout, but it's awfully concerned with all the painting.
 
 <figure class="full-figure critical-path">
-<div class="critical-bubble"><img alt="You layout too much and smell of old biscuits" src="/static/posts/svg-perf/critical2.png"></div>
-<img alt="" src="/static/posts/svg-perf/path.jpg">
+<div class="critical-bubble"><img alt="You layout too much and smell of old biscuits" src="asset-url:./critical2.png"></div>
+<img alt="" src="asset-url:./path.jpg">
 <figcaption>The critical path, again</figcaption>
 </figure>
 
@@ -548,12 +548,10 @@ However, we could do this processing once, locally, save the resulting SVG, & se
   var charsShown;
   var play;
 
-  ready.push(function() {
-    ja.get('/static/posts/svg-perf/final.svg').then(function(response) {
-      container.innerHTML = response.responseText;
-      startButton.style.display = 'inline';
-      texts = Array.prototype.slice.call(document.querySelectorAll('.curved-text.fast text'));
-    });
+  fetch('asset-url:./final.svg').then(r => r.text()).then(text => {
+    container.innerHTML = text;
+    startButton.style.display = 'inline';
+    texts = Array.prototype.slice.call(document.querySelectorAll('.curved-text.fast text'));
   });
 
   function frame() {
@@ -594,15 +592,15 @@ However, we could do this processing once, locally, save the resulting SVG, & se
 </script>
 
 <figure class="full-figure">
-<img alt="Devtools showing 60fps" src="/static/posts/svg-perf/timeline4.png">
+<img alt="Devtools showing 60fps" src="asset-url:./timeline4.png">
 <figcaption>Job done, for real this time</figcaption>
 </figure>
 
 Ahh the sweet smell of 60fps. Hardly touching the CPU. The critical path now has very little to complain about.
 
 <figure class="full-figure critical-path">
-<div class="critical-bubble"><img alt="…your mum?" src="/static/posts/svg-perf/critical3.png"></div>
-<img alt="" src="/static/posts/svg-perf/path.jpg">
+<div class="critical-bubble"><img alt="…your mum?" src="asset-url:./critical3.png"></div>
+<img alt="" src="asset-url:./path.jpg">
 <figcaption>Oh you!</figcaption>
 </figure>
 

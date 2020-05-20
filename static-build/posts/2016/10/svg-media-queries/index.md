@@ -3,11 +3,10 @@ title: SVG & media queries
 date: 2016-10-10 14:50:06
 summary: One of the great things about SVG is you can use media queries to add
   responsiveness to images, but which viewport triggers those media queries?
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: You can use media queries to add responsiveness to SVG, but which viewport
   triggers those media queries?
-
 ---
 
 One of the great things about SVG is you can use media queries to add responsiveness to images:
@@ -33,20 +32,20 @@ One of the great things about SVG is you can use media queries to add responsive
 # Which viewport?
 
 ```html
-<img src="circle.svg" width="50" height="50">
-<img src="circle.svg" width="100" height="100">
+<img src="circle.svg" width="50" height="50" />
+<img src="circle.svg" width="100" height="100" />
 <iframe src="circle.svg" width="50" height="50"></iframe>
 <svg width="50" height="50">
   …as above…
 </svg>
 ```
 
-Which of the above would draw a (potentially clipped) *blue* circle in an HTML document? As in, which viewport should be used? Should it be:
+Which of the above would draw a (potentially clipped) _blue_ circle in an HTML document? As in, which viewport should be used? Should it be:
 
-* The CSS size of the host document
-* The width/height/viewBox attributes on the `<svg>`
-* The width/height attributes on the `<img>`
-* The CSS layout size of the `<img>`
+- The CSS size of the host document
+- The width/height/viewBox attributes on the `<svg>`
+- The width/height attributes on the `<img>`
+- The CSS layout size of the `<img>`
 
 Here's an demo of the above:
 
@@ -57,7 +56,7 @@ Here's an demo of the above:
   }
   .img-row {
     display: flex;
-    align-items: center;  
+    align-items: center;
     padding: 30px 0;
     flex-flow: row wrap;
   }
@@ -72,9 +71,9 @@ Here's an demo of the above:
 
 <figure class="full-figure trans-tile">
 <div class="img-row">
-<img src="/static/posts/svg-canvas-media-queries/fixed100.svg" width="50" height="50">
-<img src="/static/posts/svg-canvas-media-queries/fixed100.svg" width="100" height="100">
-<iframe src="/static/posts/svg-canvas-media-queries/fixed100.svg" width="50" height="50"></iframe>
+<img src="asset-url:./fixed100.svg" width="50" height="50">
+<img src="asset-url:./fixed100.svg" width="100" height="100">
+<iframe src="asset-url:./fixed100.svg" width="50" height="50"></iframe>
 <svg width="50" height="50">
   <style>
     .inline-svg-circle {
@@ -121,14 +120,14 @@ canvas2dContext.drawImage(img, x, y, width, height);
 
 **But when should the circle be blue?** There are a few more viewport choices this time. Should it be:
 
-* The CSS size of the host window
-* The width/height/viewBox attributes on the `<svg>`
-* The width/height attributes on the `<img>`
-* The CSS layout dimensions of the `<img>`
-* The pixel-data dimensions of the `<canvas>`
-* The CSS layout dimensions of the `<canvas>`
-* The width/height specified in `drawImage`
-* The width/height specified in `drawImage`, multiplied by whatever transform the 2d context has
+- The CSS size of the host window
+- The width/height/viewBox attributes on the `<svg>`
+- The width/height attributes on the `<img>`
+- The CSS layout dimensions of the `<img>`
+- The pixel-data dimensions of the `<canvas>`
+- The CSS layout dimensions of the `<canvas>`
+- The width/height specified in `drawImage`
+- The width/height specified in `drawImage`, multiplied by whatever transform the 2d context has
 
 Which would you expect? Again, the spec is unclear, and this time every browser has gone in a different direction. Give it a try:
 
@@ -141,7 +140,7 @@ Which would you expect? Again, the spec is unclear, and this time every browser 
   @media (min-width: 530px) {
     .svg-test-form {
       margin: 0 -64px 0 -32px;
-    }  
+    }
   }
 
   .svg-test-output {
@@ -176,7 +175,7 @@ Which would you expect? Again, the spec is unclear, and this time every browser 
   @media (min-width: 500px) {
     .svg-test-form fieldset {
       min-width: 33%;
-    }  
+    }
   }
 
   .svg-test-form legend {
@@ -229,15 +228,12 @@ Which would you expect? Again, the spec is unclear, and this time every browser 
 function loadImg(url, width, height) {
   return new Promise(function(resolve, reject) {
     var img = new Image();
-    
     if (width) {
       img.width = width;
     }
-    
     if (height) {
       img.height = height;
     }
-    
     img.src = url;
     img.onload = function() {
       resolve(img);
@@ -245,80 +241,65 @@ function loadImg(url, width, height) {
     img.onerror = function() {
       reject(Error('Image load failed'))
     };
+});
+}
+(function() {
+var svgImgs = {
+  fixed50: 'asset-url:./fixed50.svg',
+  fixed100: 'asset-url:./fixed100.svg',
+  viewbox50: 'asset-url:./viewbox50.svg',
+  viewbox100: 'asset-url:./viewbox100.svg',
+};
+function createCanvas(width, height) {
+  var canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+  return canvas;
+}
+function drawImgOnCanvas(canvas, img, width, height, scale) {
+  var context = canvas.getContext('2d');
+  context.scale(scale, scale);
+  context.drawImage(img, 0, 0, width, height);
+}
+var svgTestForm = document.querySelector('.svg-test-form');
+var svgTestOutput = document.querySelector('.svg-test-output');
+function processForm() {
+  var svgSize = svgTestForm.querySelector('[name=img-type]:checked').value;
+  var imgSize = Number(svgTestForm.querySelector('[name=img-size]:checked').value);
+  var imgCssSize = Number(svgTestForm.querySelector('[name=img-css-size]:checked').value);
+  var addImgToDom = !!svgTestForm.querySelector('[name=add-to-dom]:checked');
+  var useViewbox = !!svgTestForm.querySelector('[name=use-viewbox]:checked');
+  var canvasSize = Number(svgTestForm.querySelector('[name=canvas-size]:checked').value);
+  var drawImageSize = Number(svgTestForm.querySelector('[name=drawimage-size]:checked').value);
+  var contextTransform = Number(svgTestForm.querySelector('[name=context-transform]:checked').value);
+  var imgUrl;
+  if (useViewbox) {
+    imgUrl = svgImgs['viewbox' + svgSize];
+  }
+  else {
+    imgUrl = svgImgs['fixed' + svgSize];
+  }
+  svgTestOutput.innerHTML = '';
+  loadImg(imgUrl, imgSize, imgSize).then(img => {
+    var el = img;
+    if (imgCssSize) {
+      img.style.width = img.style.height = imgCssSize + 'px';
+    }
+    if (addImgToDom) {
+      document.body.appendChild(img);
+    }
+    el = createCanvas(canvasSize, canvasSize);
+    drawImgOnCanvas(el, img, drawImageSize, drawImageSize, contextTransform);
+    if (addImgToDom) {
+      document.body.removeChild(img);
+    }
+    svgTestOutput.appendChild(el);
   });
 }
-
-(function() {
-  var svgImgs = {
-    fixed50: '/static/posts/svg-canvas-media-queries/fixed50.svg',
-    fixed100: '/static/posts/svg-canvas-media-queries/fixed100.svg',
-    viewbox50: '/static/posts/svg-canvas-media-queries/viewbox50.svg',
-    viewbox100: '/static/posts/svg-canvas-media-queries/viewbox100.svg',
-  };
-
-  function createCanvas(width, height) {
-    var canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
-  }
-
-  function drawImgOnCanvas(canvas, img, width, height, scale) {
-    var context = canvas.getContext('2d');
-    context.scale(scale, scale);
-    context.drawImage(img, 0, 0, width, height);
-  }
-
-  var svgTestForm = document.querySelector('.svg-test-form');
-  var svgTestOutput = document.querySelector('.svg-test-output');
-
-  function processForm() {
-    var svgSize = svgTestForm.querySelector('[name=img-type]:checked').value;
-    var imgSize = Number(svgTestForm.querySelector('[name=img-size]:checked').value);
-    var imgCssSize = Number(svgTestForm.querySelector('[name=img-css-size]:checked').value);
-    var addImgToDom = !!svgTestForm.querySelector('[name=add-to-dom]:checked');
-    var useViewbox = !!svgTestForm.querySelector('[name=use-viewbox]:checked');
-    var canvasSize = Number(svgTestForm.querySelector('[name=canvas-size]:checked').value);
-    var drawImageSize = Number(svgTestForm.querySelector('[name=drawimage-size]:checked').value);
-    var contextTransform = Number(svgTestForm.querySelector('[name=context-transform]:checked').value);
-    var imgUrl;
-
-    if (useViewbox) {
-      imgUrl = svgImgs['viewbox' + svgSize];
-    }
-    else {
-      imgUrl = svgImgs['fixed' + svgSize];
-    }
-    
-    svgTestOutput.innerHTML = '';
-    
-    loadImg(imgUrl, imgSize, imgSize).then(img => {
-      var el = img;
-      
-      if (imgCssSize) {
-        img.style.width = img.style.height = imgCssSize + 'px';
-      }
-      
-      if (addImgToDom) {
-        document.body.appendChild(img);
-      }
-      
-      el = createCanvas(canvasSize, canvasSize);
-      drawImgOnCanvas(el, img, drawImageSize, drawImageSize, contextTransform);
-      
-      if (addImgToDom) {
-        document.body.removeChild(img);
-      }
-      
-      svgTestOutput.appendChild(el);
-    });
-  }
-
+processForm();
+svgTestForm.addEventListener('change', function() {
   processForm();
-
-  svgTestForm.addEventListener('change', function() {
-    processForm();
-  });
+});
 }());
 </script>
 
@@ -354,7 +335,7 @@ This kinda reflects their weird `<img>` behaviour - it's based on pixels drawn. 
 
 <figure class="full-figure">
 <div class="img-row">
-<img class="text-image" src="/static/posts/svg-canvas-media-queries/text.svg" width="150" height="60">
+<img class="text-image" src="asset-url:./text.svg" width="150" height="60">
 <canvas width="150" height="60" class="text-canvas"></canvas>
 <canvas width="150" height="60" class="text-canvas-sharp"></canvas>
 </div>
@@ -363,12 +344,12 @@ This kinda reflects their weird `<img>` behaviour - it's based on pixels drawn. 
 
 <script>
 (function() {
-  loadImg('/static/posts/svg-canvas-media-queries/text.svg').then(function(img) {
+  loadImg('asset-url:./text.svg').then(function(img) {
     var canvas = document.querySelector('.text-canvas');
     var context = canvas.getContext('2d');
     context.drawImage(img, 0, 0);
   });
-  loadImg('/static/posts/svg-canvas-media-queries/text.svg').then(function(img) {
+  loadImg('asset-url:./text.svg').then(function(img) {
     var canvas = document.querySelector('.text-canvas-sharp');
     canvas.style.width = canvas.width + 'px';
     canvas.style.height = canvas.height + 'px';

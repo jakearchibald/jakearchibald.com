@@ -3,10 +3,9 @@ title: The anatomy of responsive images
 date: 2015-09-03 00:37:01
 summary: I just had my responsive images epiphany and I'm writing it all down
   before I forget everything. This is what I know…
-mindframe: ""
+mindframe: ''
 image: null
-meta: ""
-
+meta: ''
 ---
 
 I just had my responsive images epiphany and I'm writing it all down before I forget everything. This is what I know…
@@ -36,19 +35,18 @@ This [works in all modern browsers](http://caniuse.com/#search=srcset), and fall
 
 A few more rules, not covered in the image above:
 
-* Each item within `srcset` is `<url> <density>x`, eg `cat-2x.jpg 2x`
-* The order of items within the `srcset` doesn't matter
-* If you don't specify width/height, the browser will display the image at its native width/height divided by the density. Eg if the 2x resource is picked, it'll be rendered at 50% of the resources width/height
-* This is only a hint, even on a 3x device the browser may use the 1x image, perhaps due to poor connectivity
-
+- Each item within `srcset` is `<url> <density>x`, eg `cat-2x.jpg 2x`
+- The order of items within the `srcset` doesn't matter
+- If you don't specify width/height, the browser will display the image at its native width/height divided by the density. Eg if the 2x resource is picked, it'll be rendered at 50% of the resources width/height
+- This is only a hint, even on a 3x device the browser may use the 1x image, perhaps due to poor connectivity
 
 ## Live example
 
 <figure class="full-figure">
   <img alt="A cat"
        width="320" height="213"
-       src="/static/posts/responsive-images/cat-1x.jpg"
-       srcset="/static/posts/responsive-images/cat-2x.jpg 2x, /static/posts/responsive-images/cat-3x.jpg 3x">
+       src="asset-url:./cat-1x.jpg"
+       srcset="asset-url:./cat-2x.jpg 2x, asset-url:./cat-3x.jpg 3x">
 </figure>
 
 # Varying size and density
@@ -57,9 +55,9 @@ Images of varying width are commonly used as part of the content on responsive s
 
 In order for the browser to pick the right image, it needs to know:
 
-* URLs for the image at various sizes
-* The decoded width of each of those image resources
-* The width of the `<img>`
+- URLs for the image at various sizes
+- The decoded width of each of those image resources
+- The width of the `<img>`
 
 That last one is particularly tricky, as images start downloading before CSS is ready, so the width of the `<img>` cannot be detected from the page layout.
 
@@ -76,19 +74,19 @@ You don't need to specify density, the browser figure that out itself. If the wi
 
 A few more rules, not covered in the image above:
 
-* Each item within `srcset` is `<url> <width-descriptor>w`, eg `panda-689.jpg 689w`
-* The order of items within the `srcset` doesn't matter
-* If `srcset` contains a width descriptor, the `src` is ignored by browsers that support `srcset`
-* Each item within `sizes` is `<media-condition> <image-element-width>`, except for the last entry which is just `<image-element-width>`
-* Both of the widths in `sizes` are in CSS pixels
-* The browser uses the *first* media condition match in `sizes`, so the order matters
-* As before, the browser may download a lower resolution image due to other factors such as poor connectivity
+- Each item within `srcset` is `<url> <width-descriptor>w`, eg `panda-689.jpg 689w`
+- The order of items within the `srcset` doesn't matter
+- If `srcset` contains a width descriptor, the `src` is ignored by browsers that support `srcset`
+- Each item within `sizes` is `<media-condition> <image-element-width>`, except for the last entry which is just `<image-element-width>`
+- Both of the widths in `sizes` are in CSS pixels
+- The browser uses the _first_ media condition match in `sizes`, so the order matters
+- As before, the browser may download a lower resolution image due to other factors such as poor connectivity
 
-Picking which `sizes` to list is pretty straight forward. Start with your window at its narrowest, and as you increase its size, create a new rule whenever the `<img>` size vs window size changes formula. 
+Picking which `sizes` to list is pretty straight forward. Start with your window at its narrowest, and as you increase its size, create a new rule whenever the `<img>` size vs window size changes formula.
 
 When this window is at its narrowest, the `<img>` is full width, or `100vw`. When the window goes beyond `530px` the content area on this page gets `32px` padding on the left and `64px` on the right, so the `<img>` is now `calc(100vw - 96px)`.
 
-The browser won't call the police if it finds out you lied about the `<img>` width. I've been accurate with my `sizes`, but a rough answer can be good enough, eg `sizes="(min-width: 1066px) 689px, (min-width: 800px) 75vw, 100vw"`. 
+The browser won't call the police if it finds out you lied about the `<img>` width. I've been accurate with my `sizes`, but a rough answer can be good enough, eg `sizes="(min-width: 1066px) 689px, (min-width: 800px) 75vw, 100vw"`.
 
 Picking which resources to create and include in `srcset` is much harder, and I don't think I've mastered it. In the above example I include the maximum size the `<img>` can be (`689px`) and double that for 2x devices (`1378px`). The other two are rough in-between values. I didn't include smaller widths such as `320px`, under the assumption that screens of that size will be 2x density or greater.
 
@@ -99,11 +97,11 @@ Picking which resources to create and include in `srcset` is much harder, and I 
 <figure class="full-figure">
   <img style="width:100%"
        alt="A red panda eating leaves"
-       src="/static/posts/responsive-images/panda-689.jpg"
-       srcset="/static/posts/responsive-images/panda-689.jpg 689w,
-               /static/posts/responsive-images/panda-1378.jpg 1378w,
-               /static/posts/responsive-images/panda-500.jpg 500w,
-               /static/posts/responsive-images/panda-1000.jpg 1000w"
+       src="asset-url:./panda-689.jpg"
+       srcset="asset-url:./panda-689.jpg 689w,
+               asset-url:./panda-1378.jpg 1378w,
+               asset-url:./panda-500.jpg 500w,
+               asset-url:./panda-1000.jpg 1000w"
        sizes="(min-width: 1066px) 689px,
               (min-width: 800px) calc(75vw - 137px),
               (min-width: 530px) calc(100vw - 96px),
@@ -119,14 +117,14 @@ Similar to the previous example, but the framing changes at different widths. Th
   <svg class="img-d-3" viewBox="0 0 679 555"><style>.img-d-3 .st0{fill:#5F6464; white-space: pre;} .img-d-3 .st1{font-family:Inconsolata; font-weight: bold;} .img-d-3 .st2{font-size:24.2164px;} .img-d-3 .st3{fill:#C92C2C;} .img-d-3 .st4{fill:#309D47;} .img-d-3 .st5{fill:#1990B8; white-space: pre;} .img-d-3 .st6{fill:none;} .img-d-3 .st7{font-family:'Just Another Hand'} .img-d-3 .st8{font-size:41px;} .img-d-3 .st9{fill:none;stroke:#ED1F24;stroke-width:3;stroke-miterlimit:10;} .img-d-3 .st10{fill:#ED1F24;}</style><text transform="matrix(1 -.018 .018 1 3.572 23.804)"><tspan x="0" y="0" class="st0 st1 st2">&lt;</tspan><tspan x="12.1" y="0" class="st3 st1 st2">picture</tspan><tspan x="96.9" y="0" class="st0 st1 st2">&gt;</tspan><tspan x="0" y="29.1" class="st0 st1 st2">  &lt;</tspan><tspan x="36.3" y="29.1" class="st3 st1 st2">source</tspan><tspan x="109" y="29.1" class="st0 st1 st2"> </tspan><tspan x="121.1" y="29.1" class="st4 st1 st2">media</tspan><tspan x="181.6" y="29.1" class="st0 st1 st2">=&quot;</tspan><tspan x="205.8" y="29.1" class="st5 st1 st2">(max-width: 800px)</tspan><tspan x="423.8" y="29.1" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="174.4" class="st0 st1 st2"> </tspan><tspan x="121.1" y="174.4" class="st4 st1 st2">srcset</tspan><tspan x="193.7" y="174.4" class="st0 st1 st2">=&quot;</tspan><tspan x="217.9" y="174.4" class="st5 st1 st2">f1-focused-800.jpg 800w,</tspan><tspan x="0" y="203.4" class="st5 st1 st2">                  f1-focused-1406.jpg 1406w</tspan><tspan x="520.7" y="203.4" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="232.5" class="st0 st1 st2"> </tspan><tspan x="121.1" y="232.5" class="st4 st1 st2">sizes</tspan><tspan x="181.6" y="232.5" class="st0 st1 st2">=&quot;</tspan><tspan x="205.8" y="232.5" class="st5 st1 st2">(min-width: 530px) calc(100vw - 96px),</tspan><tspan x="0" y="261.5" class="st5 st1 st2">                 100vw</tspan><tspan x="266.4" y="261.5" class="st0 st1 st2">&quot;&gt;</tspan><tspan x="0" y="290.6" class="st0 st1 st2">  &lt;</tspan><tspan x="36.3" y="290.6" class="st3 st1 st2">img</tspan><tspan x="72.6" y="290.6" class="st0 st1 st2"> </tspan><tspan x="84.8" y="290.6" class="st4 st1 st2">alt</tspan><tspan x="121.1" y="290.6" class="st0 st1 st2">=&quot;</tspan><tspan x="145.3" y="290.6" class="st5 st1 st2">F1 car in the gravel</tspan><tspan x="387.5" y="290.6" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="319.7" class="st0 st1 st2"> </tspan><tspan x="84.8" y="319.7" class="st4 st1 st2">src</tspan><tspan x="121.1" y="319.7" class="st0 st1 st2">=&quot;</tspan><tspan x="145.3" y="319.7" class="st5 st1 st2">f1-689.jpg</tspan><tspan x="266.4" y="319.7" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="348.7" class="st0 st1 st2"> </tspan><tspan x="84.8" y="348.7" class="st4 st1 st2">srcset</tspan><tspan x="157.4" y="348.7" class="st0 st1 st2">=&quot;</tspan><tspan x="181.6" y="348.7" class="st5 st1 st2">f1-689.jpg 689w,</tspan><tspan x="0" y="377.8" class="st5 st1 st2">               f1-1378.jpg 1378w,</tspan><tspan x="0" y="406.8" class="st5 st1 st2">               f1-500.jpg 500w,</tspan><tspan x="0" y="435.9" class="st5 st1 st2">               f1-1000.jpg 1000w</tspan><tspan x="387.5" y="435.9" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="465" class="st0 st1 st2"> </tspan><tspan x="84.8" y="465" class="st4 st1 st2">sizes</tspan><tspan x="145.3" y="465" class="st0 st1 st2">=&quot;</tspan><tspan x="169.5" y="465" class="st5 st1 st2">(min-width: 1066px) 689px,</tspan><tspan x="0" y="494" class="st5 st1 st2">              calc(75vw - 137px)</tspan><tspan x="387.5" y="494" class="st0 st1 st2">&quot;&gt;</tspan><tspan x="0" y="523.1" class="st0 st1 st2">&lt;/</tspan><tspan x="24.2" y="523.1" class="st3 st1 st2">picture</tspan><tspan x="109" y="523.1" class="st0 st1 st2">&gt;</tspan></text><path class="st6" d="M336.5 166.3l-305 2.5-1-98 305-2.4z"/><text transform="matrix(1 -.008 .008 1 30.88 105.816)"><tspan x="0" y="0" class="st7 st8">If this query matches the window, </tspan><tspan x="0" y="40" class="st7 st8">use these to select the src</tspan></text><path class="st9" d="M387.2 68.6c-6 44.8-47.7 41-47.7 41"/><path class="st10" d="M379.5 73.5L387 71l7 3.6-6-17.6z"/><path class="st9" d="M102.5 213C74.8 202.5 82 153.6 82 153.6"/><path class="st10" d="M98.6 204.5l1.6 7.7-4.4 6.4L114 215z"/><text transform="translate(462 349)" class="st7 st8">…else use these</text><path class="st9" d="M450.6 425.2C505.8 420 533 396.5 533 360"/><path class="st10" d="M456.6 432l-3.6-7 2.5-7.5L439 426z"/></svg>
 </figure>
 
-* You can have as many `<source>`s as you want
-* You *must* include an `<img>`
-* The media query on `<source>` will always be obeyed, it's not just a hint
-* The media query is based on the window's width, not the `<img>`
-* The first matching `<source>` will be used, so the order matters
-* If no matching `<source>` is found, the `<img>` is used
-* The `<img>` must appear after all `<source>`s
-* `<source>` doesn't support `src`, but `srcset="whatever.jpg"` works just as well
+- You can have as many `<source>`s as you want
+- You _must_ include an `<img>`
+- The media query on `<source>` will always be obeyed, it's not just a hint
+- The media query is based on the window's width, not the `<img>`
+- The first matching `<source>` will be used, so the order matters
+- If no matching `<source>` is found, the `<img>` is used
+- The `<img>` must appear after all `<source>`s
+- `<source>` doesn't support `src`, but `srcset="whatever.jpg"` works just as well
 
 Once the `<source>` or `<img>` is selected, the `srcset` and `sizes` attributes work as in previous examples, so you can mix and match techniques.
 
@@ -137,17 +135,17 @@ The `<picture>` element [works in Chrome, Firefox, and Opera](http://caniuse.com
 <figure class="full-figure">
   <picture>
     <source media="(max-width: 800px)"
-            srcset="/static/posts/responsive-images/f1-focused-800.jpg 800w,
-                    /static/posts/responsive-images/f1-focused-1406.jpg 1406w"
+            srcset="asset-url:./f1-focused-800.jpg 800w,
+                    asset-url:./f1-focused-1406.jpg 1406w"
             sizes="(min-width: 530px) calc(100vw - 96px),
                    100vw">
     <img style="width:100%"
          alt="F1 car in the gravel"
-         src="/static/posts/responsive-images/f1-689.jpg"
-         srcset="/static/posts/responsive-images/f1-689.jpg 689w,
-                 /static/posts/responsive-images/f1-1378.jpg 1378w,
-                 /static/posts/responsive-images/f1-500.jpg 500w,
-                 /static/posts/responsive-images/f1-1000.jpg 1000w"
+         src="asset-url:./f1-689.jpg"
+         srcset="asset-url:./f1-689.jpg 689w,
+                 asset-url:./f1-1378.jpg 1378w,
+                 asset-url:./f1-500.jpg 500w,
+                 asset-url:./f1-1000.jpg 1000w"
          sizes="(min-width: 1066px) 689px,
                 calc(75vw - 137px)">
   </picture>
@@ -162,8 +160,8 @@ This method allows you to serve better-optimised formats to browsers that suppor
   <svg class="img-d-4" viewBox="0 0 679 187"><style>.img-d-4 .st0{fill:#5F6464; white-space: pre;} .img-d-4 .st1{font-family:Inconsolata; font-weight: bold;} .img-d-4 .st2{font-size:25.7851px;} .img-d-4 .st3{fill:#C92C2C;} .img-d-4 .st4{fill:#309D47;} .img-d-4 .st5{fill:#1990B8;} .img-d-4 .st6{fill:none;} .img-d-4 .st7{font-family:'Just Another Hand';} .img-d-4 .st8{font-size:41px;} .img-d-4 .st9{fill:none;stroke:#ED1F24;stroke-width:3;stroke-miterlimit:10;} .img-d-4 .st10{fill:#ED1F24;}</style><text transform="matrix(1 -.018 .018 1 3.594 22.076)"><tspan x="0" y="0" class="st0 st1 st2">&lt;</tspan><tspan x="12.9" y="0" class="st3 st1 st2">picture</tspan><tspan x="103.1" y="0" class="st0 st1 st2">&gt;</tspan><tspan x="0" y="30.9" class="st0 st1 st2">  &lt;</tspan><tspan x="38.7" y="30.9" class="st3 st1 st2">source</tspan><tspan x="116" y="30.9" class="st0 st1 st2"> </tspan><tspan x="128.9" y="30.9" class="st4 st1 st2">type</tspan><tspan x="180.5" y="30.9" class="st0 st1 st2">=&quot;</tspan><tspan x="206.3" y="30.9" class="st5 st1 st2">image/webp</tspan><tspan x="335.2" y="30.9" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="61.9" class="st0 st1 st2"> </tspan><tspan x="128.9" y="61.9" class="st4 st1 st2">srcset</tspan><tspan x="206.3" y="61.9" class="st0 st1 st2">=&quot;</tspan><tspan x="232.1" y="61.9" class="st5 st1 st2">snow.webp</tspan><tspan x="348.1" y="61.9" class="st0 st1 st2">&quot;&gt;</tspan><tspan x="0" y="92.8" class="st0 st1 st2">  &lt;</tspan><tspan x="38.7" y="92.8" class="st3 st1 st2">img</tspan><tspan x="77.4" y="92.8" class="st0 st1 st2"> </tspan><tspan x="90.2" y="92.8" class="st4 st1 st2">alt</tspan><tspan x="128.9" y="92.8" class="st0 st1 st2">=&quot;</tspan><tspan x="154.7" y="92.8" class="st5 st1 st2">Hut in the snow</tspan><tspan x="348.1" y="92.8" class="st0 st1 st2">&quot;</tspan><tspan x="0" y="123.8" class="st0 st1 st2"> </tspan><tspan x="90.2" y="123.8" class="st4 st1 st2">src</tspan><tspan x="128.9" y="123.8" class="st0 st1 st2">=&quot;</tspan><tspan x="154.7" y="123.8" class="st5 st1 st2">snow.jpg</tspan><tspan x="257.9" y="123.8" class="st0 st1 st2">&quot;&gt;</tspan><tspan x="0" y="154.7" class="st0 st1 st2">&lt;/</tspan><tspan x="25.8" y="154.7" class="st3 st1 st2">picture</tspan><tspan x="116" y="154.7" class="st0 st1 st2">&gt;</tspan></text><path class="st6" d="M659 110.7l-228.7 2-.8-98 228.6-2z"/><text transform="matrix(1 -.008 .008 1 429.879 49.61)"><tspan x="0" y="0" class="st7 st8">If this type is supported, </tspan><tspan x="0" y="40" class="st7 st8">use this</tspan></text><path class="st9" d="M368.6 40c37.6-2 58-2 58-2"/><path class="st10" d="M374.4 47l-3.4-7 2.8-7.4-16.8 8z"/><path class="st9" d="M395 69.5c33.7-1 34.5 2.8 34.5 2.8"/><path class="st10" d="M401 76.5l-3.5-7 2.8-7.4-16.8 8z"/><text transform="translate(366 141.5)" class="st7 st8">…else this</text><path class="st9" d="M307 133.4c37.3-1.5 55.5.5 55.5.5"/><path class="st10" d="M313 140.6l-3.5-7 2.8-7.4-16.8 7.8z"/></svg>
 </figure>
 
-* `type` is a mime type
-* You can have multiple sources and mix `type` with `media`, `srcset`, and even `sizes` to create something truly monstrous/awesome
+- `type` is a mime type
+- You can have multiple sources and mix `type` with `media`, `srcset`, and even `sizes` to create something truly monstrous/awesome
 
 This [works in Chrome, Firefox, and Opera](http://caniuse.com/#search=picture), and falls back to the `<img>` in other browsers.
 
@@ -172,10 +170,10 @@ This [works in Chrome, Firefox, and Opera](http://caniuse.com/#search=picture), 
 <figure class="full-figure">
   <picture>
     <source type="image/webp"
-            srcset="/static/posts/responsive-images/snow.webp">
+            srcset="asset-url:./snow.webp">
     <img style="width:100%"
          alt="Hut in the snow"
-         src="/static/posts/responsive-images/snow.jpg">
+         src="asset-url:./snow.jpg">
   </picture>
 </figure>
 
@@ -183,8 +181,8 @@ This [works in Chrome, Firefox, and Opera](http://caniuse.com/#search=picture), 
 
 Hopefully the above helps as a kind of quick reference to the various use-cases, but if not, dig into these:
 
-* [A 10-part novella on responsive images](http://blog.cloudfour.com/responsive-images-101-definitions/) - by Jason Grigsby
-* [Responsive Images: Use Cases and Code Snippets](https://dev.opera.com/articles/responsive-images/) - similar to this article, but covers more combinations of use-cases
-* [Client hints](https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints) - a server-side alternative to responsive images
+- [A 10-part novella on responsive images](http://blog.cloudfour.com/responsive-images-101-definitions/) - by Jason Grigsby
+- [Responsive Images: Use Cases and Code Snippets](https://dev.opera.com/articles/responsive-images/) - similar to this article, but covers more combinations of use-cases
+- [Client hints](https://developers.google.com/web/updates/2015/09/automating-resource-selection-with-client-hints) - a server-side alternative to responsive images
 
 <small>Thanks to Mike Hall, Jason Grigsby, Simon Peters, and Yoav Weiss for proofreading and point-sharpening.</small>

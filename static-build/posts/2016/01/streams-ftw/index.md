@@ -108,7 +108,6 @@ We could do this one step at a time, or we could stream it:
 .animate.stream-diagram .stream.process {
   animation: stream-diagram-stream-process 5s linear infinite both;
 }
-
 @keyframes stream-diagram-buffer-fetch {
 74% {
 stroke-dashoffset: -185;
@@ -289,7 +288,7 @@ reader.read().then(function processResult(result) {
     }
   }
 
-  .hypothetical-code + .codehilite {
+  .hypothetical-code + .code-example {
     margin-top: 0;
   }
 </style>

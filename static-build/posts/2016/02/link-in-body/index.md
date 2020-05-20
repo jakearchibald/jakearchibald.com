@@ -6,11 +6,10 @@ summary: Chrome is intending to [change the behaviour of `<link
   which will be noticeable when it appears within `<body>`. The impact and
   benefits of this aren't clear from the blink-dev post, so I wanted to go into
   detail here.
-mindframe: "- totally overshadowed by some waving gravity thing. Thanks Einstein."
-image: ""
+mindframe: '- totally overshadowed by some waving gravity thing. Thanks Einstein.'
+image: ''
 meta: Chrome is intending to change the behaviour of <link> in <body>, which
   allows for better ways to load CSS
-
 ---
 
 Chrome is intending to [change the behaviour of `<link rel="stylesheet">`](https://groups.google.com/a/chromium.org/forum/#!topic/blink-dev/ZAPP8aTnyn0), which will be noticeable when it appears within `<body>`. The impact and benefits of this aren't clear from the blink-dev post, so I wanted to go into detail here.
@@ -21,7 +20,7 @@ Chrome is intending to [change the behaviour of `<link rel="stylesheet">`](https
 
 ```html
 <head>
-  <link rel="stylesheet" href="/all-of-my-styles.css">
+  <link rel="stylesheet" href="/all-of-my-styles.css" />
 </head>
 <body>
   …content…
@@ -36,18 +35,18 @@ This isn't the case with SPDY and HTTP/2, where many smaller resources can be de
 
 ```html
 <head>
-  <link rel="stylesheet" href="/site-header.css">
-  <link rel="stylesheet" href="/article.css">
-  <link rel="stylesheet" href="/comment.css">
-  <link rel="stylesheet" href="/about-me.css">
-  <link rel="stylesheet" href="/site-footer.css">
+  <link rel="stylesheet" href="/site-header.css" />
+  <link rel="stylesheet" href="/article.css" />
+  <link rel="stylesheet" href="/comment.css" />
+  <link rel="stylesheet" href="/about-me.css" />
+  <link rel="stylesheet" href="/site-footer.css" />
 </head>
 <body>
   …content…
 </body>
 ```
 
-This fixes the redundancy issue, but it means you need to know what the page will contain when you're outputting the `<head>`, which can prevent streaming. Also, the browser still has to download all the CSS before it can render anything. A slow loading `/site-footer.css` will delay the rendering of *everything*.
+This fixes the redundancy issue, but it means you need to know what the page will contain when you're outputting the `<head>`, which can prevent streaming. Also, the browser still has to download all the CSS before it can render anything. A slow loading `/site-footer.css` will delay the rendering of _everything_.
 
 [**View demo**](https://jakearchibald-demos.herokuapp.com/progressive-css/head.html).
 
@@ -57,11 +56,55 @@ This fixes the redundancy issue, but it means you need to know what the page wil
 <head>
   <script>
     // https://github.com/filamentgroup/loadCSS
-    !function(e){"use strict"
-    var n=function(n,t,o){function i(e){return f.body?e():void setTimeout(function(){i(e)})}var d,r,a,l,f=e.document,s=f.createElement("link"),u=o||"all"
-    return t?d=t:(r=(f.body||f.getElementsByTagName("head")[0]).childNodes,d=r[r.length-1]),a=f.styleSheets,s.rel="stylesheet",s.href=n,s.media="only x",i(function(){d.parentNode.insertBefore(s,t?d:d.nextSibling)}),l=function(e){for(var n=s.href,t=a.length;t--;)if(a[t].href===n)return e()
-    setTimeout(function(){l(e)})},s.addEventListener&&s.addEventListener("load",function(){this.media=u}),s.onloadcssdefined=l,l(function(){s.media!==u&&(s.media=u)}),s}
-    "undefined"!=typeof exports?exports.loadCSS=n:e.loadCSS=n}("undefined"!=typeof global?global:this)
+    !(function (e) {
+      'use strict';
+      var n = function (n, t, o) {
+        function i(e) {
+          return f.body
+            ? e()
+            : void setTimeout(function () {
+                i(e);
+              });
+        }
+        var d,
+          r,
+          a,
+          l,
+          f = e.document,
+          s = f.createElement('link'),
+          u = o || 'all';
+        return (
+          t
+            ? (d = t)
+            : ((r = (f.body || f.getElementsByTagName('head')[0]).childNodes),
+              (d = r[r.length - 1])),
+          (a = f.styleSheets),
+          (s.rel = 'stylesheet'),
+          (s.href = n),
+          (s.media = 'only x'),
+          i(function () {
+            d.parentNode.insertBefore(s, t ? d : d.nextSibling);
+          }),
+          (l = function (e) {
+            for (var n = s.href, t = a.length; t--; )
+              if (a[t].href === n) return e();
+            setTimeout(function () {
+              l(e);
+            });
+          }),
+          s.addEventListener &&
+            s.addEventListener('load', function () {
+              this.media = u;
+            }),
+          (s.onloadcssdefined = l),
+          l(function () {
+            s.media !== u && (s.media = u);
+          }),
+          s
+        );
+      };
+      'undefined' != typeof exports ? (exports.loadCSS = n) : (e.loadCSS = n);
+    })('undefined' != typeof global ? global : this);
   </script>
   <style>
     /* The styles for the site header, plus: */
@@ -73,11 +116,10 @@ This fixes the redundancy issue, but it means you need to know what the page wil
     }
   </style>
   <script>
-    loadCSS("/the-rest-of-the-styles.css");
+    loadCSS('/the-rest-of-the-styles.css');
   </script>
 </head>
-<body>
-</body>
+<body></body>
 ```
 
 In the above, we have some inline styles to get us a fast initial render, plus hide the stuff we don't have styles for yet, then load the rest of the CSS async using JavaScript. The rest of the CSS would override the `display: none` on `.main-article` etc.
@@ -90,7 +132,7 @@ This method is [recommended by](https://developers.google.com/speed/docs/insight
 In the real world, I did this [wiki-offline](https://wiki-offline.jakearchibald.com/), and it worked a treat:
 
 <figure class="full-figure" style="background: #eee; overflow: hidden;">
-<div style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling: touch"><img src="/static/posts/link-in-body/wpt.png" alt="" style="height:213px;max-width:none"></div>
+<div style="overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling: touch"><img src="asset-url:./wpt.png" alt="" style="height:213px;max-width:none"></div>
 <figcaption>0.6s faster first render on 3g. Full results <a href="http://www.webpagetest.org/video/compare.php?tests=160202_WJ_KTY-r%3A2-c%3A0&thumbSize=200&ival=100&end=visual">before</a> vs <a href="http://www.webpagetest.org/video/compare.php?tests=160202_TD_KMQ-r%3A2-c%3A0&thumbSize=200&ival=100&end=visual">after</a>.</figcaption>
 </figure>
 
@@ -117,23 +159,22 @@ Since you're restricted to two phases of loading, you have to decide what's in y
 # A simpler, better way
 
 ```html
-<head>
-</head>
+<head> </head>
 <body>
   <!-- HTTP/2 push this resource, or inline it, whichever's faster -->
-  <link rel="stylesheet" href="/site-header.css">
+  <link rel="stylesheet" href="/site-header.css" />
   <header>…</header>
 
-  <link rel="stylesheet" href="/article.css">
+  <link rel="stylesheet" href="/article.css" />
   <main>…</main>
 
-  <link rel="stylesheet" href="/comment.css">
+  <link rel="stylesheet" href="/comment.css" />
   <section class="comments">…</section>
 
-  <link rel="stylesheet" href="/about-me.css">
+  <link rel="stylesheet" href="/about-me.css" />
   <section class="about-me">…</section>
 
-  <link rel="stylesheet" href="/site-footer.css">
+  <link rel="stylesheet" href="/site-footer.css" />
   <footer>…</footer>
 </body>
 ```
@@ -142,11 +183,11 @@ The plan is for each `<link rel="stylesheet">` to block rendering of subsequent 
 
 Let's say the site-header, article, and footer CSS have loaded, but the rest are still pending, here's how the page would look:
 
-* Header: rendered
-* Article: rendered
-* Comments: not rendered, CSS before it hasn't loaded yet (`/comment.css`)
-* About me: not rendered, CSS before it hasn't loaded yet (`/comment.css`)
-* Footer: not rendered, CSS before it hasn't loaded yet (`/comment.css`), even though its own CSS has loaded
+- Header: rendered
+- Article: rendered
+- Comments: not rendered, CSS before it hasn't loaded yet (`/comment.css`)
+- About me: not rendered, CSS before it hasn't loaded yet (`/comment.css`)
+- Footer: not rendered, CSS before it hasn't loaded yet (`/comment.css`), even though its own CSS has loaded
 
 This gives you a sequential render of the page. You don't need decide what's "above the fold", just include a page component's CSS just before the first instance of the component. It's fully streaming compatible, because you don't need to output the `<link>` until just before you need it.
 
@@ -156,9 +197,9 @@ You need to take care when using layout systems where content dictates layout (s
 
 [The HTML spec](https://html.spec.whatwg.org/multipage/semantics.html#the-link-element) doesn't cover how page rendering should be blocked by CSS, and it discourages `<link rel="stylesheet">` in the body, but all browsers allow it. Of course, they all deal with link-in-body in their own way:
 
-* **Chrome & Safari:** Stops rendering as soon as the `<link rel="stylesheet">` is discovered, and won't render until all discovered stylesheets have loaded. This often results in unrendered content *above* the `<link>` being blocked.
-* **Firefox**: `<link rel="stylesheet">` in the head blocks rendering until all discovered stylesheets have loaded. `<link rel="stylesheet">` in the body does not block rendering *unless* a stylesheet in the head is already blocking rendering. This can result in a flash of unstyled content (FOUC).
-* **IE/Edge**: Blocks the parser until the stylesheet loads, but allows content above the `<link>` to render.
+- **Chrome & Safari:** Stops rendering as soon as the `<link rel="stylesheet">` is discovered, and won't render until all discovered stylesheets have loaded. This often results in unrendered content _above_ the `<link>` being blocked.
+- **Firefox**: `<link rel="stylesheet">` in the head blocks rendering until all discovered stylesheets have loaded. `<link rel="stylesheet">` in the body does not block rendering _unless_ a stylesheet in the head is already blocking rendering. This can result in a flash of unstyled content (FOUC).
+- **IE/Edge**: Blocks the parser until the stylesheet loads, but allows content above the `<link>` to render.
 
 At Chrome, we like the IE/Edge behaviour, so we're going to align with it. This allows the progressive rendering pattern of CSS described above. We're working on getting this into the spec, starting with allowing [`<link>` in `<body>`](https://github.com/whatwg/html/pull/616).
 
@@ -169,7 +210,8 @@ The current Chrome/Safari behaviour is backwards compatible, it just ends up blo
 Because Firefox doesn't always block rendering for link-in-body, we'll need to work around it a bit to avoid a FOUC. Thankfully this is pretty easy, as `<script>` blocks parsing, but also waits for pending stylesheets to load:
 
 ```html
-<link rel="stylesheet" href="/article.css"><script> </script>
+<link rel="stylesheet" href="/article.css" />
+<script></script>
 <main>…</main>
 ```
 

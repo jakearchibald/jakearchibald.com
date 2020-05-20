@@ -411,7 +411,7 @@ This is called "newline-delimited JSON" and there's a [sort-of standard for it](
     }
   }
 
-  .hypothetical-code + .codehilite {
+  .hypothetical-code + .code-example {
     margin-top: 0;
   }
 </style>

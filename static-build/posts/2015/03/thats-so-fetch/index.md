@@ -5,9 +5,8 @@ summary: There's been some confusion around the new [fetch
   API](https://fetch.spec.whatwg.org/#fetch-api) recently. Let's clear things
   up.
 mindframe: "- and I've even included a meme"
-image: ""
-meta: ""
-
+image: ''
+meta: ''
 ---
 
 There's been some confusion around the new [fetch API](https://fetch.spec.whatwg.org/#fetch-api) recently. Let's clear things up.
@@ -19,12 +18,12 @@ var xhr = new XMLHttpRequest();
 xhr.open('GET', url);
 xhr.responseType = 'json';
 
-xhr.onload = function() {
+xhr.onload = function () {
   console.log(xhr.response);
 };
 
-xhr.onerror = function() {
-  console.log("Booo");
+xhr.onerror = function () {
+  console.log('Booo');
 };
 
 xhr.send();
@@ -33,33 +32,37 @@ xhr.send();
 Now mop up that vomit and take a look at how fetch does the same thing:
 
 ```js
-fetch(url).then(function(response) {
-  return response.json();
-}).then(function(data) {
-  console.log(data);
-}).catch(function() {
-  console.log("Booo");
-});
+fetch(url)
+  .then(function (response) {
+    return response.json();
+  })
+  .then(function (data) {
+    console.log(data);
+  })
+  .catch(function () {
+    console.log('Booo');
+  });
 ```
 
 Mix in some ES6 arrow functions and it gets even more compact:
 
 ```js
-fetch(url).then(r => r.json())
-  .then(data => console.log(data))
-  .catch(e => console.log("Booo"))
+fetch(url)
+  .then((r) => r.json())
+  .then((data) => console.log(data))
+  .catch((e) => console.log('Booo'));
 ```
 
 And with [ES7 async functions](/2014/es7-async-functions/) it can be structured like sync code, whilst still being async:
 
 ```js
-(async() => {
+(async () => {
   try {
     var response = await fetch(url);
     var data = await response.json();
     console.log(data);
   } catch (e) {
-    console.log("Booo")
+    console.log('Booo');
   }
 })();
 ```
@@ -68,8 +71,8 @@ Unfortunately, not everyone was throwing "SHUT UP AND TAKE MY MONEY" memes at it
 
 <figure class="full-figure fetch-vid-figure" style="position:relative;display:none;">
 <video class="fetch-vid" preload="auto" autoplay="autoplay" muted="muted" loop="loop" webkit-playsinline style="width:100%">
-  <source src="/static/posts/thats-so-fetch/fetch.webm" type="video/webm">
-  <source src="/static/posts/thats-so-fetch/fetch.mp4" type="video/mp4">
+  <source src="asset-url:./fetch.webm" type="video/webm">
+  <source src="asset-url:./fetch.mp4" type="video/mp4">
 </video>
 <svg role="button" tabindex="0" class="fetch-vid-play" xmlns="http://www.w3.org/2000/svg" viewBox="-100 0 300 77" style="position:absolute; top:0; left:0; width: 100%; height: 100%;"><path d="M84.2 73H18C9 73 1.5 65.6 1.5 56.6V20.4C1.5 11.4 9 4 18 4h66.2c9 0 16.5 7.4 16.5 16.4v36.2c0 9-7.4 16.4-16.5 16.4zM18 14c-3.7 0-6.6 2.8-6.6 6.4v36.2c0 3.6 3 6.5 6.6 6.5h66.2c3.7 0 6.6-2.8 6.6-6.4V20.4c0-3.6-3-6.5-6.6-6.5H18zM42.6 23.3c0-1.3 1-1.8 2-1L65.4 37c1 1 1 2 0 3L44.6 54.6c-1 .8-2 .3-2-1V23.3z" fill="#fff"/></svg>
 <figcaption>Dramatic reconstruction</figcaption>
@@ -87,7 +90,7 @@ Unfortunately, not everyone was throwing "SHUT UP AND TAKE MY MONEY" memes at it
     // Apple hates the web
     var obj = document.createElement('object');
     obj.type = 'image/svg+xml';
-    obj.data = '/static/posts/thats-so-fetch/fetch-fallback.svg';
+    obj.data = 'asset-url:./fetch-fallback.svg';
     figure.removeChild(vid);
     figure.removeChild(playBtn);
     figure.insertBefore(obj, figure.firstChild);
@@ -115,7 +118,7 @@ Unfortunately, not everyone was throwing "SHUT UP AND TAKE MY MONEY" memes at it
 
 They thought we shouldn't be adding high level features to the platform, especially as we're in dire need of lower level primitives when it comes to requests and responses.
 
-To that I say, well, actually, that's soooo fetch, and we *are*  going to make fetch happen. Let's clear up the misconceptions…
+To that I say, well, actually, that's soooo fetch, and we _are_ going to make fetch happen. Let's clear up the misconceptions…
 
 ## Don't be fooled by the nice API
 
@@ -128,7 +131,7 @@ XHR is now defined in terms of fetch (see the [calls to fetch in XHR's `.send()`
 What exists in Chrome today doesn't cover the full spec, and the spec doesn't cover all of the planned features. In some cases this is because they haven't been designed yet, in others it's because they're dependent on other in-progress specs. Basically, we're following this pattern:
 
 <figure class="full-figure">
-<img alt="Developing iteratively so the user starts with a skateboard, scooter, bike, motorbike then car, as opposed to giving them nothing until you give them the whole car." src="/static/posts/thats-so-fetch/mvp.png">
+<img alt="Developing iteratively so the user starts with a skateboard, scooter, bike, motorbike then car, as opposed to giving them nothing until you give them the whole car." src="asset-url:./mvp.png">
 </figure>
 
 Bit of a rant: it bothers me that as developers, we preach iterative development and release, but when we're the customers of that approach the reaction is all too often "HOW DARE YOU PRESENT ME WITH SUCH INCOMPLETE IMPERFECTION".
@@ -142,13 +145,13 @@ Anyway, let's take a look at what fetch can do that XHR cannot:
 XHR kinda smushes the request and response together, meaning they can't be used separately. Fetch is different thanks to the `Request` and `Response` constructors. This is particularly useful within a ServiceWorker:
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   if (event.request.url === new URL('/', location).href) {
     event.respondWith(
-      new Response("<h1>Hello!</h1>", {
-        headers: {'Content-Type': 'text/html'}
-      })
-    )
+      new Response('<h1>Hello!</h1>', {
+        headers: { 'Content-Type': 'text/html' },
+      }),
+    );
   }
 });
 ```
@@ -157,7 +160,7 @@ In the above, `event.request` is a `Request`. There's no response yet, and inste
 
 The [Cache API](https://slightlyoff.github.io/ServiceWorker/spec/service_worker/#cache-objects) is a store of `Response`s keyed against `Request`s, having separates allows you to add your own pairings.
 
-This is in Chrome stable *today* from within a ServiceWorker. The fetch API is also available from pages in Chrome Beta.
+This is in Chrome stable _today_ from within a ServiceWorker. The fetch API is also available from pages in Chrome Beta.
 
 Soon, `request.context` will be able to tell you the source of that request, so you can tell apart requests triggered by hyperlinks vs `<img>` etc.
 
@@ -169,8 +172,8 @@ However, with fetch, you can make a `no-cors` request:
 
 ```js
 fetch('//google.com', {
-  mode: 'no-cors'
-}).then(function(response) {
+  mode: 'no-cors',
+}).then(function (response) {
   console.log(response.type); // "opaque"
 });
 ```
@@ -178,13 +181,13 @@ fetch('//google.com', {
 This is similar to the request an `<img>` makes. Of course, you can't read the content of the response as it could contain private information, but it can be consumed by other APIs:
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
     fetch('//www.google.co.uk/images/srpr/logo11w.png', {
-      mode: 'no-cors'
-    })
-  )
-})
+      mode: 'no-cors',
+    }),
+  );
+});
 ```
 
 The above is fine within a ServiceWorker, as long as the receiver is happy with a `no-cors` response. `<img>` is, `<img crossorigin>` isn't.
@@ -199,60 +202,63 @@ This all works in Chrome stable today. In Chrome Canary, although you can use `f
 
 XHR lacks streaming. You can get access to `.responseText` while the request is in progress, but the whole response is still going to buffer into memory.
 
-With fetch, you get access to the low-level body stream. Say I wanted to load a massive CSV and find the value in the cell *after* the one containing "Jake":
+With fetch, you get access to the low-level body stream. Say I wanted to load a massive CSV and find the value in the cell _after_ the one containing "Jake":
 
 ```js
-fetch('/big-data.csv').then(function(response) {
-  var reader = response.body.getReader();
-  var partialCell = '';
-  var returnNextCell = false;
-  var returnCellAfter = "Jake";
-  var decoder = new TextDecoder();
+fetch('/big-data.csv')
+  .then(function (response) {
+    var reader = response.body.getReader();
+    var partialCell = '';
+    var returnNextCell = false;
+    var returnCellAfter = 'Jake';
+    var decoder = new TextDecoder();
 
-  function search() {
-    return reader.read().then(function(result) {
-      partialCell += decoder.decode(result.value || new Uint8Array, {
-        stream: !result.done
+    function search() {
+      return reader.read().then(function (result) {
+        partialCell += decoder.decode(result.value || new Uint8Array(), {
+          stream: !result.done,
+        });
+
+        // Split what we have into CSV 'cells'
+        var cellBoundry = /(?:,|\r\n)/;
+        var completeCells = partialCell.split(cellBoundry);
+
+        if (!result.done) {
+          // Last cell is likely incomplete
+          // Keep hold of it for next time
+          partialCell = completeCells[completeCells.length - 1];
+          // Remove it from our complete cells
+          completeCells = completeCells.slice(0, -1);
+        }
+
+        for (var cell of completeCells) {
+          cell = cell.trim();
+
+          if (returnNextCell) {
+            reader.cancel('No more reading needed.');
+            return cell;
+          }
+          if (cell === returnCellAfter) {
+            returnNextCell = true;
+          }
+        }
+
+        if (result.done) {
+          throw Error('Could not find value after ' + returnCellAfter);
+        }
+
+        return search();
       });
-      
-      // Split what we have into CSV 'cells'
-      var cellBoundry = /(?:,|\r\n)/;
-      var completeCells = partialCell.split(cellBoundry);
-      
-      if (!result.done) {
-        // Last cell is likely incomplete
-        // Keep hold of it for next time
-        partialCell = completeCells[completeCells.length - 1];
-        // Remove it from our complete cells
-        completeCells = completeCells.slice(0, -1);
-      }
+    }
 
-      for (var cell of completeCells) {
-        cell = cell.trim();
-
-        if (returnNextCell) {
-          reader.cancel("No more reading needed.");
-          return cell;
-        }
-        if (cell === returnCellAfter) {
-          returnNextCell = true;
-        }
-      }
-
-      if (result.done) {
-        throw Error("Could not find value after " + returnCellAfter);
-      }
-
-      return search();
-    })
-  }
-
-  return search();
-}).then(function(result) {
-  console.log("Got the result! It's '" + result + "'");
-}).catch(function(err) {
-  console.log(err.message);
-});
+    return search();
+  })
+  .then(function (result) {
+    console.log("Got the result! It's '" + result + "'");
+  })
+  .catch(function (err) {
+    console.log(err.message);
+  });
 ```
 
 Here I'm reading through the CSV (yes, I know my regex is naive), but with only a chunk of content in memory at a given time. Once I find the value I'm looking for, I cancel the stream, closing the connection.
@@ -261,21 +267,21 @@ Here I'm reading through the CSV (yes, I know my regex is naive), but with only 
 
 `TextDecoder` is part of the [encoding spec](https://encoding.spec.whatwg.org/#interface-textencoder). If the chunk it receives via `.decode(input, {stream: true})` ends with a partial multi-byte character, it will return and flush everything but that partial. The next call to decode appends onto the partial, hopefully forming a whole character.
 
-This stuff is starting to land in Canary, [here's a demo of the above](https://jsbin.com/gowaze/quiet), and [here's a demo with a larger dataset](https://domenic.github.io/streams-demo/) (warning: running the demo *may* download many megabytes).
+This stuff is starting to land in Canary, [here's a demo of the above](https://jsbin.com/gowaze/quiet), and [here's a demo with a larger dataset](https://domenic.github.io/streams-demo/) (warning: running the demo _may_ download many megabytes).
 
-Streams are one of the things I'm *really* looking forward to having on the platform. I want to be able to stream-parse some JSON, generate some HTML as a result, and stream that to the browser's parser. JS-driven apps lack an easy way to get progressive-rendering from a single data source, streams can solve that.
+Streams are one of the things I'm _really_ looking forward to having on the platform. I want to be able to stream-parse some JSON, generate some HTML as a result, and stream that to the browser's parser. JS-driven apps lack an easy way to get progressive-rendering from a single data source, streams can solve that.
 
 Transform streams are coming soon, which would make the code above simpler. Ideally `TextDecoder` would be a transform stream, and another transform stream could chunk it into CSV rows. Something like:
 
 ```js
-fetch('/big-data.csv').then(function(response) {
+fetch('/big-data.csv').then(function (response) {
   var csvStream = response.body
-    .pipeThrough(new TextDecoder)
-    .pipeThrough(new CSVDecoder);
+    .pipeThrough(new TextDecoder())
+    .pipeThrough(new CSVDecoder());
 
-  csvStream.read().then(function(result) {
+  csvStream.read().then(function (result) {
     // array of cell values for the first row
-    console.log(result.value); 
+    console.log(result.value);
   });
 });
 ```
@@ -283,17 +289,17 @@ fetch('/big-data.csv').then(function(response) {
 Transform streams also become really exciting within a ServiceWorker:
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    fetch('video.unknowncodec').then(function(response) {
+    fetch('video.unknowncodec').then(function (response) {
       var h264Stream = response.body
         .pipeThrough(codecDecoder)
         .pipeThrough(h264Encoder);
 
       return new Response(h264Stream, {
-        headers: {'Content-type': 'video/h264'}
+        headers: { 'Content-type': 'video/h264' },
       });
-    })
+    }),
   );
 });
 ```
@@ -305,26 +311,26 @@ In the above, I'm using transform streams to take a video the browser doesn't un
 As I mentioned before, we initially shipped fetch without streams support so developers could get the other benefits sooner. To make up for a lack of streams & to subsequently offer a simple way to get common data types, we added some readers:
 
 ```js
-fetch(url).then(function(response) {
+fetch(url).then(function (response) {
   return response.json();
 });
 ```
 
 That, as you might expect, reads the whole stream as JSON. Here's the full list of readers:
 
-* `.arrayBuffer()`
-* `.blob()`
-* `.formData()`
-* `.json()`
-* `.text()`
+- `.arrayBuffer()`
+- `.blob()`
+- `.formData()`
+- `.json()`
+- `.text()`
 
 They exist on `Request` objects as well as responses, so you can use them to read (for example) POST data within a ServiceWorker.
 
 These are true stream readers, meaning they drain the stream:
 
 ```js
-fetch(url).then(function(response) {
-  return response.json().catch(function() {
+fetch(url).then(function (response) {
+  return response.json().catch(function () {
     // This does not work:
     return response.text();
   });
@@ -334,10 +340,13 @@ fetch(url).then(function(response) {
 The call to `.text()` fails as the stream has already been read. You can work around this using `.clone()`:
 
 ```js
-fetch(url).then(function(response) {
-  return response.clone().json().catch(function() {
-    return response.text();
-  });
+fetch(url).then(function (response) {
+  return response
+    .clone()
+    .json()
+    .catch(function () {
+      return response.text();
+    });
 });
 ```
 
@@ -346,7 +355,7 @@ fetch(url).then(function(response) {
 Alternatively, you could look at the headers of the response:
 
 ```js
-fetch(url).then(function(response) {
+fetch(url).then(function (response) {
   if (response.headers.get('Content-Type') === 'application/json') {
     return response.json();
   }
@@ -366,7 +375,7 @@ Fetch has [a headers class](https://fetch.spec.whatwg.org/#headers-class) which 
 
 ## Cache control
 
-The [cache mode](https://fetch.spec.whatwg.org/#concept-request-cache-mode) lets you specify the interaction with the cache. As in, should the cache be consulted? Should the response go into the cache if it's valid? Should the response *only* come from the cache?
+The [cache mode](https://fetch.spec.whatwg.org/#concept-request-cache-mode) lets you specify the interaction with the cache. As in, should the cache be consulted? Should the response go into the cache if it's valid? Should the response _only_ come from the cache?
 
 The latter is a bit contentious as it can expose user history, so it may come with a CORS restriction before it lands in Chrome.
 
@@ -406,9 +415,9 @@ Let's make fetch happen!
 
 # Further reading
 
-* [Intro to ServiceWorkers](http://www.html5rocks.com/en/tutorials/service-worker/introduction/)
-* [ES6 iterators](/2014/iterators-gonna-iterate/)
-* [ES7 async functions](/2014/es7-async-functions/)
-* [Partial fetch polyfill](https://github.com/github/fetch) - built on top of XHR
+- [Intro to ServiceWorkers](http://www.html5rocks.com/en/tutorials/service-worker/introduction/)
+- [ES6 iterators](/2014/iterators-gonna-iterate/)
+- [ES7 async functions](/2014/es7-async-functions/)
+- [Partial fetch polyfill](https://github.com/github/fetch) - built on top of XHR
 
 Thanks to Matt Gaunt, Mat Scales, Anne van Kesteren, Domenic Denicola, Mikeal Rogers, Ben Kelly, and Joshua Bell for disguising the fact I can't really spell, grammar, or indeed code.

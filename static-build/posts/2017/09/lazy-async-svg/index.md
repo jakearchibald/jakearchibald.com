@@ -2,10 +2,9 @@
 title: Lazy async SVG rasterisation
 date: 2017-09-08 09:57:21
 summary: Using `createImageBitmap` to make SVG render off the main thread.
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: Using createImageBitmap for threaded SVG rendering.
-
 ---
 
 Phwoar I love a good sciency-sounding title.
@@ -17,7 +16,7 @@ When transforming an SVG image, browsers try to render on every frame to keep th
 [**Here's a demo**](https://svg-zoom-demo.glitch.me/), press "Scale SVG".
 
 <figure class="full-figure">
-<img src="/static/posts/lazy-async-svg/bad.png" alt="">
+<img src="asset-url:./bad.png" alt="">
 <figcaption>Devtools timeline for SVG animation</figcaption>
 </figure>
 
@@ -30,7 +29,7 @@ However, a new API gives us more control:
 # Rasterising SVG lazily
 
 ```js
-createImageBitmap(imgElement).then(imageBitmap => {
+createImageBitmap(imgElement).then((imageBitmap) => {
   // …
 });
 ```
@@ -53,7 +52,7 @@ The allows me to perform a really cheap bitmap zoom of the SVG using a canvas, w
 [**Here's a demo**](https://svg-zoom-demo.glitch.me/), press "Scale canvas". Requires Chrome 61+ with `chrome://flags/#enable-experimental-canvas-features` enabled.
 
 <figure class="full-figure">
-<img src="/static/posts/lazy-async-svg/better.png" alt="">
+<img src="asset-url:./better.png" alt="">
 <figcaption>Devtools timeline for canvas animation</figcaption>
 </figure>
 

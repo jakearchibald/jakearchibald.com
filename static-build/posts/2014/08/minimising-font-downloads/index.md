@@ -3,17 +3,16 @@ title: Minimising font downloads
 date: 2014-08-19 00:00:32
 summary: Optimising fonts is pretty difficult for larger sites. There's an easy
   solution, although only some browsers support it.
-mindframe: ""
+mindframe: ''
 image: null
-meta: ""
-
+meta: ''
 ---
 
 Optimising fonts is pretty difficult for larger sites. There's an easy solution, although only some browsers support it.
 
 ## Translations
 
-* [Français](http://tdd.github.io/translations/articles/jake-font-dls.html)
+- [Français](http://tdd.github.io/translations/articles/jake-font-dls.html)
 
 # Fonts can be big
 
@@ -95,27 +94,27 @@ Optimally, the browser should only download the normal sub-setted resource. If y
 
 Ok, here's the bad news:
 
-* **Safari**: Downloads all the fonts
-* **Internet Explorer**: Also downloads all the fonts
-* **Firefox**: Only downloads one font, but the wrong font, leaving rendering broken
-* **Chrome**: Does the right thing, only downloads the normal subsetted font
-* **Opera**: Same as Chrome
+- **Safari**: Downloads all the fonts
+- **Internet Explorer**: Also downloads all the fonts
+- **Firefox**: Only downloads one font, but the wrong font, leaving rendering broken
+- **Chrome**: Does the right thing, only downloads the normal subsetted font
+- **Opera**: Same as Chrome
 
 This is pretty bad new for IE and Safari, they end up downloading 300k rather than 30k in this example. It gets much worse if you add in italic & bold-italic, as IE & Safari will download those too, even if they're not used.
 
 ## What's going on with Firefox?
 
 <figure class="full-figure" style="background: #eee; overflow: hidden;">
-<img src="/static/posts/font-subsetting/firefox.png" alt="" style="max-width: 337px; margin: 11px auto; width: 100%">
+<img src="asset-url:./firefox.png" alt="" style="max-width: 337px; margin: 11px auto; width: 100%">
 <figcaption>Incorrect Firefox rendering</figcaption>
 </figure>
 
 Firefox does the right thing with `font-weight`, it only downloads what the page uses, unfortunately it ignores `unicode-range`. The "reg-extended" font declaration overwrites the "reg-subset" one, but only because of the source order. "reg-extended" is used to render the page, but it doesn't contain all the characters, so fallbacks are used. Of course, "sans-serif" would have been a better fallback, but I wanted to highlight the problem.
 
-But if it's only using the extended font, how are *most* of the characters are rendering correctly? You wouldn't expect 'o' to be part of the extended set, but it is. In order to be efficient within the font, `ö` is a combination of the `o` and `¨` glyphs. Although we didn't want to keep 'o' in the extended font it's retained because other glyphs depend on it.
+But if it's only using the extended font, how are _most_ of the characters are rendering correctly? You wouldn't expect 'o' to be part of the extended set, but it is. In order to be efficient within the font, `ö` is a combination of the `o` and `¨` glyphs. Although we didn't want to keep 'o' in the extended font it's retained because other glyphs depend on it.
 
 <figure class="full-figure" style="background: #eee; overflow: hidden;">
-<img src="/static/posts/font-subsetting/e.png" alt="" style="max-width: 353px; margin: 3px auto; width: 100%">
+<img src="asset-url:./e.png" alt="" style="max-width: 353px; margin: 3px auto; width: 100%">
 <figcaption>Einstein's theory of glyph reuse</figcaption>
 </figure>
 
@@ -152,9 +151,9 @@ p {
 
 When it works, this is a great feature, especially for sites that handle a variety of locales, sites that allow users can submit their own content, or even just for downloading that fancy-ampersand font only when it's needed. If it's useful to you, tell browser vendors (including your use-case):
 
-* **Safari**: [Download only needed weights](https://bugs.webkit.org/show_bug.cgi?id=113715), [Download only needed ranges](https://bugs.webkit.org/show_bug.cgi?id=42154)
-* **Internet Explorer** [Download only needed weights](https://connect.microsoft.com/IE/feedbackdetail/view/949871/), [Download only needed ranges](https://connect.microsoft.com/IE/feedbackdetail/view/789754) - last year they indicated they have no intention of implementing this, hopefully they'll change their mind
-* **Firefox**: [Support `unicode-range`](https://bugzilla.mozilla.org/show_bug.cgi?id=475891)
+- **Safari**: [Download only needed weights](https://bugs.webkit.org/show_bug.cgi?id=113715), [Download only needed ranges](https://bugs.webkit.org/show_bug.cgi?id=42154)
+- **Internet Explorer** [Download only needed weights](https://connect.microsoft.com/IE/feedbackdetail/view/949871/), [Download only needed ranges](https://connect.microsoft.com/IE/feedbackdetail/view/789754) - last year they indicated they have no intention of implementing this, hopefully they'll change their mind
+- **Firefox**: [Support `unicode-range`](https://bugzilla.mozilla.org/show_bug.cgi?id=475891)
 
 # In the meantime
 
@@ -164,4 +163,4 @@ IE, Firefox & Safari will download more than they need, but only the equivalent 
 
 # Further reading
 
-* [WOFF2](https://gist.github.com/sergejmueller/cf6b4f2133bcb3e2f64a) - supported by Chrome & Opera, reduces font resources by a further ~20%
+- [WOFF2](https://gist.github.com/sergejmueller/cf6b4f2133bcb3e2f64a) - supported by Chrome & Opera, reduces font resources by a further ~20%
