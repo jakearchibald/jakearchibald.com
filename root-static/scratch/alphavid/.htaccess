@@ -1,0 +1,7 @@
+AddType video/ogg .ogv
+AddType video/mp4 .mp4
+AddType video/webm .webm
+
+<FilesMatch "\.(mp4|ogv)$">
+Header set Expires "Thu, 15 Apr 2020 20:00:00 GMT"
+</FilesMatch>

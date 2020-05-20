@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width">
+  <meta charset="utf-8">
+  <title>Font test</title>
+  <style>
+    /* Small subset, normal weight */
+    @font-face {
+      font-family: ubuntu-custom;
+      src: url('ubuntu-r-subset.woff') format('woff');
+      unicode-range: U+0-00A0;
+      font-weight: normal;
+    }
+    /* Large subset, normal weight */
+    @font-face {
+      font-family: ubuntu-custom;
+      src: url('ubuntu-r.woff') format('woff');
+      unicode-range: U+00A0-FFFF;
+      font-weight: normal;
+    }
+    /* Small subset, bold weight */
+    @font-face {
+      font-family: ubuntu-custom;
+      src: url('ubuntu-b-subset.woff') format('woff');
+      unicode-range: U+0-A0;
+      font-weight: bold;
+    }
+    /* Large subset, bold weight */
+    @font-face {
+      font-family: ubuntu-custom;
+      src: url('ubuntu-b.woff') format('woff');
+      unicode-range: U+00A0-FFFF;
+      font-weight: bold;
+    }
+    /* And use the font: */
+    .demo {
+      font-family: ubuntu-custom, serif;
+      font-size: 3rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="demo" contenteditable>Foobar</div>
+</body>
+</html>

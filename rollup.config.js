@@ -24,6 +24,7 @@ import resolveDirsPlugin from './lib/resolve-dirs-plugin';
 import postData from './lib/post-data-plugin';
 import runScript from './lib/run-script';
 import markdownPlugin from './lib/markdown-plugin';
+import rootStaticPlugin from './lib/add-root-static';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -42,7 +43,7 @@ export default async function ({ watch }) {
     markdownPlugin(),
   ];
   const dir = '.tmp/build';
-  const staticPath = 'static/[name]-[hash][extname]';
+  const staticPath = 'static/[name]-[hash].c[extname]';
 
   return {
     input: 'static-build/index.tsx',
@@ -76,6 +77,7 @@ export default async function ({ watch }) {
       ),
       ...commonPlugins(),
       postData(),
+      rootStaticPlugin(),
       nodeExternalPlugin(),
       runScript(dir + '/index.js'),
     ],
