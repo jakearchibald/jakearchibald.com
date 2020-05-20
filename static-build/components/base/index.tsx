@@ -13,7 +13,7 @@
 import { h, FunctionalComponent, RenderableProps, VNode } from 'preact';
 import styles from 'css-bundle:./css/all.css';
 
-import bundleURL, { imports } from 'client-bundle:client/all/index.tsx';
+//import bundleURL, { imports } from 'client-bundle:client/all/index.tsx';
 import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
 
 interface Props {
@@ -50,10 +50,10 @@ const BasePage: FunctionalComponent<Props> = ({
           title="Jake Archibald's Blog"
           href="/posts.rss"
         />
-        <script type="module" src={bundleURL} />
+        {/*}<script type="module" src={bundleURL} />
         {imports.map((v) => (
           <link rel="preload" as="script" href={v} crossOrigin="" />
-        ))}
+        ))}{*/}
         {extraHead}
       </head>
       <body>
