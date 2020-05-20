@@ -1,3 +1,5 @@
+skipWaiting();
+
 // Self-removing service worker, until I can replace the server-side stuff I had before:
 addEventListener('activate', (event) => {
   event.waitUntil(
