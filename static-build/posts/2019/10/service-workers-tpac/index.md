@@ -4,10 +4,9 @@ date: 2019-10-06 14:05:43
 summary: "Last month we had a service worker meeting at the W3C TPAC conference
   in Fukuoka. For the first time in a few years, we focused on possible new
   features and behaviours. Here's a summary:"
-mindframe: ""
-image: ""
+mindframe: ''
+image: ''
 meta: Last month we had a service worker meeting at TPAC. Here's a summary…
-
 ---
 
 Last month we had a service worker meeting at the W3C TPAC conference in Fukuoka. For the first time in a few years, we focused on potential new features and behaviours. Here's a summary:
@@ -101,8 +100,8 @@ I even put all of my art skills to the test:
 <figure class="full-figure">
 <div style="position:relative;padding-top:57%">
   <picture>
-    <source type="image/webp" srcset="/static/posts/sw-tpac/diagram.webp">
-    <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="/static/posts/sw-tpac/diagram.jpg" alt="">
+    <source type="image/webp" srcset="asset-url:./diagram.webp">
+    <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="asset-url:./diagram.jpg" alt="">
   </picture>
 </div>
 <figcaption>I'm sure that clears everything up.</figcaption>
@@ -110,9 +109,9 @@ I even put all of my art skills to the test:
 
 Now we just have to spec it.
 
-* [GitHub issue about frozen documents & service workers](https://github.com/w3c/ServiceWorker/pull/1442).
-* [GitHub issue about bfcache & service workers](https://github.com/w3c/ServiceWorker/issues/1038).
-* [GitHub issue about discarded tabs](https://github.com/w3c/ServiceWorker/issues/626).
+- [GitHub issue about frozen documents & service workers](https://github.com/w3c/ServiceWorker/pull/1442).
+- [GitHub issue about bfcache & service workers](https://github.com/w3c/ServiceWorker/issues/1038).
+- [GitHub issue about discarded tabs](https://github.com/w3c/ServiceWorker/issues/626).
 
 # Attaching state to clients
 
@@ -149,7 +148,7 @@ reg.unregister({ immediate: true });
 
 [Asa Kusuma](https://twitter.com/asakusuma) from LinkedIn has written [tests for `Clear-Site-Data`](https://github.com/web-platform-tests/wpt/pull/19132). I just need to do the spec work, which unfortunately is easier said than done. Making something abortable involves going through the whole spec and defining how aborting works at each point.
 
-* [GitHub issue](https://github.com/w3c/ServiceWorker/issues/614).
+- [GitHub issue](https://github.com/w3c/ServiceWorker/issues/614).
 
 # URL pattern matching
 
@@ -213,23 +212,25 @@ A practical example would involve uploading something that was inherently stream
 
 HTTP is bidirectional. The model isn't request-then-response – you can start receiving the response while you're still sending the request body. However, at TPAC, browser folks noted that exposing this in fetch was really complicated given the current networking stacks, so the initial implementations of request-streams won't yield the response until the request is complete. This isn't too bad – if you want to emulate bidirectional communication, you can use one fetch for the upload, and another for the download.
 
-* [GitHub issue](https://github.com/whatwg/fetch/pull/425#issuecomment-527387538).
+- [GitHub issue](https://github.com/whatwg/fetch/pull/425#issuecomment-527387538).
 
 # Execute after response
 
 This has become a pretty common pattern in service workers:
 
 ```js
-addEventListener('fetch', event => {
-  event.respondWith(async function() {
-    const response = await getResponseSomehow();
+addEventListener('fetch', (event) => {
+  event.respondWith(
+    (async function () {
+      const response = await getResponseSomehow();
 
-    event.waitUntil(async function() {
-      await doSomeBookkeepingOrCaching();
-    });
+      event.waitUntil(async function () {
+        await doSomeBookkeepingOrCaching();
+      });
 
-    return response;
-  }());
+      return response;
+    })(),
+  );
 });
 ```
 
@@ -238,18 +239,20 @@ However, some folks were finding that some of their JavaScript running in `waitU
 To avoid this hack, we agreed on `event.handled`, which is a promise that resolves once the fetch event has provided a response, or deferred to the browser.
 
 ```js
-addEventListener('fetch', event => {
-  event.respondWith(async function() {
-    const response = await getResponseSomehow();
+addEventListener('fetch', (event) => {
+  event.respondWith(
+    (async function () {
+      const response = await getResponseSomehow();
 
-    event.waitUntil(async function() {
-      // And here's the new bit:
-      await event.handled;
-      await doSomeBookkeepingOrCaching();
-    });
+      event.waitUntil(async function () {
+        // And here's the new bit:
+        await event.handled;
+        await doSomeBookkeepingOrCaching();
+      });
 
-    return response;
-  }());
+      return response;
+    })(),
+  );
 });
 ```
 
@@ -327,7 +330,7 @@ await foo();
 const modulePromise = import('./utils');
 ```
 
-* [GitHub issue](https://github.com/w3c/ServiceWorker/issues/1407).
+- [GitHub issue](https://github.com/w3c/ServiceWorker/issues/1407).
 
 # Fetch opt-in / opt-out
 
@@ -362,7 +365,7 @@ Oh, also, the venue was next to a baseball stadium, and there was a pub that had
 
 <figure class="full-figure">
 <div style="position:relative;padding-top:75%">
-  <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="/static/posts/sw-tpac/baseball.jpg" alt="Pub window looking into a baseball stadium">
+  <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="asset-url:./baseball.jpg" alt="Pub window looking into a baseball stadium">
 </div>
 </figure>
 
@@ -374,7 +377,7 @@ Well…
 
 <figure class="full-figure">
 <div style="position:relative;padding-top:143%">
-  <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="/static/posts/sw-tpac/pint.jpg" alt="A pint of gin & tonic">
+  <img style="position:absolute;top:0;left:0;width:100%;height:100%" src="asset-url:./pint.jpg" alt="A pint of gin & tonic">
 </div>
 <figcaption>Cheers!</figcaption>
 </figure>

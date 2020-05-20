@@ -12,10 +12,11 @@
  */
 import { h } from 'preact';
 
-import { renderPage, writeFiles } from './utils';
+import { renderPage, writeFiles, getPostPath } from './utils';
 import IndexPage from './pages/index';
 import posts from 'post-data:';
 import WhoPage from './pages/who';
+import PostPage from './pages/post';
 
 const indexPageSize = 10;
 const paginatedPosts = Array.from(
@@ -37,6 +38,12 @@ for (const [i, posts] of paginatedPosts.entries()) {
       pageNum={i + 1}
       totalPages={paginatedPosts.length}
     />,
+  );
+}
+
+for (const post of posts) {
+  toOutput[getPostPath(post) + 'index.html'] = renderPage(
+    <PostPage post={post} />,
   );
 }
 
