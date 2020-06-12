@@ -2,3 +2,6 @@
 node_modules
 *.css.d.ts
 build
+
+# Local Netlify folder
+.netlify
