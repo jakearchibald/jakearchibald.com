@@ -154,6 +154,8 @@ And see if there's a change:
 
 Yes! All of our objects have been garbage collected. So, the answer is: no, `abortable` doesn't leak.
 
+[Here's the demo I used for the videos](/demos/event-listener-leak/), so you can try it yourself.
+
 # But, why?
 
 Here's a less-code example:
