@@ -214,4 +214,4 @@ function demo() {
 }
 ```
 
-Once either `'load'` or `'error'` fires, the browser sets a flag on the `xhr` instance to say "I hereby shall not fire any more events on this object", and since you no longer have a reference to `xhr`, you can't fire events on it either, all the event listeners can be GCd.
+Once either `'load'` or `'error'` fires, the browser sets a flag on the `xhr` instance to say "I hereby shall not fire any more events on this object", and since you no longer have a reference to `xhr`, you can't fire events on it either, all the event listeners can be GCed.
