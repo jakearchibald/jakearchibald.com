@@ -1,10 +1,10 @@
 ---
 title: Event listeners and garbage collection
 date: 2020-06-12 01:00:00
-summary: ''
+summary: "Sometimes, leaving event listeners attached to an object feels like an anti-pattern, but sometimes it's fine. Here's how it works…"
 mindframe: "- ohh it's been a while"
 image: 'asset-url:./post.png'
-meta: TODO
+meta: 'The browser is pretty smart when it comes to GCing listeners…'
 ---
 
 Imagine a bit of code like this:
