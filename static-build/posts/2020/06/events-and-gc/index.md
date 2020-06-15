@@ -189,7 +189,7 @@ The event listener added to `signal`, and everything that listener can access, n
 
 While we're waiting for `someAsyncAPI()` to resolve, there are live references to `signal` and `controller` within `demo()`.
 
-But, once `someAsyncAPI()` resolves, `demo()` pops off the stack. It no longer holds references to `signal` or `controller`. With those gone, the browser realises `signal` can no longer receive events, that event listener will never be called, so it can be garbage collected along with anything it references.
+But, once `someAsyncAPI()` resolves, `demo()` pops off the stack. It no longer holds references to `signal` or `controller`. With those gone, the browser realises `signal` can no longer receive events, and that event listener will never be called, so it can be garbage collected along with anything it references.
 
 # And that's it!
 
