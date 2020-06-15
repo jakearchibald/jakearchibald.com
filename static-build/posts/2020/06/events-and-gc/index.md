@@ -98,7 +98,7 @@ In this version, I allocate 100mb of memory in a `Uint8Array`. That object is re
 
 `'abort'` may never fire. But also, `'abort'` may fire multiple times.
 
-If you call `controller.abort()` multiple times, the browser will only fire the `'abort'` event once. But it's a regular DOM event, so there's nothing stopping anyone from doing this:
+If you call `controller.abort()` multiple times, the browser will only fire the `'abort'` event once. But it's a regular DOM event, so there's nothing stopping anyone from doing something weird like this:
 
 ```js
 signal.dispatchEvent(new Event('abort'));
