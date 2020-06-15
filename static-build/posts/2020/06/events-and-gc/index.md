@@ -22,7 +22,7 @@ btn2.onclick = () => showImageSize(url2);
 
 This has a race condition. If the user clicks `btn1`, then `btn2`, it's possible that the result for `url2` will arrive before `url1`. This isn't the order the user clicked the buttons, so the user is left looking at incorrect data.
 
-The best way to solve this is to 'abort' any pending `showImageSize` operations. [`fetch` supports aborting requests](https://developers.google.com/web/updates/2017/09/abortable-fetch), but unfortunately `createImageBitmap` doesn't. However, you can at least exit early and ignore the result. I wrote a little helper for this:
+Sometimes the best way to solve this is to queue the two actions, but in this case it's better to 'abort' the previous `showImageSize` operation, because the new operation supersedes it. [`fetch` supports aborting requests](https://developers.google.com/web/updates/2017/09/abortable-fetch), but unfortunately `createImageBitmap` doesn't. However, you can at least exit early and ignore the result. I wrote a little helper for this:
 
 ```js
 async function abortable(signal, promise) {
@@ -215,3 +215,5 @@ function demo() {
 ```
 
 Once either `'load'` or `'error'` fires, the browser sets a flag on the `xhr` instance to say "I hereby shall not fire any more events on this object", and since you no longer have a reference to `xhr`, you can't fire events on it either, all the event listeners can be GCd.
+
+These are browser optimisations, rather than spec'd behaviours. If you're unsure if a particular thing will be correctly GC'd, test it!
