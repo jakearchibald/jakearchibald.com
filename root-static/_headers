@@ -1,6 +1,9 @@
 /*
   X-Frame-Options: DENY
 
-/*.c.*
+/c/*
   Cache-Control: max-age=31536000
   x-test-header: foo
+
+/20*
+  Cache-Control: max-age=180

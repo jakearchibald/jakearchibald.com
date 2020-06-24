@@ -43,7 +43,7 @@ export default async function ({ watch }) {
     markdownPlugin(),
   ];
   const dir = '.tmp/build';
-  const staticPath = 'static/[name]-[hash].c[extname]';
+  const staticPath = 'static/c/[name]-[hash][extname]';
 
   return {
     input: 'static-build/index.tsx',
