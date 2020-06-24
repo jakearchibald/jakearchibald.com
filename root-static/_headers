@@ -3,6 +3,4 @@
 
 /*.c.*
   Cache-Control: max-age=31536000
-
-/*.html
-  Cache-Control: max-age=180
+  x-test-header: foo
