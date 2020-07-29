@@ -1,8 +1,8 @@
 ---
-title: Different tabs can be running different versions of your site
+title: Different versions of your site can be running at the same time
 date: 2020-07-29 01:00:00
-summary: Is your site prepared for that? Many of mine aren't…
-meta: Different tabs can be running different versions of your site, and it's easy to forget that.
+summary: Are you prepared for that? I'm not sure I am
+meta: Different versions of your site can be running at the same time, and it's easy to forget that.
 ---
 
 It's pretty easy for a user to be running an old version of your site. Not only that, but a user could be running many different versions of your site at the same time, in different tabs, and that's kinda terrifying. For instance:
