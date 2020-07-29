@@ -97,7 +97,7 @@ btn.addEventListener('click', async () => {
 });
 ```
 
-But you aren't given the reason for failure here. A connection failure due to user being offline, syntax error in the script, and 404 during the fetch are indistinguishable in the code above
+But you aren't given the reason for failure here. A connection failure due to user being offline, syntax error in the script, and 404 during the fetch are indistinguishable in the code above.
 
 Also, this means that V1 needs to be prepared for errors introduced by V2, and I don't know about you, but I don't always have total foresight for that kind of stuff.
 
