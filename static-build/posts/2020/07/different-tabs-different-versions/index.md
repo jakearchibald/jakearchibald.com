@@ -47,6 +47,8 @@ The JavaScript running on your page is V1, but `./lazy-script.js` is now V2. Thi
 - `updatePage` tries to update the element with class name `main-content`, but in V1 that was named `main-page-content`, so the script throws.
 - `updatePage` has been renamed `updateMainComponent`, so `updatePage()` throws an error.
 
+This is a problem with anything lazy-loaded that's co-dependent with other things on the page, including CSS and JSON.
+
 ## Solutions
 
 You could use a service worker to cache the current version. [The service worker lifecycle](https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle) won't let a new version take over until everything using the current version goes away. However, that means caching `lazy-script.js` up-front, which maybe defeats the point in terms of bandwidth saving.
@@ -69,6 +71,12 @@ In the latest deployment the lazy script was updated, so its URL has changed to 
 In ye olde days, we'd push immutable assets to some kind of static host such as Amazon S3 as part of the deploy script. This meant both `lazy-script.a837cb1e.js` _and_ `lazy-script.39bfa2c2.js` would exist on the server, and everything would work fine.
 
 However, with newer containerised/serverless build systems, the old static assets are likely _gone_, so the above script will fail with a 404.
+
+This isn't just a problem with lazy-loaded scripts, it's a problem with anything lazy-loaded, even something as simple as:
+
+```html
+<img src="article.7d62b23c.jpg" loading="lazy" alt="…" />
+```
 
 ## Solutions
 
@@ -177,6 +185,6 @@ Now your server can either return an error, or return the data format required b
 
 # Are you prepared for multiple versions of your site running at once?
 
-I'm not finger-wagging – a lot of the things I work on use serverless builds, so they're vulnerable to at least some of the breakages I've outlined. I just wish we had better tools to deal with it.
+I'm not trying to finger-wag – a lot of the things I work on use serverless builds, so they're vulnerable to at least some of the breakages I've outlined, and some of the solutions I've presented here are a bit a weak, but they're the best I've got. I wish we had better tools to deal with this.
 
-Do you have better ways of dealing with situations like this? Let me know in the comments:
+Do you have better ways of dealing with these situations? Let me know in the comments:
