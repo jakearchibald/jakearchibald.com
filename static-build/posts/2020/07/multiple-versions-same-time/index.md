@@ -152,7 +152,7 @@ IndexedDB kinda sends you down this path by design. It has versioning built in, 
 
 If you're using a service worker and serving all content from a cache, [the service worker lifecycle](https://developers.google.com/web/fundamentals/primers/service-workers/lifecycle) will prevent two tabs running different versions unless you say otherwise. And again, V2 can forcibly reload V1 pages if V1 was totally unprepared for V2's arrival.
 
-# API response change
+# API response changes
 
 What if the user loads one of your pages, you deploy an update, then the user clicks a button:
 
