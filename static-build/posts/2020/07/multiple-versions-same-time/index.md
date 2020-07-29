@@ -2,7 +2,7 @@
 title: Different versions of your site can be running at the same time
 date: 2020-07-29 01:00:00
 summary: Are you prepared for that? I'm not sure I am
-meta: Different versions of your site can be running at the same time, and it's easy to forget that.
+meta: Are you prepared for that? I'm not sure I am
 ---
 
 It's pretty easy for a user to be running an old version of your site. Not only that, but a user could be running many different versions of your site at the same time, in different tabs, and that's kinda terrifying. For instance:
