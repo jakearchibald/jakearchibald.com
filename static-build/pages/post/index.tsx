@@ -67,6 +67,18 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => (
             {post.mindframe}
           </time>
           <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
+          <p>
+            <small>
+              <a
+                href={`https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/${date.format(
+                  new Date(post.date),
+                  'YYYY/MM',
+                )}/${post.slug}/index.md`}
+              >
+                View this page on GitHub
+              </a>
+            </small>
+          </p>
         </div>
         <div class="comments" id="comments">
           <div id="disqus_thread"></div>
