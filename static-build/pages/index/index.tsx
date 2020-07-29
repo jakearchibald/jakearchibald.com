@@ -88,7 +88,7 @@ const IndexPage: FunctionalComponent<Props> = ({
                 class="article-date"
                 dateTime={date.format(new Date(post.date), 'YYYY-DD-MM')}
               >
-                Posted {date.format(new Date(post.date), 'DD MMMM YYYY')}
+                Posted {date.format(new Date(post.date), 'DD MMMM YYYY')}{' '}
                 {post.mindframe}
               </time>
             </header>
