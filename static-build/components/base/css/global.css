@@ -4,7 +4,6 @@
   font-weight: 400;
   src: url(https://themes.googleusercontent.com/static/fonts/inconsolata/v6/BjAYBlHtW3CJxDcjzrnZCCwlidHJgAgmTjOEEzwu1L8.ttf)
     format('truetype');
-  font-display: optional;
 }
 @font-face {
   font-family: 'PT Serif';
@@ -12,7 +11,6 @@
   font-weight: 400;
   src: url(https://themes.googleusercontent.com/static/fonts/ptserif/v5/EgBlzoNBIHxNPCMwXaAhYHYhjbSpvc47ee6xR_80Hnw.ttf)
     format('truetype');
-  font-display: optional;
 }
 
 html {
