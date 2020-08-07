@@ -1,4 +1,5 @@
 skipWaiting();
+registration.unregister();
 
 // Self-removing service worker, until I can replace the server-side stuff I had before:
 addEventListener('activate', (event) => {
