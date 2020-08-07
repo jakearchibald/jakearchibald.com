@@ -27,7 +27,7 @@ Firefox and Chrome cache the service worker's certificate. When you visit a page
 
 Safari on the other hand doesn't display a 🔒. It doesn't say the page is "not secure", but it doesn't explicitly say it's secure either. However, Safari is moving to the same model as Firefox and Chrome.
 
-When it comes to the HTTP cache, responses are cached along with their certificate, and the 🔒 is displayed using information from that cached certificate.
+When it comes to the HTTP cache, all browsers behave the same. Responses are cached along with their certificate, and the 🔒 is displayed using information from that cached certificate.
 
 # Is that a problem?
 
