@@ -31,7 +31,7 @@ When it comes to the HTTP cache, responses are cached along with their certifica
 
 # Is that a problem?
 
-Neither model is perfect. It seems weird to say the "connection is secure" when there's no connection. Also, you might end up seeing certificate information that has since expired. You might say that cached content should expire when the 'associated' certificate expires, but it isn't that simple. What if some JavaScript writes information to IndexedDB, then the certificate 'associated' with the JavaScript expires, or is even revoked? Should IndexedDB also be cleared? On the web, the certificate is only used to verify data as it crosses from the internet to the user's local machine.
+Neither model is perfect. It seems weird to say the "connection is secure" when there's no connection. Also, you might end up seeing certificate information that has since expired. You might say that cached content should expire when the 'associated' certificate expires, but it isn't that simple. What if some JavaScript writes information to IndexedDB, then the certificate 'associated' with the JavaScript expires, or is even revoked? Should IndexedDB also be cleared? No, we already have a per-resource expiration mechanism for the HTTP cache via `Cache-Control`, and we already have [clear-site-data](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Clear-Site-Data) to use as a panic button. The certificate is only used to verify data as it crosses from the internet to the user's local machine.
 
 The current Safari model doesn't make a claim about the connection, since it doesn't exist, which makes sense. But the absence of the 🔒 might be a red flag to users that are trained to spot it as a signal of safety.
 
