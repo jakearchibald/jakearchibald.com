@@ -116,10 +116,10 @@ export default class ZoomableTwoUp extends Component<Props, State> {
           ref={this._pinchZoomLeft}
           onChange={this._onPinchZoomLeftChange}
         >
-          {left}
+          <div>{left}</div>
         </pinch-zoom>
         <pinch-zoom class="pinch-zoom" ref={this._pinchZoomRight}>
-          {right}
+          <div>{right}</div>
         </pinch-zoom>
       </two-up>
     );

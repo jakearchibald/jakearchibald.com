@@ -23,10 +23,6 @@ html {
   height: -webkit-fill-available;
 }
 
-.demo-img {
-  width: 960px;
-}
-
 .pinch-zoom {
   display: grid;
   justify-items: center;

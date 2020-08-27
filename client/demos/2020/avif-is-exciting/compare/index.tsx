@@ -12,31 +12,93 @@
  */
 import { render, Component, h } from 'preact';
 import ZoomableTwoUp from './ZoomableTwoUp';
-import f1WebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-match.webp';
-import f1WebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-good.webp';
-import f1JpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-match.jpg';
-import f1JpgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-good.jpg';
-import f1AvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-good.avif';
-import f1AvifNearLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1/f1-near-lossless.avif';
+import f1WebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.webp';
+import f1WebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.webp';
+import f1JpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.jpg';
+import f1JpgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.jpg';
+import f1AvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.avif';
+import f1AvifNearLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif';
+import teamAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif';
+import teamWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
+import teamPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
+import teamAvifLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
+import teamWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp';
+import teamJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg';
+import teamWebpLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp';
+import carWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp';
+import carAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
+import carSvgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
+import carPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png';
+import carSvgOriginal from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
+import carWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
+import machineWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
+import machineWebpDithered from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp';
+import machineWebpLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp';
+import machineJpgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg';
+import machineAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif';
+import machineWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp';
+import machineJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg';
+
 import DecodedImg from './DecodedImg';
 
 const categories: {
-  [category: string]: { [name: string]: string } | undefined;
+  [category: string]:
+    | { width: number; options: { [name: string]: string } }
+    | undefined;
 } = {
   f1: {
-    'AVIF - acceptable - 18k': f1AvifGood,
-    'WebP - acceptable - 39k': f1WebpGood,
-    'JPEG - acceptable - 77k': f1JpgGood,
-    'WebP - 22k': f1WebpMatch,
-    'JPEG - 20k': f1JpgMatch,
-    'AVIF - near lossless - 486k': f1AvifNearLossless,
+    width: 960,
+    options: {
+      'AVIF - acceptable - 18k': f1AvifGood,
+      'WebP - acceptable - 39k': f1WebpGood,
+      'JPEG - acceptable - 77k': f1JpgGood,
+      'WebP - 22k': f1WebpMatch,
+      'JPEG - 20k': f1JpgMatch,
+      'AVIF - near lossless - 486k': f1AvifNearLossless,
+    },
+  },
+  team: {
+    width: 400,
+    options: {
+      'AVIF - acceptable - 8.5k': teamAvifGood,
+      'WebP - 68 color lossless - 13k': teamWebpGood,
+      'PNG - 68 color lossless - 16k': teamPngGood,
+      'AVIF - 68 color lossless - 41k': teamAvifLossless,
+      'WebP - lossy - 8.4k': teamWebpMatch,
+      'JPEG - 8.5k': teamJpgMatch,
+      'WebP - full color lossless - 43k': teamWebpLossless,
+    },
+  },
+  car: {
+    width: 500,
+    options: {
+      'AVIF - acceptable - 13k': carAvifGood,
+      'WebP - acceptable - 49k': carWebpGood,
+      'PNG - acceptable - 84k': carPngGood,
+      'WebP - 13k': carWebpMatch,
+      "SVG - SVGO'd - 30k": carSvgGood,
+      'SVG - original - 80k': carSvgOriginal,
+    },
+  },
+  machine: {
+    width: 960,
+    options: {
+      'AVIF - acceptable - 12k': machineAvifGood,
+      'WebP - acceptable - 26k': machineWebpGood,
+      'JPEG - acceptable - 80k': machineJpgGood,
+      'WebP - 12k': machineWebpMatch,
+      'JPEG - 12k': machineJpgMatch,
+      'WebP - 256 color lossless - 166k': machineWebpDithered,
+      'WebP - full color lossless - 268k': machineWebpLossless,
+    },
   },
 };
 
-const images = Object.entries(
+const category =
   categories[new URLSearchParams(location.search).get('show') || 'f1'] ||
-    categories.f1!,
-);
+  categories.f1!;
+
+const images = Object.entries(category.options);
 
 interface State {
   leftImgSrc: string;
@@ -65,8 +127,8 @@ class App extends Component<{}, State> {
     return (
       <div>
         <ZoomableTwoUp
-          left={<DecodedImg src={leftImgSrc} />}
-          right={<DecodedImg src={rightImgSrc} />}
+          left={<DecodedImg renderWidth={category.width} src={leftImgSrc} />}
+          right={<DecodedImg renderWidth={category.width} src={rightImgSrc} />}
         />
         <select
           class="choice-left"

@@ -50,19 +50,18 @@ const extensionTypes: { [type: string]: string | undefined } = {
   webp: 'image/webp',
   avif: 'image/avif',
   jpg: 'image/jpeg',
+  png: 'image/png',
+  svg: 'image/svg+xml',
 };
 
 interface Props {
   src: string;
+  renderWidth: number;
 }
 
 interface State {
   output?: VNode;
 }
-
-// Pick type from extension
-// If can decode, just use img
-// If not, go wasm - steal the worker model I made for image-experiments
 
 export default class DecodedImg extends Component<Props, State> {
   private _updateController?: AbortController;
@@ -84,7 +83,12 @@ export default class DecodedImg extends Component<Props, State> {
 
       if (canDecode) {
         this.setState({
-          output: <img class="demo-img" src={this.props.src} />,
+          output: (
+            <img
+              style={{ width: this.props.renderWidth + 'px' }}
+              src={this.props.src}
+            />
+          ),
         });
         return;
       }
@@ -109,7 +113,10 @@ export default class DecodedImg extends Component<Props, State> {
         new Promise<HTMLCanvasElement>((resolve) => {
           this.setState({
             output: (
-              <canvas class="demo-img" ref={(node) => node && resolve(node)} />
+              <canvas
+                style={{ width: this.props.renderWidth + 'px' }}
+                ref={(node) => node && resolve(node)}
+              />
             ),
           });
         }),
