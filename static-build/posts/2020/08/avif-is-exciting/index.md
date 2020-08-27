@@ -5,6 +5,8 @@ summary: TODO
 meta: TODO
 ---
 
+Do slow test - don't need service worker just use devtools (don't randomise url either, else bad for CDN)
+
 - AVIF landed in Squoosh
 - You've heard it's good, but how good?
   - New format from video file, often think good at high bitrate, but not
@@ -34,7 +36,7 @@ meta: TODO
   - Performance
   - Features 4:2:0 and 4:0:0
 
-Quote kornel's oscar speech
+Quote kornel's oscar speech - bad a micro sizes
 Using it in browsers today - right at the start
 That JPEG-XL article
 WebPv2

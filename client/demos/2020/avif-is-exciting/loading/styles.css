@@ -1,0 +1,36 @@
+body {
+  margin: 0;
+  font-family: sans-serif;
+}
+
+.images {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.item {
+  overflow: hidden;
+
+  &:nth-child(2) img {
+    transform: translate(-33.33vw);
+  }
+
+  &:nth-child(3) img {
+    transform: translate(-66.66vw);
+  }
+}
+
+img {
+  width: 100vw;
+}
+
+h1 {
+  text-align: center;
+}
+
+.go-btn {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+}

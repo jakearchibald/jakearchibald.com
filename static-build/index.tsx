@@ -83,10 +83,23 @@ import avifCompareDemoScript, {
 import avifCompareDemoStyles from 'css-bundle:client/demos/2020/avif-is-exciting/compare/styles.css';
 toOutput['2020/avif-is-exciting/demos/compare/index.html'] = renderPage(
   <ClientDemo
-    title="Hello"
+    title="Image comparison"
     script={avifCompareDemoScript}
     scriptPreload={avifCompareDemoScriptImports}
     styles={avifCompareDemoStyles}
+  />,
+);
+
+import avifLoadingDemoScript, {
+  imports as avifLoadingDemoScriptImports,
+} from 'client-bundle:client/demos/2020/avif-is-exciting/loading';
+import avifLoadingDemoStyles from 'css-bundle:client/demos/2020/avif-is-exciting/loading/styles.css';
+toOutput['2020/avif-is-exciting/demos/loading/index.html'] = renderPage(
+  <ClientDemo
+    title="Hello"
+    script={avifLoadingDemoScript}
+    scriptPreload={avifLoadingDemoScriptImports}
+    styles={avifLoadingDemoStyles}
   />,
 );
 
