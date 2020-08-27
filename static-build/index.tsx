@@ -19,6 +19,7 @@ import posts from 'post-data:';
 import WhoPage from './pages/who';
 import PostPage from './pages/post';
 import iconUrl from 'asset-url:./pages/post/icon.png';
+import ClientDemo from './components/client-demo';
 
 interface Output {
   [outputPath: string]: string;
@@ -74,5 +75,19 @@ for (const post of posts) {
 }
 
 toOutput['posts.rss'] = feed.atom1();
+
+// Demos
+import avifCompareDemoScript, {
+  imports as avifCompareDemoScriptImports,
+} from 'client-bundle:client/demos/2020/avif-is-exciting/compare';
+import avifCompareDemoStyles from 'css-bundle:client/demos/2020/avif-is-exciting/compare/styles.css';
+toOutput['2020/avif-is-exciting/demos/compare/index.html'] = renderPage(
+  <ClientDemo
+    title="Hello"
+    script={avifCompareDemoScript}
+    scriptPreload={avifCompareDemoScriptImports}
+    styles={avifCompareDemoStyles}
+  />,
+);
 
 writeFiles(toOutput);

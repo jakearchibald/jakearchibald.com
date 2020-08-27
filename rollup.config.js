@@ -13,6 +13,7 @@
 import del from 'del';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
+import commonjs from '@rollup/plugin-commonjs';
 
 import simpleTS from './lib/simple-ts';
 import clientBundlePlugin from './lib/client-bundle-plugin';
@@ -25,6 +26,7 @@ import postData from './lib/post-data-plugin';
 import runScript from './lib/run-script';
 import markdownPlugin from './lib/markdown-plugin';
 import rootStaticPlugin from './lib/add-root-static';
+import entryURLPlugin from './lib/entry-url-plugin';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -36,7 +38,13 @@ export default async function ({ watch }) {
   const tsPluginInstance = simpleTS('static-build', { watch });
   const commonPlugins = () => [
     tsPluginInstance,
-    resolveDirsPlugin(['static-build', 'client', 'tests', 'shared']),
+    resolveDirsPlugin([
+      'static-build',
+      'client',
+      'tests',
+      'shared',
+      'client-worker',
+    ]),
     assetPlugin(),
     assetStringPlugin(),
     cssPlugin(resolveFileUrl),
@@ -62,8 +70,10 @@ export default async function ({ watch }) {
         {
           plugins: [
             { resolveFileUrl },
+            entryURLPlugin(),
             ...commonPlugins(),
             resolve(),
+            commonjs(),
             terser({ module: true }),
           ],
         },

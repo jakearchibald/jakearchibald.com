@@ -10,9 +10,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-/// <reference path="../missing-types.d.ts" />
-
-declare module 'entry-url:*' {
-  const value: string;
-  export default value;
+export async function abortable<T>(
+  signal: AbortSignal,
+  promise: Promise<T>,
+): Promise<T> {
+  if (signal.aborted) throw new DOMException('AbortError', 'AbortError');
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => {
+      signal.addEventListener('abort', () =>
+        reject(new DOMException('AbortError', 'AbortError')),
+      );
+    }),
+  ]);
 }

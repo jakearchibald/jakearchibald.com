@@ -11,8 +11,3 @@
  * limitations under the License.
  */
 /// <reference path="../missing-types.d.ts" />
-
-declare module 'entry-url:*' {
-  const value: string;
-  export default value;
-}

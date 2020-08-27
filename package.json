@@ -8,6 +8,7 @@
     "serve": "serve --config server.json .tmp/build/static"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^15.0.0",
     "@rollup/plugin-node-resolve": "^8.4.0",
     "@types/date-and-time": "^0.13.0",
     "@types/prismjs": "^1.16.0",
@@ -22,6 +23,7 @@
     "lint-staged": "^10.2.11",
     "lodash.camelcase": "^4.3.0",
     "marked": "^1.1.1",
+    "pinch-zoom-element": "^1.1.1",
     "postcss": "^7.0.32",
     "postcss-import": "^12.0.1",
     "postcss-modules": "^3.2.0",
@@ -35,6 +37,7 @@
     "rollup": "^2.23.0",
     "rollup-plugin-terser": "^6.1.0",
     "serve": "^11.3.2",
+    "two-up-element": "^1.0.1",
     "typescript": "^3.9.7"
   },
   "husky": {
