@@ -41,3 +41,4 @@ Using it in browsers today - right at the start
 That JPEG-XL article
 WebPv2
 That issue where they say no to progressive rendering.
+Guardian image https://i.guim.co.uk/img/media/060d0026bff97104b362536449932910382919c7/0_0_3500_2330/master/3500.jpg?width=1010&quality=45&auto=format&fit=max&dpr=2&s=23c15b9efd8845e550ba046333b62ce7

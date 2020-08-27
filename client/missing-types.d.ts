@@ -16,3 +16,8 @@ declare module 'entry-url:*' {
   const value: string;
   export default value;
 }
+
+declare module 'static-entry-url:*' {
+  const value: string;
+  export default value;
+}

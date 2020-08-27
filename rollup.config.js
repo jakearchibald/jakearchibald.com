@@ -27,6 +27,7 @@ import runScript from './lib/run-script';
 import markdownPlugin from './lib/markdown-plugin';
 import rootStaticPlugin from './lib/add-root-static';
 import entryURLPlugin from './lib/entry-url-plugin';
+import staticEntryURLPlugin from './lib/static-entry-url-plugin';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -71,6 +72,7 @@ export default async function ({ watch }) {
           plugins: [
             { resolveFileUrl },
             entryURLPlugin(),
+            staticEntryURLPlugin(),
             ...commonPlugins(),
             resolve(),
             commonjs(),

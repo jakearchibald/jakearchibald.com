@@ -26,6 +26,24 @@ img {
 
 h1 {
   text-align: center;
+
+  &::before {
+    content: '✅ ';
+    visibility: hidden;
+  }
+  &::after {
+    content: ' ✅';
+    visibility: hidden;
+  }
+
+  &.done {
+    &::before {
+      visibility: visible;
+    }
+    &::after {
+      visibility: visible;
+    }
+  }
 }
 
 .go-btn {
