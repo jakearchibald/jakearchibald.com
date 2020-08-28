@@ -206,7 +206,8 @@
     }
   }
 
-  & > figcaption {
+  & > figcaption,
+  & .figcaption {
     font-size: 0.8rem;
     line-height: 1.4;
     background: #ffe454;
