@@ -81,78 +81,13 @@ _Cough_ sorry about all that. Just trying to get ahead of the "what if…"s, "ho
 
 [Compare the f1 image for yourself](/2020/avif-is-exciting/demos/compare/?show=f1). Don't worry if your browser doesn't support AVIF/WebP, I threw in Squoosh's decoders. It will appear at its intended size, but feel free to zoom in and look at the gory details. In fact, let's do that to get a closer look at how the codecs tick:
 
-<style>
-  .img-results {
-    display: grid;
-    grid-auto-columns: 1fr;
-    grid-template-rows: max-content max-content;
-    grid-auto-flow: column;
-    gap: 0px 3px;
-    background: white;
-  }
-  .img-results .figcaption {
-    text-align: center;
-  }
-  .img-results img {
-    width: 100%;
-  }
-</style>
+Changes:
 
-<figure class="full-figure">
-  <div class="img-results">
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-lossless.webp">
-      <img src="asset-url:./article-imgs/f1-lossless.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">Original</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-good-jpg.webp">
-      <img src="asset-url:./article-imgs/f1-good-jpg.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">JPEG 77k</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-good-webp.webp">
-      <img src="asset-url:./article-imgs/f1-good-webp.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">WebP 39k</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-good-avif.webp">
-      <img src="asset-url:./article-imgs/f1-good-avif.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">AVIF 18k</div>
-  </div>
-</figure>
-
-Blah blah more detail in the JPEG
-
-<figure class="full-figure">
-  <div class="img-results">
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-lossless.webp">
-      <img src="asset-url:./article-imgs/f1-lossless.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">Original</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-match-jpg.webp">
-      <img src="asset-url:./article-imgs/f1-match-jpg.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">JPEG 20k</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-match-webp.webp">
-      <img src="asset-url:./article-imgs/f1-match-webp.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">WebP 22k</div>
-    <picture>
-      <source type="image/webp" srcset="asset-url:./article-imgs/f1-good-avif.webp">
-      <img src="asset-url:./article-imgs/f1-good-avif.png" width="118" alt="">
-    </picture>
-    <div class="figcaption">AVIF 18k</div>
-  </div>
-</figure>
-
-TODO embed photo
-
-Do slow test - don't need service worker just use devtools (don't randomise url either, else bad for CDN)
+- Embed encoded versions in article using tab interface
+- Make encoder work with queue (doesn't always abort)
+- Make preact img component cache output
+- Make the start much smaller
+- Title: Compressing web images in an AVIF world
 
 - AVIF landed in Squoosh
 - You've heard it's good, but how good?
