@@ -54,6 +54,8 @@ const extensionTypes: { [type: string]: string | undefined } = {
   svg: 'image/svg+xml',
 };
 
+const decodeCache = new Map<string, Promise<ImageData>>();
+
 interface Props {
   src: string;
   renderWidth: number;
@@ -93,20 +95,23 @@ export default class DecodedImg extends Component<Props, State> {
         return;
       }
 
-      if (!this._decoder) this._decoder = new Decoder();
+      if (!decodeCache.has(this.props.src)) {
+        if (!this._decoder) this._decoder = new Decoder();
 
-      this._decoder.awake(type as 'image/webp' | 'image/avif');
+        this._decoder.awake(type as 'image/webp' | 'image/avif');
 
-      const decodedImagePromise = fetch(this.props.src, { signal }).then(
-        async (response) => {
-          const blob = await response.blob();
-          return this._decoder!.decode(
-            signal,
-            type as 'image/webp' | 'image/avif',
-            blob,
-          );
-        },
-      );
+        decodeCache.set(
+          this.props.src,
+          fetch(this.props.src, { signal }).then(async (response) => {
+            const blob = await response.blob();
+            return this._decoder!.decode(
+              signal,
+              type as 'image/webp' | 'image/avif',
+              blob,
+            );
+          }),
+        );
+      }
 
       const canvas = await abortable(
         signal,
@@ -122,7 +127,7 @@ export default class DecodedImg extends Component<Props, State> {
         }),
       );
 
-      const decodedImage = await decodedImagePromise;
+      const decodedImage = await decodeCache.get(this.props.src)!;
       canvas.width = decodedImage.width;
       canvas.height = decodedImage.height;
       canvas.getContext('2d')!.putImageData(decodedImage, 0, 0);
