@@ -24,6 +24,12 @@ declare module 'css-bundle:*' {
   export const inline: string;
 }
 
+interface Script {
+  src: string;
+  async: boolean;
+  imports: string[];
+}
+
 interface Post {
   content: string;
   slug: string;
@@ -33,6 +39,7 @@ interface Post {
   summary: string;
   meta: string;
   image: string | null;
+  scripts: Script[];
 }
 
 declare module 'post-data:' {
