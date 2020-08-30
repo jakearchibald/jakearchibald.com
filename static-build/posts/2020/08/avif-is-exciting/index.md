@@ -3,10 +3,9 @@ title: AVIF is exciting
 date: 2020-08-26 01:00:00
 summary: TODO
 meta: TODO
-scripts:
-  - src: 'client/demos/2020/avif-is-exciting/test.ts'
-    async: true
 ---
+
+<script type="component">{"module": "shared/demos/2020/avif-is-exciting/ImageTabs"}</script>
 
 Back in ancient July I released a talk that dug into how lossy and lossless image compression works:
 
@@ -86,8 +85,10 @@ _Cough_ sorry about all that. Just trying to get ahead of the "what if…"s, "ho
 
 Changes:
 
-- Allow articles to have client JS
 - Embed encoded versions in article using tab interface
+  - Single DecodedImage
+  - Set of tabs, just radio buttons
+  - Is it possible to do a preact prerender?
 - Make the start much smaller
 - Title: Compressing web images in an AVIF world
 
@@ -129,3 +130,5 @@ Guardian image https://i.guim.co.uk/img/media/060d0026bff97104b36253644993291038
 Part of my pitch for squoosh was to not believe codec claims
 Mention subsample rendering issue with JPEG.
 AVIF - what about CPU?
+With the team image, compare to SVG
+Solve double preloads

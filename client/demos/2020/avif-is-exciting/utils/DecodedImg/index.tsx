@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { Component, h, createRef, VNode } from 'preact';
+import { Component, h, VNode } from 'preact';
 import { abortable } from './utils';
 import Decoder from './decoder';
 

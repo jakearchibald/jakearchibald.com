@@ -91,7 +91,7 @@ export default async function ({ watch }) {
       postData(),
       rootStaticPlugin(),
       nodeExternalPlugin(),
-      runScript(dir + '/index.js'),
+      runScript(dir + '/static-build/index.js'),
     ],
   };
 }

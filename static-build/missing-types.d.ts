@@ -27,6 +27,7 @@ declare module 'css-bundle:*' {
 interface Script {
   src: string;
   async: boolean;
+  preloadOnly: boolean;
   imports: string[];
 }
 

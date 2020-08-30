@@ -54,7 +54,16 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => (
         <meta property="og:description" content={post.meta} />
         {post.scripts.map((script) => (
           <Fragment>
-            <script src={script.src} async={script.async} type="module" />
+            {script.preloadOnly ? (
+              <link
+                rel="preload"
+                as="script"
+                href={script.src}
+                crossOrigin=""
+              />
+            ) : (
+              <script src={script.src} async={script.async} type="module" />
+            )}
             {script.imports.map((script) => (
               <link rel="preload" as="script" href={script} crossOrigin="" />
             ))}
