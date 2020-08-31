@@ -95,7 +95,7 @@ export default class DecodedImg extends Component<Props, State> {
         return;
       }
 
-      if (!decodeCache.has(this.props.src)) {
+      const addToCache = () => {
         if (!this._decoder) this._decoder = new Decoder();
 
         this._decoder.awake(type as 'image/webp' | 'image/avif');
@@ -111,7 +111,9 @@ export default class DecodedImg extends Component<Props, State> {
             );
           }),
         );
-      }
+      };
+
+      if (!decodeCache.has(this.props.src)) addToCache();
 
       const canvas = await abortable(
         signal,
@@ -127,7 +129,27 @@ export default class DecodedImg extends Component<Props, State> {
         }),
       );
 
-      const decodedImage = await decodeCache.get(this.props.src)!;
+      let decodedImage: ImageData;
+
+      while (true) {
+        const promise = decodeCache.get(this.props.src)!;
+        const cachedResult = await promise.catch((err) => err as Error);
+
+        if (cachedResult instanceof ImageData) {
+          decodedImage = cachedResult;
+          break;
+        }
+
+        // Otherwise, we've got an error.
+        // If it's an unexpected error, throw it.
+        if (cachedResult.name !== 'AbortError') throw cachedResult;
+
+        // We've cached an abort error. We want to retry the operation.
+        // However, another run of this algorithm may have started one.
+        // If not, start the operation again.
+        if (decodeCache.get(this.props.src) === promise) addToCache();
+      }
+
       canvas.width = decodedImage.width;
       canvas.height = decodedImage.height;
       canvas.getContext('2d')!.putImageData(decodedImage, 0, 0);

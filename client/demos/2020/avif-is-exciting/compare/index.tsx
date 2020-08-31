@@ -39,7 +39,7 @@ import machineAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciti
 import machineWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp';
 import machineJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg';
 
-import DecodedImg from '../utils/DecodedImg';
+import DecodedImg from 'shared/demos/2020/avif-is-exciting/DecodedImg';
 
 const categories: {
   [category: string]:
