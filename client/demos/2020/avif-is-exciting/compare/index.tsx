@@ -12,32 +12,59 @@
  */
 import { render, Component, h } from 'preact';
 import ZoomableTwoUp from './ZoomableTwoUp';
+
 import f1WebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.webp';
+import f1WebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.webp';
 import f1WebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.webp';
+import f1WebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.webp';
 import f1JpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.jpg';
+import f1JpgMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.jpg';
 import f1JpgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.jpg';
+import f1JpgGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.jpg';
 import f1AvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.avif';
+import f1AvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.avif';
 import f1AvifNearLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif';
+import f1AvifNearLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif';
 import teamAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif';
+import teamAvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif';
 import teamWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
+import teamWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
 import teamPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
+import teamPngGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
 import teamAvifLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
+import teamAvifLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
 import teamWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp';
+import teamWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp';
 import teamJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg';
+import teamJpgMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg';
 import teamWebpLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp';
+import teamWebpLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp';
 import carWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp';
+import carWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp';
 import carAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
+import carAvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
 import carSvgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
+import carSvgGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
 import carPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png';
+import carPngGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png';
 import carSvgOriginal from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
+import carSvgOriginalSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
 import carWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
+import carWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
 import machineWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
+import machineWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
 import machineWebpDithered from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp';
+import machineWebpDitheredSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp';
 import machineWebpLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp';
+import machineWebpLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp';
 import machineJpgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg';
+import machineJpgGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg';
 import machineAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif';
+import machineAvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif';
 import machineWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp';
+import machineWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp';
 import machineJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg';
+import machineJpgMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg';
 
 import DecodedImg from 'shared/demos/2020/avif-is-exciting/DecodedImg';
 
@@ -49,47 +76,47 @@ const categories: {
   f1: {
     width: 960,
     options: {
-      'AVIF - acceptable - 18k': f1AvifGood,
-      'WebP - acceptable - 39k': f1WebpGood,
-      'JPEG - acceptable - 77k': f1JpgGood,
-      'WebP - 22k': f1WebpMatch,
-      'JPEG - 20k': f1JpgMatch,
-      'AVIF - near lossless - 486k': f1AvifNearLossless,
+      [`AVIF - acceptable - ${f1AvifGoodSize}`]: f1AvifGood,
+      [`WebP - acceptable - ${f1WebpGoodSize}`]: f1WebpGood,
+      [`JPEG - acceptable - ${f1JpgGoodSize}`]: f1JpgGood,
+      [`WebP - ${f1WebpMatchSize}`]: f1WebpMatch,
+      [`JPEG - ${f1JpgMatchSize}`]: f1JpgMatch,
+      [`AVIF - near lossless - ${f1AvifNearLosslessSize}`]: f1AvifNearLossless,
     },
   },
   team: {
     width: 400,
     options: {
-      'AVIF - acceptable - 8.5k': teamAvifGood,
-      'WebP - 68 color lossless - 13k': teamWebpGood,
-      'PNG - 68 color lossless - 16k': teamPngGood,
-      'AVIF - 68 color lossless - 41k': teamAvifLossless,
-      'WebP - lossy - 8.4k': teamWebpMatch,
-      'JPEG - 8.5k': teamJpgMatch,
-      'WebP - full color lossless - 43k': teamWebpLossless,
+      [`AVIF - acceptable - ${teamAvifGoodSize}`]: teamAvifGood,
+      [`WebP - 68 color lossless - ${teamWebpGoodSize}`]: teamWebpGood,
+      [`PNG - 68 color lossless - ${teamPngGoodSize}`]: teamPngGood,
+      [`AVIF - 68 color lossless - ${teamAvifLosslessSize}`]: teamAvifLossless,
+      [`WebP - lossy - ${teamWebpMatchSize}`]: teamWebpMatch,
+      [`JPEG - ${teamJpgMatchSize}`]: teamJpgMatch,
+      [`WebP - full color lossless - ${teamWebpLosslessSize}`]: teamWebpLossless,
     },
   },
   car: {
     width: 500,
     options: {
-      'AVIF - acceptable - 13k': carAvifGood,
-      'WebP - acceptable - 49k': carWebpGood,
-      'PNG - acceptable - 84k': carPngGood,
-      'WebP - 13k': carWebpMatch,
-      "SVG - SVGO'd - 30k": carSvgGood,
-      'SVG - original - 80k': carSvgOriginal,
+      [`AVIF - acceptable - ${carAvifGoodSize}`]: carAvifGood,
+      [`WebP - acceptable - ${carWebpGoodSize}`]: carWebpGood,
+      [`PNG - acceptable - ${carPngGoodSize}`]: carPngGood,
+      [`WebP - ${carWebpMatchSize}`]: carWebpMatch,
+      [`SVG - SVGO'd - ${carSvgGoodSize}`]: carSvgGood,
+      [`SVG - original - ${carSvgOriginalSize}`]: carSvgOriginal,
     },
   },
   machine: {
     width: 960,
     options: {
-      'AVIF - acceptable - 12k': machineAvifGood,
-      'WebP - acceptable - 26k': machineWebpGood,
-      'JPEG - acceptable - 80k': machineJpgGood,
-      'WebP - 12k': machineWebpMatch,
-      'JPEG - 12k': machineJpgMatch,
-      'WebP - 256 color lossless - 166k': machineWebpDithered,
-      'WebP - full color lossless - 268k': machineWebpLossless,
+      [`AVIF - acceptable - ${machineAvifGoodSize}`]: machineAvifGood,
+      [`WebP - acceptable - ${machineWebpGoodSize}`]: machineWebpGood,
+      [`JPEG - acceptable - ${machineJpgGoodSize}`]: machineJpgGood,
+      [`WebP - ${machineWebpMatchSize}`]: machineWebpMatch,
+      [`JPEG - ${machineJpgMatchSize}`]: machineJpgMatch,
+      [`WebP - 256 color lossless - ${machineWebpDitheredSize}`]: machineWebpDithered,
+      [`WebP - full color lossless - ${machineWebpLosslessSize}`]: machineWebpLossless,
     },
   },
 };

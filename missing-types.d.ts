@@ -15,6 +15,11 @@ declare module 'asset-url:*' {
   export default value;
 }
 
+declare module 'asset-pretty-size:*' {
+  const value: string;
+  export default value;
+}
+
 declare module 'asset-string:*' {
   const value: string;
   export default value;
