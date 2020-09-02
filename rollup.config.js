@@ -14,6 +14,7 @@ import del from 'del';
 import resolve from '@rollup/plugin-node-resolve';
 import { terser } from 'rollup-plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
+import replace from '@rollup/plugin-replace';
 
 import simpleTS from './lib/simple-ts';
 import clientBundlePlugin from './lib/client-bundle-plugin';
@@ -78,6 +79,7 @@ export default async function ({ watch }) {
             ...commonPlugins(),
             resolve(),
             commonjs(),
+            replace({ __PRERENDER__: false }),
             terser({ module: true }),
           ],
         },
@@ -93,6 +95,7 @@ export default async function ({ watch }) {
       postData(),
       rootStaticPlugin(),
       nodeExternalPlugin(),
+      replace({ __PRERENDER__: true }),
       runScript(dir + '/static-build/index.js'),
     ],
   };
