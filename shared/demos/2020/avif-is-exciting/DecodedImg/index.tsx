@@ -72,7 +72,9 @@ export default class DecodedImg extends Component<Props, State> {
   private async _updateOutput() {
     if (this._updateController) this._updateController.abort();
 
-    this.setState({ output: undefined });
+    const clearId = setTimeout(() => {
+      this.setState({ output: undefined });
+    }, 1000);
 
     this._updateController = new AbortController();
     const { signal } = this._updateController;
@@ -92,6 +94,7 @@ export default class DecodedImg extends Component<Props, State> {
             />
           ),
         });
+        clearTimeout(clearId);
         return;
       }
 
@@ -118,6 +121,7 @@ export default class DecodedImg extends Component<Props, State> {
       const canvas = await abortable(
         signal,
         new Promise<HTMLCanvasElement>((resolve) => {
+          clearTimeout(clearId);
           this.setState({
             output: (
               <canvas

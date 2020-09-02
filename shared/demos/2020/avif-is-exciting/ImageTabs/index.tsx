@@ -28,21 +28,24 @@ export default class ImageTabs extends Component<Props, State> {
     const src = __PRERENDER__ ? undefined : images[selected][1];
 
     return (
-      <div>
-        <div>{src && <DecodedImg src={src} renderWidth={maxWidth} />}</div>
-        <form class="tabs" onChange={this._onChange}>
+      <div class="image-tabs">
+        <div class="image-tabs-preview">
+          <div class="image-tabs-sizer" style={{ maxWidth }}>
+            <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
+          </div>
+          {src && <DecodedImg src={src} renderWidth={maxWidth} />}
+        </div>
+        <form class="image-tabs-tabs" onChange={this._onChange}>
           {images.map(([title], i) => (
-            <div>
-              <label>
-                <input
-                  name="tabs"
-                  type="radio"
-                  checked={i === selected}
-                  value={i}
-                />
-                <span class="image-tab-label">{title}</span>
-              </label>
-            </div>
+            <label class="image-tabs-tab">
+              <input
+                name="tabs"
+                type="radio"
+                checked={i === selected}
+                value={i}
+              />
+              <span class="image-tabs-label">{title}</span>
+            </label>
           ))}
         </form>
       </div>
