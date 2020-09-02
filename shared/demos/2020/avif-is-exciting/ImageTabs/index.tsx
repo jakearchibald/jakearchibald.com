@@ -1,26 +1,51 @@
 import { Component, h } from 'preact';
+import DecodedImg from '../DecodedImg';
 
-interface Props {}
+interface Props {
+  images: [title: string, url: string][];
+  ratio: number;
+  maxWidth: number;
+  initial: number;
+}
 
 interface State {
-  initialRender: boolean;
+  selected: number;
 }
 
 export default class ImageTabs extends Component<Props, State> {
   state: State = {
-    initialRender: true,
+    selected: this.props.initial,
   };
 
-  componentDidMount() {
-    this.setState({ initialRender: false });
-  }
+  private _onChange = (event: Event) => {
+    const num = Number(
+      new FormData(event.currentTarget as HTMLFormElement).get('tabs'),
+    );
+    this.setState({ selected: num });
+  };
 
-  render({}: Props, { initialRender }: State) {
+  render({ images, maxWidth, ratio }: Props, { selected }: State) {
+    const src = __PRERENDER__ ? undefined : images[selected][1];
+
     return (
-      <p>
-        Will this actually work? Is this the initial render:{' '}
-        {initialRender ? 'yes' : 'no'}.
-      </p>
+      <div>
+        <div>{src && <DecodedImg src={src} renderWidth={maxWidth} />}</div>
+        <form class="tabs" onChange={this._onChange}>
+          {images.map(([title], i) => (
+            <div>
+              <label>
+                <input
+                  name="tabs"
+                  type="radio"
+                  checked={i === selected}
+                  value={i}
+                />
+                <span class="image-tab-label">{title}</span>
+              </label>
+            </div>
+          ))}
+        </form>
+      </div>
     );
   }
 }

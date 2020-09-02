@@ -10,7 +10,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import workerURL from 'entry-url:client-worker/decode';
+import workerURL from 'entry-url:client-worker/avif/decode';
 import { abortable } from './utils';
 
 type ImageTypes = 'image/webp' | 'image/avif';
@@ -40,9 +40,13 @@ export default class Decoder {
     });
   }
 
-  decode(signal: AbortSignal, type: ImageTypes, blob: Blob): Promise<ImageData> {
+  decode(
+    signal: AbortSignal,
+    type: ImageTypes,
+    blob: Blob,
+  ): Promise<ImageData> {
     return (this._queue = this._queue
-      .catch(() => { })
+      .catch(() => {})
       .then(async () => {
         if (signal.aborted) throw new DOMException('AbortError', 'AbortError');
         const id = Math.random();

@@ -36,7 +36,8 @@ figure {
   margin: 0;
 }
 
-img {
+img,
+canvas {
   max-width: 100%;
 }
 

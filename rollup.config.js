@@ -30,6 +30,7 @@ import rootStaticPlugin from './lib/add-root-static';
 import entryURLPlugin from './lib/entry-url-plugin';
 import staticEntryURLPlugin from './lib/static-entry-url-plugin';
 import assetPrettySizePlugin from './lib/asset-pretty-size-plugin';
+import prefixDefaultPlugin from './lib/prefix-default-plugin';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -40,6 +41,9 @@ export default async function ({ watch }) {
 
   const tsPluginInstance = simpleTS('static-build', { watch });
   const commonPlugins = () => [
+    prefixDefaultPlugin({
+      'entry-url:': '',
+    }),
     tsPluginInstance,
     resolveDirsPlugin([
       'static-build',
