@@ -1,6 +1,6 @@
-import catAvif from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/cat.avif';
-import catWebp from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/cat.webp';
-import catJpg from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/cat.jpg';
+import catAvif from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/cat.avif';
+import catWebp from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/cat.webp';
+import catJpg from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/cat.jpg';
 import workerURL from 'static-entry-url:client-worker/avif/avif-slow-sw';
 
 const items = [
