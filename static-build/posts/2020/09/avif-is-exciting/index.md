@@ -469,7 +469,7 @@ In this case, WebP offers a huge drop in size compared to the JPEG, so it's defi
 
 # So, is AVIF the champion?
 
-I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect. Because it's an off-cut of a video format, it's missing some features and optimisations that video doesn't need, but the web can benefit from:
+I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect. Because it's an off-cut of a video format, it's missing some useful image features and optimisations that aren't relevant to video:
 
 <figure class="full-figure max-figure">
 <video src="asset-url:./progressive.mp4" width="1000" height="666" style="width: 100%; height: auto;" controls></video>
