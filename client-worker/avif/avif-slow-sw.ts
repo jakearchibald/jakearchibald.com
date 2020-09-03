@@ -22,11 +22,18 @@ self.addEventListener('activate', () => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.destination !== 'image') return;
+  const url = new URL(event.request.url);
+  if (!url.searchParams.has('chunkSize')) return;
+
+  const chunkSize = Number(url.searchParams.get('chunkSize'));
+  const delay = Number(url.searchParams.get('delay'));
+
+  url.search = '';
 
   event.respondWith(
     (async () => {
-      const { status, headers, body } = await fetch(event.request);
-      const stream = body!.pipeThrough(slowStream(3125, 250));
+      const { status, headers, body } = await fetch(url.href);
+      const stream = body!.pipeThrough(slowStream(chunkSize, delay));
       return new Response(stream, { status, headers });
     })(),
   );

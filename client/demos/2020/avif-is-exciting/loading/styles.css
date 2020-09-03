@@ -46,9 +46,12 @@ h1 {
   }
 }
 
-.go-btn {
-  position: absolute;
-  top: 10px;
-  left: 50%;
-  transform: translateX(-50%);
+.buttons {
+  display: grid;
+  grid-auto-flow: column;
+  width: max-content;
+  margin: 0 auto;
+  margin-top: 10px;
+  grid-auto-columns: max-content;
+  gap: 0.5em;
 }

@@ -7,7 +7,7 @@ meta: TODO
 
 Back in ancient July [I released a talk](https://www.youtube.com/watch?v=F1kYBnY6mwg) that dug into how lossy and lossless image compression works, how to apply this knowledge to compress a set of different images for the web. Well, that's already out of date because since then _AVIF has arrived_.
 
-AVIF is a new image format derived from the key frames of AV1 video. It's an open format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are part of AOMedia who created AV1.
+AVIF is a new image format derived from the keyframes of AV1 video. It's an open format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are part of AOMedia who created AV1.
 
 What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [client hints](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
 
@@ -35,6 +35,8 @@ Ok, let's take a look at how AVIF compares to other web image formats…
 <style>
   .image-tabs-preview {
     overflow: hidden;
+    background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
+    background-size: 20px 20px;
   }
   .image-tabs-transformer {
     display: grid;
@@ -50,7 +52,9 @@ Ok, let's take a look at how AVIF compares to other web image formats…
     border-top: 7px solid #ffe454;
   }
   .image-tabs input[type=radio] {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
   }
   .image-tabs-label {
     padding: 0.7em 0.7em;
@@ -59,8 +63,14 @@ Ok, let's take a look at how AVIF compares to other web image formats…
     line-height: 1.3;
     font-size: 0.9rem;
   }
-  .image-tabs input[type=radio]:checked + .image-tabs-label {
+  input[type=radio]:checked + .image-tabs-label {
     background: #ffe454;
+  }
+  input[type=radio]:focus-visible + .image-tabs-label {
+    background: #b9b9b9;
+  }
+  input[type=radio]:focus-visible:checked + .image-tabs-label {
+    background: #ffc254;
   }
   .image-tabs-tab {
     display: grid;
@@ -90,7 +100,7 @@ I picked this image because it's a photo with a mixture of low frequency detail 
 
 Roughly speaking, at an acceptable quality the WebP is almost half the size of JPEG, and AVIF is under half the size of WebP. I find it incredible that AVIF can do a good job of the image in just 18k.
 
-[Here's a full-page comparison of the image](/2020/avif-is-exciting/demos/compare/?show=f1).
+[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=f1).
 
 Before I compare things further:
 
@@ -149,7 +159,7 @@ Just for fun, let's see how the other image formats compare around the same file
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
-    "initial": 3,
+    "initial": 1,
     "images": [
       ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.jpg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-match.jpg"],
@@ -172,60 +182,291 @@ Ok, next image:
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
-    "initial": 2,
+    "initial": 3,
     "images": [
       ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg"],
       ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png"],
-      ["WebP 68 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp"],
-      ["AVIF 68 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif"]
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp"],
+      ["AVIF 68 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif"]
     ]
   }
 }</script>
 </figure>
 
-- Title: Compressing web images in an AVIF world
+This is an illustration by [Stephen Waller](https://twitter.com/bruised_blood). I picked it because of the sharp edges and solid colours, so it's a good test of lossless compression.
 
-- AVIF landed in Squoosh
-- You've heard it's good, but how good?
-  - New format from video file, often think good at high bitrate, but not
-  - Hand-me-down
-- Intro talk
-  - Head off the "well actually"s because we can't have nice things - no do this stuff after the first image, but before the zoom in
-  - This post is about web images - acceptable quality, not perfect quality, also designed for retina
-  - Also my reckons, your reckons may be different
-  - Also hand-tuned, which doesn't work in all cases
-- Go through each image in the talk
-- F1 - picked due to photograph with strong colour boundaries
-- Characters - picked due to sharp edges
-  - Not good at lossless, but lossy is really good
-  - 4:4:4 - and Chroma subsampling
-- Then I threw a spanner in the works.
-- Car SVG - picked due to heavy SVG and alpha
-  - Lossy alpha
-- Elfs - picked due to cartoon with gradients
-- Using AVIF in Squoosh
-  - Min - only change if looking too smooth in some areas
-  - Sep alpha - change if colour looks fine but alpha doesn't - did this with car
-  - Effort - yes but slow
-- Gotcha: progressive rendering
-  - Show demo
-  - Hand-me-down
-- Future work on AVIF in Squoosh
-  - Performance
-  - Features 4:2:0 and 4:0:0
+In the same way AVIF is derived from the keyframes of AV1 video, WebP's lossy compression is based on the keyframes of VP8 video. However, _lossless_ WebP is a different codec, written from the ground up. It's often overlooked, but it outperforms PNG every time.
 
-Quote kornel's oscar speech - bad a micro sizes
-Using it in browsers today - right at the start
-That JPEG-XL article
-WebPv2
-That issue where they say no to progressive rendering.
-Guardian image https://i.guim.co.uk/img/media/060d0026bff97104b362536449932910382919c7/0_0_3500_2330/master/3500.jpg?width=1010&quality=45&auto=format&fit=max&dpr=2&s=23c15b9efd8845e550ba046333b62ce7
-Part of my pitch for squoosh was to not believe codec claims
-Mention subsample rendering issue with JPEG.
-AVIF - what about CPU?
-With the team image, compare to SVG
-Solve double preloads
-Lazy load the images if intersection available!
-Test in other browsers
+Both WebP lossless and PNG switch to 'paletted' mode when there are 256 colours or fewer, which compresses really well. I was able to reduce the colours to 68 before things started looking bad.
 
-That said, I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. It can result in missing features or missed optimisations that video doesn't care about, but the web does (more on that later). But having played with it, I'm seriously impressed. It feels like a game-changer.
+I don't have the original vector version of this image, but I created a 'traced' SVG version using Adobe Illustrator.
+
+What's notable is how badly AVIF performs here. It has a lossless mode, but it isn't very good.
+
+But wait…
+
+## Why not lossy?
+
+I went straight for palette reduction and lossless compression with this image because I have enough experience with image compression to know lossy compression _always_ does a bad job here. Or so I thought…
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.333,
+    "maxWidth": 400,
+    "initial": 4,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg"],
+      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png"],
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+Turns out lossy AVIF can handle solid colour and sharp lines really well, and produces a file quite a bit smaller than the SVG. Let's take a closer look:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.333,
+    "maxWidth": 1000,
+    "transform": "translate(-1%, 59%) scale(2.5)",
+    "initial": 4,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg"],
+      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png"],
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+I expected a lossy codec to produce a lot of smoothing, but there's hardly any. There's a very slight bit above the glasses of the guy on the left, and on the ear of the guy on the right. If anything, AVIF has introduced some sharpening – see the left-hand side of the glasses. That kind of sharpening is usually produced by palette reduction, but here it's just how AVIF works.
+
+The PNG and WebP have sharp edges particularly around the green shirt, but it isn't really noticeable at normal size.
+
+The SVG of course looks super sharp due to vector scaling, but you can see where the tracing lost details around the hair and pocket.
+
+AVIF has kinda blown my mind here. It's made me reconsider the kinds of images lossy codecs are suited to.
+
+But all said and done, a proper SVG is probably right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few k. In this case it might not be worth the complexity of creating different versions of the image.
+
+Ok, just for fun, let's push the other codecs down to the size of the AVIF:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.333,
+    "maxWidth": 400,
+    "initial": 1,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg"],
+      ["PNG 8 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.png"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+Things aren't as bad as they were with the F1 image, but the JPEG is very noisy, the WebP is very blurry, and the PNG shows that, well, you need more than 8 colours.
+
+[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=team).
+
+Right, it's time for the next image…
+
+# Heavy SVG
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.5,
+    "maxWidth": 500,
+    "initial": 4,
+    "images": [
+      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg"],
+      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg"],
+      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+I find it incredible that this image was created with SVG. However, it comes at a cost. The number of shapes and filters involved means it take a lot of CPU for the browser to render. It's one of those edge cases where it's better to avoid the original SVG, even if the other formats are larger.
+
+PNG struggles here due to the smooth gradients. I used the colours to 256, but had to dither them to avoid visible banding.
+
+WebP performs significantly better by mixing lossy compression with an alpha channel. However, the alpha channel is always encoded lossless in WebP, so it suffers in a similar way to PNG when it comes to the transparent gradient beneath the car.
+
+AVIF aces it again at a significantly smaller size, even compared to the SVG. Part of AVIF's advantage here is it supports a lossy alpha channel.
+
+Let's take a closer look:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.5,
+    "maxWidth": 1000,
+    "transform": "scale(2.3) translate(2%, -9%)",
+    "initial": 4,
+    "images": [
+      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg"],
+      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg"],
+      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+Up close on the PNG, you can see the effects of the palette reduction. The WebP is getting blurry, and suffers from some colour noise. The AVIF look similar to the WebP, but at a much smaller size. Interestingly, the AVIF just kinda gives up drawing the bonnet, but it's hardly noticeable when it's zoomed out.
+
+As always, just for giggles, let's push the other formats down to the size of the AVIF:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.5,
+    "maxWidth": 500,
+    "initial": 1,
+    "images": [
+      ["PNG 12 colour (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.png)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+The PNG version looks kinda cool! Whereas the WebP version makes me want to clean my glasses.
+
+[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=car).
+
+Ok, one more:
+
+# Illustration with gradients
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.786,
+    "maxWidth": 960,
+    "initial": 4,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg"],
+      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+This is another one from [Stephen Waller](https://twitter.com/bruised_blood). I picked this because it has a lot of flat colour and sharp lines, which usually points to lossless compression, but it also has a lot of gradients, which lossless formats can struggle with.
+
+Even if I take the colours down to 256, and let WebP work its lossless magic, the result is still 170kB. In this case, the lossy codecs perform much better.
+
+JPEG doesn't do a great job here – anything lower than 80kB starts to introduce obvious blockiness. WebP handles the image much better, but again I'm staggered by how well AVIF performs.
+
+Let's take a closer look:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.786,
+    "maxWidth": 960,
+    "transform": "scale(6) translate(4.3%, 27.3%)",
+    "initial": 4,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.jpg"],
+      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+The JPEG is pretty noisy zoomed in, and you can start to see the 8x8 blocks in the background.
+
+With the 256 colour WebP, you can start to see the effects of palette reduction, especially in the elf's hat.
+
+The lossy WebP is pretty blurry, and suffers from colour artefacts. WebP always halves the resolution of the colour data, unlike JPEG and AVIF where this is optional. However, WebP has a feature called "Sharp YUV" which tries to reduce the impact of the colour reduction. It generally works pretty well, but also causes the colour artefacts seen here.
+
+The AVIF has really clean colours, some blurring, and even changes some of the shapes a bit – the circle looks almost octagonal.
+
+For one last time, just for funsies, let's push the other codecs down to AVIF's size:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.786,
+    "maxWidth": 960,
+    "initial": 1,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+At these sizes, JPEG has done its own art, and the WebP looks blocky and messy.
+
+[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=machine).
+
+# So, is AVIF the champion?
+
+I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect. Because it's an off-cut of a video format, it's missing some features and optimisations that video doesn't need, but the web can benefit from:
+
+<figure class="full-figure max-figure">
+<video src="asset-url:./progressive.mp4" width="1000" height="666" style="width: 100%; height: auto;" controls></video>
+<figcaption>JPEG, WebP, and AVIF loading at 2g speeds</figcaption>
+</figure>
+
+The above shows a high-resolution (2000x1178), high-quality image loading at 2g speeds. To get roughly the same quality, the JPEG is 249kB, the WebP is 153kB, and the AVIF is 96kB.
+
+Although they're all loading at the same rate, the much-larger JPEG feels faster because of how it renders in multiple passes. WebP renders from top to bottom, which isn't as good, but at least you see the progress. Unfortunately, with AVIF it's all-or-nothing.
+
+Video never needs to render a partial frame, so it isn't something the format is set up to do. It isn't impossible to have a top-to-bottom render like WebP, but the implementation would be complicated, so we're unlikely to see it in browsers for the foreseeable future.
+
+Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, comply with this, and [aren't very interested in changing](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything.
+
+Because of this, AVIF feels better suited to smaller quicker-loading images. But that still covers most images on the web.
+
+There's also a question of CPU usage vs other formats, but I haven't dug into that yet. Although AV1 is likely to get hardware support, I'm told that it won't be suited to decoding a page full of images.
+
+# What about JPEG-XL and WebPv2?
+
+One of the reasons we built [Squoosh](https://squoosh.app) is so developers could bypass the claims made about particular codecs, and instead just try it for themselves. JPEG-XL isn't quite ready yet, but we'll get it into Squoosh as soon as possible. In the meantime, I'm trying to take JPEG-XL's claims of superiority with a pinch of salt. However, there's a lot to get excited about.
+
+JPEG-XL is an image format, rather than an off-cut of a video format. It supports lossless and lossy compressions, and progressive multi-pass rendering. It looks like the lossless compression will be better than WebP's, which is great. However, the lossy compression is tuned for high quality rather than 'acceptable quality', so it might not be a great fit for most web images. But, the multi-pass rendering might be worth a slightly larger resource size. I guess we'll wait and see!
+
+There aren't many details around WebPv2 yet, so again it's best to wait and see until we can test it with our own images.
+
+# And that's it!
+
+Phew! I didn't expect this post to get so long, but I really enjoyed poking around AVIF and building the demos in this article. I wanted to include a dive into the more obscure settings these codecs offer, but I'll save that for another day.

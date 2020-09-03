@@ -9,7 +9,7 @@ const items = [
   ['AVIF', catAvif],
 ];
 
-function addImages() {
+function addImages(chunkSize: number, delay: number) {
   const images = document.createElement('div');
   images.className = 'images';
 
@@ -19,7 +19,11 @@ function addImages() {
     const h1 = document.createElement('h1');
     h1.textContent = title;
     const img = document.createElement('img');
-    img.src = imgSrc;
+    const url = new URL(imgSrc, location.href);
+    url.searchParams.set('r', Math.random() + '');
+    url.searchParams.set('chunkSize', chunkSize + '');
+    url.searchParams.set('delay', delay + '');
+    img.src = url.href;
     img.onload = () => h1.classList.add('done');
     div.append(h1, img);
     images.append(div);
@@ -28,17 +32,47 @@ function addImages() {
   document.body.append(images);
 }
 
-const button = document.createElement('button');
-button.className = 'go-btn';
-button.textContent = 'Load images';
-button.onclick = () => {
-  button.remove();
-  addImages();
-};
-document.body.append(button);
+if (!self.TransformStream) {
+  document.body.append(
+    'Sorry, this demo requires a browser that implements TransformStream.',
+  );
+} else {
+  navigator.serviceWorker
+    .register(workerURL, {
+      scope: new URL('./', location.href).href,
+    })
+    .then(async (reg) => {
+      if (!reg.active) {
+        await new Promise((resolve) => {
+          const worker = reg.installing || reg.waiting;
+          worker!.addEventListener('statechange', () => {
+            if (worker!.state === 'activating') resolve();
+          });
+        });
+      }
 
-if (self.TransformStream) {
-  navigator.serviceWorker.register(workerURL, {
-    scope: new URL('./', location.href).href,
-  });
+      const buttons = document.createElement('div');
+      buttons.className = 'buttons';
+      document.body.append(buttons);
+
+      {
+        const button = document.createElement('button');
+        button.textContent = 'Load images 2g';
+        button.onclick = () => {
+          buttons.remove();
+          addImages(3125, 250);
+        };
+        buttons.append(button);
+      }
+
+      {
+        const button = document.createElement('button');
+        button.textContent = 'Load images 3g';
+        button.onclick = () => {
+          buttons.remove();
+          addImages(37500 / 4, 250);
+        };
+        buttons.append(button);
+      }
+    });
 }

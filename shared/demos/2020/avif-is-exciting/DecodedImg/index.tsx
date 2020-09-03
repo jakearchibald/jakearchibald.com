@@ -59,6 +59,7 @@ const decodeCache = new Map<string, Promise<ImageData>>();
 interface Props {
   src: string;
   renderWidth: number;
+  lazy?: boolean;
 }
 
 interface State {
@@ -91,6 +92,7 @@ export default class DecodedImg extends Component<Props, State> {
             <img
               style={{ width: this.props.renderWidth + 'px' }}
               src={this.props.src}
+              loading={this.props.lazy ? 'lazy' : undefined}
             />
           ),
         });
@@ -116,8 +118,6 @@ export default class DecodedImg extends Component<Props, State> {
         );
       };
 
-      if (!decodeCache.has(this.props.src)) addToCache();
-
       const canvas = await abortable(
         signal,
         new Promise<HTMLCanvasElement>((resolve) => {
@@ -132,6 +132,22 @@ export default class DecodedImg extends Component<Props, State> {
           });
         }),
       );
+
+      if (this.props.lazy && self.IntersectionObserver) {
+        await abortable(
+          signal,
+          new Promise((resolve) => {
+            const observer = new IntersectionObserver(([result]) => {
+              if (!result.isIntersecting) return;
+              observer.disconnect();
+              resolve();
+            });
+            observer.observe(canvas);
+          }),
+        );
+      }
+
+      if (!decodeCache.has(this.props.src)) addToCache();
 
       let decodedImage: ImageData;
 

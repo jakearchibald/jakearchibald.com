@@ -96,7 +96,7 @@ import avifLoadingDemoScript, {
 import avifLoadingDemoStyles from 'css-bundle:client/demos/2020/avif-is-exciting/loading/styles.css';
 toOutput['2020/avif-is-exciting/demos/loading/index.html'] = renderPage(
   <ClientDemo
-    title="Hello"
+    title="Slow loading images"
     script={avifLoadingDemoScript}
     scriptPreload={avifLoadingDemoScriptImports}
     styles={avifLoadingDemoStyles}

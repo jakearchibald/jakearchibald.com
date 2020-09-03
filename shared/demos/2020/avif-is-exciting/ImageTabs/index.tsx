@@ -38,7 +38,7 @@ export default class ImageTabs extends Component<Props, State> {
             <div class="image-tabs-sizer" style={{ maxWidth }}>
               <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
             </div>
-            {src && <DecodedImg src={src} renderWidth={maxWidth} />}
+            {src && <DecodedImg src={src} renderWidth={maxWidth} lazy={true} />}
           </div>
         </div>
         <form class="image-tabs-tabs" onChange={this._onChange}>

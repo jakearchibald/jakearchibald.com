@@ -25,12 +25,15 @@ import f1AvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/de
 import f1AvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-good.avif';
 import f1AvifNearLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif';
 import f1AvifNearLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/f1-near-lossless.avif';
+
 import teamAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif';
 import teamAvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.avif';
 import teamWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
 import teamWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
 import teamPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
 import teamPngGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
+import teamPngMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.png';
+import teamPngMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.png';
 import teamSvgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg';
 import teamSvgGoodSize from 'asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg';
 import teamAvifLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
@@ -41,6 +44,7 @@ import teamJpgMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/
 import teamJpgMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-match.jpg';
 import teamWebpLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp';
 import teamWebpLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.webp';
+
 import carWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp';
 import carWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.webp';
 import carAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
@@ -53,6 +57,9 @@ import carSvgOriginal from 'asset-url:static-build/posts/2020/08/avif-is-excitin
 import carSvgOriginalSize from 'asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
 import carWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
 import carWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
+import carPngMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.png';
+import carPngMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.png';
+
 import machineWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
 import machineWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
 import machineWebpDithered from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-dithered.webp';
@@ -96,6 +103,7 @@ const categories: {
       [`SVG - traced - ${teamSvgGoodSize}`]: teamSvgGood,
       [`WebP - lossy - ${teamWebpMatchSize}`]: teamWebpMatch,
       [`JPEG - ${teamJpgMatchSize}`]: teamJpgMatch,
+      [`PNG - 9 color lossless - ${teamPngMatchSize}`]: teamPngMatch,
       [`WebP - full color lossless - ${teamWebpLosslessSize}`]: teamWebpLossless,
     },
   },
@@ -104,8 +112,9 @@ const categories: {
     options: {
       [`AVIF - acceptable - ${carAvifGoodSize}`]: carAvifGood,
       [`WebP - acceptable - ${carWebpGoodSize}`]: carWebpGood,
-      [`PNG - acceptable - ${carPngGoodSize}`]: carPngGood,
+      [`PNG - 256 colour - ${carPngGoodSize}`]: carPngGood,
       [`WebP - ${carWebpMatchSize}`]: carWebpMatch,
+      [`PNG - 12 colour - ${carPngMatchSize}`]: carPngMatch,
       [`SVG - SVGO'd - ${carSvgGoodSize}`]: carSvgGood,
       [`SVG - original - ${carSvgOriginalSize}`]: carSvgOriginal,
     },
