@@ -1,8 +1,9 @@
 ---
 title: AVIF is exciting
 date: 2020-09-07 01:00:00
-summary: TODO
-meta: TODO
+summary: AVIF has already landed in Chrome 85. It's the first image format we've had in 10 years. Let's see how it performs…
+meta: AVIF is the first browser image format we've had in 10 years. Let's see how it performs…
+image: 'asset-url:./post.jpg'
 ---
 
 Back in ancient July [I released a talk](https://www.youtube.com/watch?v=F1kYBnY6mwg) that dug into how lossy and lossless image compression works and how to apply that knowledge to compress a set of different images for the web. Well, that's already out of date because _AVIF has arrived_. Brilliant.
