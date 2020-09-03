@@ -72,6 +72,7 @@ export default class DecodedImg extends Component<Props, State> {
 
   private async _updateOutput() {
     if (this._updateController) this._updateController.abort();
+    const { renderWidth, src, lazy } = this.props;
 
     const clearId = setTimeout(() => {
       this.setState({ output: undefined });
@@ -79,7 +80,7 @@ export default class DecodedImg extends Component<Props, State> {
 
     this._updateController = new AbortController();
     const { signal } = this._updateController;
-    const ext = this.props.src.split('.').slice(-1)[0];
+    const ext = src.split('.').slice(-1)[0];
     const type = extensionTypes[ext];
     if (!type) throw Error('Unexpected extension');
 
@@ -90,9 +91,9 @@ export default class DecodedImg extends Component<Props, State> {
         this.setState({
           output: (
             <img
-              style={{ width: this.props.renderWidth + 'px' }}
-              src={this.props.src}
-              loading={this.props.lazy ? 'lazy' : undefined}
+              style={{ width: renderWidth + 'px' }}
+              src={src}
+              loading={lazy ? 'lazy' : undefined}
             />
           ),
         });
@@ -106,8 +107,8 @@ export default class DecodedImg extends Component<Props, State> {
         this._decoder.awake(type as 'image/webp' | 'image/avif');
 
         decodeCache.set(
-          this.props.src,
-          fetch(this.props.src, { signal }).then(async (response) => {
+          src,
+          fetch(src, { signal }).then(async (response) => {
             const blob = await response.blob();
             return this._decoder!.decode(
               signal,
@@ -118,22 +119,7 @@ export default class DecodedImg extends Component<Props, State> {
         );
       };
 
-      const canvas = await abortable(
-        signal,
-        new Promise<HTMLCanvasElement>((resolve) => {
-          clearTimeout(clearId);
-          this.setState({
-            output: (
-              <canvas
-                style={{ width: this.props.renderWidth + 'px' }}
-                ref={(node) => node && resolve(node)}
-              />
-            ),
-          });
-        }),
-      );
-
-      if (this.props.lazy && self.IntersectionObserver) {
+      if (lazy && self.IntersectionObserver) {
         await abortable(
           signal,
           new Promise((resolve) => {
@@ -142,18 +128,21 @@ export default class DecodedImg extends Component<Props, State> {
               observer.disconnect();
               resolve();
             });
-            observer.observe(canvas);
+            observer.observe(this.base!.parentElement!);
           }),
         );
       }
 
-      if (!decodeCache.has(this.props.src)) addToCache();
+      if (!decodeCache.has(src)) addToCache();
 
       let decodedImage: ImageData;
 
       while (true) {
-        const promise = decodeCache.get(this.props.src)!;
-        const cachedResult = await promise.catch((err) => err as Error);
+        const promise = decodeCache.get(src)!;
+        const cachedResult = await abortable(
+          signal,
+          promise.catch((err) => err as Error),
+        );
 
         if (cachedResult instanceof ImageData) {
           decodedImage = cachedResult;
@@ -167,13 +156,29 @@ export default class DecodedImg extends Component<Props, State> {
         // We've cached an abort error. We want to retry the operation.
         // However, another run of this algorithm may have started one.
         // If not, start the operation again.
-        if (decodeCache.get(this.props.src) === promise) addToCache();
+        if (decodeCache.get(src) === promise) addToCache();
       }
+
+      const canvas = await abortable(
+        signal,
+        new Promise<HTMLCanvasElement>((resolve) => {
+          clearTimeout(clearId);
+          this.setState({
+            output: (
+              <canvas
+                style={{ width: renderWidth + 'px' }}
+                ref={(node) => node && resolve(node)}
+              />
+            ),
+          });
+        }),
+      );
 
       canvas.width = decodedImage.width;
       canvas.height = decodedImage.height;
       canvas.getContext('2d')!.putImageData(decodedImage, 0, 0);
     } catch (err) {
+      clearTimeout(clearId);
       if (err.name === 'AbortError') return;
       throw err;
     }
