@@ -232,6 +232,10 @@
   }
 }
 
+h2 + .max-figure {
+  margin-top: 0;
+}
+
 /* 'who' sidebar */
 .side {
   font-size: 0.85rem;

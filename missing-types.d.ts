@@ -20,6 +20,11 @@ declare module 'asset-pretty-size:*' {
   export default value;
 }
 
+declare module 'asset-pretty-size-br:*' {
+  const value: string;
+  export default value;
+}
+
 declare module 'asset-string:*' {
   const value: string;
   export default value;

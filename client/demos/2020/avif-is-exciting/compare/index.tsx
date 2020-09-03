@@ -31,6 +31,8 @@ import teamWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/
 import teamWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.webp';
 import teamPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
 import teamPngGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-good.png';
+import teamSvgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg';
+import teamSvgGoodSize from 'asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/team-traced.svg';
 import teamAvifLossless from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
 import teamAvifLosslessSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/team-lossless.avif';
 import teamWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/team-match.webp';
@@ -44,11 +46,11 @@ import carWebpGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-i
 import carAvifGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
 import carAvifGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.avif';
 import carSvgGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
-import carSvgGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
+import carSvgGoodSize from 'asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-good.svg';
 import carPngGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png';
 import carPngGoodSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-good.png';
 import carSvgOriginal from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
-import carSvgOriginalSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
+import carSvgOriginalSize from 'asset-pretty-size-br:static-build/posts/2020/08/avif-is-exciting/demos/car-original.svg';
 import carWebpMatch from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
 import carWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/08/avif-is-exciting/demos/car-match.webp';
 import machineWebpGood from 'asset-url:static-build/posts/2020/08/avif-is-exciting/demos/machine-good.webp';
@@ -91,6 +93,7 @@ const categories: {
       [`WebP - 68 color lossless - ${teamWebpGoodSize}`]: teamWebpGood,
       [`PNG - 68 color lossless - ${teamPngGoodSize}`]: teamPngGood,
       [`AVIF - 68 color lossless - ${teamAvifLosslessSize}`]: teamAvifLossless,
+      [`SVG - traced - ${teamSvgGoodSize}`]: teamSvgGood,
       [`WebP - lossy - ${teamWebpMatchSize}`]: teamWebpMatch,
       [`JPEG - ${teamJpgMatchSize}`]: teamJpgMatch,
       [`WebP - full color lossless - ${teamWebpLosslessSize}`]: teamWebpLossless,

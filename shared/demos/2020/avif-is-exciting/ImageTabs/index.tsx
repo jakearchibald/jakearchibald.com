@@ -6,6 +6,7 @@ interface Props {
   ratio: number;
   maxWidth: number;
   initial: number;
+  transform?: string;
 }
 
 interface State {
@@ -24,16 +25,21 @@ export default class ImageTabs extends Component<Props, State> {
     this.setState({ selected: num });
   };
 
-  render({ images, maxWidth, ratio }: Props, { selected }: State) {
+  render({ images, maxWidth, ratio, transform }: Props, { selected }: State) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
 
     return (
       <div class="image-tabs">
         <div class="image-tabs-preview">
-          <div class="image-tabs-sizer" style={{ maxWidth }}>
-            <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
+          <div
+            class="image-tabs-transformer"
+            style={{ transform: transform || '' }}
+          >
+            <div class="image-tabs-sizer" style={{ maxWidth }}>
+              <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
+            </div>
+            {src && <DecodedImg src={src} renderWidth={maxWidth} />}
           </div>
-          {src && <DecodedImg src={src} renderWidth={maxWidth} />}
         </div>
         <form class="image-tabs-tabs" onChange={this._onChange}>
           {images.map(([title], i) => (
