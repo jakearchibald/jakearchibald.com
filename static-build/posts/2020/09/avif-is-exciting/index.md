@@ -175,7 +175,7 @@ I couldn't even get the JPEG and WebP down to 18 kB, even at lowest settings. Th
 
 ## Conclusion
 
-UNless it's automated, offering up 3 versions of the same image is a bit of a pain, but the saving here are pretty significant, so it seems worth it, especially given the number of users that can already benefit from AVIF.
+Unless it's automated, offering up 3 versions of the same image is a bit of a pain, but the saving here are pretty significant, so it seems worth it, especially given the number of users that can already benefit from AVIF.
 
 [Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=f1).
 
