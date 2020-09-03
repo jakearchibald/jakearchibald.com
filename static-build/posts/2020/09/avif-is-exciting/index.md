@@ -482,7 +482,7 @@ Although they're all loading at the same rate, the much-larger JPEG feels faster
 
 Video never needs to render a partial frame, so it isn't something the format is set up to do. It isn't impossible to have a top-to-bottom render like WebP, but the implementation would be complicated, so we're unlikely to see it in browsers in the foreseeable future.
 
-Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything.
+Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and they [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything.
 
 Because of this, AVIF feels better suited to smaller quicker-loading images. But that still covers most images on the web.
 
