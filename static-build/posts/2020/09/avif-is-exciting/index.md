@@ -41,7 +41,8 @@ Let's take a look at how AVIF performs against the image formats we already know
   }
   .image-tabs-transformer {
     display: grid;
-    align-items: end;
+    align-items: stretch;
+    justify-items: stretch;
   }
   .image-tabs-transformer > * {
     grid-area: 1/1;

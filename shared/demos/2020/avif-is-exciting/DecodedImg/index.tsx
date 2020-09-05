@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 import { Component, h, VNode } from 'preact';
-import { abortable } from './utils';
+import { abortable, abortableWait, combineSignals } from './utils';
 import Decoder from './decoder';
 
 /** Caches results from canDecodeImageType */
@@ -74,30 +74,52 @@ export default class DecodedImg extends Component<Props, State> {
     if (this._updateController) this._updateController.abort();
     const { renderWidth, src, lazy } = this.props;
 
-    const clearId = setTimeout(() => {
-      this.setState({ output: undefined });
-    }, 1000);
-
     this._updateController = new AbortController();
     const { signal } = this._updateController;
     const ext = src.split('.').slice(-1)[0];
     const type = extensionTypes[ext];
     if (!type) throw Error('Unexpected extension');
 
+    const timeoutController = new AbortController();
+
+    abortableWait(combineSignals([signal, timeoutController.signal]), 1000)
+      .then(() => {
+        this.setState({ output: undefined });
+      })
+      .catch(() => {});
+
     try {
       const canDecode = await abortable(signal, canDecodeImageType(type));
 
+      if (lazy && self.IntersectionObserver) {
+        await abortable(
+          signal,
+          new Promise((resolve) => {
+            const observer = new IntersectionObserver(([result]) => {
+              if (!result.isIntersecting) return;
+              observer.disconnect();
+              resolve();
+            });
+            observer.observe(this.base!.parentElement!);
+          }),
+        );
+      }
+
       if (canDecode) {
+        const img = new Image();
+        img.src = src;
+        await abortable(signal, img.decode());
+        timeoutController.abort();
         this.setState({
           output: (
             <img
+              // @ts-ignore - type doesn't exist in Preact
+              decoding="sync"
               style={{ width: renderWidth + 'px' }}
               src={src}
-              loading={lazy ? 'lazy' : undefined}
             />
           ),
         });
-        clearTimeout(clearId);
         return;
       }
 
@@ -118,20 +140,6 @@ export default class DecodedImg extends Component<Props, State> {
           }),
         );
       };
-
-      if (lazy && self.IntersectionObserver) {
-        await abortable(
-          signal,
-          new Promise((resolve) => {
-            const observer = new IntersectionObserver(([result]) => {
-              if (!result.isIntersecting) return;
-              observer.disconnect();
-              resolve();
-            });
-            observer.observe(this.base!.parentElement!);
-          }),
-        );
-      }
 
       if (!decodeCache.has(src)) addToCache();
 
@@ -162,7 +170,7 @@ export default class DecodedImg extends Component<Props, State> {
       const canvas = await abortable(
         signal,
         new Promise<HTMLCanvasElement>((resolve) => {
-          clearTimeout(clearId);
+          timeoutController.abort();
           this.setState({
             output: (
               <canvas
@@ -178,7 +186,6 @@ export default class DecodedImg extends Component<Props, State> {
       canvas.height = decodedImage.height;
       canvas.getContext('2d')!.putImageData(decodedImage, 0, 0);
     } catch (err) {
-      clearTimeout(clearId);
       if (err.name === 'AbortError') return;
       throw err;
     }
