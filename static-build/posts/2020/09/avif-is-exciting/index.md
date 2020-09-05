@@ -8,9 +8,9 @@ image: 'asset-url:./post.jpg'
 
 Back in ancient July [I released a talk](https://www.youtube.com/watch?v=F1kYBnY6mwg) that dug into how lossy and lossless image compression works and how to apply that knowledge to compress a set of different images for the web. Well, that's already out of date because _AVIF has arrived_. Brilliant.
 
-AVIF is a new image format derived from the keyframes of AV1 video. It's an open format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are a member of the group that created AV1.
+AVIF is a new image format derived from the keyframes of AV1 video. It's an royalty-free format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are a member of the group that created AV1.
 
-What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [client hints](https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/client-hints) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
+What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation/List_of_default_Accept_values#Values_for_an_image) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
 
 <link href='https://fonts.googleapis.com/css?family=Just+Another+Hand|Inconsolata:700' rel='stylesheet' type='text/css'><style>
   .img-diagram-figure {
@@ -116,9 +116,39 @@ Most images I see on the web are a much higher quality than they need to be, whi
 
 In this article, I'm optimising images as if they were appearing in an article, where their CSS width is around 50% of their pixel width, meaning they're optimised for high-density displays.
 
-**These are _my_ reckons**. In this article I'm comparing the images using the human balls of eye I keep safely inside my skull, rather than any kind of algorithm that tries to guess how humans perceive images. I'm providing the full output for each image so you can make your own judgement, and you can try with your own images using [Squoosh](https://squoosh.app).
+## Technique
+
+Well, 'technique' might be too strong a word. To compress the images I used [Squoosh](https://squoosh.app), zoomed the image out to 50%, and dragged the quality slider down until it looked bad, then moved it back a bit. If the codec had an 'effort' setting, I turned it to max. I also used one or two advanced settings, and I'll point those out along the way.
+
+But yes, **these are just _my_ reckons**. I'm comparing the images using the human balls of eye I keep safely inside my skull, rather than any kind of algorithm that tries to guess how humans perceive images, and there are biases with that.
+
+In fact, when I showed this article to [Kornel Lesiński](https://twitter.com/kornelski) (who actually knows what he's talking about when it comes to image compression), he was unhappy with my F1 comparison above, because the [DDSIM score](https://github.com/kornelski/dssim) of the JPEG is much lower than the others, meaning it's closer in quality to the original image, and… he's right.
+
+I struggled to compress the F1 image as JPEG. If I went any lower than 74 kB, the banding on the road became really obvious to me, and some of the grey parts of the road appeared slightly purple in a noticeable way. Kornel was able to tweak the quantization tables in MozJPEG to get a better result:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "props": {
+    "ratio": 1.777,
+    "maxWidth": 960,
+    "initial": 2,
+    "images": [
+      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
+      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+…but, although I'm happy to spend time manually compressing key images of a web site, I don't really have to skills to tweak a JPEG encoder in that way. So the results in this post are also a reflection of what the codec can do with my moderate time and talent.
 
 I also realise that manually tuning codec settings per image doesn't scale. If you need to automate image compression, you can figure out the settings manually from a few representative images, then add a bit of extra quality for safety, and use those settings in an automated tool.
+
+I'm providing the full output for each image so you can make your own judgement, and you can try with your own images using [Squoosh](https://squoosh.app).
 
 _\*cough\*_ Sorry about all that. Just trying to get ahead of the "what if"s, "how about"s, and "well actually"s.
 
@@ -132,11 +162,12 @@ Let's take a closer look and see how the codecs work:
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
-    "initial": 3,
+    "initial": 4,
     "transform": "scale(6.5) translate(-9.6%, 8.9%)",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
+      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg"],
       ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp"],
       ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
     ]
@@ -146,13 +177,15 @@ Let's take a closer look and see how the codecs work:
 
 If you're interested in how lossy codecs work, [check out my talk starting at 4:44](https://youtu.be/F1kYBnY6mwg?t=284).
 
-The fine detail of the road is lost in all of the compressed versions, which I'm ok with. In the JPEG version you can see the individual 8x8 blocks of the DCT, thankfully they aren't obvious when zoomed out. WebP avoids this blockiness using decoding filters, and by, well, just being better. AVIF applies a lot of smoothing, but there are very few artefacts (or maybe I'm just not attuned to them).
+The fine detail of the road is lost in all of the compressed versions, which I'm ok with. However, you can see the difference in detail Kornel was talking about. Look at the red bodywork in the original, there are three distinct parts – the mirror, the wing connecting the bargeboard, and the top of the sidepod. In the AVIF, the smoothing removes the division between these parts, but they're still mostly there in the JPEG, especially the 74 kB version.
+
+In the JPEG version you can also see the individual 8x8 blocks of the DCT, thankfully they aren't obvious when zoomed out. WebP avoids this blockiness using decoding filters, and by, well, just being better. AVIF does much better at preserving sharp lines, but introduces smoothing. These are all ways of reducing data in the image, but the artefacts in AVIF are much less obvious to me.
 
 If you're thinking "wait, what's he talking about? The AVIF is really blocky around the red/blue", well, chances are you're looking at it in Chrome 85. There's a bug in the decoder when it comes to upscaling the colour detail. This is mostly fixed in 86, although there are [some edge cases where it still happens](https://bugs.chromium.org/p/chromium/issues/detail?id=1121579).
 
-## At the same size
+## At equal sizes
 
-Just for fun, let's see how the other image formats compare around the same file size as the AVIF:
+One way to make the differences between the codecs obvious is to make them roughly the same size:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -175,7 +208,7 @@ I couldn't even get the JPEG and WebP down to 18 kB, even at lowest settings. Th
 
 ## Conclusion
 
-Unless it's automated, offering up 3 versions of the same image is a bit of a pain, but the saving here are pretty significant, so it seems worth it, especially given the number of users that can already benefit from AVIF.
+Unless it's automated, offering up 3 versions of the same image is a bit of a pain, but the savings here are pretty significant, so it seems worth it, especially given the number of users that can already benefit from AVIF.
 
 [Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=f1).
 
@@ -235,7 +268,7 @@ I went straight for palette reduction and lossless compression with this image b
 }</script>
 </figure>
 
-Turns out lossy AVIF can handle solid colour and sharp lines really well, and produces a file quite a bit smaller than the SVG.
+Turns out lossy AVIF can handle solid colour and sharp lines really well, and produces a file quite a bit smaller than the SVG. I disabled chroma subsampling in the AVIF to keep the colours sharp.
 
 ## A closer look
 
@@ -258,15 +291,15 @@ Turns out lossy AVIF can handle solid colour and sharp lines really well, and pr
 }</script>
 </figure>
 
-I expected a lossy codec to produce a lot of smoothing, but there's hardly any. There's a very slight bit above the glasses of the guy on the left, and on the ear of the guy on the right. If anything, AVIF has introduced some sharpening – see the left-hand side of the glasses. That kind of sharpening is usually produced by palette reduction, but here it's just how AVIF works.
+I expected a lossy codec to produce a lot of smoothing, but there's hardly any. There's a very slight bit above the glasses of the guy on the left, and on the ear of the guy on the right. If anything, AVIF has introduced some sharpening – see the left-hand side of the glasses. That kind of sharpening is usually produced by palette reduction, but here it's just how AVIF works thanks to the [directional transforms and filters](https://hacks.mozilla.org/2018/06/av1-next-generation-video-the-constrained-directional-enhancement-filter/).
 
 The PNG and WebP have sharp edges particularly around the green shirt due to the palette reduction, but it isn't really noticeable at normal size.
 
 Of course, the SVG looks super sharp due to vector scaling, but you can see where the tracing lost details around the hair and pocket.
 
-## At the same size
+## At equal sizes
 
-Again, just for fun (no, seriously, I find this fun), let's push the other codecs down to the size of the AVIF:
+Let's push the other codecs down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -347,15 +380,13 @@ AVIF aces it again at a significantly smaller size, even compared to the SVG. Pa
 }</script>
 </figure>
 
-When zoomed into the PNG, you can see the effects of the palette reduction.
+When zoomed into the PNG, you can see the effects of the palette reduction. The WebP is getting blurry, and suffers from some colour noise.
 
-The WebP is getting blurry, and suffers from some colour noise.
+The AVIF looks similar to the WebP, but at a much smaller size. Interestingly, the AVIF just kinda gives up drawing the bonnet, but it's hardly noticeable when it's zoomed out.
 
-The AVIF look similar to the WebP, but at a much smaller size. Interestingly, the AVIF just kinda gives up drawing the bonnet, but it's hardly noticeable when it's zoomed out.
+## At equal sizes
 
-## At the same size
-
-As always, just for giggles, let's push the other formats down to the size of the AVIF:
+As always, let's push the other formats down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -436,11 +467,11 @@ With the reduced-palette WebP, you can start to see the effects of palette reduc
 
 The lossy WebP is pretty blurry, and suffers from colour artefacts. WebP always halves the resolution of the colour data, unlike JPEG and AVIF where this is optional. However, WebP has a feature called "Sharp YUV" which tries to reduce the impact of the colour reduction. It generally works pretty well, but also causes the colour artefacts seen here.
 
-The AVIF has really clean colours, but some blurring, and even changes some of the shapes a bit – the circle looks almost octagonal. But c'mon, 12 Kb!
+The AVIF has really clean colours, but some blurring, and even changes some of the shapes a bit – the circle looks almost octagonal due to the edge detection. But c'mon, 12 Kb!
 
-## At the same size
+## At equal sizes
 
-For one last time, just for funsies, let's push the other codecs down to AVIF's size:
+For one last time, let's push the other codecs down to AVIF's size:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -480,13 +511,13 @@ The above shows a high-resolution (2000x1178), high-quality image loading at 2g 
 
 Although they're all loading at the same rate, the much-larger JPEG feels faster because of how it renders in multiple passes. WebP renders from top to bottom, which isn't as good, but at least you see the progress. Unfortunately, with AVIF it's all-or-nothing.
 
-Video never needs to render a partial frame, so it isn't something the format is set up to do. It isn't impossible to have a top-to-bottom render like WebP, but the implementation would be complicated, so we're unlikely to see it in browsers in the foreseeable future.
+Video doesn't need to render a partial frame, so it isn't something the format is set up to do. It's possible to have a top-to-bottom render like WebP, but the implementation would be complicated, so we're unlikely to see it in browsers in the foreseeable future.
 
 Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and they [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything.
 
 Because of this, AVIF feels better suited to smaller quicker-loading images. But that still covers most images on the web.
 
-There's also a question of CPU usage vs other formats, but I haven't dug into that yet. Although AV1 is likely to get hardware support, I'm told that dedicated hardware will be tuned for video, rather than decoding a page full of images.
+There's also a question of CPU usage vs other formats, but I haven't dug into that yet. Although AV1 is [starting to get hardware support](https://www.nvidia.com/en-gb/geforce/news/rtx-30-series-av1-decoding/), I'm told that dedicated hardware will be tuned for video, and not so great at decoding a page full of images.
 
 # What about JPEG-XL and WebPv2?
 

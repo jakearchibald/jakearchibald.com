@@ -21,6 +21,8 @@ import f1JpgMatch from 'asset-url:static-build/posts/2020/09/avif-is-exciting/de
 import f1JpgMatchSize from 'asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.jpg';
 import f1JpgGood from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg';
 import f1JpgGoodSize from 'asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg';
+import f1JpgKornel from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg';
+import f1JpgKornelSize from 'asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg';
 import f1AvifGood from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif';
 import f1AvifGoodSize from 'asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif';
 import f1AvifNearLossless from 'asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif';
@@ -88,6 +90,7 @@ const categories: {
       [`AVIF - acceptable - ${f1AvifGoodSize}`]: f1AvifGood,
       [`WebP - acceptable - ${f1WebpGoodSize}`]: f1WebpGood,
       [`JPEG - acceptable - ${f1JpgGoodSize}`]: f1JpgGood,
+      [`JPEG - Kornel powers - ${f1JpgKornelSize}`]: f1JpgKornel,
       [`WebP - ${f1WebpMatchSize}`]: f1WebpMatch,
       [`JPEG - ${f1JpgMatchSize}`]: f1JpgMatch,
       [`AVIF - near lossless - ${f1AvifNearLosslessSize}`]: f1AvifNearLossless,
