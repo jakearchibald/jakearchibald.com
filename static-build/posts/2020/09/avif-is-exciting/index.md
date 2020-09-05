@@ -205,7 +205,7 @@ One way to make the differences between the codecs really obvious is to test the
 }</script>
 </figure>
 
-I couldn't even get the JPEG and WebP down to 18 kB, even at lowest settings, so this isn't a totally fair test. The JPEG suffers from awful banding, which started to appear as soon as I went below 74 kB. The WebP is much better, but there's still noticeable blockiness compared to the AVIF. I guess that's what a decade or two's progress looks like.
+I couldn't even get the JPEG and WebP down to 18 kB, even at lowest settings, so this isn't a totally fair test. The JPEG suffers from awful banding, which started to appear as soon as I went below 74 kB. The WebP is much better, but there's still noticeable blockiness compared to the AVIF. I guess that's what a decade or two of progress looks like.
 
 ## Conclusion
 
