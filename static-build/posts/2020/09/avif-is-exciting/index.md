@@ -530,3 +530,5 @@ There aren't many details around WebPv2 yet, so again it's best to wait and see 
 # And that's it!
 
 Phew! I didn't expect this post to get so long, but I really enjoyed poking around AVIF and building the demos in this article. I wanted to include a dive into the more obscure settings these codecs offer, but I'll save that for another day.
+
+Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), and [Paul Kinlan](https://twitter.com/Paul_Kinlan) for proof-reading and fact checking!
