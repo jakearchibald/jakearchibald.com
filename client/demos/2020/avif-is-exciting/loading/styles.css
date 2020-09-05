@@ -1,6 +1,7 @@
 body {
   margin: 0;
   font-family: sans-serif;
+  background: #eee;
 }
 
 .images {
@@ -26,6 +27,7 @@ img {
 
 h1 {
   text-align: center;
+  margin: 10px 0;
 
   &::before {
     content: '✅ ';
