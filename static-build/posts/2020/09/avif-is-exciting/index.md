@@ -34,6 +34,17 @@ Also, **[Squoosh](https://squoosh.app) now supports AVIF**, which is how I compr
 Let's take a look at how AVIF performs against the image formats we already know and love…
 
 <style>
+  .image-tabs {
+    position: relative;
+  }
+  .image-tabs .pop-out-icon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    fill: #fff;
+    width: 32px;
+    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.7));
+  }
   .image-tabs-preview {
     overflow: hidden;
     background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
@@ -88,6 +99,7 @@ Let's take a look at how AVIF performs against the image formats we already know
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 3,
+    "category": "f1",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
@@ -134,6 +146,7 @@ I struggled to compress the F1 image as JPEG. If I went any lower than 74 kB, th
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 2,
+    "category": "f1",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
@@ -165,6 +178,7 @@ Let's take a closer look and see how the codecs work:
     "maxWidth": 960,
     "initial": 4,
     "transform": "scale(6.5) translate(-9.6%, 8.9%)",
+    "category": "f1",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
@@ -195,6 +209,7 @@ One way to make the differences between the codecs really obvious is to test the
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 1,
+    "category": "f1",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.jpg"],
@@ -224,6 +239,7 @@ Ok, next image:
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 3,
+    "category": "team",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
       ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
@@ -258,6 +274,7 @@ I went straight for palette reduction and lossless compression with this image, 
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 4,
+    "category": "team",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
       ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
@@ -281,6 +298,7 @@ Turns out lossy AVIF can handle solid colour and sharp lines really well, and pr
     "maxWidth": 1000,
     "transform": "translate(-1%, 59%) scale(2.5)",
     "initial": 4,
+    "category": "team",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
       ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
@@ -309,6 +327,7 @@ Let's push the other codecs down to the size of the AVIF:
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 1,
+    "category": "team",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-match.jpg"],
@@ -341,6 +360,7 @@ Right, it's time for the next image…
     "ratio": 1.5,
     "maxWidth": 500,
     "initial": 4,
+    "category": "car",
     "images": [
       ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg"],
       ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg"],
@@ -370,6 +390,7 @@ AVIF aces it again at a significantly smaller size, even compared to the SVG. Pa
     "maxWidth": 1000,
     "transform": "scale(2.3) translate(2%, -9%)",
     "initial": 4,
+    "category": "car",
     "images": [
       ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg"],
       ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg"],
@@ -396,6 +417,7 @@ As always, let's push the other formats down to the size of the AVIF:
     "ratio": 1.5,
     "maxWidth": 500,
     "initial": 1,
+    "category": "car",
     "images": [
       ["PNG 12 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-match.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-match.png"],
       ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-match.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-match.webp"],
@@ -424,6 +446,7 @@ Ok, one more:
     "ratio": 1.786,
     "maxWidth": 960,
     "initial": 4,
+    "category": "machine",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg"],
@@ -453,6 +476,7 @@ JPEG doesn't do a _great_ job here – anything lower than 80 kB starts to intro
     "maxWidth": 960,
     "transform": "scale(6) translate(4.3%, 27.3%)",
     "initial": 4,
+    "category": "machine",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg"],
@@ -483,6 +507,7 @@ For one last time, let's push the other codecs down to AVIF's size:
     "ratio": 1.786,
     "maxWidth": 960,
     "initial": 1,
+    "category": "machine",
     "images": [
       ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
       ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.jpg"],
@@ -548,4 +573,4 @@ There aren't many details around WebPv2 yet, so again it's best to wait and see 
 
 Phew! I didn't expect this post to get so long, but I really enjoyed poking around AVIF and building the demos in this article. I wanted to include a dive into the more obscure settings these codecs offer, but I'll save that for another day.
 
-Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), and [Paul Kinlan](https://twitter.com/Paul_Kinlan) for proof-reading and fact checking!
+Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), and Sam Jenkins for proof-reading and fact checking!

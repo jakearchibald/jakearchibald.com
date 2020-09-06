@@ -136,11 +136,16 @@ const categories: {
   },
 };
 
-const category =
-  categories[new URLSearchParams(location.search).get('show') || 'f1'] ||
-  categories.f1!;
+const urlParams = new URLSearchParams(location.search);
+
+const category = categories[urlParams.get('show') || 'f1'] || categories.f1!;
 
 const images = Object.entries(category.options);
+
+const initalLeftImg = images[0][1];
+const imgParam = urlParams.get('img');
+const initialRightImg =
+  imgParam && imgParam !== initalLeftImg ? imgParam : images[1][1];
 
 interface State {
   leftImgSrc: string;
@@ -149,8 +154,8 @@ interface State {
 
 class App extends Component<{}, State> {
   state: State = {
-    leftImgSrc: images[0][1],
-    rightImgSrc: images[1][1],
+    leftImgSrc: initalLeftImg,
+    rightImgSrc: initialRightImg,
   };
 
   private _onChoiceLeftChange = (event: Event) => {
