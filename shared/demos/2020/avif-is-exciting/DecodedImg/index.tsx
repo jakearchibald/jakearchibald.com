@@ -82,10 +82,12 @@ export default class DecodedImg extends Component<Props, State> {
 
     const timeoutController = new AbortController();
 
-    abortableWait(combineSignals([signal, timeoutController.signal]), 1000)
+    // Blank the output if it takes too long to switch the image
+    abortableWait(combineSignals([signal, timeoutController.signal]), 500)
       .then(() => {
         this.setState({ output: undefined });
       })
+      // Ignore errors (they should only be aborts)
       .catch(() => {});
 
     try {
@@ -162,7 +164,7 @@ export default class DecodedImg extends Component<Props, State> {
         if (cachedResult.name !== 'AbortError') throw cachedResult;
 
         // We've cached an abort error. We want to retry the operation.
-        // However, another run of this algorithm may have started one.
+        // However, another run of this algorithm may have already retried.
         // If not, start the operation again.
         if (decodeCache.get(src) === promise) addToCache();
       }
