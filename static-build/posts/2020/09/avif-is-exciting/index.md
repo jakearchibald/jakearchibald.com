@@ -224,9 +224,9 @@ If you're thinking "wait, what's he talking about? The AVIF is really blocky aro
 
 If you want more details on how lossy codecs work, [check out my talk starting at 4:44](https://youtu.be/F1kYBnY6mwg?t=284).
 
-## At equal sizes
+## At equal file sizes
 
-One way to make the differences between the codecs really obvious is to test them at roughly the same size:
+One way to make the differences between the codecs really obvious is to test them at roughly the same file size:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -342,7 +342,7 @@ The PNG and WebP have sharp edges particularly around the green shirt due to the
 
 Of course, the SVG looks super sharp due to vector scaling, but you can see where the tracing lost details around the hair and pocket of the guy on the right.
 
-## At equal sizes
+## At equal file sizes
 
 Let's push the other codecs down to the size of the AVIF:
 
@@ -432,7 +432,7 @@ When zoomed into the PNG, you can see the effects of the palette reduction. The 
 
 The AVIF looks similar to the WebP, but at a much smaller size. Interestingly, the AVIF just kinda gives up drawing the bonnet, but it's hardly noticeable when it's zoomed out.
 
-## At equal sizes
+## At equal file sizes
 
 As always, let's push the other formats down to the size of the AVIF:
 
@@ -522,7 +522,7 @@ The lossy WebP is pretty blurry, and suffers from colour artefacts, which are a 
 
 The AVIF has really clean colours, but some blurring, and even changes some of the shapes a bit – the circle looks almost octagonal due to the edge detection. But c'mon, 12 Kb!
 
-## At equal sizes
+## At equal file sizes
 
 For one last time, let's push the other codecs down to AVIF's size:
 
