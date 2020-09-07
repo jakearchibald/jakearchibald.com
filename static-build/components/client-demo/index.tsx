@@ -13,6 +13,7 @@
 import { h, FunctionalComponent, RenderableProps } from 'preact';
 
 import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
+import faviconURL from 'asset-url:static-build/imgs/favicon.png';
 
 interface Props {
   title: string;
@@ -35,6 +36,7 @@ const ClientDemo: FunctionalComponent<Props> = ({
           name="viewport"
           content="width=device-width, minimum-scale=1.0"
         ></meta>
+        <link rel="icon" type="image/png" href={faviconURL} />
         {styles && <link rel="stylesheet" href={styles} />}
         <script type="module" async src={analyticsBundleURL}></script>
         {script && <script type="module" src={script} />}

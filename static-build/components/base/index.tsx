@@ -15,6 +15,7 @@ import styles from 'css-bundle:./css/all.css';
 
 //import bundleURL, { imports } from 'client-bundle:client/all/index.tsx';
 import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
+import faviconURL from 'asset-url:static-build/imgs/favicon.png';
 
 interface Props {
   title: string;
@@ -42,6 +43,7 @@ const BasePage: FunctionalComponent<Props> = ({
           name="viewport"
           content="width=device-width, minimum-scale=1.0"
         ></meta>
+        <link rel="icon" type="image/png" href={faviconURL} />
         <link rel="stylesheet" href={styles} />
         <script type="module" async src={analyticsBundleURL}></script>
         <link
