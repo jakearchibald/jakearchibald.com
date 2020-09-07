@@ -2,15 +2,13 @@
   font-family: 'Inconsolata';
   font-style: normal;
   font-weight: 400;
-  src: url(https://themes.googleusercontent.com/static/fonts/inconsolata/v6/BjAYBlHtW3CJxDcjzrnZCCwlidHJgAgmTjOEEzwu1L8.ttf)
-    format('truetype');
+  src: url('fonts/inconsolata.woff') format('woff');
 }
 @font-face {
   font-family: 'PT Serif';
   font-style: normal;
   font-weight: 400;
-  src: url(https://themes.googleusercontent.com/static/fonts/ptserif/v5/EgBlzoNBIHxNPCMwXaAhYHYhjbSpvc47ee6xR_80Hnw.ttf)
-    format('truetype');
+  src: url('fonts/pt-serif.woff2') format('woff2');
 }
 
 html {

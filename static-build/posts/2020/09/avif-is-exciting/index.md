@@ -12,7 +12,14 @@ AVIF is a new image format derived from the keyframes of AV1 video. It's an roya
 
 What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation/List_of_default_Accept_values#Values_for_an_image) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
 
-<link href='https://fonts.googleapis.com/css?family=Just+Another+Hand|Inconsolata:700' rel='stylesheet' type='text/css'><style>
+<style>
+  @font-face {
+    font-family: 'Just Another Hand';
+    font-style: normal;
+    font-weight: 400;
+    src: url('asset-url:static-build/extra-fonts/just-another-hand.woff2') format('woff2');
+  }
+
   .img-diagram-figure {
     position: relative;
   }
