@@ -100,6 +100,7 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
           <div class="comments" id="comments">
             <div id="disqus_thread"></div>
             <script
+              // prettier-ignore
               dangerouslySetInnerHTML={{
                 __html:
                   `var disqus_shortname = 'jakearchibald';` +
@@ -109,18 +110,22 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
                   `var disqus_title = ${JSON.stringify(post.title)};` +
                   `var disqus_url = ${JSON.stringify(
                     `http://jakearchibald.com${getPostUrl(post).slice(0, -1)}`,
-                  )};`,
+                  )};` +
+                  `const observer = new IntersectionObserver(([result]) => {` +
+                    `if (!result.isIntersecting) return;` +
+                    `observer.disconnect();` +
+                    `const script = document.createElement('script');` +
+                    `script.src = 'https://jakearchibald.disqus.com/embed.js';` +
+                    `document.head.append(script);` +
+                  `}, { rootMargin: '500px' });` +
+                  `observer.observe(document.querySelector('#comments'));`
               }}
-            ></script>
-            <script
-              async
-              src="https://jakearchibald.disqus.com/embed.js"
             ></script>
             <noscript>
               I hate that Disqus doesn't work without JavaScript. It should.
             </noscript>
             <a href="http://disqus.com" class="dsq-brlink">
-              comments powered by <span class="logo-disqus">Disqus</span>
+              Comments powered by <span class="logo-disqus">Disqus</span>
             </a>
           </div>
         </div>
