@@ -1,6 +1,10 @@
 import { h, FunctionalComponent } from 'preact';
 
 import meUrl from 'asset-url:./me.jpg';
+import twitterUrl from 'asset-url:./twitter.svg';
+import githubUrl from 'asset-url:./github.svg';
+import youtubeUrl from 'asset-url:./youtube.svg';
+import podcastUrl from 'asset-url:./podcast.svg';
 
 const Who: FunctionalComponent<{}> = () => (
   <section>
@@ -16,19 +20,37 @@ const Who: FunctionalComponent<{}> = () => (
     </p>
 
     <h1>Elsewhere</h1>
-    <ul class="icon-list link-list">
-      <li>
-        <a href="https://twitter.com/jaffathecake">
-          <span class="i i-social twitter"></span>
-          Twitter
-        </a>
-      </li>
-      <li>
-        <a href="https://github.com/jakearchibald/">
-          <span class="i i-social github"></span>
-          Github
-        </a>
-      </li>
+    <ul class="icon-list">
+      {[
+        {
+          url: 'https://twitter.com/jaffathecake',
+          img: twitterUrl,
+          content: 'Twitter',
+        },
+        {
+          url: 'https://github.com/jakearchibald/',
+          img: githubUrl,
+          content: 'Github',
+        },
+        {
+          url:
+            'https://www.youtube.com/playlist?list=PLNYkxOF6rcIAKIQFsNbV0JDws_G_bnNo9',
+          img: youtubeUrl,
+          content: 'YouTube',
+        },
+        {
+          url: 'https://http203.libsyn.com/',
+          img: podcastUrl,
+          content: 'Podcast',
+        },
+      ].map((item) => (
+        <li>
+          <a href={item.url} class="icon-list-item">
+            <img class="icon-list-icon" src={item.img} alt="" />
+            {item.content}
+          </a>
+        </li>
+      ))}
     </ul>
     <h1>Contact</h1>
     <p>

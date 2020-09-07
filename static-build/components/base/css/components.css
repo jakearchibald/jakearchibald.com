@@ -244,12 +244,6 @@ h2 + .max-figure {
 
   & .icon-list {
     margin: 1em 0;
-    display: flex;
-    flex-flow: row wrap;
-
-    & > li {
-      flex: 0 0 50%;
-    }
   }
 }
 .my-big-face {
@@ -443,63 +437,21 @@ h2 + .max-figure {
   }
 }
 
-/* icons */
-.i {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-.i-social {
-  width: 16px;
-  height: 16px;
-  background: url('imgs/social-icons.png') no-repeat;
-  background-size: 106px;
-
-  &.flickr {
-    background-position: 0 0;
-  }
-
-  &.lanyrd {
-    background-position: -18px 0;
-  }
-
-  &.github {
-    background-position: -36px 0;
-  }
-
-  &.twitter {
-    background-position: -54px 0;
-  }
-
-  &.gplus {
-    background-position: -72px 0;
-  }
-
-  &.rss {
-    background-position: -90px 0;
-  }
-}
-
 /* icon list */
 .icon-list {
   margin: 0;
   padding: 0;
   list-style: none;
-
-  & > li {
-    margin: 0 0 0.3em;
-  }
-
-  & .i {
-    margin-right: 4px;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.5em 0.2em;
 }
 
-/* link list */
-.link-list {
-  & a {
-    display: block;
-  }
+.icon-list-item {
+  display: grid;
+  grid-template-columns: 20px 1fr;
+  gap: 0.5em;
+  align-items: center;
 }
 
 /* comments */
