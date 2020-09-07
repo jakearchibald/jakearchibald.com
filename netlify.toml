@@ -1,2 +1,2 @@
 [[plugins]]
-package = "/netlify-plugins/netlify-plugin-cache-ts"
+package = "/netlify-plugins/cache-ts"
