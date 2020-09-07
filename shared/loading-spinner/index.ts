@@ -1,7 +1,9 @@
 import { inline as shadowStyles } from 'css-bundle:./styles.css';
 
 // So it doesn't cause an error when running in node
-const HTMLElement = self.HTMLElement || Object;
+const HTMLEl = ((__PRERENDER__
+  ? Object
+  : HTMLElement) as unknown) as typeof HTMLElement;
 
 /**
  * A simple spinner. This custom element has no JS API. Just put it in the document, and it'll
@@ -11,7 +13,7 @@ const HTMLElement = self.HTMLElement || Object;
  * --color: Color of the spinner. Default: #4285f4.
  * --stroke-width: Width of the stroke of the spinner. Default: 3px.
  */
-export default class LoadingSpinner extends HTMLElement {
+export default class LoadingSpinner extends HTMLEl {
   constructor() {
     super();
     if (__PRERENDER__) return;
