@@ -11,7 +11,7 @@
  * limitations under the License.
  */
 import { Component, h, VNode } from 'preact';
-import { abortable, abortableWait, combineSignals } from './utils';
+import { abortable } from './utils';
 import Decoder from './decoder';
 
 /** Caches results from canDecodeImageType */
@@ -60,6 +60,8 @@ interface Props {
   src: string;
   renderWidth: number;
   lazy?: boolean;
+  onLoadStart?: () => void;
+  onLoadEnd?: () => void;
 }
 
 interface State {
@@ -72,6 +74,7 @@ export default class DecodedImg extends Component<Props, State> {
 
   private async _updateOutput() {
     if (this._updateController) this._updateController.abort();
+
     const { renderWidth, src, lazy } = this.props;
 
     this._updateController = new AbortController();
@@ -85,16 +88,6 @@ export default class DecodedImg extends Component<Props, State> {
     const type = extensionTypes[ext];
 
     if (!type) throw Error('Unexpected extension');
-
-    const timeoutController = new AbortController();
-
-    // Blank the output if it takes too long to switch the image
-    abortableWait(combineSignals([signal, timeoutController.signal]), 500)
-      .then(() => {
-        this.setState({ output: undefined });
-      })
-      // Ignore errors (they should only be aborts)
-      .catch(() => {});
 
     try {
       const canDecode = await abortable(signal, canDecodeImageType(type));
@@ -113,11 +106,15 @@ export default class DecodedImg extends Component<Props, State> {
         );
       }
 
+      this.props.onLoadStart?.();
+
       if (canDecode) {
         const img = new Image();
         img.src = src;
         await abortable(signal, img.decode());
-        timeoutController.abort();
+
+        this.props.onLoadEnd?.();
+
         this.setState({
           output: (
             <img
@@ -178,7 +175,8 @@ export default class DecodedImg extends Component<Props, State> {
       const canvas = await abortable(
         signal,
         new Promise<HTMLCanvasElement>((resolve) => {
-          timeoutController.abort();
+          this.props.onLoadEnd?.();
+
           this.setState({
             output: (
               <canvas

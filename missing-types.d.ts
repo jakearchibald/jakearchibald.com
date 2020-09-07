@@ -39,3 +39,9 @@ declare module 'static-entry-url:*' {
   const value: string;
   export default value;
 }
+
+declare module 'css-bundle:*' {
+  const url: string;
+  export default url;
+  export const inline: string;
+}

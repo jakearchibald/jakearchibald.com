@@ -24,31 +24,3 @@ export async function abortable<T>(
     }),
   ]);
 }
-
-export async function abortableWait(
-  signal: AbortSignal,
-  ms: number,
-): Promise<void> {
-  if (signal.aborted) throw new DOMException('AbortError', 'AbortError');
-  let id: number;
-  signal.addEventListener('abort', () => clearTimeout(id));
-  return abortable(signal, new Promise((r) => (id = setTimeout(r, ms))));
-}
-
-export function combineSignals(signals: AbortSignal[]): AbortSignal {
-  const controller = new AbortController();
-  const onAbort = () => {
-    controller.abort();
-    for (const signal of signals) signal.removeEventListener('abort', onAbort);
-  };
-
-  for (const signal of signals) {
-    if (signal.aborted) {
-      onAbort();
-      break;
-    }
-
-    signal.addEventListener('abort', onAbort);
-  }
-  return controller.signal;
-}

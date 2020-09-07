@@ -37,7 +37,7 @@ Let's take a look at how AVIF performs against the image formats we already know
   .image-tabs {
     position: relative;
   }
-  .image-tabs .pop-out-icon {
+  .image-tabs-pop-out-icon {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -46,6 +46,7 @@ Let's take a look at how AVIF performs against the image formats we already know
     filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.7));
   }
   .image-tabs-preview {
+    position: relative;
     overflow: hidden;
     background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
     background-size: 20px 20px;
@@ -87,6 +88,24 @@ Let's take a look at how AVIF performs against the image formats we already know
   }
   .image-tabs-tab {
     display: grid;
+  }
+  @keyframes loading-fade-in {
+    from { opacity: 0; animation-timing-function: ease-in-out; }
+  }
+  .image-tabs-loading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, .62);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: 300ms loading-fade-in;
+  }
+  .image-tabs-loading loading-spinner {
+    --color: #fff;
   }
 </style>
 
