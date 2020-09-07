@@ -136,10 +136,9 @@ const categories: {
   },
 };
 
+const loadingTimeout = 600;
 const urlParams = new URLSearchParams(location.search);
-
 const category = categories[urlParams.get('show') || 'f1'] || categories.f1!;
-
 const images = Object.entries(category.options);
 
 const initalLeftImg = images[0][1];
@@ -150,13 +149,20 @@ const initialRightImg =
 interface State {
   leftImgSrc: string;
   rightImgSrc: string;
+  leftLoading: boolean;
+  rightLoading: boolean;
 }
 
 class App extends Component<{}, State> {
   state: State = {
     leftImgSrc: initalLeftImg,
     rightImgSrc: initialRightImg,
+    leftLoading: false,
+    rightLoading: false,
   };
+
+  private _leftLoadingTimeout?: number;
+  private _rightLoadingTimeout?: number;
 
   private _onChoiceLeftChange = (event: Event) => {
     this.setState({
@@ -170,12 +176,56 @@ class App extends Component<{}, State> {
     });
   };
 
-  render({}, { leftImgSrc, rightImgSrc }: State) {
+  private _onLeftLoadStart = () => {
+    if (this._leftLoadingTimeout) clearInterval(this._leftLoadingTimeout);
+    this._leftLoadingTimeout = setTimeout(
+      () => this.setState({ leftLoading: true }),
+      loadingTimeout,
+    );
+  };
+
+  private _onLeftLoadEnd = () => {
+    if (this._leftLoadingTimeout) clearInterval(this._leftLoadingTimeout);
+    this.setState({ leftLoading: false });
+  };
+
+  private _onRightLoadStart = () => {
+    if (this._rightLoadingTimeout) clearInterval(this._rightLoadingTimeout);
+    this._rightLoadingTimeout = setTimeout(
+      () => this.setState({ rightLoading: true }),
+      loadingTimeout,
+    );
+  };
+
+  private _onRightLoadEnd = () => {
+    if (this._rightLoadingTimeout) clearInterval(this._rightLoadingTimeout);
+    this.setState({ rightLoading: false });
+  };
+
+  render({}, { leftImgSrc, rightImgSrc, leftLoading, rightLoading }: State) {
     return (
       <div>
         <ZoomableTwoUp
-          left={<DecodedImg renderWidth={category.width} src={leftImgSrc} />}
-          right={<DecodedImg renderWidth={category.width} src={rightImgSrc} />}
+          left={
+            <div class={`img-container${leftLoading ? ' loading' : ''}`}>
+              <DecodedImg
+                renderWidth={category.width}
+                src={leftImgSrc}
+                onLoadStart={this._onLeftLoadStart}
+                onLoadEnd={this._onLeftLoadEnd}
+              />
+            </div>
+          }
+          right={
+            <div class={`img-container${rightLoading ? ' loading' : ''}`}>
+              <DecodedImg
+                renderWidth={category.width}
+                src={rightImgSrc}
+                onLoadStart={this._onRightLoadStart}
+                onLoadEnd={this._onRightLoadEnd}
+              />
+            </div>
+          }
         />
         <select
           class="choice-left"

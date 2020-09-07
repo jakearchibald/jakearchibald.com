@@ -58,3 +58,25 @@ html {
     right: 10px;
   }
 }
+
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+.img-container {
+  position: relative;
+
+  &.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.62);
+    animation: 300ms loading-fade-in;
+  }
+}
