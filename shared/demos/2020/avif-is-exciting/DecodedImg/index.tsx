@@ -77,7 +77,13 @@ export default class DecodedImg extends Component<Props, State> {
     this._updateController = new AbortController();
     const { signal } = this._updateController;
     const ext = src.split('.').slice(-1)[0];
+
+    // Assuming type from extension is hacky and not how things work on the web.
+    // In Squoosh we sniff image bytes (similar to how the browser does it),
+    // another way would be to use the response Content-Type.
+    // But this is quick and easy and works for the blog post.
     const type = extensionTypes[ext];
+
     if (!type) throw Error('Unexpected extension');
 
     const timeoutController = new AbortController();
@@ -195,6 +201,10 @@ export default class DecodedImg extends Component<Props, State> {
 
   componentDidMount() {
     this._updateOutput();
+  }
+
+  componentWillUnmount() {
+    if (this._updateController) this._updateController.abort();
   }
 
   componentDidUpdate(previousProps: Props) {

@@ -571,6 +571,15 @@ There aren't many details around WebPv2 yet, so again it's best to wait and see 
 
 # And that's it!
 
-Phew! I didn't expect this post to get so long, but I really enjoyed poking around AVIF and building the demos in this article. I wanted to include a dive into the more obscure settings these codecs offer, but I'll save that for another day.
+Phew! I didn't expect this post to get so long. I wanted to include a dive into the more obscure settings these codecs offer, but I'll save that for another day.
+
+I really enjoyed building the demos for this article. In case you want to dig into the details:
+
+- I built [a Preact component to handle image loading and decoding](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-is-exciting/DecodedImg/index.tsx), so AVIF/WebP works even without browser support. [A worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/decode/index.ts) handles the actual decoding, using the WebAssembly decoders from [Squoosh](https://squoosh.app/). I'd usually use [comlink](https://github.com/GoogleChromeLabs/comlink) to help with worker communication, but lack of worker-module compatibility meant I [went for something smaller/hackier](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-is-exciting/DecodedImg/decoder.ts) instead.
+- I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/static-build/posts/2020/09/avif-is-exciting/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L109).
+- The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client/demos/2020/avif-is-exciting/compare/ZoomableTwoUp.tsx) from Squoosh.
+- Here's the [progressive image loading demo](/2020/avif-is-exciting/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
+- For the talk rather than this article, I build a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
+- Also from the talk, I build a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
 Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), and Sam Jenkins for proof-reading and fact checking!

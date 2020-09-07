@@ -10,11 +10,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import type { WebPModule } from "./webp/webp_dec";
-import webpDec from "./webp/webp_dec";
+import type { WebPModule } from './webp/webp_dec';
+import webpDec from './webp/webp_dec';
 import webPDecWasm from 'asset-url:./webp/webp_dec.wasm';
-import type { AVIFModule } from "./avif/avif_dec";
-import avifDec from "./avif/avif_dec";
+import type { AVIFModule } from './avif/avif_dec';
+import avifDec from './avif/avif_dec';
 import avifDecWasm from 'asset-url:./avif/avif_dec.wasm';
 
 type ModuleFactory<M extends EmscriptenWasm.Module> = (
@@ -29,11 +29,7 @@ function initEmscriptenModule<T extends EmscriptenWasm.Module>(
     const module = moduleFactory({
       // Just to be safe, don't automatically invoke any wasm functions
       noInitialRun: true,
-      locateFile(url: string): string {
-        // Redirect the request for the wasm binary to whatever webpack gave us.
-        if (url.endsWith('.wasm')) return wasmUrl;
-        return url;
-      },
+      locateFile: () => wasmUrl,
       onRuntimeInitialized() {
         // An Emscripten is a then-able that resolves with itself, causing an infite loop when you
         // wrap it in a real promise. Delete the `then` prop solves this for now.
