@@ -92,7 +92,7 @@ export default class DecodedImg extends Component<Props, State> {
     try {
       const canDecode = await abortable(signal, canDecodeImageType(type));
 
-      if (lazy && self.IntersectionObserver) {
+      if (lazy) {
         await abortable(
           signal,
           new Promise((resolve) => {
