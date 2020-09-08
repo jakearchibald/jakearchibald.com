@@ -1,0 +1,82 @@
+body {
+  height: 100vh;
+  /* mobile viewport bug fix */
+  height: -webkit-fill-available;
+  display: grid;
+  margin: 0;
+  position: relative;
+  background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
+  background-size: 20px 20px;
+}
+
+html {
+  height: -webkit-fill-available;
+}
+
+.two-up {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  /* sighhhhh Safari */
+  height: -webkit-fill-available;
+}
+
+.pinch-zoom {
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+@media (max-width: 550px) {
+  .choice-left {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .choice-right {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}
+
+@media (min-width: 550px) {
+  .choice-left {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+  }
+
+  .choice-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+}
+
+@keyframes loading-fade-in {
+  from {
+    opacity: 0;
+    animation-timing-function: ease-in-out;
+  }
+}
+
+.img-container {
+  position: relative;
+
+  &.loading::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.62);
+    animation: 300ms loading-fade-in;
+  }
+}

@@ -18,10 +18,11 @@ declare module 'client-bundle:*' {
   export const imports: string[];
 }
 
-declare module 'css-bundle:*' {
-  const url: string;
-  export default url;
-  export const inline: string;
+interface Script {
+  src: string;
+  async: boolean;
+  preloadOnly: boolean;
+  imports: string[];
 }
 
 interface Post {
@@ -33,6 +34,7 @@ interface Post {
   summary: string;
   meta: string;
   image: string | null;
+  scripts: Script[];
 }
 
 declare module 'post-data:' {

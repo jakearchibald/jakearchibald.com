@@ -4,6 +4,6 @@
     "lib": ["esnext", "dom", "dom.iterable"],
     "types": []
   },
-  "references": [{ "path": "../shared" }],
+  "references": [{ "path": "../shared" }, { "path": "../client-worker" }],
   "include": ["./**/*"]
 }

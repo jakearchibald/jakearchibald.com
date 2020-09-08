@@ -133,7 +133,7 @@ for (let i = 0; i < 10; i++) asyncTask();
 
 And let's poke that with Chrome's DevTools:
 
-<figure class="full-figure" controls>
+<figure class="full-figure max-figure">
 <video src="asset-url:./1.mp4" width="1920" height="1080" style="width: 100%; height: auto;" controls></video>
 </figure>
 
@@ -148,7 +148,7 @@ while (resolvers[0]) {
 
 And see if there's a change:
 
-<figure class="full-figure" controls>
+<figure class="full-figure max-figure">
 <video src="asset-url:./2.mp4" width="1920" height="1080" style="width: 100%; height: auto;" controls></video>
 </figure>
 

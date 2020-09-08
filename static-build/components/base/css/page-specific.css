@@ -7,7 +7,6 @@
     }
   }
   & .icon-list {
-    columns: 100px;
     margin: 16px 0;
   }
 }

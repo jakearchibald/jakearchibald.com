@@ -19,6 +19,7 @@ import posts from 'post-data:';
 import WhoPage from './pages/who';
 import PostPage from './pages/post';
 import iconUrl from 'asset-url:./pages/post/icon.png';
+import ClientDemo from './components/client-demo';
 
 interface Output {
   [outputPath: string]: string;
@@ -74,5 +75,32 @@ for (const post of posts) {
 }
 
 toOutput['posts.rss'] = feed.atom1();
+
+// Demos
+import avifCompareDemoScript, {
+  imports as avifCompareDemoScriptImports,
+} from 'client-bundle:client/demos/2020/avif-has-landed/compare';
+import avifCompareDemoStyles from 'css-bundle:client/demos/2020/avif-has-landed/compare/styles.css';
+toOutput['2020/avif-has-landed/demos/compare/index.html'] = renderPage(
+  <ClientDemo
+    title="Image comparison"
+    script={avifCompareDemoScript}
+    scriptPreload={avifCompareDemoScriptImports}
+    styles={avifCompareDemoStyles}
+  />,
+);
+
+import avifLoadingDemoScript, {
+  imports as avifLoadingDemoScriptImports,
+} from 'client-bundle:client/demos/2020/avif-has-landed/loading';
+import avifLoadingDemoStyles from 'css-bundle:client/demos/2020/avif-has-landed/loading/styles.css';
+toOutput['2020/avif-has-landed/demos/loading/index.html'] = renderPage(
+  <ClientDemo
+    title="Slow loading images"
+    script={avifLoadingDemoScript}
+    scriptPreload={avifLoadingDemoScriptImports}
+    styles={avifLoadingDemoStyles}
+  />,
+);
 
 writeFiles(toOutput);

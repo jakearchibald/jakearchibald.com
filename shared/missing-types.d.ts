@@ -11,3 +11,5 @@
  * limitations under the License.
  */
 /// <reference path="../missing-types.d.ts" />
+
+declare const __PRERENDER__: boolean;
