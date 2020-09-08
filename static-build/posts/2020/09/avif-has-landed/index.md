@@ -606,6 +606,6 @@ I really enjoyed building the demos for this article. In case you want to dig in
 - The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/main/client/demos/2020/avif-has-landed/compare/ZoomableTwoUp.tsx) from Squoosh.
 - Here's the [progressive image loading demo](/2020/avif-has-landed/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
 - For the talk rather than this article, I built a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
-- Also from the talk, I build a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
+- Also from the talk, I built a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
 Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking!
