@@ -66,6 +66,7 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
             property="og:url"
             content={`https://jakearchibald.com${getPostUrl(post)}`}
           />
+          <meta property="twitter:title" content={post.title} />
           <meta property="og:title" content={post.title} />
           <meta property="og:description" content={post.meta} />
           {post.scripts.map(
