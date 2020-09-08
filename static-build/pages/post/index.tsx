@@ -43,12 +43,20 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
                 property="og:image"
                 content={`https://jakearchibald.com${post.image}`}
               />
+              <meta
+                name="twitter:image"
+                content={`https://jakearchibald.com${post.image}`}
+              />
             </Fragment>
           ) : (
             <Fragment>
               <meta name="twitter:card" content="summary" />
               <meta
                 property="og:image"
+                content={`https://jakearchibald.com${iconUrl}`}
+              />
+              <meta
+                property="twitter:image"
                 content={`https://jakearchibald.com${iconUrl}`}
               />
             </Fragment>
