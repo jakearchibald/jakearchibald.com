@@ -371,7 +371,7 @@ Things aren't as bad as they were with the F1 image, but the JPEG is very noisy 
 
 AVIF has kinda blown my mind here. It's made me reconsider the kinds of images lossy codecs are suited to.
 
-But all said and done, a proper SVG is probably right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few kB. In this case it might not be worth the complexity of creating different versions of the image.
+But all said and done, a proper SVG is probably the right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few kB. In this case it might not be worth the complexity of creating different versions of the image.
 
 [Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=team).
 
@@ -554,7 +554,7 @@ In this case, WebP offers a huge drop in size compared to the JPEG, so it's defi
 
 # So, is AVIF the champion?
 
-I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect.
+I was initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect.
 
 ## Progressive rendering
 
@@ -605,7 +605,7 @@ I really enjoyed building the demos for this article. In case you want to dig in
 - I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/2020/09/avif-has-landed/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L109).
 - The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/main/client/demos/2020/avif-has-landed/compare/ZoomableTwoUp.tsx) from Squoosh.
 - Here's the [progressive image loading demo](/2020/avif-has-landed/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
-- For the talk rather than this article, I build a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
+- For the talk rather than this article, I built a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
 - Also from the talk, I build a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
 Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking!
