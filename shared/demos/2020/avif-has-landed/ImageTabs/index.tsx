@@ -90,7 +90,7 @@ export default class ImageTabs extends Component<Props, State> {
           ))}
         </form>
         <a
-          href={`/2020/avif-is-exciting/demos/compare/?show=${category}&img=${src}`}
+          href={`/2020/avif-has-landed/demos/compare/?show=${category}&img=${src}`}
           target="_blank"
         >
           <svg

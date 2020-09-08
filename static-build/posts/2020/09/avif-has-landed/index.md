@@ -1,14 +1,14 @@
 ---
-title: AVIF is exciting
+title: AVIF has landed
 date: 2020-09-08 01:00:00
-summary: AVIF has already landed in Chrome 85. It's the first image format we've had in 10 years. Let's see how it performs…
+summary: AVIF has shipped in Chrome 85. It's the first image format we've had in 10 years. Let's see how it performs…
 meta: AVIF is the first browser image format we've had in 10 years. Let's see how it performs…
 image: 'asset-url:./post.jpg'
 ---
 
 Back in ancient July [I released a video](https://www.youtube.com/watch?v=F1kYBnY6mwg) that dug into how lossy and lossless image compression works and how to apply that knowledge to compress a set of different images for the web. Well, that's already out of date because _AVIF has arrived_. Brilliant.
 
-AVIF is a new image format derived from the keyframes of AV1 video. It's an royalty-free format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are a member of the group that created AV1.
+AVIF is a new image format derived from the keyframes of [AV1 video](https://en.wikipedia.org/wiki/AV1). It's a royalty-free format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are a member of the group that created AV1.
 
 What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation/List_of_default_Accept_values#Values_for_an_image) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
 
@@ -120,17 +120,17 @@ Let's take a look at how AVIF performs against the image formats we already know
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 3,
     "category": "f1",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-near-lossless.avif"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif"]
     ]
   }
 }</script>
@@ -167,18 +167,18 @@ I struggled to compress the F1 image as JPEG. If I went any lower than 74 kB, th
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 2,
     "category": "f1",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
-      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-near-lossless.avif"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg"],
+      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-kornel.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif"]
     ]
   }
 }</script>
@@ -198,7 +198,7 @@ Let's take a closer look and see how the codecs work:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
@@ -206,11 +206,11 @@ Let's take a closer look and see how the codecs work:
     "transform": "scale(6.5) translate(-9.6%, 8.9%)",
     "category": "f1",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.jpg"],
-      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-kornel.jpg"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-near-lossless.avif"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.jpg"],
+      ["JPEG + Kornel powers (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-kornel.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-kornel.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif"]
     ]
   }
 }</script>
@@ -230,17 +230,17 @@ One way to make the differences between the codecs really obvious is to test the
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
     "initial": 1,
     "category": "f1",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-near-lossless.avif"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.jpg"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-match.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/f1-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-near-lossless.avif"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-match.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-match.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-match.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/f1-good.avif"]
     ]
   }
 }</script>
@@ -252,7 +252,7 @@ I couldn't even get the JPEG and WebP down to 18 kB, even at lowest settings, so
 
 Unless it's automated, offering up 3 versions of the same image is a bit of a pain, but the savings here are pretty significant, so it seems worth it, especially given the number of users that can already benefit from AVIF.
 
-[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=f1).
+[Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=f1).
 
 Ok, next image:
 
@@ -260,18 +260,18 @@ Ok, next image:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 3,
     "category": "team",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
-      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
-      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png"],
-      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp"],
-      ["AVIF 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg"],
+      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.png"],
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp"],
+      ["AVIF 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.avif"]
     ]
   }
 }</script>
@@ -295,18 +295,18 @@ I went straight for palette reduction and lossless compression with this image, 
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 4,
     "category": "team",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
-      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
-      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png"],
-      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg"],
+      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.png"],
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif"]
     ]
   }
 }</script>
@@ -318,7 +318,7 @@ Turns out lossy AVIF can handle solid colour and sharp lines really well, and pr
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 1000,
@@ -326,11 +326,11 @@ Turns out lossy AVIF can handle solid colour and sharp lines really well, and pr
     "initial": 4,
     "category": "team",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
-      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-traced.svg"],
-      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.png"],
-      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.webp"],
+      ["Traced SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-traced.svg"],
+      ["PNG 68 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.png"],
+      ["WebP 68 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif"]
     ]
   }
 }</script>
@@ -348,18 +348,18 @@ Let's push the other codecs down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
     "initial": 1,
     "category": "team",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-lossless.webp"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-match.jpg"],
-      ["PNG 8 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-match.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-match.png"],
-      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-match.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-match.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/team-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-match.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-match.jpg"],
+      ["PNG 8 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-match.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-match.png"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-match.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/team-good.avif"]
     ]
   }
 }</script>
@@ -373,7 +373,7 @@ AVIF has kinda blown my mind here. It's made me reconsider the kinds of images l
 
 But all said and done, a proper SVG is probably right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few kB. In this case it might not be worth the complexity of creating different versions of the image.
 
-[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=team).
+[Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=team).
 
 Right, it's time for the next image…
 
@@ -381,18 +381,18 @@ Right, it's time for the next image…
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 500,
     "initial": 4,
     "category": "car",
     "images": [
-      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg"],
-      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg"],
-      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.png"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif"]
+      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-original.svg"],
+      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.svg"],
+      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif"]
     ]
   }
 }</script>
@@ -410,7 +410,7 @@ AVIF aces it again at a significantly smaller size, even compared to the SVG. Pa
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 1000,
@@ -418,11 +418,11 @@ AVIF aces it again at a significantly smaller size, even compared to the SVG. Pa
     "initial": 4,
     "category": "car",
     "images": [
-      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-original.svg"],
-      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.svg"],
-      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.png"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif"]
+      ["Original SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/car-original.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-original.svg"],
+      ["Optimised SVG (asset-pretty-size-br:static-build/posts/2020/09/avif-has-landed/demos/car-good.svg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.svg"],
+      ["PNG 256 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif"]
     ]
   }
 }</script>
@@ -438,16 +438,16 @@ As always, let's push the other formats down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 500,
     "initial": 1,
     "category": "car",
     "images": [
-      ["PNG 12 colour (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-match.png)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-match.png"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-match.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-match.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/car-good.avif"]
+      ["PNG 12 colour (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-match.png)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-match.png"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-match.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/car-good.avif"]
     ]
   }
 }</script>
@@ -459,7 +459,7 @@ The PNG version looks kinda cool! Whereas the WebP version makes me want to clea
 
 Yeahhhh going from 86/50 kB down to 13 kB is a huge saving, and worth the extra effort.
 
-[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=car).
+[Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=car).
 
 Ok, one more:
 
@@ -467,18 +467,18 @@ Ok, one more:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
     "initial": 4,
     "category": "machine",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg"],
-      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-dithered.webp"],
-      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.jpg"],
+      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-dithered.webp"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif"]
     ]
   }
 }</script>
@@ -496,7 +496,7 @@ JPEG doesn't do a _great_ job here – anything lower than 80 kB starts to intro
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
@@ -504,11 +504,11 @@ JPEG doesn't do a _great_ job here – anything lower than 80 kB starts to intro
     "initial": 4,
     "category": "machine",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.jpg"],
-      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-dithered.webp"],
-      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.jpg"],
+      ["WebP 256 colour lossless (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-dithered.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-dithered.webp"],
+      ["WebP lossy (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif"]
     ]
   }
 }</script>
@@ -528,17 +528,17 @@ For one last time, let's push the other codecs down to AVIF's size:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-is-exciting/ImageTabs",
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
     "initial": 1,
     "category": "machine",
     "images": [
-      ["Original", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-lossless.webp"],
-      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.jpg)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.jpg"],
-      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.webp)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-match.webp"],
-      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-is-exciting/demos/machine-good.avif"]
+      ["Original", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-lossless.webp"],
+      ["JPEG (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg"],
+      ["WebP (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-match.webp)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-match.webp"],
+      ["AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-good.avif"]
     ]
   }
 }</script>
@@ -550,7 +550,7 @@ At these sizes, JPEG has done its own art, and the WebP looks blocky and messy.
 
 In this case, WebP offers a huge drop in size compared to the JPEG, so it's definitely worth providing the WebP to browsers that support it. However, the difference between the WebP and AVIF isn't huge, so it might not be worth creating an AVIF too.
 
-[Here's a full-page comparison of the results](/2020/avif-is-exciting/demos/compare/?show=machine).
+[Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=machine).
 
 # So, is AVIF the champion?
 
@@ -601,11 +601,11 @@ Phew! I didn't expect this post to get so long. I wanted to include a dive into 
 
 I really enjoyed building the demos for this article. In case you want to dig into the details:
 
-- I built [a Preact component to handle image loading and decoding](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-is-exciting/DecodedImg/index.tsx), so AVIF/WebP works even without browser support. [A worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/decode/index.ts) handles the actual decoding, using the WebAssembly decoders from [Squoosh](https://squoosh.app/). I'd usually use [comlink](https://github.com/GoogleChromeLabs/comlink) to help with worker communication, but lack of worker-module compatibility meant I [went for something smaller/hackier](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-is-exciting/DecodedImg/decoder.ts) instead.
-- I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/static-build/posts/2020/09/avif-is-exciting/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L109).
-- The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client/demos/2020/avif-is-exciting/compare/ZoomableTwoUp.tsx) from Squoosh.
-- Here's the [progressive image loading demo](/2020/avif-is-exciting/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
+- I built [a Preact component to handle image loading and decoding](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-has-landed/DecodedImg/index.tsx), so AVIF/WebP works even without browser support. [A worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/decode/index.ts) handles the actual decoding, using the WebAssembly decoders from [Squoosh](https://squoosh.app/). I'd usually use [comlink](https://github.com/GoogleChromeLabs/comlink) to help with worker communication, but lack of worker-module compatibility meant I [went for something smaller/hackier](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/shared/demos/2020/avif-has-landed/DecodedImg/decoder.ts) instead.
+- I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/static-build/posts/2020/09/avif-has-landed/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/lib/markdown-plugin.js#L109).
+- The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client/demos/2020/avif-has-landed/compare/ZoomableTwoUp.tsx) from Squoosh.
+- Here's the [progressive image loading demo](/2020/avif-has-landed/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/avif-post/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
 - For the talk rather than this article, I build a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
 - Also from the talk, I build a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
-Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), and Sam Jenkins for proof-reading and fact checking!
+Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking!
