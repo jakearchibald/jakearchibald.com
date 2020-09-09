@@ -571,9 +571,9 @@ Although they're all loading at the same rate, the much-larger JPEG feels faster
 
 Video doesn't need to render a partial frame, so it isn't something the format is set up to do. It's possible to have a top-to-bottom render like WebP, but the implementation would be complicated, so we're unlikely to see it in browsers in the foreseeable future.
 
-Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and they [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything.
-
 Because of this, AVIF feels better suited to smaller quicker-loading images. But that still covers most images on the web.
+
+Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and they [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything. **Edit:** Ohhh! Scratch that, [libavif's implementation has changed](https://github.com/AOMediaCodec/libavif/issues/287#issuecomment-689282701).
 
 ## Encoding time
 
@@ -585,7 +585,7 @@ AVIF supports tiling images, which chops the image into smaller blocks that can 
 
 ## Decoding time
 
-There's also a question of CPU usage vs other formats when it comes to decoding, but I haven't dug into that yet. Although AV1 is [starting to get hardware support](https://www.nvidia.com/en-gb/geforce/news/rtx-30-series-av1-decoding/), I'm told that dedicated hardware will be tuned for video, and not so great at decoding a page full of images.
+There's also a question of CPU usage vs other formats when it comes to decoding, but I haven't dug into that yet. Although AV1 is [starting to get](https://www.nvidia.com/en-gb/geforce/news/rtx-30-series-av1-decoding/) [hardware support](https://newsroom.intel.com/news-releases/11th-gen-tiger-lake-evo/), I'm told that dedicated hardware will be tuned for video, and not so great at decoding a page full of images.
 
 # What about JPEG-XL and WebPv2?
 
@@ -605,7 +605,7 @@ I really enjoyed building the demos for this article. In case you want to dig in
 - I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/2020/09/avif-has-landed/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L109).
 - The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/main/client/demos/2020/avif-has-landed/compare/ZoomableTwoUp.tsx) from Squoosh.
 - Here's the [progressive image loading demo](/2020/avif-has-landed/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
-- For the talk rather than this article, I build a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
-- Also from the talk, I build a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
+- For the talk rather than this article, I built a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
+- Also from the talk, I built a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
 Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking!
