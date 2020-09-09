@@ -573,7 +573,25 @@ Video doesn't need to render a partial frame, so it isn't something the format i
 
 Because of this, AVIF feels better suited to smaller quicker-loading images. But that still covers most images on the web.
 
-Things get more complicated with images that have an alpha channel. The AV1 spec recommends that primary images should appear before auxiliary images, and the alpha channel is stored as an auxiliary image. libavaif, the encoder we're using in Squoosh, complies with this recommendation, and they [aren't very interested in changing that](https://github.com/AOMediaCodec/libavif/issues/287). Rendering part of an image without its alpha channel will look pretty ugly, so that takes us back to waiting for the whole image to load before displaying anything. **Edit:** Ohhh! Scratch that, [libavif's implementation has changed](https://github.com/AOMediaCodec/libavif/issues/287#issuecomment-689282701).
+Maybe this could be solved if the format could provide a way to embed a 'preview' version of the image at the start of the file. The browser would render this if it doesn't have the rest of the file. Because it's a different image, the developer would get to choose the quality, resolution, and even apply filters like blurring:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "props": {
+    "ratio": 1.786,
+    "maxWidth": 960,
+    "initial": 1,
+    "images": [
+      ["Full AVIF (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/cat.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat.avif"],
+      ["Half resolution, low quality (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/cat-preview.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat-preview.avif"],
+      ["Half resolution, blurred (asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/cat-blur.avif)", "asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat-blur.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+Adding 5 kB to big image like this seems worth it to get a low-quality early render. I've [proposed this to the AVIF spec folks](https://github.com/AOMediaCodec/av1-avif/issues/102).
 
 ## Encoding time
 
