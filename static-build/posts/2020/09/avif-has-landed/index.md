@@ -371,7 +371,7 @@ Things aren't as bad as they were with the F1 image, but the JPEG is very noisy 
 
 AVIF has kinda blown my mind here. It's made me reconsider the kinds of images lossy codecs are suited to.
 
-But all said and done, a proper SVG is probably right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few kB. In this case it might not be worth the complexity of creating different versions of the image.
+But all said and done, a proper SVG is probably the right choice here. But even if SVG couldn't be used, the difference between the PNG and AVIF is only a few kB. In this case it might not be worth the complexity of creating different versions of the image.
 
 [Here's a full-page comparison of the results](/2020/avif-has-landed/demos/compare/?show=team).
 
@@ -554,7 +554,7 @@ In this case, WebP offers a huge drop in size compared to the JPEG, so it's defi
 
 # So, is AVIF the champion?
 
-I was a initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect.
+I was initially sceptical of AVIF – I don't like the idea that the web has to pick up the scraps left by video formats. But wow, I'm seriously impressed with the results above. That said, it isn't perfect.
 
 ## Progressive rendering
 
