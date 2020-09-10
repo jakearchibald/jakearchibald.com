@@ -643,4 +643,4 @@ I really enjoyed building the demos for this article. In case you want to dig in
 - For the talk rather than this article, I built a tool that lets you [experiment with chroma subsampling](https://jakearchibald.github.io/image-experiments/channels/).
 - Also from the talk, I built a tool to visualise the [DCT patterns that form an 8x8 block](https://jakearchibald.github.io/image-experiments/quant/).
 
-Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking!
+Thanks to [Kornel Lesiński](https://twitter.com/kornelski), [Surma](https://twitter.com/DasSurma), [Paul Kinlan](https://twitter.com/Paul_Kinlan), [Ingvar Stepanyan](https://twitter.com/RReverser), and Sam Jenkins for proof-reading and fact checking! And since publishing, thanks to [Hubert Sablonnière](https://twitter.com/hsablonniere) and [Mathias Bynens](https://twitter.com/mathias) for more typo-busting.
