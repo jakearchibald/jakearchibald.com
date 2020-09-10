@@ -184,7 +184,7 @@ I struggled to compress the F1 image as JPEG. If I went any lower than 74 kB, th
 }</script>
 </figure>
 
-Although I'm happy to spend time manually compressing key images of a web site, I don't really have to skills to tweak a JPEG encoder in that way. So the results in this post are also a reflection of what the codec can do with my moderate talent and perseverance.
+Although I'm happy to spend time manually compressing key images of a web site, I don't really have the skills to tweak a JPEG encoder in that way. So the results in this post are also a reflection of what the codec can do with my moderate talent and perseverance.
 
 I also realise that manually tuning codec settings per image doesn't scale. If you need to automate image compression, you can figure out the settings manually from a few representative images, then add a bit of extra quality for safety, and use those settings in an automated tool.
 
