@@ -591,7 +591,14 @@ Maybe this could be solved if the format could provide a way to embed a 'preview
 }</script>
 </figure>
 
-Adding 5 kB to big image like this seems worth it to get a low-quality early render. I've [proposed this to the AVIF spec folks](https://github.com/AOMediaCodec/av1-avif/issues/102).
+Adding 5 kB to big image like this seems worth it to get a low-quality early render. Here's what it would look like:
+
+<figure class="full-figure max-figure" id="progressive-avif-demo">
+<video src="asset-url:./progressive-avif.mp4" width="1000" height="666" style="width: 100%; height: auto;" controls></video>
+<figcaption>JPEG, WebP, and 'progressive' AVIF loading at 2g speeds</figcaption>
+</figure>
+
+I've [proposed this to the AVIF spec folks](https://github.com/AOMediaCodec/av1-avif/issues/102).
 
 ## Encoding time
 

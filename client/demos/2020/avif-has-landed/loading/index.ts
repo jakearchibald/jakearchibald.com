@@ -1,4 +1,5 @@
 import catAvif from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat.avif';
+import catAvifPreview from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat-preview.avif';
 import catWebp from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat.webp';
 import catJpg from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/cat.jpg';
 import workerURL from 'static-entry-url:client-worker/avif/avif-slow-sw';
@@ -9,25 +10,45 @@ const items = [
   ['AVIF', catAvif],
 ];
 
-function addImages(chunkSize: number, delay: number) {
+interface AddImagesOptions {
+  fakeProgressiveAvif?: boolean;
+}
+
+function addImages(
+  chunkSize: number,
+  delay: number,
+  { fakeProgressiveAvif = false }: AddImagesOptions = {},
+) {
   const images = document.createElement('div');
   images.className = 'images';
 
-  for (const [title, imgSrc] of items) {
+  const createURL = (imgSrc: string) => {
+    const url = new URL(imgSrc, location.href);
+    url.searchParams.set('r', Math.random() + '');
+    url.searchParams.set('chunkSize', chunkSize + '');
+    url.searchParams.set('delay', delay + '');
+    return url.href;
+  };
+
+  items.forEach(async ([title, imgSrc]) => {
     const div = document.createElement('div');
     div.className = 'item';
     const h1 = document.createElement('h1');
     h1.textContent = title;
     const img = document.createElement('img');
-    const url = new URL(imgSrc, location.href);
-    url.searchParams.set('r', Math.random() + '');
-    url.searchParams.set('chunkSize', chunkSize + '');
-    url.searchParams.set('delay', delay + '');
-    img.src = url.href;
-    img.onload = () => h1.classList.add('done');
     div.append(h1, img);
     images.append(div);
-  }
+
+    if (fakeProgressiveAvif && imgSrc == catAvif) {
+      img.src = createURL(catAvifPreview);
+      await img.decode();
+    }
+
+    img.src = createURL(imgSrc);
+
+    await img.decode();
+    h1.classList.add('done');
+  });
 
   document.body.append(images);
 }
@@ -61,6 +82,16 @@ if (!self.TransformStream) {
         button.onclick = () => {
           buttons.remove();
           addImages(3125, 250);
+        };
+        buttons.append(button);
+      }
+
+      {
+        const button = document.createElement('button');
+        button.textContent = 'Load images 2g, fake AVIF progressive';
+        button.onclick = () => {
+          buttons.remove();
+          addImages(3125, 250, { fakeProgressiveAvif: true });
         };
         buttons.append(button);
       }
