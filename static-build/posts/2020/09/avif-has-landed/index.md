@@ -601,6 +601,16 @@ At an 'effort' of 2, it takes a good few seconds to encode. 'Effort' 3 is signif
 
 AVIF supports tiling images, which chops the image into smaller blocks that can be encoded and decoded separately. This is interesting for encoding, because it means the blocks can be encoded in parallel, making full use of CPU cores, although Squoosh doesn't take advantage of this yet.
 
+The command line tools are orders of magnitude faster. You can either [compile libavif yourself](https://github.com/AOMediaCodec/libavif), or on OSX, install it via [Homebrew](https://brew.sh/):
+
+```sh
+brew install joedrago/repo/avifenc
+```
+
+There's also a Rust implementation, [cavif](https://github.com/kornelski/cavif-rs).
+
+My current workflow is to use [Squoosh](https://squoosh.app) to figure out decent settings at 'effort' 2, then use libavif to try the same settings at 'effort' 10. Hopefully we can speed up the Squoosh version soon!
+
 ## Decoding time
 
 There's also a question of CPU usage vs other formats when it comes to decoding, but I haven't dug into that yet. Although AV1 is [starting to get](https://www.nvidia.com/en-gb/geforce/news/rtx-30-series-av1-decoding/) [hardware support](https://newsroom.intel.com/news-releases/11th-gen-tiger-lake-evo/), I'm told that dedicated hardware will be tuned for video, and not so great at decoding a page full of images.
