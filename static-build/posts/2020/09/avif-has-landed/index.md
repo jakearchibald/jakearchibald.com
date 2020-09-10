@@ -591,7 +591,7 @@ Maybe this could be solved if the format could provide a way to embed a 'preview
 }</script>
 </figure>
 
-Adding 5 kB to big image like this seems worth it to get a low-quality early render. Here's what it would look like:
+Adding 5 kB to a big image like this seems worth it to get a low-quality early render. Here's what it would look like:
 
 <figure class="full-figure max-figure" id="progressive-avif-demo">
 <video src="asset-url:./progressive-avif.mp4" width="1000" height="666" style="width: 100%; height: auto;" controls></video>
