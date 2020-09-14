@@ -228,6 +228,13 @@
     margin-right: -64px;
   }
 
+  & > figcaption,
+  & .figcaption {
+    @media screen and (min-width: $mobile-boundry) {
+      padding-left: 32px;
+    }
+  }
+
   @media screen and (min-width: $side-introduction-width) {
     margin-right: -32px;
   }
