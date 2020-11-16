@@ -103,7 +103,7 @@ If you're using [a browser that supports the CSS paint API](https://caniuse.com/
 
 # Initial implementation
 
-This isn't a full tutorial to the CSS paint API, so if the below isn't clear, or you want to know more, check out [this article on the CSS paint API](https://developers.google.com/web/updates/2018/01/paintapi), and [this article on `registerProperty`](https://web.dev/css-props-and-vals/).
+This isn't a full tutorial on the CSS paint API, so if the below isn't clear or you want to know more, check out [this article on the CSS paint API](https://developers.google.com/web/updates/2018/01/paintapi), and [this article on `registerProperty`](https://web.dev/css-props-and-vals/).
 
 First up, the client-side JavaScript:
 
