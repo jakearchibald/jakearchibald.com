@@ -282,15 +282,15 @@ So we've created a blocky gradient that's random, but there's a higher chance of
 
 Play with the above or try resizing your browser. Sometimes the pattern in the background changes, sometimes it doesn't.
 
-The paint API is optimised with determinism in mind. The same input should produce the same output. In fact, the spec says if the bounds and `inputProperties` are the same between paints, the browser can use a cached copy of our paint instructions. We're violating that assumption with `Math.random()`.
+The paint API is optimised with determinism in mind. The same input should produce the same output. In fact, the spec says if the element size and `inputProperties` are the same between paints, the browser can use a cached copy of our paint instructions. We're violating that assumption with `Math.random()`.
 
 I'll try and explain what I see in Chrome:
 
-**Why does the pattern change while animating width / height / colour / block-size?** This changes the bounds or our input properties, so the element has to repaint. Since we use `Math.random()`, we get a new random result.
+**Why does the pattern change while animating width / height / colour / block-size?** These change the element size or our input properties, so the element has to repaint. Since we use `Math.random()`, we get a new random result.
 
-**Why does it stay the same while changing the text?** This requires a repaint, but since the bounds and input remain the same, the browser uses a cached version of our pattern.
+**Why does it stay the same while changing the text?** This requires a repaint, but since the element size and input remain the same, the browser uses a cached version of our pattern.
 
-**Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the bounds, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could used a cached version of our pattern here, but it doesn't.
+**Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could used a cached version of our pattern here, but it doesn't.
 
 **Why does it change twice when animating blur?** Hah, well, animating blur happens on the compositor, so you get an initial repaint to lift the element onto its own layer. But, during the animation, it just blurs the cached result. Then, once the animation is complete, it drops the layer, and paints the element as a regular part of the page. These repaints could use a cached result, but it doesn't seem to.
 
@@ -685,7 +685,7 @@ let seed = props.get('--pixel-gradient-seed').value;
 for (let x = 0; x < bounds.width; x += size) {
   const rand = mulberry32(seed);
   // Instead of incrementing, set the seed to a 'random' 32bit value:
-  seed = (rand() * 2 ** 23) | 0;
+  seed = (rand() * 2 ** 32) | 0;
 
   for (let y = 0; y < bounds.height; y += size) {
     const pos = y / bounds.height;
@@ -777,7 +777,7 @@ let seed = props.get('--confetti-seed').value;
 
 for (let x = 0; x < bounds.width; x += gridSize) {
   const rand = mulberry32(seed);
-  seed = (rand() * 2 ** 23) | 0;
+  seed = (rand() * 2 ** 32) | 0;
 
   for (let y = 0; y < bounds.height; y += gridSize) {
     for (let _ = 0; _ < density, _++) {

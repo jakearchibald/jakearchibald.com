@@ -26,7 +26,7 @@ registerPaint(
 
       for (let x = 0; x < bounds.width; x += size) {
         const rand = mulberry32(seed);
-        seed = (rand() * 2 ** 23) | 0;
+        seed = (rand() * 2 ** 32) | 0;
 
         for (let y = 0; y < bounds.height; y += size) {
           const pos = y / bounds.height;
