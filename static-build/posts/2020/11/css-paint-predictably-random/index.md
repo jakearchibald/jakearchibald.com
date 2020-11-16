@@ -31,6 +31,20 @@ Take a look at this:
       inherits: true,
     });
 
+    CSS.registerProperty({
+      name: '--confetti-density',
+      syntax: '<number>',
+      initialValue: '200',
+      inherits: true,
+    });
+
+    CSS.registerProperty({
+      name: '--confetti-seed',
+      syntax: '<number>',
+      initialValue: '10',
+      inherits: true,
+    });
+
     CSS.paintWorklet.addModule(`client-bundle:client/demos/2020/css-paint-predictably-random/worklet.js`);
   }
 </script>
@@ -86,7 +100,7 @@ Take a look at this:
 </style>
 
 <figure class="full-figure max-figure">
-  <div class="pixel-gradient pixel-gradient-final invaders-demo">
+  <div class="target-el pixel-gradient pixel-gradient-final invaders-demo">
     <svg class="invader-img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 737 536"><path d="M670 335V201h-67v-67h-67V67h67V0H469v134H268V0H134v67h67v67h-67v67H67v134H0v134h67v-67h67v134h134v-67h-67v-67h335v67h-67v67h134V402h67v67h67V335h-67zm-402-67h-67v-67h67v67zm268 0h-67v-67h67v67z"/></svg>
     <div class="invaders-title">Space invaders</div>
   </div>
@@ -139,7 +153,7 @@ class PixelGradient {
     return ['--pixel-gradient-color', '--pixel-gradient-size'];
   }
   paint(ctx, bounds, props) {
-    // TODO - we'll get to this later
+    // TODO: We'll get to this later
   }
 }
 
@@ -196,7 +210,7 @@ So we've created a blocky gradient that's random, but there's a higher chance of
     height: 300px;
     contain: layout;
   }
-  .demo-container .pixel-gradient {
+  .demo-container .target-el {
     height: 100%;
     width: 100%;
     display: grid;
@@ -230,18 +244,18 @@ So we've created a blocky gradient that's random, but there's a higher chance of
   .pixel-gradient.block-size {
     --pixel-gradient-size: 18px;
   }
-  @keyframes animate-seed {
+  @keyframes animate-pixel-gradient-seed {
     from { --pixel-gradient-seed: 0 }
     to { --pixel-gradient-seed: 4294967295 }
   }
   .pixel-gradient.animate-noise {
-    animation: 60s linear infinite animate-seed;
+    animation: 60s linear infinite animate-pixel-gradient-seed;
   }
 </style>
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
-    <div class="pixel-gradient pixel-gradient-animate pixel-gradient-v1">
+    <div class="target-el pixel-gradient pixel-gradient-animate pixel-gradient-v1">
       Hello
     </div>
   </div>
@@ -260,7 +274,7 @@ So we've created a blocky gradient that's random, but there's a higher chance of
   }
 
   function callbackForEl(callback) {
-    return (event) => callback(event.target.closest('.full-figure').querySelector('.pixel-gradient'));
+    return (event) => callback(event.target.closest('.full-figure').querySelector('.target-el'));
   }
 
   const initialButtonSet = [
@@ -454,7 +468,7 @@ And here it is:
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
-    <div class="pixel-gradient pixel-gradient-animate pixel-gradient-v2">
+    <div class="target-el pixel-gradient pixel-gradient-animate pixel-gradient-v2">
       Hello
     </div>
   </div>
@@ -507,18 +521,15 @@ Right now we're calling `rand()` for every block. Take a look at this:
 
 <figure class="full-figure">
   <div class="demo-container">
-    <canvas class="pixel-grid pixel-grid-v1"></canvas>
+    <canvas class="target-el pixel-grid pixel-grid-v1"></canvas>
   </div>
   <div class="figcaption demo-buttons pixel-grid-buttons-v1"></div>
 </figure>
 
 <script>
-  function callbackForPixelEl(callback) {
-    return (event) => callback(event.target.closest('.full-figure').querySelector('.pixel-grid'));
-  }
   const pixelGridButtons = [
-    ['Animate width', callbackForPixelEl(el => el.classList.toggle('width'))],
-    ['Animate height', callbackForPixelEl(el => el.classList.toggle('height'))],
+    ['Animate width', callbackForEl(el => el.classList.toggle('width'))],
+    ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
   ];
 
   const pixelGridGap = 5;
@@ -581,7 +592,7 @@ Let's say each square is a block, and the numbers represent the number of times 
 
 <figure class="full-figure">
   <div class="demo-container">
-    <canvas class="pixel-grid pixel-grid-v2"></canvas>
+    <canvas class="target-el pixel-grid pixel-grid-v2"></canvas>
   </div>
   <div class="figcaption demo-buttons pixel-grid-buttons-v2"></div>
 </figure>
@@ -657,7 +668,7 @@ And here it is:
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
-    <div class="pixel-gradient pixel-gradient-animate pixel-gradient-v3">
+    <div class="target-el pixel-gradient pixel-gradient-animate pixel-gradient-v3">
       Hello
     </div>
   </div>
@@ -674,31 +685,53 @@ And here it is:
 
 Now height and block size animate in a more natural way! But there's one last thing to fix. By incrementing the seed by 1 for each column we've introduced visual predictability into our pattern. You can see this if you 'increment seed' – instead of producing a new random pattern, it shifts the pattern along (until it gets past JavaScript's maximum safe integer, at which point _spooky things happen_). Instead of incrementing the seed by 1, we want to change it in some way that feels random, but is 100% deterministic.
 
-Oh wait, that's what our `rand()` function does!
+Oh wait, that's what our `rand()` function does! In fact, let's create a version of `mulberry32` that can be 'forked' for multiple dimensions:
+
+```js
+function randomGenerator(seed) {
+  let state = seed;
+
+  const next = () => {
+    state |= 0;
+    state = (state + 0x6d2b79f5) | 0;
+    var t = Math.imul(state ^ (state >>> 15), 1 | state);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+
+  return {
+    next,
+    // Instead of incrementing, set the seed to a 'random' 32 bit value:
+    fork: () => randomGenerator(next() * 2 ** 32),
+  };
+}
+```
+
+We use a random 32 bit value, since that's the amount of state `mulberry32` works with. Then our paint method can use that:
 
 ```js
 const size = props.get('--pixel-gradient-size').value;
 ctx.fillStyle = props.get('--pixel-gradient-color');
-
-let seed = props.get('--pixel-gradient-seed').value;
+const seed = props.get('--pixel-gradient-seed').value;
+// Create our initial random generator:
+const randomXs = randomGenerator(seed);
 
 for (let x = 0; x < bounds.width; x += size) {
-  const rand = mulberry32(seed);
-  // Instead of incrementing, set the seed to a 'random' 32bit value:
-  seed = rand() * 2 ** 32);
+  // Then fork it for each column:
+  const randomYs = randomXs.fork();
 
   for (let y = 0; y < bounds.height; y += size) {
     const pos = y / bounds.height;
-    if (rand() < pos) ctx.fillRect(x, y, size, size);
+    if (randomYs.next() < pos) ctx.fillRect(x, y, size, size);
   }
 }
 ```
 
-We use a random 32bit value, since that's the amount of state `mulberry32` works with. And here it is:
+And here it is:
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
-    <div class="pixel-gradient pixel-gradient-animate pixel-gradient-final">
+    <div class="target-el pixel-gradient pixel-gradient-animate pixel-gradient-final">
       Hello
     </div>
   </div>
@@ -713,6 +746,8 @@ We use a random 32bit value, since that's the amount of state `mulberry32` works
   }
 </script>
 
+Now changing the seed produces an entirely new pattern.
+
 # Bringing back the fun
 
 Ok, I admit that the animated noise effect was cool, but it was out of our control. Some folks react badly to flashing images and randomly changing visuals, so it's definitely something we _do_ want to have under our control.
@@ -720,7 +755,7 @@ Ok, I admit that the animated noise effect was cool, but it was out of our contr
 However, now we have `--pixel-gradient-seed` defined as a number, we can animate it to recreate the animated noise effect:
 
 ```css
-@keyframes animate-seed {
+@keyframes animate-pixel-gradient-seed {
   from {
     --pixel-gradient-seed: 0;
   }
@@ -731,7 +766,7 @@ However, now we have `--pixel-gradient-seed` defined as a number, we can animate
 
 .animated-pixel-gradient {
   background-image: paint(pixel-gradient);
-  animation: 60s linear infinite animate-seed;
+  animation: 60s linear infinite animate-pixel-gradient-seed;
 }
 
 /* Be nice to users who don't want that kind of animation: */
@@ -746,7 +781,7 @@ And here it is:
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
-    <div class="pixel-gradient pixel-gradient-animate pixel-gradient-final">
+    <div class="target-el pixel-gradient pixel-gradient-animate pixel-gradient-final">
       Hello
     </div>
   </div>
@@ -773,22 +808,75 @@ Some CSS paint effects work with random placement of objects rather than random 
 ```js
 const gridSize = 300;
 const density = props.get('--confetti-density').value;
-let seed = props.get('--confetti-seed').value;
+const seed = props.get('--confetti-seed').value;
+// Create our initial random generator:
+const randomXs = randomGenerator(seed);
 
 for (let x = 0; x < bounds.width; x += gridSize) {
-  const rand = mulberry32(seed);
-  seed = rand() * 2 ** 32;
+  // Fork it for each column:
+  const randomYs = randomXs.fork();
 
   for (let y = 0; y < bounds.height; y += gridSize) {
-    for (let _ = 0; _ < density, _++) {
-      const confettiX = rand() * gridSize + x;
-      const confettiY = rand() * gridSize + y;
-      // TODO: draw confetti at confettiX,confettiY
+    // Fork it again for each cell:
+    const randomItems = randomYs.fork();
+
+    for (let _ = 0; _ < density; _++) {
+      const confettiX = randomItems.next() * gridSize + x;
+      const confettiY = randomItems.next() * gridSize + y;
+      // TODO: Draw confetti at confettiX, confettiY.
     }
   }
 }
 ```
 
-TODO: Do example of this, and fix it for 3 dimensions of random (x, y, density)
+This time we have 3 dimensions of randomness, so the density of the confetti can change without completely changing the pattern. Other other advantage of this is the density of confetti will be consistent no matter how big the element is.
 
-Other other advantage of this is the density of confetti will be consistent no matter how big the element is.
+Like this:
+
+<style>
+  .confetti {
+    background-image: paint(confetti);
+    transition: all 4s ease-in-out;
+    transition-property: width, height, --confetti-density;
+    color: #000;
+  }
+  .confetti.width {
+    width: 50%;
+  }
+  .confetti.height {
+    height: 50%;
+  }
+  .confetti.density {
+    --confetti-density: 600;
+  }
+  @keyframes animate-confetti-seed {
+    from { --confetti-seed: 0 }
+    to { --confetti-seed: 4294967295 }
+  }
+  .confetti.animate-seed {
+    animation: 60s linear infinite animate-confetti-seed;
+  }
+</style>
+
+<figure class="full-figure" style="overflow: visible">
+  <div class="demo-container">
+    <div class="target-el confetti">
+      Hello
+    </div>
+  </div>
+  <div class="figcaption demo-buttons confetti-buttons"></div>
+</figure>
+
+<script>
+  if (demosSupported) {
+    addButtons(document.querySelector('.confetti-buttons'), [
+      ['Animate width', callbackForEl(el => el.classList.toggle('width'))],
+      ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
+      ['Animate density', callbackForEl(el => el.classList.toggle('density'))],
+      ['Change text', callbackForEl(el => el.textContent = el.textContent.trim() === 'Hello' ? 'World' : 'Hello')],
+      ['Toggle animate seed', callbackForEl(el => el.classList.toggle('animate-seed'))],
+    ]);
+  } else {
+    document.querySelector('.confetti-buttons').textContent = `Your browser does not support this demo`;
+  }
+</script>
