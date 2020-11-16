@@ -26,7 +26,7 @@ registerPaint(
 
       for (let x = 0; x < bounds.width; x += size) {
         const rand = mulberry32(seed);
-        seed = (rand() * 2 ** 32) | 0;
+        seed = rand() * 2 ** 32;
 
         for (let y = 0; y < bounds.height; y += size) {
           const pos = y / bounds.height;
@@ -112,8 +112,8 @@ registerPaint(
       for (let x = 0; x < bounds.width; x += size) {
         // Create a new rand() for this column:
         const rand = mulberry32(seed);
-        // Increment the seed for next time, casting to a 32bit integer.
-        seed = (seed + 1) | 0;
+        // Increment the seed for next time:
+        seed++;
 
         for (let y = 0; y < bounds.height; y += size) {
           const pos = y / bounds.height;

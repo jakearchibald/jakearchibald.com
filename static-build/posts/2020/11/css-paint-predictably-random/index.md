@@ -637,8 +637,8 @@ let seed = props.get('--pixel-gradient-seed').value;
 for (let x = 0; x < bounds.width; x += size) {
   // Create a new rand() for this column:
   const rand = mulberry32(seed);
-  // Increment the seed for next time, casting to a 32bit integer.
-  seed = (seed + 1) | 0;
+  // Increment the seed for next time:
+  seed++;
 
   for (let y = 0; y < bounds.height; y += size) {
     const pos = y / bounds.height;
@@ -647,7 +647,7 @@ for (let x = 0; x < bounds.width; x += size) {
 }
 ```
 
-`mulberry32` works with 32bit state, which is why we use `| 0` to cast the number to 32bit. And here it is:
+And here it is:
 
 <style>
   .pixel-gradient-v3 {
@@ -672,7 +672,7 @@ for (let x = 0; x < bounds.width; x += size) {
   }
 </script>
 
-Now height and block size animate in a more natural way! But there's one last thing to fix. By incrementing the seed by 1 for each column we've introduced visual predictability into our pattern. You can see this if you 'increment seed' – instead of producing a new random pattern, it shifts the pattern along. Instead of incrementing the seed by 1, we want to change it in some way that feels random, but is 100% deterministic.
+Now height and block size animate in a more natural way! But there's one last thing to fix. By incrementing the seed by 1 for each column we've introduced visual predictability into our pattern. You can see this if you 'increment seed' – instead of producing a new random pattern, it shifts the pattern along (until it gets past JavaScript's maximum safe integer, at which point _spooky things happen_). Instead of incrementing the seed by 1, we want to change it in some way that feels random, but is 100% deterministic.
 
 Oh wait, that's what our `rand()` function does!
 
@@ -685,7 +685,7 @@ let seed = props.get('--pixel-gradient-seed').value;
 for (let x = 0; x < bounds.width; x += size) {
   const rand = mulberry32(seed);
   // Instead of incrementing, set the seed to a 'random' 32bit value:
-  seed = (rand() * 2 ** 32) | 0;
+  seed = rand() * 2 ** 32);
 
   for (let y = 0; y < bounds.height; y += size) {
     const pos = y / bounds.height;
@@ -694,7 +694,7 @@ for (let x = 0; x < bounds.width; x += size) {
 }
 ```
 
-And here it is:
+We use a random 32bit value, since that's the amount of state `mulberry32` works with. And here it is:
 
 <figure class="full-figure" style="overflow: visible">
   <div class="demo-container">
@@ -777,7 +777,7 @@ let seed = props.get('--confetti-seed').value;
 
 for (let x = 0; x < bounds.width; x += gridSize) {
   const rand = mulberry32(seed);
-  seed = (rand() * 2 ** 32) | 0;
+  seed = rand() * 2 ** 32;
 
   for (let y = 0; y < bounds.height; y += gridSize) {
     for (let _ = 0; _ < density, _++) {
