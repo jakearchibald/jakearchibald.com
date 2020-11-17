@@ -577,8 +577,13 @@ Right now we're calling `rand()` for every block. Take a look at this:
     }).observe(el);
 
     new ResizeObserver(([entry]) => {
-      width = entry.devicePixelContentBoxSize[0].inlineSize || entry.contentBoxSize[0].inlineSize * devicePixelRatio;
-      height = entry.devicePixelContentBoxSize[0].blockSize || entry.contentBoxSize[0].blockSize * devicePixelRatio;
+      if ('devicePixelContentBoxSize' in entry) {
+        width = entry.devicePixelContentBoxSize[0].inlineSize;
+        height = entry.devicePixelContentBoxSize[0].blockSize;
+      } else {
+        width = entry.contentRect.width * devicePixelRatio;
+        height = entry.contentRect.height * devicePixelRatio;
+      }
       if (intersecting) {
         callback(width, height);
         return;
@@ -857,7 +862,7 @@ for (let x = 0; x < bounds.width; x += gridSize) {
 }
 ```
 
-This time we have 3 dimensions of randomness, so the density of the confetti can change without completely changing the pattern. Other other advantage of this is the density of confetti will be consistent no matter how big the element is.
+This time we have 3 dimensions of randomness – rows, columns, and density. Another advantage of using cells is the density of confetti will be consistent no matter how big the element is.
 
 Like this:
 
