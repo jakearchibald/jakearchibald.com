@@ -177,9 +177,10 @@ Right ok, now let's get to the main bit, the painting of the element. Our input 
 - `bounds`: The width & height of the area to paint.
 - `props`: The computed values for our `inputProperties`.
 
-Here's the body of the `paint` method, to create our random gradient:
+Here's the body of the `paint` method to create our random gradient:
 
 ```js
+// Get styles from our input properties:
 const size = props.get('--pixel-gradient-size').value;
 ctx.fillStyle = props.get('--pixel-gradient-color');
 
@@ -188,7 +189,7 @@ for (let x = 0; x < bounds.width; x += size) {
   // Loop over rows
   for (let y = 0; y < bounds.height; y += size) {
     // Convert our vertical position to 0-1
-    const pos = y / bounds.height;
+    const pos = (y + size / 2) / bounds.height;
     // Only draw a box if a random number is less than pos
     if (Math.random() < pos) ctx.fillRect(x, y, size, size);
   }
@@ -281,7 +282,7 @@ So we've created a blocky gradient that's random, but there's a higher chance of
     ['Animate width', callbackForEl(el => el.classList.toggle('width'))],
     ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
     ['Animate colours', callbackForEl(el => el.classList.toggle('colours'))],
-    ['Animate block size', callbackForEl(el => el.classList.toggle('block-size'))],
+    ['Animate box size', callbackForEl(el => el.classList.toggle('block-size'))],
     ['Change text', callbackForEl(el => el.textContent = el.textContent.trim() === 'Hello' ? 'World' : 'Hello')],
     ['Animate box-shadow', callbackForEl(el => el.classList.toggle('box-shadow'))],
     ['Animate blur', callbackForEl(el => el.classList.toggle('blur'))],
@@ -294,19 +295,19 @@ So we've created a blocky gradient that's random, but there's a higher chance of
   }
 </script>
 
-Play with the above or try resizing your browser. Sometimes the pattern in the background changes, sometimes it doesn't.
+One of the things I love about the paint API is how easy it is to create animations. Even for animating the block size, all I had to do is create a CSS transition on `--pixel-gradient-size`. Anyway, play with the above or try resizing your browser. Sometimes the pattern in the background changes, sometimes it doesn't.
 
 The paint API is optimised with determinism in mind. The same input should produce the same output. In fact, the spec says if the element size and `inputProperties` are the same between paints, the browser can use a cached copy of our paint instructions. We're violating that assumption with `Math.random()`.
 
 I'll try and explain what I see in Chrome:
 
-**Why does the pattern change while animating width / height / colour / block-size?** These change the element size or our input properties, so the element has to repaint. Since we use `Math.random()`, we get a new random result.
+**Why does the pattern change while animating width / height / colour / box size?** These change the element size or our input properties, so the element has to repaint. Since we use `Math.random()`, we get a new random result.
 
 **Why does it stay the same while changing the text?** This requires a repaint, but since the element size and input remain the same, the browser uses a cached version of our pattern.
 
 **Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could used a cached version of our pattern here, but it doesn't.
 
-**Why does it change twice when animating blur?** Hah, well, animating blur happens on the compositor, so you get an initial repaint to lift the element onto its own layer. But, during the animation, it just blurs the cached result. Then, once the animation is complete, it drops the layer, and paints the element as a regular part of the page. These repaints could use a cached result, but it doesn't seem to.
+**Why does it change twice when animating blur?** Hah, well, animating blur happens on the compositor, so you get an initial repaint to lift the element onto its own layer. But, during the animation, it just blurs the cached result. Then, once the animation is complete, it drops the layer, and paints the element as a regular part of the page. The browser could use a cached result for these repaints, but it doesn't.
 
 How the above behaves may differ depending on the browser, multiplied by version, multiplied by display/graphics hardware.
 
@@ -316,7 +317,7 @@ I explained this to my colleagues, and they said "So what? It's fun! Stop trying
 
 Computers can't really do random. Instead, they take some state, and do some hot maths all over it to create a number. Then, they modify that state so the next number seems unrelated to the number(s) that came before. But the truth is they're 100% related.
 
-If you start with the same initial state, you'll get the same sequence of random number. That's what we want – something that looks random, but it's 100% reproducible. The good news is that's how `Math.random()` works, the bad news is it doesn't let us set the initial state.
+If you start with the same initial state, you'll get the same sequence of random numbers. That's what we want – something that looks random, but it's 100% reproducible. The good news is that's how `Math.random()` works, the bad news is it doesn't let us set the initial state.
 
 Instead, let's use another implementation that _does_ let us set the initial state:
 
@@ -338,12 +339,9 @@ rand(); // 0.7972629074938595
 rand(); // 0.9965302373748273
 ```
 
-[This gist](https://github.com/bryc/code/blob/master/jshash/PRNGs.md) has a great collection of random number generators. I picked `mulberry32` because it's simple, and good enough for visual randomness. I want to stress that I'm only recommending this for visual randomness. Remember the two golden rules:
+[This gist](https://github.com/bryc/code/blob/master/jshash/PRNGs.md) has a great collection of random number generators. I picked `mulberry32` because it's simple, and good enough for visual randomness. I want to stress that I'm only recommending this for visual randomness. If you're implementing your own cryptography, this is the only piece of advice I'm qualified to give: _don't_.
 
-- If you're implementing your own cryptography, don't take advice from me – I'm not qualified.
-- Don't implement your own cryptography.
-
-I mean, I'm not saying `mulberry32` is bad either. I'm just saying, if all your buttcoins get stolen because you broke the rules above, don't come crying to me.
+I'm not saying `mulberry32` is bad either. I'm just saying, if all your buttcoins get stolen because you were influenced by this article, don't come crying to me.
 
 Anyway, here's `mulberry32` in action:
 
@@ -368,6 +366,21 @@ Anyway, here's `mulberry32` in action:
 .form-rows p {
   margin: 0;
 }
+
+.distribution {
+  position: relative;
+}
+.distribution > div {
+  --size: 10px;
+  width: var(--size);
+  height: var(--size);
+  border-radius: var(--size);
+  background: #036b58;
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.3;
+}
 </style>
 
 <form class="random-form form-rows"><div class="form-rows-inner">
@@ -378,8 +391,12 @@ Anyway, here's `mulberry32` in action:
   <div class="field">
     <div class="label">Output:</div>
     <div class="input">
-      <div class="random-output">…</div>
+      <div class="random-output"></div>
     </div>
+  </div>
+  <div class="field">
+    <div class="label">Distribution:</div>
+    <div class="input distribution"></div>
   </div>
   <div class="field">
     <div class="label"></div>
@@ -401,13 +418,15 @@ Anyway, here's `mulberry32` in action:
   const seedInput = document.querySelector('#seed-input');
   const restartBtn = document.querySelector('.btn-restart');
   const result = document.querySelector('.random-output');
+  const distribution = document.querySelector('.distribution');
 
   let rand;
 
   const restart = (event) => {
     event.preventDefault();
     rand = undefined;
-    result.textContent = '…';
+    result.textContent = '';
+    distribution.textContent = '';
   }
 
   seedInput.addEventListener('input', restart);
@@ -416,7 +435,11 @@ Anyway, here's `mulberry32` in action:
   form.addEventListener('submit', (event) => {
     event.preventDefault();
     if (!rand) rand = mulberry32(seedInput.valueAsNumber);
-    result.textContent = rand();
+    const num = rand();
+    result.textContent = num;
+    const div = document.createElement('div');
+    div.style.left = num * 100 + '%';
+    distribution.append(div);
   });
 </script>
 
@@ -451,7 +474,7 @@ const rand = mulberry32(seed);
 
 for (let x = 0; x < bounds.width; x += size) {
   for (let y = 0; y < bounds.height; y += size) {
-    const pos = y / bounds.height;
+    const pos = (y + size / 2) / bounds.height;
     // …and use it rather than Math.random()
     if (rand() < pos) ctx.fillRect(x, y, size, size);
   }
@@ -476,11 +499,13 @@ And here it is:
 </figure>
 
 <script>
-  let seed = 1;
   const secondButtonSet = [
     ...initialButtonSet,
     ['Increment seed', callbackForEl(el => {
-      el.style.setProperty('--pixel-gradient-seed', ++seed);
+      el.style.setProperty(
+        '--pixel-gradient-seed',
+        el.computedStyleMap().get('--pixel-gradient-seed').value + 1
+      );
     })]
   ];
 
@@ -532,8 +557,9 @@ Right now we're calling `rand()` for every block. Take a look at this:
     ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
   ];
 
-  const pixelGridGap = 5;
-  const pixelGridSize = 52;
+  const pixelGridGap = 6;
+  const pixelGridSize = 42;
+  let width, height;
 
   addButtons(document.querySelector('.pixel-grid-buttons-v1'), pixelGridButtons);
 
@@ -546,27 +572,29 @@ Right now we're calling `rand()` for every block. Take a look at this:
       intersecting = entries[0].isIntersecting;
       if (!wasIntersecting && intersecting && drawOnIntersection) {
         drawOnIntersection = false;
-        callback();
+        callback(width, height);
       }
     }).observe(el);
 
-    new ResizeObserver((entries) => {
+    new ResizeObserver(([entry]) => {
+      width = entry.devicePixelContentBoxSize[0].inlineSize || entry.contentBoxSize[0].inlineSize * devicePixelRatio;
+      height = entry.devicePixelContentBoxSize[0].blockSize || entry.contentBoxSize[0].blockSize * devicePixelRatio;
       if (intersecting) {
-        callback();
+        callback(width, height);
         return;
       }
       drawOnIntersection = true;
-    }).observe(el);
+    }).observe(el, {box: ['device-pixel-content-box']});
   }
 
   {
     const canvas = document.querySelector('.pixel-grid-v1');
     const ctx = canvas.getContext('2d');
 
-    createDrawCallback(canvas, () => {
+    createDrawCallback(canvas, (width, height) => {
       const bounds = canvas.getBoundingClientRect();
-      canvas.width = bounds.width * devicePixelRatio;
-      canvas.height = bounds.height * devicePixelRatio;
+      canvas.width = width;
+      canvas.height = height;
       ctx.scale(devicePixelRatio, devicePixelRatio);
       ctx.font = '15px sans-serif';
       ctx.textAlign = 'center';
@@ -604,10 +632,10 @@ Let's say each square is a block, and the numbers represent the number of times 
     const canvas = document.querySelector('.pixel-grid-v2');
     const ctx = canvas.getContext('2d');
 
-    createDrawCallback(canvas, () => {
+    createDrawCallback(canvas, (width, height) => {
       const bounds = canvas.getBoundingClientRect();
-      canvas.width = bounds.width * devicePixelRatio;
-      canvas.height = bounds.height * devicePixelRatio;
+      canvas.width = width;
+      canvas.height = height;
       ctx.scale(devicePixelRatio, devicePixelRatio);
       ctx.font = '15px sans-serif';
       ctx.textAlign = 'center';
@@ -652,7 +680,7 @@ for (let x = 0; x < bounds.width; x += size) {
   seed++;
 
   for (let y = 0; y < bounds.height; y += size) {
-    const pos = y / bounds.height;
+    const pos = (y + size / 2) / bounds.height;
     if (rand() < pos) ctx.fillRect(x, y, size, size);
   }
 }
@@ -721,7 +749,7 @@ for (let x = 0; x < bounds.width; x += size) {
   const randomYs = randomXs.fork();
 
   for (let y = 0; y < bounds.height; y += size) {
-    const pos = y / bounds.height;
+    const pos = (y + size / 2) / bounds.height;
     if (randomYs.next() < pos) ctx.fillRect(x, y, size, size);
   }
 }
@@ -838,6 +866,7 @@ Like this:
     background-image: paint(confetti);
     transition: all 4s ease-in-out;
     transition-property: width, height, --confetti-density;
+    --confetti-seed: 2;
     color: #000;
   }
   .confetti.width {
@@ -874,9 +903,19 @@ Like this:
       ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
       ['Animate density', callbackForEl(el => el.classList.toggle('density'))],
       ['Change text', callbackForEl(el => el.textContent = el.textContent.trim() === 'Hello' ? 'World' : 'Hello')],
+      ['Increment seed', callbackForEl(el => {
+        el.style.setProperty(
+          '--confetti-seed',
+          el.computedStyleMap().get('--confetti-seed').value + 1
+        );
+      })],
       ['Toggle animate seed', callbackForEl(el => el.classList.toggle('animate-seed'))],
     ]);
   } else {
     document.querySelector('.confetti-buttons').textContent = `Your browser does not support this demo`;
   }
 </script>
+
+And now the density can be animated without creating a whole new pattern each time! See, that was fun, right? Right? RIGHT????
+
+If you want to create your own stable-but-random effects, [here's a gist for the `randomGenerator` function](https://gist.github.com/jakearchibald/5b9a5d194008871efc8b5b70b5f37b1d).

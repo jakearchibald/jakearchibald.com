@@ -46,7 +46,7 @@ registerPaint(
         const randomYs = randomXs.fork();
 
         for (let y = 0; y < bounds.height; y += size) {
-          const pos = y / bounds.height;
+          const pos = (y + size / 2) / bounds.height;
           if (randomYs.next() < pos) ctx.fillRect(x, y, size, size);
         }
       }
@@ -70,7 +70,7 @@ registerPaint(
         // Loop over rows
         for (let y = 0; y < bounds.height; y += size) {
           // Convert our vertical position to 0-1
-          const pos = y / bounds.height;
+          const pos = (y + size / 2) / bounds.height;
           // Only draw a box if a random number is less than pos
           if (Math.random() < pos) ctx.fillRect(x, y, size, size);
         }
@@ -100,7 +100,7 @@ registerPaint(
 
       for (let x = 0; x < bounds.width; x += size) {
         for (let y = 0; y < bounds.height; y += size) {
-          const pos = y / bounds.height;
+          const pos = (y + size / 2) / bounds.height;
           // …and use it rather than Math.random()
           if (rand() < pos) ctx.fillRect(x, y, size, size);
         }
@@ -133,7 +133,7 @@ registerPaint(
         seed++;
 
         for (let y = 0; y < bounds.height; y += size) {
-          const pos = y / bounds.height;
+          const pos = (y + size / 2) / bounds.height;
           if (rand() < pos) ctx.fillRect(x, y, size, size);
         }
       }
