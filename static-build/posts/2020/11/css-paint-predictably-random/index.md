@@ -45,6 +45,20 @@ Take a look at this:
       inherits: true,
     });
 
+    CSS.registerProperty({
+      name: '--confetti-length-variance',
+      syntax: '<length>',
+      initialValue: '15px',
+      inherits: true,
+    });
+
+    CSS.registerProperty({
+      name: '--confetti-weight-variance',
+      syntax: '<length>',
+      initialValue: '4px',
+      inherits: true,
+    });
+
     CSS.paintWorklet.addModule(`client-bundle:client/demos/2020/css-paint-predictably-random/worklet.js`);
   }
 </script>
@@ -106,13 +120,11 @@ Take a look at this:
   </div>
 </figure>
 
-If you're using [a browser that supports the CSS paint API](https://caniuse.com/css-paint-api)<span class="no-support-msg"></span>, the element will have a random pixel-art gradient in the background. But it turns out, doing 'random' in CSS isn't as easy as it seems…
+If you're using [a browser that supports the CSS paint API](https://caniuse.com/css-paint-api)<span class="support-msg"></span>, the element will have a random pixel-art gradient in the background. But it turns out, doing 'random' in CSS isn't as easy as it seems…
 
 <script>
   const demosSupported = CSS.registerProperty && CSS.paintWorklet;
-  if (!demosSupported) {
-    document.querySelector('.no-support-msg').textContent = ` (which unfortunately you aren't)`;
-  }
+  document.querySelector('.support-msg').textContent = demosSupported ? ` (which you are)` : ` (which unfortunately you aren't)`;
 </script>
 
 # Initial implementation
@@ -369,6 +381,7 @@ Anyway, here's `mulberry32` in action:
 
 .distribution {
   position: relative;
+  overflow: hidden;
 }
 .distribution > div {
   --size: 10px;
@@ -664,7 +677,7 @@ Let's say each square is a block, and the numbers represent the number of times 
   }
 </script>
 
-…where are random values have two dimensions. Thankfully, we already have two dimensions to play with, the number of times `rand()` is called, and the seed.
+…where our random values have two dimensions. Thankfully, we already have two dimensions to play with, the number of times `rand()` is called, and the seed.
 
 _Have you ever had this much fun??_
 
@@ -870,7 +883,7 @@ Like this:
   .confetti {
     background-image: paint(confetti);
     transition: all 4s ease-in-out;
-    transition-property: width, height, --confetti-density;
+    transition-property: width, height;
     --confetti-seed: 2;
     color: #000;
   }
@@ -879,9 +892,6 @@ Like this:
   }
   .confetti.height {
     height: 50%;
-  }
-  .confetti.density {
-    --confetti-density: 600;
   }
   @keyframes animate-confetti-seed {
     from { --confetti-seed: 0 }
@@ -892,7 +902,7 @@ Like this:
   }
 </style>
 
-<figure class="full-figure" style="overflow: visible">
+<figure class="full-figure max-figure" style="overflow: visible">
   <div class="demo-container">
     <div class="target-el confetti">
       Hello
@@ -900,13 +910,26 @@ Like this:
   </div>
   <div class="figcaption demo-buttons confetti-buttons"></div>
 </figure>
+<form class="form-rows max-form confetti-form" style="display: none"><div class="form-rows-inner">
+  <div class="field">
+    <label for="density-input" class="label">Density:</label>
+    <div class="input"><input id="density-input" name="density" type="range" min="1" max="1200" step="1" value="200"></div>
+  </div>
+  <div class="field">
+    <label for="length-input" class="label">Length variance:</label>
+    <div class="input"><input id="length-input" name="length" type="range" min="1" max="100" step="1" value="15"></div>
+  </div>
+  <div class="field">
+    <label for="weight-input" class="label">Weight variance:</label>
+    <div class="input"><input id="weight-input" name="weight" type="range" min="1" max="100" step="1" value="4"></div>
+  </div>
+</div></form>
 
 <script>
   if (demosSupported) {
     addButtons(document.querySelector('.confetti-buttons'), [
       ['Animate width', callbackForEl(el => el.classList.toggle('width'))],
       ['Animate height', callbackForEl(el => el.classList.toggle('height'))],
-      ['Animate density', callbackForEl(el => el.classList.toggle('density'))],
       ['Change text', callbackForEl(el => el.textContent = el.textContent.trim() === 'Hello' ? 'World' : 'Hello')],
       ['Increment seed', callbackForEl(el => {
         el.style.setProperty(
@@ -916,11 +939,25 @@ Like this:
       })],
       ['Toggle animate seed', callbackForEl(el => el.classList.toggle('animate-seed'))],
     ]);
+
+    const confetti = document.querySelector('.confetti');
+    const confettiForm = document.querySelector('.confetti-form');
+
+    confettiForm.style.display = '';
+
+    confettiForm.addEventListener('submit', (e) => e.preventDefault());
+
+    confettiForm.addEventListener('input', () => {
+      const data = new FormData(confettiForm);
+      confetti.style.setProperty('--confetti-density', data.get('density'));
+      confetti.style.setProperty('--confetti-length-variance', data.get('length') + 'px');
+      confetti.style.setProperty('--confetti-weight-variance', data.get('weight') + 'px');
+    });
   } else {
     document.querySelector('.confetti-buttons').textContent = `Your browser does not support this demo`;
   }
 </script>
 
-And now the density can be animated without creating a whole new pattern each time! See, that was fun, right? Right? RIGHT????
+And now the density can be changed/animated without creating a whole new pattern each time! See, that was fun, right? Right? RIGHT????
 
 If you want to create your own stable-but-random effects, [here's a gist for the `randomGenerator` function](https://gist.github.com/jakearchibald/5b9a5d194008871efc8b5b70b5f37b1d).

@@ -554,6 +554,20 @@ h2 + .max-figure {
 .form-rows {
   margin: 1em -20px;
 
+  &.max-form {
+    @media screen and (min-width: $mobile-boundry) {
+      margin-right: -64px;
+    }
+
+    @media screen and (min-width: $side-introduction-width) {
+      margin-right: -32px;
+    }
+  }
+
+  .full-figure + & {
+    margin-top: -1em;
+  }
+
   .code-example + & {
     /* move these up against code examples */
     margin-top: -1.1em;
@@ -595,6 +609,10 @@ h2 + .max-figure {
     padding: 0 0.5em;
     vertical-align: middle;
     display: table-cell;
+
+    & > * {
+      vertical-align: middle;
+    }
   }
 
   & input[type='text'],

@@ -21,6 +21,7 @@ function randomGenerator(seed) {
 
   return {
     next,
+    nextBetween: (from, to) => next() * (to - from) + from,
     fork: () => randomGenerator(next() * 2 ** 32),
   };
 }
@@ -145,17 +146,24 @@ registerPaint(
   'confetti',
   class PixelGradient {
     static get inputProperties() {
-      return ['--confetti-density', '--confetti-seed'];
+      return [
+        '--confetti-density',
+        '--confetti-seed',
+        '--confetti-length-variance',
+        '--confetti-weight-variance',
+      ];
     }
 
     paint(ctx, bounds, props) {
       const gridSize = 300;
       const density = props.get('--confetti-density').value;
       const seed = props.get('--confetti-seed').value;
+      const lengthVar = props.get('--confetti-length-variance').value;
+      const weightVar = props.get('--confetti-weight-variance').value;
       const minLength = 3;
-      const maxLength = minLength + 15;
+      const maxLength = minLength + lengthVar;
       const minWeight = 1;
-      const maxWeight = minWeight + 4;
+      const maxWeight = minWeight + weightVar;
 
       const randomXs = randomGenerator(seed);
 
@@ -166,10 +174,14 @@ registerPaint(
           const randomItems = randomYs.fork();
 
           for (let _ = 0; _ < density; _++) {
-            const confettiLength =
-              randomItems.next() * (maxLength - minLength) + minLength;
-            const confettiWeight =
-              randomItems.next() * (maxWeight - minWeight) + minWeight;
+            const confettiLength = randomItems.nextBetween(
+              minLength,
+              maxLength,
+            );
+            const confettiWeight = randomItems.nextBetween(
+              minWeight,
+              maxWeight,
+            );
             const confettiX = randomItems.next() * gridSize + x;
             const confettiY = randomItems.next() * gridSize + y;
 
