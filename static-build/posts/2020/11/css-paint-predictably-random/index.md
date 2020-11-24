@@ -150,10 +150,8 @@ registerPaint('pixel-gradient', PixelGradient);
 And some CSS:
 
 ```css
-/*
- * Provide defaults and types for some custom properties,
- * so the browser knows how to animate them.
- */
+/* Provide defaults and types for some custom properties,
+ * so the browser knows how to animate them. */
 /* The end colour of the gradient */
 @property --pixel-gradient-color {
   syntax: '<color>';
