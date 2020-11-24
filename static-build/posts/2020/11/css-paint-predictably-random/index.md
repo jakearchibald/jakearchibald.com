@@ -150,15 +150,13 @@ registerPaint('pixel-gradient', PixelGradient);
 And some CSS:
 
 ```css
-/* Provide defaults and types for some custom properties,
- * so the browser knows how to animate them. */
 /* The end colour of the gradient */
 @property --pixel-gradient-color {
   syntax: '<color>';
   initial-value: black;
   inherits: true;
 }
-/* The size of each block */
+
 @property --pixel-gradient-size {
   syntax: '<length>';
   initial-value: 8px;
@@ -173,7 +171,9 @@ And some CSS:
 }
 ```
 
-Right ok, now let's get to the main bit, the painting of the element. Our input is:
+`@property` tells the browser the format of the custom properties. This is great as it means values can animate, and things like `--pixel-gradient-size` can be specified in `em`, `%`, `vw` etc etc – they'll be converted to pixels for the paint worklet.
+
+Right ok, now let's get to the main bit, the painting of the element. The input is:
 
 - `ctx`: A subset of the 2d canvas API.
 - `bounds`: The width & height of the area to paint.
@@ -456,13 +456,12 @@ Let's put `mulberry32` to work here…
 
 We'll add another custom property for the seed:
 
-```js
-CSS.registerProperty({
-  name: '--pixel-gradient-seed',
-  syntax: '<number>',
-  initialValue: '1',
-  inherits: true,
-});
+```css
+@property --pixel-gradient-seed {
+  syntax: '<number>';
+  initial-value: 1;
+  inherits: true;
+}
 ```
 
 …which we'll also add to our `inputProperties`. Then, we can modify our paint code:
@@ -471,8 +470,9 @@ CSS.registerProperty({
 const size = props.get('--pixel-gradient-size').value;
 ctx.fillStyle = props.get('--pixel-gradient-color');
 
-// Get the seed, and create our random function:
+// Get the seed…
 const seed = props.get('--pixel-gradient-seed').value;
+// …and create a random number generator:
 const rand = mulberry32(seed);
 
 for (let x = 0; x < bounds.width; x += size) {
