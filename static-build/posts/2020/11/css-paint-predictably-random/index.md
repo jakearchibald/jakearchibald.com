@@ -9,56 +9,7 @@ image: 'asset-url:./post.jpg'
 Take a look at this:
 
 <script>
-  if (CSS.registerProperty && CSS.paintWorklet) {
-    CSS.registerProperty({
-      name: '--pixel-gradient-color',
-      syntax: '<color>',
-      initialValue: 'black',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--pixel-gradient-seed',
-      syntax: '<number>',
-      initialValue: '1',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--pixel-gradient-size',
-      syntax: '<length>',
-      initialValue: '8px',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--confetti-density',
-      syntax: '<number>',
-      initialValue: '200',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--confetti-seed',
-      syntax: '<number>',
-      initialValue: '10',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--confetti-length-variance',
-      syntax: '<length>',
-      initialValue: '15px',
-      inherits: true,
-    });
-
-    CSS.registerProperty({
-      name: '--confetti-weight-variance',
-      syntax: '<length>',
-      initialValue: '4px',
-      inherits: true,
-    });
-
+  if (CSS.paintWorklet) {
     CSS.paintWorklet.addModule(`client-bundle:client/demos/2020/css-paint-predictably-random/worklet.js`);
   }
 </script>
@@ -111,6 +62,48 @@ Take a look at this:
       margin-top: 2rem;
     }
   }
+
+  @property --pixel-gradient-color {
+    syntax: '<color>';
+    initial-value: black;
+    inherits: true;
+  }
+
+  @property --pixel-gradient-seed {
+    syntax: '<number>';
+    initial-value: 1;
+    inherits: true;
+  }
+
+  @property --pixel-gradient-size {
+    syntax: '<length>';
+    initial-value: 8px;
+    inherits: true;
+  }
+
+  @property --confetti-density {
+    syntax: '<number>';
+    initial-value: 200;
+    inherits: true;
+  }
+
+  @property --confetti-seed {
+    syntax: '<number>';
+    initial-value: 10;
+    inherits: true;
+  }
+
+  @property --confetti-length-variance {
+    syntax: '<length>';
+    initial-value: 15px;
+    inherits: true;
+  }
+
+  @property --confetti-weight-variance {
+    syntax: '<length>';
+    initial-value: 4px;
+    inherits: true;
+  }
 </style>
 
 <figure class="full-figure max-figure">
@@ -123,36 +116,17 @@ Take a look at this:
 If you're using [a browser that supports the CSS paint API](https://caniuse.com/css-paint-api)<span class="support-msg"></span>, the element will have a random pixel-art gradient in the background. But it turns out, doing 'random' in CSS isn't as easy as it seems…
 
 <script>
-  const demosSupported = CSS.registerProperty && CSS.paintWorklet;
+  const demosSupported = CSS.paintWorklet;
   document.querySelector('.support-msg').textContent = demosSupported ? ` (which you are)` : ` (which unfortunately you aren't)`;
 </script>
 
 # Initial implementation
 
-This isn't a full tutorial on the CSS paint API, so if the below isn't clear or you want to know more, check out [this article on the CSS paint API](https://developers.google.com/web/updates/2018/01/paintapi), and [this article on `registerProperty`](https://web.dev/css-props-and-vals/).
+This isn't a full tutorial on the CSS paint API, so if the below isn't clear or you want to know more, check out [this article on the CSS paint API](https://developers.google.com/web/updates/2018/01/paintapi), and [this article on `@property`](https://web.dev/at-property/).
 
-First up, the client-side JavaScript:
+First up, register a paint worklet:
 
 ```js
-// Provide defaults and types for custom properties, so the
-// browser knows how to animate them.
-// The colour of the blocks:
-CSS.registerProperty({
-  name: '--pixel-gradient-color',
-  syntax: '<color>',
-  initialValue: 'black',
-  inherits: true,
-});
-
-// The size of the blocks:
-CSS.registerProperty({
-  name: '--pixel-gradient-size',
-  syntax: '<length>',
-  initialValue: '8px',
-  inherits: true,
-});
-
-// Then register a worklet to do the painting:
 CSS.paintWorklet.addModule(`worklet.js`);
 ```
 
@@ -176,9 +150,27 @@ registerPaint('pixel-gradient', PixelGradient);
 And some CSS:
 
 ```css
+/*
+ * Provide defaults and types for some custom properties,
+ * so the browser knows how to animate them.
+ */
+/* The end colour of the gradient */
+@property --pixel-gradient-color {
+  syntax: '<color>';
+  initial-value: black;
+  inherits: true;
+}
+/* The size of each block */
+@property --pixel-gradient-size {
+  syntax: '<length>';
+  initial-value: 8px;
+  inherits: true;
+}
+
 .pixel-gradient {
   --pixel-gradient-color: #9a9a9a;
   background-color: #8a8a8a;
+  /* Tell the browser to use our worklet for the background image */
   background-image: paint(pixel-gradient);
 }
 ```
@@ -729,9 +721,9 @@ And here it is:
   }
 </script>
 
-Now height and block size animate in a more natural way! But there's one last thing to fix. By incrementing the seed by 1 for each column we've introduced visual predictability into our pattern. You can see this if you 'increment seed' – instead of producing a new random pattern, it shifts the pattern along (until it gets past JavaScript's maximum safe integer, at which point _spooky things happen_). Instead of incrementing the seed by 1, we want to change it in some way that feels random, but is 100% deterministic.
+Now height and block size animate in a more natural way! But there's one last thing to fix. By incrementing the seed by 1 for each column we've introduced visual predictability into our pattern. You can see this if you 'increment seed' – instead of producing a new random pattern, it shifts the pattern along (until it gets past JavaScript's maximum safe integer, at which point _spooky things happen_). Instead of incrementing the seed by 1, we want to change it in some way that feels random, but is 100% deterministic. Oh wait, that's what our `rand()` function does!
 
-Oh wait, that's what our `rand()` function does! In fact, let's create a version of `mulberry32` that can be 'forked' for multiple dimensions:
+In fact, let's create a version of `mulberry32` that can be 'forked' for multiple dimensions:
 
 ```js
 function randomGenerator(seed) {
