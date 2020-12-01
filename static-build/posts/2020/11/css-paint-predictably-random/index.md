@@ -156,7 +156,7 @@ And some CSS:
   initial-value: black;
   inherits: true;
 }
-
+/* The size of each block in the gradient */
 @property --pixel-gradient-size {
   syntax: '<length>';
   initial-value: 8px;
@@ -307,7 +307,7 @@ I'll try and explain what I see in Chrome:
 
 **Why does it stay the same while changing the text?** This requires a repaint, but since the element size and input remain the same, the browser uses a cached version of our pattern.
 
-**Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could used a cached version of our pattern here, but it doesn't.
+**Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could use a cached version of our pattern here, but it doesn't.
 
 **Why does it change twice when animating blur?** Hah, well, animating blur happens on the compositor, so you get an initial repaint to lift the element onto its own layer. But, during the animation, it just blurs the cached result. Then, once the animation is complete, it drops the layer, and paints the element as a regular part of the page. The browser could use a cached result for these repaints, but it doesn't.
 
@@ -317,7 +317,7 @@ I explained this to my colleagues, and they said "So what? It's fun! Stop trying
 
 # Making random, not random
 
-Computers can't really do random. Instead, they take some state, and do some hot maths all over it to create a number. Then, they modify that state so the next number seems unrelated to the number(s) that came before. But the truth is they're 100% related.
+Computers can't really do random. Instead, they take some state, and do some hot maths all over it to create a number. Then, they modify that state so the next number seems unrelated to the previous ones. But the truth is they're 100% related.
 
 If you start with the same initial state, you'll get the same sequence of random numbers. That's what we want – something that looks random, but it's 100% reproducible. The good news is that's how `Math.random()` works, the bad news is it doesn't let us set the initial state.
 
@@ -842,6 +842,7 @@ Now we can choose to animate the noise when _we_ want, but keep it stable at oth
 Some CSS paint effects work with random placement of objects rather than random pixels, such as confetti/firework effects. You can use similar principles there too. Instead of placing items randomly around the element, split your elements up into a grid:
 
 ```js
+// We'll split the element up into 300x300 cells:
 const gridSize = 300;
 const density = props.get('--confetti-density').value;
 const seed = props.get('--confetti-seed').value;
