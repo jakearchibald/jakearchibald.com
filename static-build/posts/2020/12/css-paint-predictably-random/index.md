@@ -1,9 +1,9 @@
 ---
 title: 'CSS paint API: Being predictably random'
-date: 2020-11-13 01:00:00
-summary: TODO
-meta: TODO
-image: 'asset-url:./post.jpg'
+date: 2020-12-10 01:00:00
+summary: Creating random-but-stable effects with the CSS paint API
+meta: Creating random-but-stable effects with the CSS paint API
+image: 'asset-url:./img.png'
 ---
 
 Take a look at this:
@@ -122,7 +122,7 @@ If you're using [a browser that supports the CSS paint API](https://caniuse.com/
 
 # Initial implementation
 
-This isn't a full tutorial on the CSS paint API, so if the below isn't clear or you want to know more, check out [this article on the CSS paint API](https://developers.google.com/web/updates/2018/01/paintapi), and [this article on `@property`](https://web.dev/at-property/).
+This isn't a full tutorial on the CSS paint API, so if the below isn't clear or you want to know more, check out the [resources on houdini.how](https://houdini.how/resources), and [this great talk by Una](https://developer.chrome.com/devsummit/sessions/extending-css-with-houdini/).
 
 First up, register a paint worklet:
 
@@ -143,7 +143,8 @@ class PixelGradient {
   }
 }
 
-// Give our custom painting a name (this is how CSS will reference it):
+// Give our custom painting a name
+// (this is how CSS will reference it):
 registerPaint('pixel-gradient', PixelGradient);
 ```
 
@@ -166,7 +167,8 @@ And some CSS:
 .pixel-gradient {
   --pixel-gradient-color: #9a9a9a;
   background-color: #8a8a8a;
-  /* Tell the browser to use our worklet for the background image */
+  /* Tell the browser to use our worklet
+     for the background image */
   background-image: paint(pixel-gradient);
 }
 ```
@@ -192,7 +194,8 @@ for (let x = 0; x < bounds.width; x += size) {
   for (let y = 0; y < bounds.height; y += size) {
     // Convert our vertical position to 0-1
     const pos = (y + size / 2) / bounds.height;
-    // Only draw a box if a random number is less than pos
+    // Only draw a box if a random number
+    // is less than pos
     if (Math.random() < pos) ctx.fillRect(x, y, size, size);
   }
 }
@@ -299,7 +302,7 @@ So we've created a blocky gradient that's random, but there's a higher chance of
 
 One of the things I love about the paint API is how easy it is to create animations. Even for animating the block size, all I had to do is create a CSS transition on `--pixel-gradient-size`. Anyway, play with the above or try resizing your browser. Sometimes the pattern in the background changes, sometimes it doesn't.
 
-The paint API is optimised with determinism in mind. The same input should produce the same output. In fact, the spec says if the element size and `inputProperties` are the same between paints, the browser can use a cached copy of our paint instructions. We're violating that assumption with `Math.random()`.
+The paint API is optimised with determinism in mind. The same input should produce the same output. In fact, the spec says if the element size and `inputProperties` are the same between paints, the browser _may_ use a cached copy of our paint instructions. We're breaking that assumption with `Math.random()`.
 
 I'll try and explain what I see in Chrome:
 
@@ -307,7 +310,7 @@ I'll try and explain what I see in Chrome:
 
 **Why does it stay the same while changing the text?** This requires a repaint, but since the element size and input remain the same, the browser uses a cached version of our pattern.
 
-**Why does it change while animating box-shadow?** Urm, I'm not really sure. Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could use a cached version of our pattern here, but it doesn't.
+**Why does it change while animating box-shadow?** Although the box-shadow change means the element needs repainting, box-shadow doesn't change the element size, and `box-shadow` isn't one of our `inputProperties`. It feels like the browser could use a cached version of our pattern here, but it doesn't. And that's fine, the spec doesn't _require_ the browser to use a cached copy here.
 
 **Why does it change twice when animating blur?** Hah, well, animating blur happens on the compositor, so you get an initial repaint to lift the element onto its own layer. But, during the animation, it just blurs the cached result. Then, once the animation is complete, it drops the layer, and paints the element as a regular part of the page. The browser could use a cached result for these repaints, but it doesn't.
 
@@ -737,7 +740,8 @@ function randomGenerator(seed) {
 
   return {
     next,
-    // Instead of incrementing, set the seed to a 'random' 32 bit value:
+    // Instead of incrementing, set the seed
+    // to a 'random' 32 bit value:
     fork: () => randomGenerator(next() * 2 ** 32),
   };
 }
@@ -805,7 +809,8 @@ However, now we have `--pixel-gradient-seed` defined as a number, we can animate
   animation: 60s linear infinite animate-pixel-gradient-seed;
 }
 
-/* Be nice to users who don't want that kind of animation: */
+/* Be nice to users who don't want
+   that kind of animation: */
 @media (prefers-reduced-motion: reduce) {
   .animated-pixel-gradient {
     animation: none;
@@ -842,7 +847,8 @@ Now we can choose to animate the noise when _we_ want, but keep it stable at oth
 Some CSS paint effects work with random placement of objects rather than random pixels, such as confetti/firework effects. You can use similar principles there too. Instead of placing items randomly around the element, split your elements up into a grid:
 
 ```js
-// We'll split the element up into 300x300 cells:
+// We'll split the element up
+// into 300x300 cells:
 const gridSize = 300;
 const density = props.get('--confetti-density').value;
 const seed = props.get('--confetti-seed').value;
@@ -860,7 +866,8 @@ for (let x = 0; x < bounds.width; x += gridSize) {
     for (let _ = 0; _ < density; _++) {
       const confettiX = randomItems.next() * gridSize + x;
       const confettiY = randomItems.next() * gridSize + y;
-      // TODO: Draw confetti at confettiX, confettiY.
+      // TODO: Draw confetti at
+      // confettiX, confettiY.
     }
   }
 }
