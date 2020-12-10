@@ -113,7 +113,7 @@ Take a look at this:
   </div>
 </figure>
 
-If you're using [a browser that supports the CSS paint API](https://caniuse.com/css-paint-api)<span class="support-msg"></span>, the element will have a random pixel-art gradient in the background. But it turns out, doing 'random' in CSS isn't as easy as it seems…
+If you're using [a browser that supports the CSS paint API](https://caniuse.com/css-paint-api)<span class="support-msg"></span>, the element will have a 'random' pixel-art gradient in the background. But it turns out, doing random in CSS isn't as easy as it seems…
 
 <script>
   const demosSupported = CSS.paintWorklet;
