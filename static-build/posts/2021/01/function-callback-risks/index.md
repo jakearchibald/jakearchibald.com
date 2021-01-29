@@ -75,9 +75,17 @@ const nextFrame = () =>
 
 This works today because `requestAnimationFrame` only does something with the first argument, but that might not be true forever. A extra parameter might be added, and the above code could break in whatever browser ships the updated `requestAnimationFrame`.
 
-# Same goes for option objects
+The best example of this pattern going wrong is probably:
 
-Chrome 90 will allow you to use an `AbortSignal` to remove an event listener, meaning a single `AbortSignal` can be used to remove event listeners, cancel fetches, and anything else that's looking for the `abort` event:
+```js
+const parsedInts = ['-10', '0', '10', '20', '30'].map(parseInt);
+```
+
+If anyone asks you the result of that in a tech interview, I recommend rolling your eyes and walking out. But anyway, the answer is `[-10, NaN, 2, 6, 12]`, because [`parseInt` has a second parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseInt).
+
+# Option objects can have the same gotcha
+
+Chrome 90 will allow you to use an `AbortSignal` to remove an event listener, meaning a single `AbortSignal` can be used to remove event listeners, [cancel fetches](https://developers.google.com/web/updates/2017/09/abortable-fetch), and anything else that supports signals:
 
 ```js
 const controller = new AbortController();
