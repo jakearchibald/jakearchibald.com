@@ -9,16 +9,6 @@ image: 'asset-url:./img.png'
 Here's an old pattern that seems to be making a comeback:
 
 ```js
-import { toReadableNumber } from 'some-library';
-const readableNumbers = someNumbers.map(toReadableNumber);
-
-const nextFrame = () => new Promise(requestAnimationFrame);
-
-const controller = new AbortController();
-el.addEventListener(name, callback, controller);
-```
-
-```js
 // Convert some numbers into human-readable strings:
 import { toReadableNumber } from 'some-library';
 const readableNumbers = someNumbers.map(toReadableNumber);
