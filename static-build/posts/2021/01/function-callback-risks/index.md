@@ -134,4 +134,4 @@ const { signal } = controller;
 el.addEventListener(name, callback, { signal });
 ```
 
-Watch out for functions being used as callbacks, and objects being used as options, unless they were designed for those purposes. Unfortunately it [isn't something TypeScript warns about](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/PTAEEFQBwJwewLYEsDOBTUAzONQBcALDAOzQA88sYBDBNALgCgBjOYlS0igMRrtAC8oABQBKQQD5QpAO6gACvGTphMNAEcArmg7hiSBNTxI2vWmlEBuIA), and I'm not aware of a linting rule that catches it.
+And that's it! Watch out for functions being used as callbacks, and objects being used as options, unless they were designed for those purposes. Unfortunately it [isn't something TypeScript warns about](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/PTAEEFQBwJwewLYEsDOBTUAzONQBcALDAOzQA88sYBDBNALgCgBjOYlS0igMRrtAC8oABQBKQQD5QpAO6gACvGTphMNAEcArmg7hiSBNTxI2vWmlEBuIA), and I'm not aware of a linting rule that catches it.
