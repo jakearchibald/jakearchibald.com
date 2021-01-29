@@ -155,12 +155,12 @@
   & code {
     font-family: Inconsolata, courier, monospace;
     background: #eee;
-    padding: 3px 3px;
+    padding: 2px 3px;
     margin: 0 2px;
     outline: 1px solid #e2e2e2;
     line-height: 1;
-    white-space: normal;
-    display: inline-block;
+    white-space: nowrap;
+    display: inline;
   }
 }
 
