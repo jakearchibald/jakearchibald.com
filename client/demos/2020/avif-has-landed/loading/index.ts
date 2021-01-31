@@ -64,7 +64,7 @@ if (!self.TransformStream) {
     })
     .then(async (reg) => {
       if (!reg.active) {
-        await new Promise((resolve) => {
+        await new Promise<void>((resolve) => {
           const worker = reg.installing || reg.waiting;
           worker!.addEventListener('statechange', () => {
             if (worker!.state === 'activating') resolve();

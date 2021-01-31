@@ -95,7 +95,7 @@ export default class DecodedImg extends Component<Props, State> {
       if (lazy) {
         await abortable(
           signal,
-          new Promise((resolve) => {
+          new Promise<void>((resolve) => {
             const observer = new IntersectionObserver(([result]) => {
               if (!result.isIntersecting) return;
               observer.disconnect();

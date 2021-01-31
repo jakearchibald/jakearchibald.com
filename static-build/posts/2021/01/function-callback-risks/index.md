@@ -132,7 +132,75 @@ const { signal } = controller;
 el.addEventListener(name, callback, { signal });
 ```
 
-And that's it! Watch out for functions being used as callbacks, and objects being used as options, unless they were designed for those purposes. Unfortunately it [isn't something TypeScript warns about](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/MYewdgzgLgBGCmAPKAxATgQwLbxgXhgAoBKfAPjngHcYAFNELASwnkLXgEcBXeaAQTBMsGKE3Dps8YgG4AUHID0imABUAngAd4AZWBomm2ABMQfMAHJYAazAga-Y8YCiAN3hgoAGRZQP8NAB5I3FIGAxgYHgjCHCYCCYAczAMABsYdXgoOSZPAIAzCNxHF3dPH2h-IJDwWIBvORgm+KSU1IAuGH4AIxA0KB1WtPkAXwVQSFgJqAZU1ID8Sgde-oBhcBmQOYCSeVNgbhxPADpe43VjjCc3D29fKsILYFSmYGsLABoiUjwKOpGvtNZvM0LIgA) (and TS types often lag behind what gets shipped in browsers), and I'm not aware of a linting rule that catches it (edit: looks like there's [a rule that catches some cases](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md), thanks [James Ross](https://twitter.com/CherryJimbo/status/1355190401037180931)!).
+And that's it! Watch out for functions being used as callbacks, and objects being used as options, unless they were designed for those purposes. Unfortunately I'm not aware of a linting rule that catches it (edit: looks like there's [a rule that catches some cases](https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-callback-reference.md), thanks [James Ross](https://twitter.com/CherryJimbo/status/1355190401037180931)!).
+
+# TypeScript doesn't solve this
+
+Edit: When I first posted this, it had a little note at the end showing that TypeScript doesn't prevent this issue, but I still got folks on Twitter telling me to "just use TypeScript", so let's look at it in more detail.
+
+TypeScript [doesn't like this](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/GYVwdgxgLglg9mABAgpgQQE4HMAUBDbARgC5EBnKDGMLASkQG8AoRRCBMuAGxQDou4uAlkK0A3EwC+TJqky4A5AAsUXAQoA0iBQHc4GLgBMF4oA):
+
+```ts
+function oneArg(arg1: string) {
+  console.log(arg1);
+}
+
+oneArg('hello', 'world');
+//              ^^^^^^^
+// Expected 1 arguments, but got 2.
+```
+
+But it's [fine with this](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/GYVwdgxgLglg9mABAgpgQQE4HMAUBDbARgC5EBnKDGMLASkQG8AoRRCBMuAGxQDou4uAlkK0A3EwC+TJqEiwEiKAHc4mLAGE8XLgCM8EANY4Iu0viKkKVGgBpEwgExXK1OogC8APkQA3ODAAJvTMrKY4AOQAFig6cBH2EaoYXIER4lIyKmrYWjr6Rjio6uJAA):
+
+```ts
+function twoArgCallback(cb: (arg1: string, arg2: string) => void) {
+  cb('hello', 'world');
+}
+
+twoArgCallback(oneArg);
+```
+
+…even though the result is the same.
+
+Therefore TypeScript is [fine with this](https://www.typescriptlang.org/play?ts=4.2.0-beta&ssl=7&ssc=57&pln=1&pc=1#code/GYVwdgxgLglg9mABFOAlApgQwCaYEYA26AciALZ7oBOAFGOQFyL0XUCUTAzlFTGAOaIA3gChEiAPQTEGKCCpIWiTJ0TdeAxH2WIAFuUxIqWXIXSJgcKmQB0YydICiggIwAGD57eIyMfrqhESgg4MnMAcncAGk8Yj3D7YzkFRHDwgG4RAF8RERCwbkRjHHwiUlYqVQBeRABtFyjEACZGgGYAXRsyTAAHGhQMErNyyio2dKA):
+
+```ts
+function toReadableNumber(num): string {
+  // Return num as string in a human readable form.
+  // Eg 10000000 might become '10,000,000'
+  return '';
+}
+
+const readableNumbers = [1, 2, 3].map(toReadableNumber);
+```
+
+If `toReadableNumber` changed to add a second _string_ param, [TypeScript would complain](https://www.typescriptlang.org/play?ts=4.2.0-beta&ssl=7&ssc=57&pln=1&pc=1#code/GYVwdgxgLglg9mABFOAlApgQwCaYEYA26AciALZ7oBOAFGOQFyL0XUA0iA7gBaZToA3akwDOUKjDABzAJSjxkqYgDeAKESIA9JsQYoIKkhaJMIxGInTEkk4m7lMSKllyF0iYHCpkAdOq06AKJKAIwADBGRYYhkMFLcUIiUEHBk7gDk4WyR2RHp-s76hojp6QDcqgC+qqopYGKIzjj4RKSsVGYAvIgA2iEcAEwcAMwAuj5kmAAONCgYzW5tlFQyZUA), but that isn't what happened in the example. An additional _number_ param was added, and this [meets the type constraints](https://www.typescriptlang.org/play?ts=4.2.0-beta#code/GYVwdgxgLglg9mABFOAlApgQwCaYEYA26AciALZ7oBOAFGOQFyL0XUA0iA7gBaZToA3akxaUqASiYBnKFRhgA5ogDeAKESIA9JsQYoIKkhaJMUxDLmLE8k4m7lMSKllyF0iYHCpkAdOq06AKJKAIwADBGRYYhkMArcUIiUEHBk7gDk4WyR2RHp-s76hojp6QDcqgC+qqopYDKIzjj4RKSsVGYAvIgA2iEcAEwcAMwAuj5kmAAONCgYzW5tYuJlQA).
+
+Things get worse with the `requestAnimationFrame` example, because this goes wrong after a new version of a _browser_ is deployed, not when a new version of your _project_ is deployed. Additionally, TypeScript DOM types tend to lag behind what browsers ship by months.
+
+In my opinion, TypeScript should enforce the number of arguments passed to a callback, just as it does with regular functions. Or at least, there should be an option for this.
+
+Things are a bit tougher when it comes to option objects:
+
+```ts
+interface Options {
+  reverse?: boolean;
+}
+
+function whatever({ reverse = false }: Options = {}) {
+  console.log(reverse);
+}
+```
+
+You could say that TypeScript should warn if the object passed to `whatever` has properties other than `reverse`. But in this example:
+
+```ts
+whatever({ reverse: true });
+```
+
+…we're passing an object with properties like `toString`, `constructor`, `valueOf`, `hasOwnProperty` etc etc since the object above is an instance of `Object`. It seems too restrictive to require that the properties are 'own' properties (that isn't how it works at runtime), but maybe TypeScript could add some allowance for properties that come with `Object`.
+
+I'm a fan of TypeScript, this blog is built using TypeScript, but it does not solve this problem.
 
 <small>
 
