@@ -178,7 +178,18 @@ If `toReadableNumber` changed to add a second _string_ param, [TypeScript would 
 
 Things get worse with the `requestAnimationFrame` example, because this goes wrong after a new version of a _browser_ is deployed, not when a new version of your _project_ is deployed. Additionally, TypeScript DOM types tend to lag behind what browsers ship by months.
 
-In my opinion, TypeScript should enforce the number of arguments passed to a callback, just as it does with regular functions. Or at least, there should be an option for this.
+I'm a fan of TypeScript, this blog is built using TypeScript, but it does not solve this problem, and probably shouldn't.
+
+Most other typed languages behave differently to TypeScript here, and [disallow casting callbacks in this way](https://dartpad.dev/342c8d1bb4779bd1ff10610bb3e9ac30), but TypeScript's behaviour here is [intentional](https://github.com/Microsoft/TypeScript/wiki/FAQ#why-are-functions-with-fewer-parameters-assignable-to-functions-that-take-more-parameters), otherwise it'd reject the following:
+
+```ts
+const numbers = [1, 2, 3];
+const doubledNumbers = numbers.map((n) => n * 2);
+```
+
+…since the callback given to `map` is cast to a callback with more params. The above is an extremely common pattern in JavaScript, and totally safe, so it's understandable that TypeScript made an exception for it.
+
+The question is "is the function intended to be a callback to `map`?", and in a JavaScript world that isn't really solvable with types. Instead, I wonder if new JS and web functions should throw if they're called with too many arguments. This would 'reserve' additional parameters for future use. We couldn't do it with existing functions, as that would break backwards compatibility, but we could show console warnings for existing functions that we might want to add parameters to later. [I proposed this idea](https://github.com/heycam/webidl/issues/954), but folks don't seem too excited about it 😀.
 
 Things are a bit tougher when it comes to option objects:
 
@@ -192,18 +203,16 @@ function whatever({ reverse = false }: Options = {}) {
 }
 ```
 
-You could say that TypeScript should warn if the object passed to `whatever` has properties other than `reverse`. But in this example:
+You could say that APIs should warn/fail if the object passed to `whatever` has properties other than `reverse`. But in this example:
 
 ```ts
 whatever({ reverse: true });
 ```
 
-…we're passing an object with properties like `toString`, `constructor`, `valueOf`, `hasOwnProperty` etc etc since the object above is an instance of `Object`. It seems too restrictive to require that the properties are 'own' properties (that isn't how it works at runtime), but maybe TypeScript could add some allowance for properties that come with `Object`.
-
-I'm a fan of TypeScript, this blog is built using TypeScript, but it does not solve this problem.
+…we're passing an object with properties like `toString`, `constructor`, `valueOf`, `hasOwnProperty` etc etc since the object above is an instance of `Object`. It seems too restrictive to require that the properties are 'own' properties (that isn't how it currently works at runtime), but maybe we could add some allowance for properties that come with `Object`.
 
 <small>
 
-Thanks to [my podcast husband](https://http203.libsyn.com/) [Surma](https://twitter.com/DasSurma) for proof-reading and suggestions.
+Thanks to [my podcast husband](https://http203.libsyn.com/) [Surma](https://twitter.com/DasSurma) for proof-reading and suggestions, and [Ryan Cavanaugh](https://twitter.com/SeaRyanC) for correcting me on the TypeScript stuff.
 
 </small>
