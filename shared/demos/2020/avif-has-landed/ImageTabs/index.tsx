@@ -8,6 +8,7 @@ interface Props {
   maxWidth: number;
   initial: number;
   category?: string;
+  previewPadding?: string;
   transform?: string;
 }
 
@@ -45,14 +46,17 @@ export default class ImageTabs extends Component<Props, State> {
   };
 
   render(
-    { images, maxWidth, ratio, transform, category }: Props,
+    { images, maxWidth, ratio, transform, category, previewPadding }: Props,
     { selected, loading }: State,
   ) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
 
     return (
       <div class="image-tabs">
-        <div class="image-tabs-preview">
+        <div
+          class="image-tabs-preview"
+          style={{ padding: previewPadding || '' }}
+        >
           <div
             class="image-tabs-transformer"
             style={{ transform: transform || '' }}
