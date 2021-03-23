@@ -9,6 +9,9 @@ interface Props {
   initial: number;
   category?: string;
   previewPadding?: string;
+  backgroundStyle?: {
+    [key: string]: string | number;
+  };
   transform?: string;
 }
 
@@ -46,7 +49,15 @@ export default class ImageTabs extends Component<Props, State> {
   };
 
   render(
-    { images, maxWidth, ratio, transform, category, previewPadding }: Props,
+    {
+      images,
+      maxWidth,
+      ratio,
+      transform,
+      category,
+      previewPadding,
+      backgroundStyle,
+    }: Props,
     { selected, loading }: State,
   ) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
@@ -57,6 +68,9 @@ export default class ImageTabs extends Component<Props, State> {
           class="image-tabs-preview"
           style={{ padding: previewPadding || '' }}
         >
+          {backgroundStyle && (
+            <div class="image-tabs-background" style={backgroundStyle} />
+          )}
           <div
             class="image-tabs-transformer"
             style={{ transform: transform || '' }}

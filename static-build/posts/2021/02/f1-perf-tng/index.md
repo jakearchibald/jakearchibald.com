@@ -221,7 +221,7 @@ I'm going to start each team with a summary. Don't worry if you're not sure what
   <dt>Compression</dt>
   <dd>
     <img alt="Not great" class="perf-icon" width="36" height="36" src="asset-url:./images/warn.svg">
-    <div class="perf-data">Efficient gzip (brotli would save ~33%)</div>
+    <div class="perf-data">gzip (brotli would save ~33%)</div>
   </dd>
   <dt>Code efficiency</dt>
   <dd>
@@ -432,7 +432,15 @@ I took a look at the source it's littered with large inline SVG, which could be 
     background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
     background-size: 20px 20px;
   }
+  .image-tabs-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
   .image-tabs-transformer {
+    position: relative;
     display: grid;
     align-items: stretch;
     justify-items: stretch;
@@ -507,7 +515,7 @@ I took a look at the source it's littered with large inline SVG, which could be 
 }</script>
 </figure>
 
-But the real problem here is that it's inlined. Inlining is great for removing the request/response overhead for blocking or key assets. The downside of inlining is the browser has to download it all before it gets to the next thing in the markup.
+But the real problem here is that it's inlined. "Inlining" means that rather than have the resource in a separate file, it's including in the HTML. Inlining is great for removing the request/response overhead for blocking or key assets. The downside of inlining is the browser has to download it all before it gets to the next thing in the markup.
 
 In this case, it's a logo that appears far down the page, but it ends up using bandwidth that could be better used for urgent resources like the CSS.
 
@@ -620,7 +628,7 @@ Ok, that's Alpha Tauri done. Are you ready for 9 more? They don't all have the s
   <dt>Compression</dt>
   <dd>
     <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
-    <div class="perf-data">Efficient gzip (brotli would save ~14%)</div>
+    <div class="perf-data">gzip (brotli would save ~14%)</div>
   </dd>
   <dt>Code efficiency</dt>
   <dd>
@@ -645,7 +653,7 @@ Ok, that's Alpha Tauri done. Are you ready for 9 more? They don't all have the s
   <dt>Image efficiency</dt>
   <dd>
     <img alt="Bad" class="perf-icon" width="36" height="36" src="asset-url:./images/stop.svg">
-    <div class="perf-data">Poor TODO add detail</div>
+    <div class="perf-data">Poor – main image could be 90% smaller</div>
   </dd>
 </dl>
 
@@ -749,8 +757,7 @@ We've got two results now, we should probably get a scoreboard going…
   font-family: 'Titillium Web';
   font-style: normal;
   font-weight: 600;
-  font-display: block;
-  src: url(https://fonts.gstatic.com/s/titilliumweb/v9/NaPDcZTIAOhVxoMyOr9n_E7ffBzCGIVzY5abuWIGxA.woff2) format('woff2');
+  src: url(https://fonts.gstatic.com/s/titilliumweb/v9/NaPDcZTIAOhVxoMyOr9n_E7ffBzCGItzY5abuWI.woff2) format('woff2');
 }
 .f1-scoreboard {
   font-size: 1rem;
@@ -762,7 +769,7 @@ We've got two results now, we should probably get a scoreboard going…
   text-align: right;
   counter-reset: pos;
   width: 100%;
-  max-width: 404px;
+  max-width: 420px;
   margin: 1em 0;
 }
 .f1-scoreboard th {
@@ -817,15 +824,38 @@ We've got two results now, we should probably get a scoreboard going…
 .f1-scoreboard .faster {
   background: #45b720;
 }
+.f1-scoreboard .team {
+  display: grid;
+  grid-template-columns: 4px auto;
+  gap: 0.4em;
+}
+.f1-scoreboard .team::before {
+  content: '';
+  background: var(--team-color);
+}
 </style>
 
 <table class="f1-scoreboard">
   <thead>
     <tr><th class="pos-col"></th> <th class="team-col"></th> <th class="num-col">Score</th> <th class="corner-border num-col">vs 2019</th> <th style="visibility: hidden" class="num-col"></th></tr>
   </thead>
-  <tr><th></th> <th>Alpha Tauri</th> <td>22.1</td> <td class="slower">+9.3</td> <td class="corner-border">Leader</td></tr>
-  <tr><th></th> <th>Alfa Romeo</th> <td>23.4</td> <td class="slower">+3.3</td> <td>+1.3</td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #2b4562">Alpha Tauri</span></th> <td>22.1</td> <td class="slower">+9.3</td> <td class="corner-border">Leader</td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #900000">Alfa Romeo</span></th> <td>23.4</td> <td class="slower">+3.3</td> <td></td></tr>
 </table>
+
+<script>
+  // haha this is so hacky
+  function updateScoreboardGaps(table) {
+    const rows = [...table.querySelectorAll('tbody > tr')];
+    const mainTime = Number(rows[0].querySelector('td').textContent);
+    for (const row of rows.slice(1)) {
+      const time = Number(row.children[2].textContent);
+      row.children[4].textContent = '+' + (time - mainTime).toFixed(1);
+    }
+  }
+
+  updateScoreboardGaps(document.currentScript.previousElementSibling);
+</script>
 
 Alpha Tauri narrowly keeps the lead. Let's see if that continues…
 
@@ -838,8 +868,8 @@ Alpha Tauri narrowly keeps the lead. Let's see if that continues…
 
 <figure class="full-figure max-figure scrollable-img">
 <picture>
-  <source type="image/avif" srcset="asset-url:./film/alfa-romeo.avif">
-  <img width="6592" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./film/alfa-romeo.png">
+  <source type="image/avif" srcset="asset-url:./film/red-bull.avif">
+  <img width="14444" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./film/red-bull.png">
 </picture>
 </figure>
 <dl class="perf-summary">
@@ -867,8 +897,8 @@ Alpha Tauri narrowly keeps the lead. Let's see if that continues…
   </dd>
   <dt>First render</dt>
   <dd>
-    <img alt="Bad" class="perf-icon" width="36" height="36" src="asset-url:./images/stop.svg">
-    <div class="perf-data">TODO (and everything following)</div>
+    <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
+    <div class="perf-data">No blocking resources</div>
   </dd>
   <dt>Connection</dt>
   <dd>
@@ -878,27 +908,27 @@ Alpha Tauri narrowly keeps the lead. Let's see if that continues…
   <dt>Caching</dt>
   <dd>
     <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
-    <div class="perf-data">Some lack of versioning, but otherwise good</div>
+    <div class="perf-data">Good</div>
   </dd>
   <dt>Compression</dt>
   <dd>
-    <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
-    <div class="perf-data">Efficient gzip (brotli would save ~14%)</div>
+    <img alt="Not great" class="perf-icon" width="36" height="36" src="asset-url:./images/warn.svg">
+    <div class="perf-data">gzip (brotli would save ~45%)</div>
   </dd>
   <dt>Code efficiency</dt>
   <dd>
     <img alt="Bad" class="perf-icon" width="36" height="36" src="asset-url:./images/stop.svg">
-    <div class="perf-data">Minified, but CSS 87% unused, JS 83% unused</div>
+    <div class="perf-data">Minified, 80% unused code in large blocking resource</div>
   </dd>
   <dt>Idle efficiency</dt>
   <dd>
-    <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
-    <div class="perf-data">Great! Ticks every 1000ms</div>
+    <img alt="Not great" class="perf-icon" width="36" height="36" src="asset-url:./images/warn.svg">
+    <div class="perf-data">Ticks every 200ms</div>
   </dd>
   <dt>Cookie modal</dt>
   <dd>
-    <img alt="Good" class="perf-icon" width="36" height="36" src="asset-url:./images/tick.svg">
-    <div class="perf-data">Small banner arrives with content</div>
+    <img alt="Bad" class="perf-icon" width="36" height="36" src="asset-url:./images/stop.svg">
+    <div class="perf-data">Full-screen and arrives very late</div>
   </dd>
   <dt>Layout stability</dt>
   <dd>
@@ -911,6 +941,111 @@ Alpha Tauri narrowly keeps the lead. Let's see if that continues…
     <div class="perf-data">Poor TODO add detail</div>
   </dd>
 </dl>
+
+Now we're talking! This is a graphically rich, engaging site, and the performance is pretty good! I'm not going to show the whole timeline, but here's the first bit:
+
+<figure class="full-figure max-figure">
+<img width="440" height="180" alt="" decoding="async" loading="lazy" src="asset-url:./waterfall/red-bull.png" style="width: 100%; height: auto;">
+</figure>
+
+This shows that we get our first-render while the browser is still downloading the HTML, meaning there are _no_ blocking resources. This suggests the CSS is inlined, and from looking at the source, yep, it is.
+
+There are some issues that I've already covered looking at other sites:
+
+- [Key issue: Late modal](#key-issue-late-modal): There's a full-screen modal that lands after almost a minute.
+- [Issue: Fonts on another server](#key-issue-blocking-resource-on-another-server): This delays the fonts load by a couple of seconds. A few preload tags would help here too.
+
+And some stuff that's worth looking at in more detail:
+
+## Issue: Too much inlining
+
+As I mentioned earlier, inlining avoids request/response overhead, which is great for render-blocking resources. But also, since it's part of the _page_, you can tailor the inlining for _that page_.
+
+However, that doesn't seem to be what's happening here. Here's what I see in [Chrome DevTools' coverage panel](https://developers.google.com/web/tools/chrome-devtools/coverage):
+
+<figure class="full-figure max-figure">
+<img width="1472" height="93" alt="" decoding="async" loading="lazy" src="asset-url:./images/red-bull-coverage.png" style="width: 100%; height: auto;">
+</figure>
+
+The code in the page is 79.5% unused, which amounts to over 600kB. Compare this to the coverage on [Squoosh](https://squoosh.app/):
+
+<figure class="full-figure max-figure">
+<img width="1494" height="166" alt="" decoding="async" loading="lazy" src="asset-url:./images/squoosh-coverage.png" style="width: 100%; height: auto;">
+</figure>
+
+…where we used inline content just for the CSS and script needed for the first interaction. The first row there is a non-blocking resource, where coverage doesn't matter, but the bottom row is the page, where only 7kB is unused.
+
+A second or two could be shaved off time-to-content on the Red Bull site by making the inlined code tailored to what the page needs for that first-render. The rest can be loaded via external resources.
+
+## Issue: Large primary image
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "props": {
+    "ratio": 0.5,
+    "initial": 2,
+    "maxWidth": 360,
+    "images": [
+      ["Original WebP (asset-pretty-size:./img-optim/red-bull-main.webp)", "asset-url:./img-optim/red-bull-main.webp"],
+      ["Optimised WebP (asset-pretty-size:./img-optim/red-bull-main-optim.webp)", "asset-url:./img-optim/red-bull-main-optim.webp"],
+      ["AVIF (asset-pretty-size:./img-optim/red-bull-main.avif)", "asset-url:./img-optim/red-bull-main.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+It's great to see them using WebP, but the quality is just set too high. Yes, some detail is lost in the compressed versions, but remember this image has text over the top, and another image over the top.
+
+Actually, let's talk about that image…
+
+## Issue: Large overlay image
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "props": {
+    "ratio": 1.395348837,
+    "initial": 2,
+    "backgroundStyle": { "background-color": "rgba(0, 0, 0, 0.5)" },
+    "category": "redBull",
+    "images": [
+      ["Original WebP (asset-pretty-size:./img-optim/red-bull-overlay.webp)", "asset-url:./img-optim/red-bull-overlay.webp"],
+      ["Optimised WebP (asset-pretty-size:./img-optim/red-bull-overlay-optim.webp)", "asset-url:./img-optim/red-bull-overlay-optim.webp"],
+      ["AVIF (asset-pretty-size:./img-optim/red-bull-overlay.avif)", "asset-url:./img-optim/red-bull-overlay.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+This image sits over the top of the main carousel, and it's a great bit of the design. Again, they're using WebP, but maybe not with the right settings. But even with optimised settings, the WebP is still big.
+
+This is because WebP's alpha channel compression is lossless, whereas AVIF's alpha compression is lossy, so it performs much better here.
+
+It's still pretty pretty large though, so I'd consider serving a scaled-down version for mobile devices.
+
+## Issue: Poor image format choice
+
+TODO
+
+## Issue: Large inlined blurry image
+
+TODO
+
+## Scoreboard
+
+<table class="f1-scoreboard">
+  <thead>
+    <tr><th class="pos-col"></th> <th class="team-col"></th> <th class="num-col">Score</th> <th class="corner-border num-col">vs 2019</th> <th style="visibility: hidden" class="num-col"></th></tr>
+  </thead>
+  <tr><th></th> <th><span class="team" style="--team-color: #0600ef">Red Bull</span></th> <td>8.6</td> <td class="faster">-7.2</td> <td class="corner-border">Leader</td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #2b4562">Alpha Tauri</span></th> <td>22.1</td> <td class="slower">+9.3</td> <td></td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #900000">Alfa Romeo</span></th> <td>23.4</td> <td class="slower">+3.3</td> <td></td></tr>
+</table>
+
+<script>
+  updateScoreboardGaps(document.currentScript.previousElementSibling);
+</script>
 
 # Notes
 

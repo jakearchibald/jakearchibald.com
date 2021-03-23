@@ -77,11 +77,22 @@ import machineWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/09/a
 import machineJpgMatch from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg';
 import machineJpgMatchSize from 'asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg';
 
+import redBullWebpOriginal from 'asset-url:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay.webp';
+import redBullWebpOriginalSize from 'asset-pretty-size:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay.webp';
+import redBullWebpGood from 'asset-url:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay-optim.webp';
+import redBullWebpGoodSize from 'asset-pretty-size:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay-optim.webp';
+import redBullAvif from 'asset-url:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay.avif';
+import redBullAvifSize from 'asset-pretty-size:static-build/posts/2021/02/f1-perf-tng/img-optim/red-bull-overlay.avif';
+
 import DecodedImg from 'shared/demos/2020/avif-has-landed/DecodedImg';
 
 const categories: {
   [category: string]:
-    | { width: number; options: { [name: string]: string } }
+    | {
+        width: number;
+        options: { [name: string]: string };
+        backgroundStyle?: { [name: string]: string };
+      }
     | undefined;
 } = {
   f1: {
@@ -134,12 +145,22 @@ const categories: {
       [`WebP - full color lossless - ${machineWebpLosslessSize}`]: machineWebpLossless,
     },
   },
+  redBull: {
+    width: 1920,
+    backgroundStyle: { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
+    options: {
+      [`WebP - original - ${redBullWebpOriginalSize}`]: redBullWebpOriginal,
+      [`WebP - acceptable - ${redBullWebpGoodSize}`]: redBullWebpGood,
+      [`AVIF - acceptable - ${redBullAvifSize}`]: redBullAvif,
+    },
+  },
 };
 
 const loadingTimeout = 600;
 const urlParams = new URLSearchParams(location.search);
 const category = categories[urlParams.get('show') || 'f1'] || categories.f1!;
 const images = Object.entries(category.options);
+const backgroundStyle = category.backgroundStyle || {};
 
 const initalLeftImg = images[0][1];
 const imgParam = urlParams.get('img');
@@ -204,7 +225,7 @@ class App extends Component<{}, State> {
 
   render({}, { leftImgSrc, rightImgSrc, leftLoading, rightLoading }: State) {
     return (
-      <div>
+      <div class="compare-root" style={backgroundStyle}>
         <ZoomableTwoUp
           left={
             <div class={`img-container${leftLoading ? ' loading' : ''}`}>
