@@ -3,7 +3,13 @@ import DecodedImg from '../DecodedImg';
 import 'shared/loading-spinner';
 
 interface Props {
-  images: [title: string, url: string][];
+  images: [
+    title: string,
+    url: string,
+    overlayStyle?: {
+      [key: string]: string | number;
+    },
+  ][];
   ratio: number;
   maxWidth: number;
   initial: number;
@@ -61,6 +67,10 @@ export default class ImageTabs extends Component<Props, State> {
     { selected, loading }: State,
   ) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
+    const overlayStyle = images[selected][2] && {
+      maxWidth,
+      ...images[selected][2],
+    };
 
     return (
       <div class="image-tabs">
@@ -88,6 +98,9 @@ export default class ImageTabs extends Component<Props, State> {
               />
             )}
           </div>
+          {overlayStyle && (
+            <div class="image-tabs-overlay" style={overlayStyle} />
+          )}
           {loading && (
             <div class="image-tabs-loading">
               <loading-spinner />
