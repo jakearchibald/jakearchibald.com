@@ -1,14 +1,23 @@
 ---
 title: Who has the fastest website in F1, in 2021? Part 1
-date: 2021-03-29 01:00:00
-summary: TODO.
-meta: TODO.
-#image: 'asset-url:./img.png'
+date: 2021-03-25 01:00:00
+summary: Deep-diving on the performance of F1 websites.
+meta: Deep-diving on the performance of F1 websites.
+image: 'asset-url:./img.jpg'
 ---
 
-In 2019 I did a [performance review of F1 websites](/2019/f1-perf/), and it was fun, so I figured I'd do it again, but bigger and better (I hope). Turns out a lot has changed in the past two years, and well, some things haven't changed.
+In 2019 I did a [performance review of F1 websites](/2019/f1-perf/), and it was fun so I figured I'd do it again, but bigger (definitely) and better (I hope). Turns out a lot has changed in the past two years, and well, some things haven't changed.
 
 Not interested in F1? It shouldn't matter. This is just a performance review of 10 recently-built/updated sites that have broadly the same goal, but are built by different teams, and have different performance issues.
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": false,
+    "partIndex": 0
+  }
+}</script>
 
 # Methodology
 
@@ -46,7 +55,7 @@ I'm not comparing how 'good' the website is in terms of design, features etc etc
 
 I'm only testing Chrome. Sorry. There's only one of me and I get tired. In fact, with 10 sites to get through, it's possible I'll miss something obvious, but I'll post the raw data so feel free to take a look.
 
-Also, and perhaps most importantly, the results aren't a reflection of the abilities of the developers. We don't know how many were on each project, we don't know what their deadline was or any other constraints. My goal here is to show common performance issues that exist on real-world sites.
+Also, and perhaps most importantly, the results aren't a reflection of the abilities of the developers. We don't know how many were on each project, we don't know what their deadline was or any other constraints. My goal here is to show common performance issues that exist on real-world sites, how to identify them, and how to fix them.
 
 Ok, that's enough waffle, let's GO, GO, GO!
 
@@ -194,9 +203,9 @@ Here's what they could do to make major improvements to load performance:
 
 Some of these delays overlap, so let's dive in:
 
-This was a really interesting one to profile. More often than not, poor content-render performance is down to JavaScript in some way, but in this case it looks like someone has done the right thing and avoided JS blocking, but non-JS things have spoiled the performance party.
+This was a really interesting one to profile. More often than not, poor content-render performance is down to JavaScript in some way, but in this case it looks like someone has done the right thing and avoided render-blocking JS, but non-JS things have spoiled the performance party.
 
-I use [Chrome DevTools' "Performance" panel](https://developers.google.com/web/tools/chrome-devtools/evaluate-performance/) during development to measure page performance, and later use [WebPageTest](https://www.webpagetest.org/) to test it on a low-end device. WebPageTest gives you a waterfall of resources, and since the page renders around the 17s mark, I focus on everything that loads before that (don't worry if you don't understand it yet):
+I use [Chrome DevTools' "Performance" panel](https://developer.chrome.com/docs/devtools/evaluate-performance/) during development to measure page performance, and later use [WebPageTest](https://www.webpagetest.org/) to test it on a low-end device. WebPageTest gives you a waterfall of resources, and since the page renders around the 17s mark, I focus on everything that loads before that (don't worry if you don't understand it yet):
 
 <figure class="full-figure max-figure">
 <img style="width: 100%; height: auto;" width="486" height="264" alt="" decoding="async" loading="lazy" src="asset-url:./alpha-tauri-waterfall.png">
@@ -217,7 +226,7 @@ The main issue here is a CSS font tracker hosted on another server, and it accou
 
 ### Parallelise sequential resources
 
-That late-loading CSS on row 10 was a bad smell, so I took a closer look at the request in Chrome DevTools' network panel:
+That late-loading CSS on row 10 is a bad smell, so I took a closer look at the request in Chrome DevTools' network panel:
 
 <figure class="full-figure max-figure">
   <img style="height:auto" width="1126" height="150" alt="" decoding="async" loading="lazy" src="asset-url:./tauri-devtools.png">
@@ -235,9 +244,9 @@ Which contains:
 @import url('//hello.myfonts.net/count/3ad3ad');
 ```
 
-The HTTP/2 is good at loading things in parallel, but it can only load what it knows about. In this case it doesn't know about the above resource until it loads the CSS that contains that line.
+The browser is good at loading things in parallel, but it can only load what it knows about. In this case it doesn't know about the above resource until it loads the CSS that contains that line.
 
-The ideal way to solve this is to delete that `@import` above, which would save 7 seconds, but that line is a contractual requirement from the owners of the web font, who use it to ensure sites have paid for font usage. I feel there are better ways for the font foundry to achieve this, but that isn't in the control of the site we're looking at, unless they switch to open source fonts. Let's assume they can't do that, and work around the problem.
+The ideal way to solve this is to delete that `@import` above, which would save 7 seconds, but that line is a requirement made by the owners of the web font, who use it to ensure sites have paid for font usage. I feel there are better ways for the font foundry to achieve this, but that isn't in the control of the site we're looking at. They could switch to open source fonts, which don't have these requirements & restrictions, but let's assume they can't do that, so we'll work around the problem.
 
 We need to turn this from a sequence of requests, to two requests in parallel, which we can do using `preload`:
 
@@ -253,11 +262,11 @@ This quick change would shave **3 seconds off the first-content delay.** That is
 
 ### Avoid blocking resources on other servers
 
-Back in the bad old days of HTTP/1.1 browsers had to set up a new HTTP connection for every in-parallel request, and browsers were limited to between 2-8 connections per server (depending on the browser and the version). This was extremely slow, especially if SSL was involved, since there's a chunk of up-front cost there.
+Back in the bad old days of HTTP/1.1 browsers had to set up a new HTTP connection for every in-parallel request, and browsers were limited to between 2-8 connections per server (depending on the browser and the version). This was extremely slow, especially if SSL was involved, since there's a chunk of up-front cost.
 
-Because this limit was per-server, you could work around the limit by adding more servers.
+Because this limit was per-origin, you could work around the limit by adding more origins.
 
-However, HTTP/2 came along and gave us massive parallelism across a single connection. You only pay the sort of connection setup once… if your resources are on the same server that is.
+However, HTTP/2 came along and gave us massive parallelism across a single connection. You only pay the cost of connection setup once… if your resources are on the same server that is.
 
 <figure class="full-figure max-figure">
 <svg viewBox="0 0 486 212">
@@ -267,7 +276,7 @@ However, HTTP/2 came along and gave us massive parallelism across a single conne
 </svg>
 </figure>
 
-The requests on rows 1 & 10 have a little extra bit at the start, representing the various bits of connection setup. Row 1 has it because it's the first connection, and row 10 has it because it's to a different server.
+The requests on rows 1 & 10 have an extra thinner bit at the start, representing the various bits of connection setup. Row 1 has it because it's the first request to the site, and row 10 has it because it's to a different site.
 
 That extra connection setup accounts for 5 seconds of blocking time. Using a preload tag would help start this connection earlier, but it can't eliminate the cost.
 
@@ -275,7 +284,7 @@ Unfortunately what was 'best practice' in HTTP/1.1 times became 'worst practice'
 
 In this case, because it's a tracker, it can't just be moved to the site's own server, so we need another solution:
 
-### Load cross-origin fonts async
+### Load cross-origin font CSS async
 
 Since we can't do anything else about it, the best thing we can do is remove the render-blocking nature of that separate connection. We can do that by moving all the `@font-face` related CSS, along with the `@import`, into its own stylesheet, and async-load it in the `<head>`:
 
@@ -285,13 +294,15 @@ Since we can't do anything else about it, the best thing we can do is remove the
   rel="stylesheet"
   href="/font-css.css"
   media="print"
-  onload="this.media='all'"
+  onload="media='all'"
 />
 ```
 
-This technique was developed by the [filament group](https://www.filamentgroup.com/lab/load-css-simpler/). Browsers will download print stylesheets ahead of time, but they won't render-block. However, they will download it at a low priority, so the `preload` counteracts that and makes it high priority. When the stylesheet has loaded, it changes `media` to `all`, so it applies to the page.
+This technique was developed by the [filament group](https://www.filamentgroup.com/lab/load-css-simpler/). Browsers will download print stylesheets ahead of time, but they won't block rendering. However, they will download it at a low priority, so the `preload` is used to make it high priority. When the stylesheet has loaded, it changes `media` to `all`, so it applies to the page.
 
-As a side-effect, your fonts will display using fallbacks before the CSS loads. Make sure this looks ok, and make sure your `@font-face` rules use [`font-display: swap`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display) so this pattern continues once the CSS loads.
+As a side-effect, fonts will display using fallbacks before the CSS loads. Make sure this looks ok, and make sure your `@font-face` rules use [`font-display: swap`](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display) so this pattern continues once the CSS loads.
+
+If you're not happy with `swap`, use the [font loading API](https://web.dev/optimize-webfont-loading/#the-font-loading-api) to get even more control over how the page displays while fonts are loading.
 
 And one last thing:
 
@@ -317,7 +328,7 @@ Phew, ok, next issue:
 
 ## Key issue: Late modal
 
-I don't have anything nice to say about 'cookie consent' modals. I think they're doing a huge amount of damage to the web exclusively, when the problems they're trying to solve happen on other platforms. Also, I don't think they solve the problems they're trying to solve. But hey, I'm not a lawyer, so I've mostly ignored them in this test, and haven't factored them into a site's score.
+I don't have anything nice to say about 'cookie consent' modals. I think they're doing a huge amount of damage to the web exclusively, while the problems they're trying to solve happen on other platforms too. Also, I don't think they solve the problems they're trying to solve. But hey, I'm not a lawyer, so I've mostly ignored them in this test, and haven't factored them into a site's score.
 
 However, throwing up a modal after the user has been using the page for 30 seconds is an awful user experience. The only 'sensible' way to show one of these modals is to use a small-as-you-can-make-it bit of JS at the top of the page, so you can show it before anything else, and the user can get it out of the way early.
 
@@ -342,7 +353,7 @@ It turns out these are preloaded images:
 <link rel="preload" href="alphatauri_tablet.jpg" as="image" />
 ```
 
-I'm surprised that the browser sent the preload request before the CSS, but request priority is a really delicate balance between what the browser asks for and what the server chooses to send. Maybe putting the preload later in the source would help, or avoid using the preload at all and instead use an `<img>` to load the image (right now it's a CSS background).
+I'm surprised that the browser sent the preload request before the CSS, but request priority is a really delicate balance between what the browser asks for and what the server chooses to send. Maybe putting the preload later in the source would help, or avoid using the preload at all and instead use an `<img>` to load the image (currently it's a CSS background).
 
 ## Issue: Unnecessary preloading
 
@@ -359,7 +370,7 @@ Those warnings are triggered by preloads like this:
 <link rel="preload" href="alphatauri_tablet.jpg" as="image" />
 ```
 
-These are images for the main carousel at the top of the page. They added these for really sensible reasons; the carousel is created with JavaScript, and it triggers the loading of the images, meaning those images start downloading really late. Since these are at the top of the page, it's important that they load early, and preloading solves that.
+These are images for the main carousel at the top of the page. The developers added these for really sensible reasons; the carousel is created with JavaScript, and it triggers the loading of the images, meaning those images would otherwise start downloading really late. Since these are at the top of the page, it's important that they load early, and preloading solves that.
 
 However, they're preloading the desktop _and_ tablet versions of the image, throwing away the benefit of responsive images.
 
@@ -394,7 +405,7 @@ The HTML is 213kB, which is pretty big given the content. HTML downloads with re
 </svg>
 </figure>
 
-The darker areas of the response in the waterfall represents bytes being received, and as you can see the HTML downloads entirely before other resources download.
+The darker areas of the response in the waterfall represents bytes being received, and as you can see the HTML downloads entirely before other resources start downloading.
 
 I took a look at the source it's littered with large inline SVG, which could be optimised:
 
@@ -501,7 +512,9 @@ I took a look at the source it's littered with large inline SVG, which could be 
 }</script>
 </figure>
 
-But the real problem here is that it's inlined. "Inlining" means that rather than have the resource in a separate file, it's including in the HTML. Inlining is great for removing the request/response overhead for blocking or key assets. The downside of inlining is the browser has to download it all before it gets to the next thing in the markup.
+I optimised the SVG using [SVGOMG](https://jakearchibald.github.io/svgomg/), but WebP seems like a better option (which I created using [Squoosh](https://squoosh.app/)).
+
+But the real problem here is that it's inlined. "Inlining" means, rather than have the resource in a separate file, it's including in the HTML. Inlining is great for removing the request/response overhead for blocking or key assets. The downside of inlining is the browser has to download it all before it gets to the next thing in the markup.
 
 In this case, it's a logo that appears far down the page, but it ends up using bandwidth that could be better used for urgent resources like the CSS.
 
@@ -521,6 +534,7 @@ The first image that appears takes up most of the viewport, so it's important to
     "initial": 2,
     "images": [
       ["Original JPEG (asset-pretty-size:./img-optim/gasly.jpg)", "asset-url:./img-optim/gasly.jpg"],
+      ["Optimised JPEG (asset-pretty-size:./img-optim/gasly-optim.jpg)", "asset-url:./img-optim/gasly-optim.jpg"],
       ["WebP (asset-pretty-size:./img-optim/gasly.webp)", "asset-url:./img-optim/gasly.webp"],
       ["AVIF (asset-pretty-size:./img-optim/gasly.avif)", "asset-url:./img-optim/gasly.avif"]
     ]
@@ -550,14 +564,25 @@ I wrote a [hacky script to automate some of this](https://github.com/jakearchiba
 <video src="asset-url:./alpha-tauri-compare.mp4" controls></video>
 </figure>
 <dl class="perf-summary">
-  <dt>Links</dt>
+  <dt>Original</dt>
   <dd>
     <div class="perf-data">
-      <a href="https://www.scuderiaalphatauri.com/en/">Original</a> | <a href="https://f1-performance-demo.netlify.app/alpha-tauri/">Optimised</a>
+      <a href="https://www.scuderiaalphatauri.com/en/">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiVM_ef153cba16916a413bccfe35025fbe0d-r%3A1-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)
     </div>
   </dd>
+  <dt>Optimised</dt>
+  <dd><div class="perf-data"><a href="https://f1-performance-demo.netlify.app/alpha-tauri/">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiYT_4722276ba66274974bc724670fda554f-r%3A3-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)</div></dd>
 </dl>
 
 # And that's it for now!
 
-I'll be posting part two tomorrow, which features TODO
+I'm not sure how may parts this article will be. It probably depends on how much there is to write about each site.
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": false,
+    "partIndex": 0
+  }
+}</script>

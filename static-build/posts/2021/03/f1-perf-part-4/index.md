@@ -16,6 +16,10 @@ TODO this is part 4, link to other parts.
   .scrollable-img img {
     max-width: none;
   }
+  .scrollable-img svg {
+    min-width: max-content;
+    width: 100%;
+  }
 
   .full-figure + .scrollable-img , .full-figure + .perf-summary {
     margin-top: -1em;
@@ -281,59 +285,170 @@ TODO this is part 4, link to other parts.
   }
 </script>
 
-Cover Williams first
-
-# Aston Martin
+# Williams
 
 <figure class="full-figure max-figure video-aspect">
 <svg viewBox="0 0 408 592"></svg>
-<video src="asset-url:./red-bull.mp4" controls></video>
+<video src="asset-url:./williams.mp4" controls></video>
 </figure>
 
 <figure class="full-figure max-figure scrollable-img">
-<picture>
-  <source type="image/avif" srcset="asset-url:./red-bull-film.avif">
-  <img width="14444" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./red-bull-film.png">
-</picture>
+<img width="3333" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./williams-film.png">
 </figure>
 <dl class="perf-summary">
   <dt>Link</dt>
   <dd>
     <div class="perf-data">
-      <a href="https://www.astonmartinf1.com/en-GB/">Aston Martin Cognizant Formula One Team</a>
+      <a href="https://www.williamsf1.com/">Williams Racing</a>
     </div>
   </dd>
   <dt>First run</dt>
   <dd>
-    <div class="perf-data">6.2s (<a href="https://www.webpagetest.org/video/compare.php?tests=210318_XiAA_98fe08e436b3e9061abdb1fe6fdc6978-r%3A2-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)</div>
+    <div class="perf-data">6.7s (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiEN_6fb8430d86c8985be8d7505bb2258ad4-r:3-c:0">raw results</a>)</div>
   </dd>
   <dt>Second run</dt>
   <dd>
-    <div class="perf-data">2.7s (<a href="https://www.webpagetest.org/video/compare.php?tests=210318_XiAA_98fe08e436b3e9061abdb1fe6fdc6978-r:2-c:1">raw results</a>)</div>
+    <div class="perf-data">4.4s (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiEN_6fb8430d86c8985be8d7505bb2258ad4-r:3-c:1">raw results</a>)</div>
   </dd>
   <dt>Total</dt>
   <dd>
-    <div class="perf-data">8.9s</div>
+    <div class="perf-data">11.1s</div>
   </dd>
   <dt>2019 total</dt>
   <dd>
-    <div class="perf-data"><a href="/2019/f1-perf/#red-bull">84.2s (2021 site is 75.3s faster)</a></div>
+    <div class="perf-data"><a href="/2019/f1-perf/#red-bull">14.1s (2021 site is 3s faster)</a></div>
   </dd>
 </dl>
 
-## Key issue: External web font CSS
+Not bad! And it's nice to see the cookie modal appearing along with the content. Well, not nice, but y'know, better than it slamming you in the face 30 seconds later.
 
-It loads more CSS too.
+## Possible improvements
+
+- **2 seconds delay to content-render** caused by CSS serving issues. Covered in detail below.
+- **4 second delay to main image** caused by HTTP/1.1 and priorities, and additional connections. Covered in detail below.
+- **Layout instability** caused by `<img>`s. Covered in detail below.
+
+Remember these delays overlap in some cases.
+
+## Key issue: Delayed CSS
+
+Here's the start of the waterfall:
+
+<figure class="full-figure max-figure scrollable-img">
+<svg width="727" viewBox="0 37 727 227">
+<foreignObject x="0" y="0" width="930" height="437">
+<img width="930" height="437" alt="" decoding="async" loading="lazy" src="asset-url:./williams-waterfall.png">
+</foreignObject>
+</svg>
+</figure>
+
+There are a couple of bad smells here. On row 6 we see a new connection being made for some render-blocking CSS on another server. The reason this causes issues is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), and the solution is to move the CSS onto the same server as the page, which would save around 1.5 seconds.
+
+But, in addition to that, the server issues a redirect, so the real resource isn't received until row 10. This wastes at least another 0.5 seconds. Again, the solution is to move the CSS to the same server, and perhaps bundle it with the current CSS.
+
+## Key issue: HTTP/1.1
+
+Here's the start of the waterfall:
+
+<figure class="full-figure max-figure">
+<svg viewBox="0 37 693 197">
+<foreignObject x="0" y="0" width="930" height="437">
+<img width="930" height="437" alt="" decoding="async" loading="lazy" src="asset-url:./williams-waterfall.png">
+</foreignObject>
+</svg>
+</figure>
+
+See how it immediately starts three connections to the same server (the thinner part of the bar at the start of rows 1-3), and again in row 9? This is the old musty stench of HTTP/1.1, and Chrome DevTools confirms it:
+
+<figure class="full-figure max-figure">
+<img style="height:auto" width="1258" height="395" alt="" decoding="async" loading="lazy" src="asset-url:./network-protocol.png">
+</figure>
+
+HTTP/1.1 can only handle a single request/response over a connection, unlike HTTP/2 which can handle many in parallel. To try to work around the shortcomings of HTTP/1.1, the browser immediately spins up multiple connections to the server, and even more later on.
+
+It's unclear to me how much of an impact this causes. It might be minimal in terms of first-render, but it's likely to get in the way of other optimisations, such as moving more content to the same server, as browsers will only download 6-8 things at once over HTTP/1.1.
+
+## Issue: Delay to main image
+
+I haven't been able to full explain this issue, but something is delaying the images:
+
+<figure class="full-figure max-figure scrollable-img">
+<img width="930" height="437" alt="" decoding="async" loading="lazy" src="asset-url:./williams-waterfall.png">
+</figure>
+
+The main images start appearing in row 20. Yes, they're on another server so they're delayed by having to set up a new connection, but something is causing that to happen really late.
+
+My best theory is that Chrome is throttling the amount of connection set-ups it will do in parallel, and that's exhausted by the connections needed due to HTTP/1.1. I'm pretty confident this issue would go away if HTTP/2 was used.
+
+## Issue: Layout instability due to `<img>`
+
+It isn't visible in the video due to the cookie modal, but once you've cleared that, you start to see some layout instability:
+
+<figure class="full-figure max-figure video-aspect">
+<svg viewBox="0 0 360 640"></svg>
+<video style="background: transparent" src="asset-url:./layout.mp4" controls></video>
+</figure>
+
+Here's (roughly) the HTML:
 
 ```html
-<link rel="preload" href="/path/to/my.css" as="style" />
-<link
-  rel="stylesheet"
-  href="/path/to/my.css"
-  media="print"
-  onload="this.media='all'"
-/>
+<img src="…" alt="…" />
 ```
+
+And here's the CSS:
+
+```css
+img {
+  display: block;
+  width: 100%;
+}
+```
+
+When this happens, the image takes up zero space until the browser downloads enough of the image to know its width and height, and then it reserves space for the image.
+
+You can avoid this issue with this pattern:
+
+HTML:
+
+```html
+<img width="600" height="315" src="…" alt="…" />
+```
+
+…where the width and height give the correct aspect ratio of the image. And CSS:
+
+```css
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+```
+
+Now the browser will assume a 600/315 aspect ratio for the image even before it downloads, meaning there's no layout shift. This technique is new in the grand scheme of things, but [well supported](https://caniuse.com/mdn-html_elements_img_aspect_ratio_computed_from_attributes).
+
+TODO: vs video
+
+# And that's it for now!
+
+Here are the scores so far:
+
+<table class="f1-scoreboard">
+  <thead>
+    <tr><th class="pos-col"></th> <th class="team-col"></th> <th class="num-col">Score</th> <th class="corner-border num-col">vs 2019</th> <th style="visibility: hidden" class="num-col"></th></tr>
+  </thead>
+  <tr><th></th> <th><span class="team" style="--team-color: #0600ef">Red Bull</span></th> <td>8.6</td> <td class="faster">-7.2</td> <td class="corner-border">Leader</td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #005aff">Williams</span></th> <td>11.1</td> <td class="faster">-3.0</td> <td></td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #2b4562">Alpha Tauri</span></th> <td>22.1</td> <td class="slower">+9.3</td> <td></td></tr>
+  <tr><th></th> <th><span class="team" style="--team-color: #900000">Alfa Romeo</span></th> <td>23.4</td> <td class="slower">+3.3</td> <td></td></tr>
+</table>
+
+<script>
+  updateScoreboardGaps(document.currentScript.previousElementSibling);
+</script>
+
+Williams slots in just a couple of seconds behind Red Bull, and it's great to see another site improving on their 2019 performance!
+
+TODO next part…
 
 # Notes
 
