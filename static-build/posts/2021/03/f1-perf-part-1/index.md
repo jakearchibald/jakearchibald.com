@@ -328,6 +328,17 @@ Phew, ok, next issue:
 
 ## Key issue: Late modal
 
+<figure class="full-figure max-figure scrollable-img">
+<picture>
+  <source type="image/avif" srcset="asset-url:./alpha-tauri-film.avif">
+  <img width="12481" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./alpha-tauri-film.png">
+</picture>
+</figure>
+
+<script>
+  document.currentScript.previousElementSibling.scrollLeft = 7192;
+</script>
+
 I don't have anything nice to say about 'cookie consent' modals. I think they're doing a huge amount of damage to the web exclusively, while the problems they're trying to solve happen on other platforms too. Also, I don't think they solve the problems they're trying to solve. But hey, I'm not a lawyer, so I've mostly ignored them in this test, and haven't factored them into a site's score.
 
 However, throwing up a modal after the user has been using the page for 30 seconds is an awful user experience. The only 'sensible' way to show one of these modals is to use a small-as-you-can-make-it bit of JS at the top of the page, so you can show it before anything else, and the user can get it out of the way early.
