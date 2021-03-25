@@ -1,8 +1,8 @@
 ---
-title: Who has the fastest website in F1, in 2021? Part 1
+title: Who has the fastest F1 website in 2021? Part 1
 date: 2021-03-25 01:00:00
-summary: Deep-diving on the performance of F1 websites.
-meta: Deep-diving on the performance of F1 websites.
+summary: Deep-diving on the load performance of F1 websites.
+meta: Deep-diving on the load performance of F1 websites.
 image: 'asset-url:./img.jpg'
 ---
 
