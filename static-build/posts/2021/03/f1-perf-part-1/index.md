@@ -501,7 +501,6 @@ I took a look at the source it's littered with large inline SVG, which could be 
   "props": {
     "ratio": 1.44859335,
     "maxWidth": 150,
-    "initial": 2,
     "previewPadding": "20px",
     "images": [
       ["Original SVG (asset-pretty-size-br:./img-optim/tauri-svg.svg)", "asset-url:./img-optim/tauri-svg.svg"],
@@ -531,7 +530,6 @@ The first image that appears takes up most of the viewport, so it's important to
   "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.6,
-    "initial": 2,
     "images": [
       ["Original JPEG (asset-pretty-size:./img-optim/gasly.jpg)", "asset-url:./img-optim/gasly.jpg"],
       ["Optimised JPEG (asset-pretty-size:./img-optim/gasly-optim.jpg)", "asset-url:./img-optim/gasly-optim.jpg"],
