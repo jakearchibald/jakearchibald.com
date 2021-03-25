@@ -308,7 +308,7 @@ And one last thing:
 
 ### Preload fonts
 
-Fonts only start downloading once the browser finds something on the page that needs them. This is effient in some ways, as it avoids loading fonts it doesn't need. However, that also means they can start downloading pretty late.
+Fonts only start downloading once the browser finds something on the page that needs them. This is efficient in some ways, as it avoids loading fonts it doesn't need. However, that also means they can start downloading pretty late.
 
 If you're _sure_ particular fonts are needed on the page, preload them to get the download starting earlier:
 
