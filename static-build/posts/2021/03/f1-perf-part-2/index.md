@@ -1,12 +1,21 @@
 ---
-title: Who has the fastest website in F1, in 2021? Part 2
-date: 2021-03-29 01:00:00
-summary: TODO.
-meta: TODO.
-#image: 'asset-url:./img.png'
+title: Who has the fastest F1 website in 2021? Part 2
+date: 2021-03-26 01:00:00
+summary: Deep-diving on the load performance of F1 websites.
+meta: Deep-diving on the load performance of F1 websites.
+image: 'asset-url:./img.jpg'
 ---
 
-TODO this is part 2, link to other parts.
+Ohhh, you've come back for more? Excellent. I was worried it was just going to be me sat here, typing to myself.
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": true,
+    "partIndex": 1
+  }
+}</script>
 
 <style>
   .scrollable-img {
@@ -224,6 +233,8 @@ TODO this is part 2, link to other parts.
   </dd>
 </dl>
 
+The video above shows how users would experience the site on a low-end phone on a good 3G connection. Alternatively, scroll along the timeline above.
+
 ## Possible improvements
 
 A loading spinner doesn't count as a first content render. A loading spinner is just an apology for being so slow 😀. Interestingly the _vast majority_ of the performance lost here is down to one easily fixable issue:
@@ -258,15 +269,15 @@ It has a 'low' prioirty, but it's a _render-blocking script!_ Why did Chrome cho
 
 Usually when we talk about render-blocking scripts we mean a script in the `<head>` that:
 
-- Doesn't have `type="module"`
 - Doesn't have `async`
 - Doesn't have `defer`
+- Doesn't have `type="module"` (which implies `defer` by default)
 
 If you have one of the above, the script doesn't block the parser, and therefore doesn't block rendering.
 
 However, the script we're talking about sits right at the end of the `<body>`, and it _does_ have `defer`, so the browser assumes it isn't render-blocking and queues it behind the images and other sub-resources.
 
-It's only 'render-blocking' because the site inserts a loading spinner that covers the whole page, and that late-loading script removes it.
+It's only 'render-blocking' because the site inserts a loading screen that covers the whole page, and that late-loading script removes it.
 
 The solution: Move that script into the `<head>`. That's it.
 
@@ -276,7 +287,7 @@ The browser would still consider it low priority, but it should still queue in f
 
 <figure class="full-figure max-figure">
 <svg viewBox="0 37 543 180">
-<foreignObject x="0" y="0" width="930" height="1591">
+<foreignObject width="930" height="1591">
 <picture>
   <source type="image/avif" srcset="asset-url:./alfa-romeo-waterfall.avif">
   <img width="930" height="1591" alt="" decoding="async" loading="lazy" src="asset-url:./alfa-romeo-waterfall.png">
@@ -285,33 +296,79 @@ The browser would still consider it low priority, but it should still queue in f
 </svg>
 </figure>
 
-The problem is the CSS on row 7 (the script on row 6 isn't render-blocking). There are two problems here that we encountered in part 1:
+The problem is the CSS on row 7 (the script on row 6 isn't render-blocking). There are two problems here that we already encountered in part 1:
 
 - [It's CSS loading CSS, in sequence](/2021/f1-perf-part-1/#parallelise-sequential-resources).
 - [It's a blocking resource on another server](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers).
 
 …but the ideal solution is different. In part 1 the solution was restricted by font-licencing, but since it's Google Fonts this time, it's open source, so we can do what we want.
 
-The delay here is doubly sad because no fonts are actually downloaded. The web font is "Roboto", which already ships on Android devices (it's the main Android font), so the user gets all the delay for nothing.
+The delay here is doubly sad because no fonts are actually downloaded. The web font they're using is "Roboto", which already ships on Android devices (it's the main Android font), so Android users get all the delay for nothing.
 
 Google Fonts CSS is smart, and it serves the best CSS and font format for that particular browser, but since [WOFF2 is well supported](https://caniuse.com/woff2), we could just copy & paste the font CSS into the site's CSS, and avoid the request to the other server. You could also do this with the fonts themselves, keeping everything on one server.
 
 ## Issue: Delayed primary image
 
-The site is using some sort of JavaScript polyfill for responsive images, which means it doesn't start downloading until the JavaScript is ready, and as we've seen the JavaScript is massively delayed.
+<figure class="full-figure max-figure scrollable-img">
+<picture>
+  <source type="image/avif" srcset="asset-url:./alfa-romeo-film.avif">
+  <img width="6592" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./alfa-romeo-film.png">
+</picture>
+</figure>
 
-Today, [responsive images are well supported](https://caniuse.com/picture), so there's no reason to use JavaScript for this, just use [real responsive images](https://jakearchibald.com/2015/anatomy-of-responsive-images/).
+<script>document.currentScript.previousElementSibling.scrollLeft = Number.MAX_SAFE_INTEGER;</script>
+
+That image is dropping in a bit late, which could be caused by a number of things. Back to the waterfall:
+
+<figure class="full-figure max-figure scrollable-img">
+<svg width="930" viewBox="0 1210 930 180">
+<foreignObject width="930" height="1591">
+<picture>
+  <source type="image/avif" srcset="asset-url:./alfa-romeo-waterfall.avif">
+  <img width="930" height="1591" alt="" decoding="async" loading="lazy" src="asset-url:./alfa-romeo-waterfall.png">
+</picture>
+</foreignObject>
+</svg>
+</figure>
+
+There it is on row 74. Browsers tend to discover `<img>`s really early, and their downloads can start before the CSS is ready. So, it probably isn't a regular `<img>`. If it was a CSS background, I'd still expect the download to start much earlier, but after the CSS.
+
+The telltale sign is row 72, which is the JavaScript. The image only starts downloading once the JavaScript has finished downloading, which suggests the download of the image is dependant on the JavaScript. Although, we don't have to guess, because Chrome DevTools can tell us:
+
+<figure class="full-figure max-figure">
+<img style="width: 100%; height: auto" width="864" height="144" alt="" decoding="async" loading="lazy" src="asset-url:./img-fetch.png">
+</figure>
+
+And there we go, the 'Initiator' column confirms the image loading was triggered by the late-loading JavaScript. Taking a look at the source:
+
+```html
+<img
+  alt=""
+  data-aspectratio="1.78"
+  data-sizes="auto"
+  data-srcset="…ARRO_2021_C41_Rear.jpg 3072w, …ARRO_2021_C41_Rear-2360x1769.jpg 2360w,
+    …ARRO_2021_C41_Rear-1800x1349.jpg 1800w, …ARRO_2021_C41_Rear-1400x1049.jpg 1400w,
+    …ARRO_2021_C41_Rear-1075x806.jpg 1075w, …ARRO_2021_C41_Rear-830x622.jpg 830w,
+    …ARRO_2021_C41_Rear-630x472.jpg 630w, …ARRO_2021_C41_Rear-480x360.jpg 480w"
+  src="…ARRO_2021_C41_Rear-5x4.jpg"
+/>
+```
+
+Aha! `data` attributes! The site is using some sort of JavaScript polyfill for responsive images. Also, as a fallback, it's downloading a 5x4 image 🙃.
+
+Today, [responsive images are well supported](https://caniuse.com/picture), so there's no reason to use JavaScript for this, just use [real responsive images](/2015/anatomy-of-responsive-images/).
 
 ## Issue: Large primary image
 
-It looks like someone really cared about image size when they built this site. However, one image is badly sized and compressed, and unfortunately it's the main one right at the top of the page.
+It looks like someone really cared about image sizes when they built this site, because they're fairly well optimised. However, one image is badly sized and compressed, and unfortunately it's the main one right at the top of the page.
+
+I put it through [Squoosh](https://squoosh.app/):
 
 <figure class="full-figure max-figure">
 <script type="component">{
   "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.33496732,
-    "initial": 3,
     "maxWidth": 420,
     "images": [
       ["Original JPEG (asset-pretty-size:./img-optim/alfa.jpg)", "asset-url:./img-optim/alfa.jpg"],
@@ -327,132 +384,44 @@ The compressed versions have a bit more smoothing compared to the original, but 
 
 ## How fast could it be?
 
-Here's the site compared to my optimised version:
+Here's the site compared to my optimised version, where I've inlined the CSS, removed unused CSS, unblocked all script, and optimised the image:
 
 <figure class="full-figure max-figure video-aspect">
 <svg viewBox="0 0 816 592"></svg>
 <video src="asset-url:./alfa-romeo-compare.mp4" controls></video>
 </figure>
 <dl class="perf-summary">
-  <dt>Links</dt>
+  <dt>Original</dt>
   <dd>
     <div class="perf-data">
-      <a href="https://www.sauber-group.com/motorsport/formula-1/">Original</a> | <a href="https://f1-performance-demo.netlify.app/alfa-romeo/">Optimised</a>
+      <a href="https://www.sauber-group.com/motorsport/formula-1/">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiE3_967d29bb2d3ede7f21e32c19eb5f77bc-r%3A3-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)
     </div>
   </dd>
+  <dt>Optimised</dt>
+  <dd><div class="perf-data"><a href="https://f1-performance-demo.netlify.app/alfa-romeo/">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_XiE6_9ebeed6f2113fcee8423836fb66466c3-r%3A3-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)</div></dd>
 </dl>
 
 It's a huge difference, but seriously, the current Alfa Romeo site is a couple of small fixes away from winning this contest.
 
-# And that's it for now!
+We've got two results now, so we should probably get a scoreboard going…
 
-We've got two results now, we should probably get a scoreboard going…
+# Scoreboard
 
-## Scoreboard
-
-<style>
-@font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 600;
-  src: url(https://fonts.gstatic.com/s/titilliumweb/v9/NaPDcZTIAOhVxoMyOr9n_E7ffBzCGItzY5abuWI.woff2) format('woff2');
-}
-.f1-scoreboard {
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: 'Titillium Web', sans-serif;
-  color: #fff;
-  border-collapse: collapse;
-  line-height: 1;
-  text-align: right;
-  counter-reset: pos;
-  width: 100%;
-  max-width: 420px;
-  margin: 1em 0;
-}
-.f1-scoreboard th {
-  background: #000;
-  text-align: left;
-}
-.f1-scoreboard thead th {
-  text-align: right;
-}
-.f1-scoreboard td {
-  background: rgba(0, 0, 0, 0.6);
-}
-.f1-scoreboard td,
-.f1-scoreboard th {
-  padding: 0.6em 0.6em;
-}
-.f1-scoreboard .corner-border {
-  border-radius: 0 0.3em 0 0;
-}
-.f1-scoreboard > tbody > tr:last-child > td:last-child {
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard > tbody tr {
-  counter-increment: pos;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1) {
-  padding: 1px 2px;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1)::before {
-  content: counter(pos);
-  text-align: center;
-  color: #000;
-  background: white;
-  display: flex;
-  height: var(--size);
-  --size: 2em;
-  width: var(--size);
-  align-items: center;
-  justify-content: center;
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard .num-col {
-  width: 23%;
-}
-.f1-scoreboard .team-col {
-  width: 31%;
-}
-.f1-scoreboard .slower {
-  background: #ffc800;
-  color: #000;
-}
-.f1-scoreboard .faster {
-  background: #45b720;
-}
-.f1-scoreboard .team {
-  display: grid;
-  grid-template-columns: 4px auto;
-  gap: 0.4em;
-}
-.f1-scoreboard .team::before {
-  content: '';
-  background: var(--team-color);
-}
-</style>
-
-<table class="f1-scoreboard">
-  <thead>
-    <tr><th class="pos-col"></th> <th class="team-col"></th> <th class="num-col">Score</th> <th class="corner-border num-col">vs 2019</th> <th style="visibility: hidden" class="num-col"></th></tr>
-  </thead>
-  <tr><th></th> <th><span class="team" style="--team-color: #2b4562">Alpha Tauri</span></th> <td>22.1</td> <td class="slower">+9.3</td> <td class="corner-border">Leader</td></tr>
-  <tr><th></th> <th><span class="team" style="--team-color: #900000">Alfa Romeo</span></th> <td>23.4</td> <td class="slower">+3.3</td> <td></td></tr>
-</table>
-
-<script>
-  // haha this is so hacky
-  function updateScoreboardGaps(table) {
-    const rows = [...table.querySelectorAll('tbody > tr')];
-    const mainTime = Number(rows[0].querySelector('td').textContent);
-    for (const row of rows.slice(1)) {
-      const time = Number(row.children[2].textContent);
-      row.children[4].textContent = '+' + (time - mainTime).toFixed(1);
-    }
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Scores",
+  "staticOnly": true,
+  "props": {
+    "results": 2
   }
-
-  updateScoreboardGaps(document.currentScript.previousElementSibling);
-</script>
+}</script>
 
 Alpha Tauri narrowly keeps the lead. Let's see if that continues in the next part.
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": false,
+    "partIndex": 1
+  }
+}</script>
