@@ -3,11 +3,21 @@ import DecodedImg from '../DecodedImg';
 import 'shared/loading-spinner';
 
 interface Props {
-  images: [title: string, url: string][];
+  images: [
+    title: string,
+    url: string,
+    overlayStyle?: {
+      [key: string]: string | number;
+    },
+  ][];
   ratio: number;
   maxWidth: number;
   initial: number;
   category?: string;
+  previewPadding?: string;
+  backgroundStyle?: {
+    [key: string]: string | number;
+  };
   transform?: string;
 }
 
@@ -45,14 +55,32 @@ export default class ImageTabs extends Component<Props, State> {
   };
 
   render(
-    { images, maxWidth, ratio, transform, category }: Props,
+    {
+      images,
+      maxWidth,
+      ratio,
+      transform,
+      category,
+      previewPadding,
+      backgroundStyle,
+    }: Props,
     { selected, loading }: State,
   ) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
+    const overlayStyle = images[selected][2] && {
+      maxWidth,
+      ...images[selected][2],
+    };
 
     return (
       <div class="image-tabs">
-        <div class="image-tabs-preview">
+        <div
+          class="image-tabs-preview"
+          style={{ padding: previewPadding || '' }}
+        >
+          {backgroundStyle && (
+            <div class="image-tabs-background" style={backgroundStyle} />
+          )}
           <div
             class="image-tabs-transformer"
             style={{ transform: transform || '' }}
@@ -70,6 +98,9 @@ export default class ImageTabs extends Component<Props, State> {
               />
             )}
           </div>
+          {overlayStyle && (
+            <div class="image-tabs-overlay" style={overlayStyle} />
+          )}
           {loading && (
             <div class="image-tabs-loading">
               <loading-spinner />
