@@ -189,6 +189,7 @@
   & iframe,
   & video,
   & canvas,
+  & svg,
   & object {
     display: block;
     margin: 0 auto;

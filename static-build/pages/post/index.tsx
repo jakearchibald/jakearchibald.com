@@ -76,7 +76,7 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
               ),
           )}
           {scriptPreloads.map((preload) => (
-            <link rel="preload" as="script" href={preload} crossOrigin="" />
+            <link rel="modulepreload" href={preload} />
           ))}
         </Fragment>
       }

@@ -81,7 +81,11 @@ import DecodedImg from 'shared/demos/2020/avif-has-landed/DecodedImg';
 
 const categories: {
   [category: string]:
-    | { width: number; options: { [name: string]: string } }
+    | {
+        width: number;
+        options: { [name: string]: string };
+        backgroundStyle?: { [name: string]: string };
+      }
     | undefined;
 } = {
   f1: {
@@ -140,6 +144,7 @@ const loadingTimeout = 600;
 const urlParams = new URLSearchParams(location.search);
 const category = categories[urlParams.get('show') || 'f1'] || categories.f1!;
 const images = Object.entries(category.options);
+const backgroundStyle = category.backgroundStyle || {};
 
 const initalLeftImg = images[0][1];
 const imgParam = urlParams.get('img');
@@ -204,7 +209,7 @@ class App extends Component<{}, State> {
 
   render({}, { leftImgSrc, rightImgSrc, leftLoading, rightLoading }: State) {
     return (
-      <div>
+      <div class="compare-root" style={backgroundStyle}>
         <ZoomableTwoUp
           left={
             <div class={`img-container${leftLoading ? ' loading' : ''}`}>
