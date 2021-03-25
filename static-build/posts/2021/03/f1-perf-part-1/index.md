@@ -611,7 +611,7 @@ I wrote a [hacky script to automate some of this](https://github.com/jakearchiba
 
 # And that's it for now!
 
-I'm not sure how may parts this article will be. It probably depends on how much there is to write about each site.
+I'm not sure how may parts this series will be. It probably depends on how much there is to write about each site. The next part is definitely just about one team, because there's some very interesting JavaScript stuff going on…
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
