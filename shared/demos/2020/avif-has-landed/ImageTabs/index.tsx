@@ -12,7 +12,7 @@ interface Props {
   ][];
   ratio: number;
   maxWidth: number;
-  initial: number;
+  initial?: number;
   category?: string;
   previewPadding?: string;
   backgroundStyle?: {
@@ -28,7 +28,7 @@ interface State {
 
 export default class ImageTabs extends Component<Props, State> {
   state: State = {
-    selected: this.props.initial,
+    selected: this.props.initial ?? this.props.images.length - 1,
     loading: false,
   };
 
