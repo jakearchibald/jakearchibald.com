@@ -3,7 +3,7 @@ title: Who has the fastest website in F1, in 2021? Part 4
 date: 2021-03-29 01:00:00
 summary: TODO.
 meta: TODO.
-#image: 'asset-url:./img.png'
+image: 'asset-url:./img.jpg'
 ---
 
 TODO this is part 4, link to other parts.
@@ -189,101 +189,6 @@ TODO this is part 4, link to other parts.
     --color: #fff;
   }
 </style>
-
-<style>
-@font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 600;
-  src: url(https://fonts.gstatic.com/s/titilliumweb/v9/NaPDcZTIAOhVxoMyOr9n_E7ffBzCGItzY5abuWI.woff2) format('woff2');
-}
-.f1-scoreboard {
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: 'Titillium Web', sans-serif;
-  color: #fff;
-  border-collapse: collapse;
-  line-height: 1;
-  text-align: right;
-  counter-reset: pos;
-  width: 100%;
-  max-width: 420px;
-  margin: 1em 0;
-}
-.f1-scoreboard th {
-  background: #000;
-  text-align: left;
-}
-.f1-scoreboard thead th {
-  text-align: right;
-}
-.f1-scoreboard td {
-  background: rgba(0, 0, 0, 0.6);
-}
-.f1-scoreboard td,
-.f1-scoreboard th {
-  padding: 0.6em 0.6em;
-}
-.f1-scoreboard .corner-border {
-  border-radius: 0 0.3em 0 0;
-}
-.f1-scoreboard > tbody > tr:last-child > td:last-child {
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard > tbody tr {
-  counter-increment: pos;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1) {
-  padding: 1px 2px;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1)::before {
-  content: counter(pos);
-  text-align: center;
-  color: #000;
-  background: white;
-  display: flex;
-  height: var(--size);
-  --size: 2em;
-  width: var(--size);
-  align-items: center;
-  justify-content: center;
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard .num-col {
-  width: 23%;
-}
-.f1-scoreboard .team-col {
-  width: 31%;
-}
-.f1-scoreboard .slower {
-  background: #ffc800;
-  color: #000;
-}
-.f1-scoreboard .faster {
-  background: #45b720;
-}
-.f1-scoreboard .team {
-  display: grid;
-  grid-template-columns: 4px auto;
-  gap: 0.4em;
-}
-.f1-scoreboard .team::before {
-  content: '';
-  background: var(--team-color);
-}
-</style>
-
-<script>
-  // haha this is so hacky
-  function updateScoreboardGaps(table) {
-    const rows = [...table.querySelectorAll('tbody > tr')];
-    const mainTime = Number(rows[0].querySelector('td').textContent);
-    for (const row of rows.slice(1)) {
-      const time = Number(row.children[2].textContent);
-      row.children[4].textContent = '+' + (time - mainTime).toFixed(1);
-    }
-  }
-</script>
 
 # Williams
 

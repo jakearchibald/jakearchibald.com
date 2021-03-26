@@ -191,7 +191,7 @@ const Scores: FunctionalComponent<Props> = ({ results }) => {
                 {i === 0 ? (
                   <td class="corner-border">Leader</td>
                 ) : (
-                  <td>{(result.score - boardResults[0].score).toFixed(1)}</td>
+                  <td>+{(result.score - boardResults[0].score).toFixed(1)}</td>
                 )}
               </tr>
             ))}

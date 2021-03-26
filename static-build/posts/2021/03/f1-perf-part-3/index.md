@@ -1,12 +1,21 @@
 ---
-title: Who has the fastest website in F1, in 2021? Part 3
+title: Who has the fastest F1 website in 2021? Part 3
 date: 2021-03-29 01:00:00
-summary: TODO.
-meta: TODO.
-#image: 'asset-url:./img.png'
+summary: Deep-diving on the load performance of F1 websites.
+meta: Deep-diving on the load performance of F1 websites.
+image: 'asset-url:./img.jpg'
 ---
 
-TODO this is part 3, link to other parts.
+I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.glitch.me/) which went viral and was even [played by F1 drivers](https://www.youtube.com/watch?v=6fgGJ-M6X2s). That sounds like a brag, and it kinda is, but now whenever I pour days or even weeks of work into something, it just seems so inefficient compared to the time I spent _an hour_ on something that went big. Wait! You're not my therapist! Let's look at another F1 website…
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": true,
+    "partIndex": 2
+  }
+}</script>
 
 <style>
   .scrollable-img {
@@ -186,101 +195,6 @@ TODO this is part 3, link to other parts.
   }
 </style>
 
-<style>
-@font-face {
-  font-family: 'Titillium Web';
-  font-style: normal;
-  font-weight: 600;
-  src: url(https://fonts.gstatic.com/s/titilliumweb/v9/NaPDcZTIAOhVxoMyOr9n_E7ffBzCGItzY5abuWI.woff2) format('woff2');
-}
-.f1-scoreboard {
-  font-size: 1rem;
-  font-weight: 600;
-  font-family: 'Titillium Web', sans-serif;
-  color: #fff;
-  border-collapse: collapse;
-  line-height: 1;
-  text-align: right;
-  counter-reset: pos;
-  width: 100%;
-  max-width: 420px;
-  margin: 1em 0;
-}
-.f1-scoreboard th {
-  background: #000;
-  text-align: left;
-}
-.f1-scoreboard thead th {
-  text-align: right;
-}
-.f1-scoreboard td {
-  background: rgba(0, 0, 0, 0.6);
-}
-.f1-scoreboard td,
-.f1-scoreboard th {
-  padding: 0.6em 0.6em;
-}
-.f1-scoreboard .corner-border {
-  border-radius: 0 0.3em 0 0;
-}
-.f1-scoreboard > tbody > tr:last-child > td:last-child {
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard > tbody tr {
-  counter-increment: pos;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1) {
-  padding: 1px 2px;
-}
-.f1-scoreboard > tbody tr > th:nth-child(1)::before {
-  content: counter(pos);
-  text-align: center;
-  color: #000;
-  background: white;
-  display: flex;
-  height: var(--size);
-  --size: 2em;
-  width: var(--size);
-  align-items: center;
-  justify-content: center;
-  border-radius: 0 0 0.3em 0;
-}
-.f1-scoreboard .num-col {
-  width: 23%;
-}
-.f1-scoreboard .team-col {
-  width: 31%;
-}
-.f1-scoreboard .slower {
-  background: #ffc800;
-  color: #000;
-}
-.f1-scoreboard .faster {
-  background: #45b720;
-}
-.f1-scoreboard .team {
-  display: grid;
-  grid-template-columns: 4px auto;
-  gap: 0.4em;
-}
-.f1-scoreboard .team::before {
-  content: '';
-  background: var(--team-color);
-}
-</style>
-
-<script>
-  // haha this is so hacky
-  function updateScoreboardGaps(table) {
-    const rows = [...table.querySelectorAll('tbody > tr')];
-    const mainTime = Number(rows[0].querySelector('td').textContent);
-    for (const row of rows.slice(1)) {
-      const time = Number(row.children[2].textContent);
-      row.children[4].textContent = '+' + (time - mainTime).toFixed(1);
-    }
-  }
-</script>
-
 # Red Bull
 
 <figure class="full-figure max-figure video-aspect">
@@ -324,30 +238,25 @@ Now we're talking! This is a graphically rich, engaging site, and the performanc
 ## Possible improvements
 
 - **3 second delay to content-render** caused by unnecessary inlining. Covered in detail below.
-- **10 second delay to main image** caused by JavaScript responsive images implementation. Fixed by using [real responsive images](/2015/anatomy-of-responsive-images/).
-- **Additional 2 second delay to main image** caused by extra connection. Why is this is problem is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but the solution here is just to move the images to the same server.
+- **10 second delay to main image** caused by a JavaScript responsive images implementation, [like we saw in part 2](/2021/f1-perf-part-2/#issue-delayed-primary-image). These should be [real responsive images](/2015/anatomy-of-responsive-images/).
+- **Additional 2 second delay to main image** caused by an extra connection. Why is this is problem is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but the solution here is just to move the images to the same server.
 - **Additional 2 second delay to main image** caused by poor optimisation. Covered in detail below.
 - **40 second delay to key image** caused by loading it with JavaScript. Covered in detail below.
 - **Additional 30 second delay to that image** caused by poor optimisation. Covered in detail below.
 - **2 second delay to fonts** caused by extra connection. Again, this is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but the solution here is just to move the fonts to the same server.
 - **40+ second delay to content-blocking cookie modal** caused by… a number of things, [covered in part 1](/2021/f1-perf-part-1/#key-issue-late-modal).
 
-Remember these delays overlap in some cases. Here's the first bit of the timeline:
+Remember these delays overlap in some cases.
+
+## Issue: Unnecessary inlining
+
+Here's the first bit of the timeline:
 
 <figure class="full-figure max-figure">
 <img width="440" height="180" alt="" decoding="async" loading="lazy" src="asset-url:./red-bull-waterfall.png" style="width: 100%; height: auto;">
 </figure>
 
-This shows that we get our content-render while the browser is still downloading the HTML, meaning there are _no_ blocking resources. This suggests the CSS is inlined, and from looking at the source, yep, it is.
-
-There are some issues that I've already covered looking at other sites:
-
-- [Key issue: Late modal](#key-issue-late-modal): There's a full-screen modal that lands after almost a minute.
-- [Issue: Fonts on another server](#key-issue-blocking-resource-on-another-server): This delays the fonts load by a couple of seconds. A few preload tags would help here too.
-
-And some stuff that's worth looking at in more detail:
-
-## Issue: Unnecessary inlining
+The page renders around the 6s mark, which is while the HTML is still downloading. Browsers can stream HTML and render it while it's downloading; it's a great feature of parsed-HTML that many sites don't get the benefit of due to blocking resources. Because the page renders with that one resource, we know there are _no_ blocking resources. This suggests the CSS is inlined, and from looking at the source, yep, it is.
 
 Inlining avoids request/response overhead, which is great for render-blocking resources. But also, since it's part of the _page_, you can tailor the inlining for _that page_.
 
@@ -363,9 +272,13 @@ The code in the page is 79.5% unused, which amounts to over 600kB. Compare this 
 <img width="1494" height="166" alt="" decoding="async" loading="lazy" src="asset-url:./squoosh-coverage.png" style="width: 100%; height: auto;">
 </figure>
 
-…where we used inline content just for the CSS and script needed for the first interaction. The first row there is a non-blocking resource, where coverage doesn't matter, but the bottom row is the page, where only 7kB is unused.
+…where we used inline content just for the CSS and script needed for the first interaction. The first row there is a non-blocking resource, where coverage doesn't matter so much, but the bottom row is the page, where only 7kB is unused. You can also click on these lines which takes you to a code view of used and unused code:
 
-Around three seconds could be shaved off time-to-content on the Red Bull site by making the inlined code tailored to what the page needs for that content-render. The rest can be loaded via external resources.
+<figure class="full-figure max-figure">
+<img width="785" height="402" alt="" decoding="async" loading="lazy" src="asset-url:./coverage-code.png" style="width: 100%; height: auto;">
+</figure>
+
+Anyway, we aren't here to talk about Squoosh. Around three seconds could be shaved off time-to-content on the Red Bull site by making the inlined code tailored to what the page needs for that content-render. The rest can be loaded via external resources.
 
 ## Issue: Large primary image
 
@@ -374,7 +287,6 @@ Around three seconds could be shaved off time-to-content on the Red Bull site by
   "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 0.5,
-    "initial": 2,
     "maxWidth": 360,
     "images": [
       ["Original WebP (asset-pretty-size:./img-optim/red-bull-main.webp)", "asset-url:./img-optim/red-bull-main.webp"],
@@ -396,7 +308,6 @@ Actually, let's talk about that image…
   "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
     "ratio": 1.395348837,
-    "initial": 3,
     "backgroundStyle": { "background-color": "rgba(0, 0, 0, 0.5)" },
     "category": "redBull",
     "images": [
@@ -411,13 +322,44 @@ Actually, let's talk about that image…
 
 This image sits over the top of the main carousel, and it's a great bit of the design. Again, they're using WebP, but maybe not with the right settings. But even with optimised settings, the WebP is still big.
 
-This is because WebP's alpha channel compression is lossless, whereas AVIF's alpha compression is lossy, so it performs much better here.
+When WebP was created, they designed the alpha channel around things like logos, and things cut-out of photos. In these cases the alpha channel is dominated by large areas of the same value:
 
-It's still pretty pretty large though, so I'd consider using a scaled-down version for mobile devices.
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "props": {
+    "ratio": 2.105263158,
+    "initial": 0,
+    "images": [
+      ["Full image", "asset-url:./poster-main.avif"],
+      ["Alpha channel", "asset-url:./poster-alpha.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+Because of this, they used the WebP _lossless_ mode for the alpha channel, even if the colour data is using the lossy mode. This works well in general, except in cases like this:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "props": {
+    "ratio": 1.395348837,
+    "backgroundStyle": { "background-color": "rgba(0, 0, 0, 0.5)" },
+    "initial": 0,
+    "images": [
+      ["Full image", "asset-url:./img-optim/red-bull-overlay-mobile.avif"],
+      ["Alpha channel", "asset-url:./img-optim/red-bull-overlay-alpha.avif"]
+    ]
+  }
+}</script>
+</figure>
+
+…where the alpha channel is frequently changing. This is something a lossy codec handles much better. AVIF performs lossy encoding of all channels, including the alpha channel, so it performs an order of magnitude better than WebP in this case.
 
 ## Issue: Overlay image loaded with JavaScript
 
-That overlay image doesn't start loading until the user has been on the site for over 50 seconds. This is because the image is a CSS background, on an element that's added with JavaScript.
+That overlay image doesn't start loading until the user has been on the site for over 50 seconds, which almost certainly means something is blocking it. The 'initiator' column in the network panel didn't help this time, so I searched the source for the image URL, and found it in a blob of JSON at the end of the document. If it's JSON, that means JavaScript is handling the load of that image in some way.
 
 I would switch this for an `<img>` so [responsive images](/2015/anatomy-of-responsive-images/) could be used to select the best format for the job. This will trigger the download much earlier.
 
@@ -436,9 +378,9 @@ The performance issues the Red Bull site has with images are pretty well disguis
     "maxWidth": 360,
     "images": [
       ["Full AVIF (asset-pretty-size:./img-optim/red-bull-main.avif)", "asset-url:./img-optim/red-bull-main.avif"],
-      ["Original JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur.jpg)", "asset-url:./img-optim/red-bull-blur.jpg", { "backdropFilter": "blur(7px)" }],
-      ["AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur.avif)", "asset-url:./img-optim/red-bull-blur.avif", { "backdropFilter": "blur(6px)" }],
-      ["WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur.webp)", "asset-url:./img-optim/red-bull-blur.webp", { "backdropFilter": "blur(8px)" }]
+      ["Original 150x150 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur.jpg)", "asset-url:./img-optim/red-bull-blur.jpg", { "backdropFilter": "blur(7px)" }],
+      ["96x192 AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur.avif)", "asset-url:./img-optim/red-bull-blur.avif", { "backdropFilter": "blur(6px)" }],
+      ["48x96 WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur.webp)", "asset-url:./img-optim/red-bull-blur.webp", { "backdropFilter": "blur(8px)" }]
     ]
   }
 }</script>
@@ -448,7 +390,13 @@ Unfortunately the image they use isn't an accurate preview of the image being lo
 
 However, I really like this method, as it provides more structure than something like a [BlurHash](https://blurha.sh/), but it does use more bytes.
 
-Their blurred images are 6kB each, which is quite a lot to inline. AVIF allows you to get under 1kB and still preserve a lot of structure, meaning you don't need to blur as much. However, AVIF has around 500B of headers, so it can't be much smaller. WebP on the other hand can go much smaller, but looks worse, and suffers some discolouration due to how WebP encodes its colour data, so it needs more blurring to compensate.
+Their blurred images are 6kB each, which is quite a lot to inline, especially when the well-optimised full version of the image is only around twice the size. 150x150 is also an odd choice for creating a tiny JPEG, since JPEG is encoded in 8x8 blocks. If you're interested in details like this, [I gave a talk on how JPEG works](https://www.youtube.com/watch?v=F1kYBnY6mwg&t=294s).
+
+AVIF allows you to get under 1kB and still preserve a lot of structure, meaning you don't need to blur as much. I created the above image in [Squoosh](https://squoosh.app/) (of course), but I went into the advanced settings of AVIF and disabled subsampling. At this kind of resolution, we don't want it to further reduce the colour data.
+
+AVIF quality becomes useless for this if you go below 800B. AVIF has around 500B of headers, so there isn't much room for image data at that point.
+
+WebP on the other hand can go much smaller and still be somewhat usable in cases like this. It suffers from some discolouration due to how WebP always subsamples its colour data, so it needs more blurring to compensate.
 
 I'm not sure which is best. You decide.
 
@@ -471,21 +419,23 @@ The Reb Bull site is pretty good, but how fast would it be if they cut their inl
 
 Not as big a difference as with previous sites, but still worth doing.
 
-# And that's it for now!
+# Scoreboard
 
-Here are the scores so far:
-
-<table class="f1-scoreboard">
-  <thead>
-    <tr><th class="pos-col"></th> <th class="team-col"></th> <th class="num-col">Score</th> <th class="corner-border num-col">vs 2019</th> <th style="visibility: hidden" class="num-col"></th></tr>
-  </thead>
-  <tr><th></th> <th><span class="team" style="--team-color: #0600ef">Red Bull</span></th> <td>8.6</td> <td class="faster">-7.2</td> <td class="corner-border">Leader</td></tr>
-  <tr><th></th> <th><span class="team" style="--team-color: #2b4562">Alpha Tauri</span></th> <td>22.1</td> <td class="slower">+9.3</td> <td></td></tr>
-  <tr><th></th> <th><span class="team" style="--team-color: #900000">Alfa Romeo</span></th> <td>23.4</td> <td class="slower">+3.3</td> <td></td></tr>
-</table>
-
-<script>
-  updateScoreboardGaps(document.currentScript.previousElementSibling);
-</script>
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Scores",
+  "staticOnly": true,
+  "props": {
+    "results": 3
+  }
+}</script>
 
 Red Bull _leaps_ into first place, but will they stay there? Find out in part 3.
+
+<script type="component">{
+  "module": "shared/demos/2021/f1-perf/Parts",
+  "staticOnly": true,
+  "props": {
+    "includeIntro": false,
+    "partIndex": 2
+  }
+}</script>

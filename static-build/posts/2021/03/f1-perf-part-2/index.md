@@ -237,7 +237,7 @@ The video above shows how users would experience the site on a low-end phone on 
 
 ## Possible improvements
 
-A loading spinner doesn't count as a first content render. A loading spinner is just an apology for being so slow 😀. Interestingly the _vast majority_ of the performance lost here is down to one easily fixable issue:
+A loading spinner doesn't count as a first content render. A loading spinner is just an apology for being slow 😀. Interestingly the _vast majority_ of the performance lost here is down to one easily fixable issue:
 
 - **10 second delay to content-render** caused by low priority render-blocking JavaScript.
 - **1.5 second delay to content-render** caused by other-server sequential CSS.
@@ -257,7 +257,7 @@ Here's the waterfall:
 </picture>
 </figure>
 
-There's some render-blocking JavaScript in the `<head>`, which isn't great, but it's pretty small, and ready after around 5.5 seconds. The real problem is down on row 72; that's another render-blocking script.
+There's some render-blocking JavaScript in the `<head>` which isn't great (row 4, which is modernizer), but it's pretty small, and ready after around 5.5 seconds. The real problem is down on row 72; that's another render-blocking script.
 
 The long thin light-yellow bit means the browser knew about the resource for a long time, but chose to download other things first. We can confirm that in the network panel of Chrome DevTools:
 
@@ -333,13 +333,13 @@ That image is dropping in a bit late, which could be caused by a number of thing
 
 There it is on row 74. Browsers tend to discover `<img>`s really early, and their downloads can start before the CSS is ready. So, it probably isn't a regular `<img>`. If it was a CSS background, I'd still expect the download to start much earlier, but after the CSS.
 
-The telltale sign is row 72, which is the JavaScript. The image only starts downloading once the JavaScript has finished downloading, which suggests the download of the image is dependant on the JavaScript. Although, we don't have to guess, because Chrome DevTools can tell us:
+The telltale sign is row 72, which is the late-loading JavaScript I covered earlier. The image only starts downloading once the JavaScript has finished downloading, which suggests the download of the image is dependant on the JavaScript. Although, we don't have to guess, because Chrome DevTools can tell us:
 
 <figure class="full-figure max-figure">
 <img style="width: 100%; height: auto" width="864" height="144" alt="" decoding="async" loading="lazy" src="asset-url:./img-fetch.png">
 </figure>
 
-And there we go, the 'Initiator' column confirms the image loading was triggered by the late-loading JavaScript. Taking a look at the source:
+And there we go, the 'initiator' column confirms the image loading was triggered by the late-loading JavaScript. Taking a look at the source:
 
 ```html
 <img
