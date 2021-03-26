@@ -10,7 +10,12 @@ const Who: FunctionalComponent<{}> = () => (
   <section>
     <figure class="my-big-face">
       <h1>
-        <img width="500" height="471" src={meUrl} alt="Jake Archibald" />
+        <img
+          width="500"
+          height="471"
+          src={meUrl}
+          alt="Jake Archibald &amp; a black cat"
+        />
       </h1>
     </figure>
 
