@@ -308,7 +308,7 @@ And one last thing:
 
 ### Preload fonts
 
-Fonts only start downloading once the browser finds something on the page that needs them. This is effient in some ways, as it avoids loading fonts it doesn't need. However, that also means they can start downloading pretty late.
+Fonts only start downloading once the browser finds something on the page that needs them. This is efficient in some ways, as it avoids loading fonts it doesn't need. However, that also means they can start downloading pretty late.
 
 If you're _sure_ particular fonts are needed on the page, preload them to get the download starting earlier:
 
@@ -327,6 +327,17 @@ The `crossorigin` bit is important, because font requests are CORS requests. Usi
 Phew, ok, next issue:
 
 ## Key issue: Late modal
+
+<figure class="full-figure max-figure scrollable-img">
+<picture>
+  <source type="image/avif" srcset="asset-url:./alpha-tauri-film.avif">
+  <img width="12481" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./alpha-tauri-film.png">
+</picture>
+</figure>
+
+<script>
+  document.currentScript.previousElementSibling.scrollLeft = 7192;
+</script>
 
 I don't have anything nice to say about 'cookie consent' modals. I think they're doing a huge amount of damage to the web exclusively, while the problems they're trying to solve happen on other platforms too. Also, I don't think they solve the problems they're trying to solve. But hey, I'm not a lawyer, so I've mostly ignored them in this test, and haven't factored them into a site's score.
 
@@ -546,6 +557,15 @@ There's a little more smoothing around the arm than I'd usually go for, but on t
 
 If I was building the site, I think I'd try and separate the picture of Gasly from the blue arrow overlay, and instead recreate that with SVG.
 
+I used [Squoosh](https://squoosh.app/) to compress these images. Browser support for AVIF is limited to Chrome right now, but you can use `<picture>` to allow browsers to select the best format they support.
+
+```html
+<picture>
+  <source type="image/avif" srcset="img.avif" />
+  <img alt="…" src="img.jpg" />
+</picture>
+```
+
 ## How fast could it be?
 
 I wanted to get a feel for how fast these sites could be, so I created optimised versions to compare them to. I didn't have time to completely rebuild 10 sites of course, so I cut some corners. Here's what I did:
@@ -574,7 +594,7 @@ I wrote a [hacky script to automate some of this](https://github.com/jakearchiba
 
 # And that's it for now!
 
-I'm not sure how may parts this article will be. It probably depends on how much there is to write about each site.
+I'm not sure how may parts this series will be. It probably depends on how much there is to write about each site. The next part is definitely just about one team, because there's some very interesting JavaScript stuff going on…
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",

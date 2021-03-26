@@ -17,19 +17,17 @@ const parts = ['Methodology & Alpha Tauri', 'Alfa Romeo'];
 const Parts: FunctionalComponent<Props> = ({ includeIntro, partIndex }) => (
   <Fragment>
     {includeIntro && (
-      <Fragment>
-        <p>
-          This is{' '}
-          {partIndex === parts.length - 1
-            ? 'the latest'
-            : `part ${partIndex + 1}`}{' '}
-          in a multi-part series looking at the loading performance of F1
-          websites. Not interested in F1? It shouldn't matter. This is just a
-          performance review of 10 recently-built/updated sites that have
-          broadly the same goal, but are built by different teams, and have
-          different performance issues.
-        </p>
-      </Fragment>
+      <p>
+        This is{' '}
+        {partIndex === parts.length - 1
+          ? 'the latest'
+          : `part ${partIndex + 1}`}{' '}
+        in a multi-part series looking at the loading performance of F1
+        websites. Not interested in F1? It shouldn't matter. This is just a
+        performance review of 10 recently-built/updated sites that have broadly
+        the same goal, but are built by different teams, and have different
+        performance issues.
+      </p>
     )}
     <ol>
       {parts.map((part, i) => (

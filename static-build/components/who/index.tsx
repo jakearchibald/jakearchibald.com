@@ -10,13 +10,18 @@ const Who: FunctionalComponent<{}> = () => (
   <section>
     <figure class="my-big-face">
       <h1>
-        <img src={meUrl} alt="Jake Archibald" />
+        <img
+          width="500"
+          height="471"
+          src={meUrl}
+          alt="Jake Archibald &amp; a black cat"
+        />
       </h1>
     </figure>
 
     <p>
-      Hello, I’m Jake and that is my face. I’m a developer advocate for Google
-      Chrome.
+      Hello, I’m Jake and one of those faces is my face. I’m a developer
+      advocate for Google Chrome.
     </p>
 
     <h1>Elsewhere</h1>
@@ -55,8 +60,9 @@ const Who: FunctionalComponent<{}> = () => (
     <h1>Contact</h1>
     <p>
       Feel free to <a href="mailto:jaffathecake@gmail.com">throw me an email</a>
-      , unless you're a recruiter, in which case destroy every email-capable
-      device you own to prevent this possibility.
+      , unless you're a recruiter, or someone trying to offer me 'sponsored
+      content' for this site, in which case write your request on a piece of
+      paper, and fling it out the window.
     </p>
   </section>
 );
