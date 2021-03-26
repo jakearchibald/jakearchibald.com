@@ -260,17 +260,13 @@ h2 + .max-figure {
   & h1 {
     position: relative;
     margin: 0;
-    /* the values in percentage are imgHeight / imgWidth */
-    padding: 76.279% 0 0 0;
     outline: 10px solid #fff;
     background: #fff;
   }
   & img {
-    position: absolute;
-    top: 0;
-    left: 0;
+    display: block;
     width: 100%;
-    height: 100%;
+    height: auto;
   }
 }
 
