@@ -267,21 +267,23 @@ The long thin light-yellow bit means the browser knew about the resource for a l
 
 It has a 'low' prioirty, but it's a _render-blocking script!_ Why did Chrome choose to download it so late? Well, the problem is, the browser doesn't know it's render-blocking.
 
-Usually when we talk about render-blocking scripts we mean a script in the `<head>` that:
+Usually when we talk about render-blocking scripts we mean a script in the `<head>` that has one of the following attributes:
 
-- Doesn't have `async`
-- Doesn't have `defer`
-- Doesn't have `type="module"` (which implies `defer` by default)
+- `async`: Don't block the parser. Execute whenever loaded.
+- `defer`: Don't block the parser. Execute after the document has parsed, and in order with other `defer` scripts.
+- `type="module"`: Load as a module, which implies `defer` by default.
 
-If you have one of the above, the script doesn't block the parser, and therefore doesn't block rendering.
+If you use one of the above, the script doesn't block the parser, and therefore doesn't block rendering.
 
-However, the script we're talking about sits right at the end of the `<body>`, and it _does_ have `defer`, so the browser assumes it isn't render-blocking and queues it behind the images and other sub-resources.
+However, the script we're talking about sits right at the end of the `<body>`, and it _does_ have `defer`, so the browser assumes it isn't render-blocking, and queues it behind the images and other sub-resources.
 
 It's only 'render-blocking' because the site inserts a loading screen that covers the whole page, and that late-loading script removes it.
 
 The solution: Move that script into the `<head>`. That's it.
 
 The browser would still consider it low priority, but it should still queue in front of all those images. If not, a `<link rel="preload" as="script" href="…">` will convince Chrome to raise the priority.
+
+An even better solution would be to avoid a JavaScript dependency for the initial render, which is very possible for content like this. Then, the JavaScript can load lazily, and gradually enhance elements.
 
 ## Issue: Other-server sequential CSS
 
@@ -305,7 +307,7 @@ The problem is the CSS on row 7 (the script on row 6 isn't render-blocking). The
 
 The delay here is doubly sad because no fonts are actually downloaded. The web font they're using is "Roboto", which already ships on Android devices (it's the main Android font), so Android users get all the delay for nothing.
 
-Google Fonts CSS is smart, and it serves the best CSS and font format for that particular browser, but since [WOFF2 is well supported](https://caniuse.com/woff2), we could just copy & paste the font CSS into the site's CSS, and avoid the request to the other server. You could also do this with the fonts themselves, keeping everything on one server.
+Google Fonts' CSS is smart; it serves the best CSS and font format for that particular browser, but since [WOFF2 is well supported](https://caniuse.com/woff2), we could just copy & paste the font CSS into the site's CSS, and avoid the request to the other server. You could also do this with the fonts themselves, keeping everything on one server.
 
 ## Issue: Delayed primary image
 
@@ -354,7 +356,7 @@ And there we go, the 'initiator' column confirms the image loading was triggered
 />
 ```
 
-Aha! `data` attributes! The site is using some sort of JavaScript polyfill for responsive images. Also, as a fallback, it's downloading a 5x4 image 🙃.
+Aha! `data` attributes! The browser doesn't really do anything with these, they're just somewhere developers can put arbitrary data. The site is using some sort of JavaScript polyfill for responsive images. Also, as a fallback, it's downloading a 5x4 image 🙃.
 
 Today, [responsive images are well supported](https://caniuse.com/picture), so there's no reason to use JavaScript for this, just use [real responsive images](/2015/anatomy-of-responsive-images/).
 
