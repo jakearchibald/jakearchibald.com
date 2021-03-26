@@ -366,6 +366,12 @@ It turns out these are preloaded images:
 
 I'm surprised that the browser sent the preload request before the CSS, but request priority is a really delicate balance between what the browser asks for and what the server chooses to send. Maybe putting the preload later in the source would help, or avoid using the preload at all and instead use an `<img>` to load the image (currently it's a CSS background).
 
+**Update:** Performance expert Andy Davies has encountered this priority issue before too, and [told me why it happens](https://twitter.com/AndyDavies/status/1375398840057102338), and… it's AppCache.
+
+Preload requests always bypass AppCache, but other requests on the page don't. That means the browser sees the preload, and queues it up. Then it sees the more-important CSS request, but it doesn't know if it needs to request it, because it might be handled by AppCache, so it has to check if the site uses AppCache or not. This takes time, and during that time the less-important request goes through.
+
+[Here's the Chrome bug](https://bugs.chromium.org/p/chromium/issues/detail?id=788757), and there's a fix in progress.
+
 ## Issue: Unnecessary preloading
 
 You might have spotted an issue in the last section, but if not, Chrome DevTools' console is here to help:
