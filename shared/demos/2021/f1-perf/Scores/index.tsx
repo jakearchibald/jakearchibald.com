@@ -1,6 +1,8 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
 import bgImgJpeg from 'asset-url:./scores-bg.jpg';
 import bgImgAvif from 'asset-url:./scores-bg.avif';
+import alphaTauriImg from 'asset-url:./alpha-tauri.svg';
+import alfaRomeoImg from 'asset-url:./alfa-romeo.svg';
 
 interface Props {
   results: number;
@@ -8,7 +10,7 @@ interface Props {
 
 interface Score {
   team: string;
-  color: string;
+  img: string;
   score: number;
   score2019: number;
 }
@@ -16,25 +18,25 @@ interface Score {
 const scores: Score[] = [
   {
     team: 'Alpha Tauri',
-    color: '#2b4562',
+    img: alphaTauriImg,
     score: 22.1,
     score2019: 12.8,
   },
   {
     team: 'Alfa Romeo',
-    color: '#900000',
+    img: alfaRomeoImg,
     score: 23.4,
     score2019: 20.1,
   },
   {
     team: 'Red Bull',
-    color: '#0600ef',
+    img: alphaTauriImg,
     score: 8.6,
     score2019: 15.8,
   },
   {
     team: 'Williams',
-    color: '#005aff',
+    img: alphaTauriImg,
     score: 11.1,
     score2019: 14.1,
   },
@@ -86,6 +88,7 @@ h2 + .f1-figure {
   width: 100%;
   max-width: 420px;
   margin: 1em auto;
+  --cell-padding: 0.5em;
 }
 .f1-scoreboard th {
   background: #000;
@@ -99,7 +102,7 @@ h2 + .f1-figure {
 }
 .f1-scoreboard td,
 .f1-scoreboard th {
-  padding: 0.6em 0.6em;
+  padding: var(--cell-padding);
 }
 .f1-scoreboard .corner-border {
   border-radius: 0 0.3em 0 0;
@@ -111,7 +114,7 @@ h2 + .f1-figure {
   counter-increment: pos;
 }
 .f1-scoreboard > tbody tr > th:nth-child(1) {
-  padding: 1px 2px;
+  padding: 1px 2px 2px 3px;
 }
 .f1-scoreboard > tbody tr > th:nth-child(1)::before {
   content: counter(pos);
@@ -119,8 +122,8 @@ h2 + .f1-figure {
   color: #000;
   background: white;
   display: flex;
+  --size: 1.7em;
   height: var(--size);
-  --size: 2em;
   width: var(--size);
   align-items: center;
   justify-content: center;
@@ -130,7 +133,7 @@ h2 + .f1-figure {
   width: 23%;
 }
 .f1-scoreboard .team-col {
-  width: 31%;
+  width: 37%;
 }
 .f1-scoreboard .slower {
   background: #ffc800;
@@ -139,14 +142,21 @@ h2 + .f1-figure {
 .f1-scoreboard .faster {
   background: #45b720;
 }
+.f1-scoreboard .no-padding {
+  padding: 0;
+}
 .f1-scoreboard .team {
   display: grid;
-  grid-template-columns: 4px auto;
-  gap: 0.4em;
+  grid-template-columns: 1fr max-content;
+  height: 100%;
+  align-items: center;
 }
-.f1-scoreboard .team::before {
-  content: '';
-  background: var(--team-color);
+.f1-scoreboard .team .name {
+  padding: var(--cell-padding);
+}
+.f1-scoreboard .team .logo {
+  width: 32px;
+  height: 32px;
 }
 `;
 
@@ -176,10 +186,17 @@ const Scores: FunctionalComponent<Props> = ({ results }) => {
             {boardResults.map((result, i) => (
               <tr>
                 <th></th>
-                <th>
-                  <span class="team" style={{ '--team-color': result.color }}>
-                    {result.team}
-                  </span>
+                <th class="no-padding">
+                  <div class="team">
+                    <div class="name">{result.team}</div>
+                    <img
+                      width="1"
+                      height="1"
+                      class="logo"
+                      src={result.img}
+                      alt=""
+                    />
+                  </div>
                 </th>
                 <td>{result.score.toFixed(1)}</td>
                 <td
