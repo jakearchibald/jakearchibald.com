@@ -6,7 +6,7 @@ meta: Deep-diving on the load performance of F1 websites.
 image: 'asset-url:./img.jpg'
 ---
 
-I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.glitch.me/) which went viral and was even [played by F1 drivers](https://www.youtube.com/watch?v=6fgGJ-M6X2s). That sounds like a brag, and it kinda is, but now whenever I pour days or even weeks of work into something, it just seems so inefficient compared to the time I spent _an hour_ on something that went big. Wait! You're not my therapist! Let's look at another F1 website…
+I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.glitch.me/) which went viral and was even [played by F1 drivers](https://www.youtube.com/watch?v=6fgGJ-M6X2s). That sounds like a brag, and it kinda is, but now whenever I pour days or even weeks of work into something, it just seems so inefficient compared to that time I spent _an hour_ on something that went big. Wait! You're not my therapist! Let's look at another F1 website…
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
@@ -138,12 +138,15 @@ I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.
   }
   .image-tabs-transformer {
     position: relative;
-    display: grid;
-    align-items: stretch;
-    justify-items: stretch;
   }
-  .image-tabs-transformer > * {
-    grid-area: 1/1;
+  .image-tabs-transformer > img {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    transform: translateX(-50%);
   }
   .image-tabs-tabs {
     display: grid;
@@ -233,13 +236,13 @@ I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.
   </dd>
 </dl>
 
-Now we're talking! This is a graphically rich, engaging site, and the performance is pretty good! But there's still room for improvement.
+Now we're talking! This is a graphically rich, engaging site, and the performance is pretty good! In fact, it's significantly faster than its 2019 site. But there's still room for improvement.
 
 ## Possible improvements
 
 - **3 second delay to content-render** caused by unnecessary inlining. Covered in detail below.
 - **10 second delay to main image** caused by a JavaScript responsive images implementation, [like we saw in part 2](/2021/f1-perf-part-2/#issue-delayed-primary-image). These should be [real responsive images](/2015/anatomy-of-responsive-images/).
-- **Additional 2 second delay to main image** caused by an extra connection. Why is this is problem is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but the solution here is just to move the images to the same server.
+- **Additional 2 second delay to main image** caused by an extra connection. This problem is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but the solution here is just to move the images to the same server as the page.
 - **Additional 2 second delay to main image** caused by poor optimisation. Covered in detail below.
 - **40 second delay to key image** caused by loading it with JavaScript. Covered in detail below.
 - **Additional 30 second delay to that image** caused by poor optimisation. Covered in detail below.
@@ -320,7 +323,7 @@ Actually, let's talk about that image…
 }</script>
 </figure>
 
-This image sits over the top of the main carousel, and it's a great bit of the design. Again, they're using WebP, but maybe not with the right settings. But even with optimised settings, the WebP is still big.
+This image sits over the top of the main carousel, and it's a great part of the design. Again, they're using WebP, but maybe not with the right settings. But even with optimised settings, the WebP is still big.
 
 When WebP was created, they designed the alpha channel around things like logos, and things cut-out of photos. In these cases the alpha channel is dominated by large areas of the same value:
 
@@ -367,38 +370,38 @@ There's a risk that the massive WebP version could end up taking bandwidth from 
 
 ## Issue: Large inlined blurry image
 
-The performance issues the Red Bull site has with images are pretty well disguised using a low-quality inlined image, but with a `blur(7px)` effect.
+The performance issues the Red Bull site has with images are pretty well disguised using a low-quality inlined image, but with a `blur(7px)` effect. Unfortunately the image they use isn't an accurate preview of the image being loaded, as it's cropped incorrectly, so there's a jump when the final version loads. However, I really like this method, as it provides more structure than something like a [BlurHash](https://blurha.sh/), but it does use more bytes.
+
+Their blurred images are 6kB each, which is quite a lot to inline, especially when the well-optimised mobile version of the image is only around twice the size. 150x150 is also an odd choice for creating a tiny JPEG, since JPEG is encoded in 8x8 blocks. If you're interested in details like this, [I gave a talk on how JPEG works](https://www.youtube.com/watch?v=F1kYBnY6mwg&t=294s).
+
+Anyway, I had a play around to see what I could do with 1kB:
 
 <figure class="full-figure max-figure">
 <script type="component">{
   "module": "shared/demos/2020/avif-has-landed/ImageTabs",
   "props": {
-    "ratio": 0.5,
-    "initial": 2,
-    "maxWidth": 360,
+    "ratio": 1.500535906,
+    "initial": 3,
     "images": [
-      ["Full AVIF (asset-pretty-size:./img-optim/red-bull-main.avif)", "asset-url:./img-optim/red-bull-main.avif"],
+      ["Full image", "asset-url:./img-optim/red-bull-blur-2-original.avif"],
       ["Original 150x150 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur.jpg)", "asset-url:./img-optim/red-bull-blur.jpg", { "backdropFilter": "blur(7px)" }],
-      ["96x192 AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur.avif)", "asset-url:./img-optim/red-bull-blur.avif", { "backdropFilter": "blur(6px)" }],
-      ["48x96 WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur.webp)", "asset-url:./img-optim/red-bull-blur.webp", { "backdropFilter": "blur(8px)" }]
+      ["48x32 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.jpg)", "asset-url:./img-optim/red-bull-blur-2.jpg", { "backdropFilter": "blur(9px)" }],
+      ["80x56 WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.webp)", "asset-url:./img-optim/red-bull-blur-2.webp", { "backdropFilter": "blur(6px)" }],
+      ["136x91 AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.avif)", "asset-url:./img-optim/red-bull-blur-2.avif", { "backdropFilter": "blur(6px)" }]
     ]
   }
 }</script>
 </figure>
 
-Unfortunately the image they use isn't an accurate preview of the image being loaded, as it's cropped incorrectly, so there's a jump when the final version loads.
+JPEG suffers from heavy blocking artefacts, so I had to increase the blur to hide it. WebP is much better, so I was able to go with a higher resolution and less blur.
 
-However, I really like this method, as it provides more structure than something like a [BlurHash](https://blurha.sh/), but it does use more bytes.
+If you're going to create super-small images like this, you'll want to disable "chroma subsampling" in the codec. Subsampling uses lower-resolution colour data, which usually works well for compression, but it's really noticeable at small sizes like this.
 
-Their blurred images are 6kB each, which is quite a lot to inline, especially when the well-optimised full version of the image is only around twice the size. 150x150 is also an odd choice for creating a tiny JPEG, since JPEG is encoded in 8x8 blocks. If you're interested in details like this, [I gave a talk on how JPEG works](https://www.youtube.com/watch?v=F1kYBnY6mwg&t=294s).
+[Squoosh](https://squoosh.app/) lets you disable subsampling for JPEG and AVIF, but it can't be disabled for WebP, as the format doesn't support it. To work around this, the WebP encoder has a "sharp RGB to YUV" option which tries to limit the impact of subsampling at the cost of some colour bleeding. I used that option above.
 
-AVIF allows you to get under 1kB and still preserve a lot of structure, meaning you don't need to blur as much. I created the above image in [Squoosh](https://squoosh.app/) (of course), but I went into the advanced settings of AVIF and disabled subsampling. At this kind of resolution, we don't want it to further reduce the colour data.
+AVIF does ok here, displaying less noise than WebP, but since the AVIF format has around 300B of headers, we don't really see the usual AVIF 'magic' that we see with other images.
 
-AVIF quality becomes useless for this if you go below 800B. AVIF has around 500B of headers, so there isn't much room for image data at that point.
-
-WebP on the other hand can go much smaller and still be somewhat usable in cases like this. It suffers from some discolouration due to how WebP always subsamples its colour data, so it needs more blurring to compensate.
-
-I'm not sure which is best. You decide.
+When it comes to an inline preview like this, you can only pick one image size and format. I'd go for the WebP, since it has decent quality and [pretty good support](https://caniuse.com/webp).
 
 ## How fast could it be?
 

@@ -3,6 +3,7 @@ import bgImgJpeg from 'asset-url:./scores-bg.jpg';
 import bgImgAvif from 'asset-url:./scores-bg.avif';
 import alphaTauriImg from 'asset-url:./alpha-tauri.svg';
 import alfaRomeoImg from 'asset-url:./alfa-romeo.svg';
+import redBullImg from 'asset-url:./red-bull.svg';
 
 interface Props {
   results: number;
@@ -30,7 +31,7 @@ const scores: Score[] = [
   },
   {
     team: 'Red Bull',
-    img: alphaTauriImg,
+    img: redBullImg,
     score: 8.6,
     score2019: 15.8,
   },
