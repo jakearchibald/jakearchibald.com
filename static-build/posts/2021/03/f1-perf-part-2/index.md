@@ -267,7 +267,7 @@ The long thin light-yellow bit means the browser knew about the resource for a l
 
 It has a 'low' prioirty, but it's a _render-blocking script!_ Why did Chrome choose to download it so late? Well, the problem is, the browser doesn't know it's render-blocking.
 
-Usually when we talk about render-blocking scripts we mean a script in the `<head>` that has one of the following attributes:
+Usually when we talk about render-blocking scripts, we mean a script that appears before the content in the source, and _doesn't_ have one of the following attributes:
 
 - `async`: Don't block the parser. Execute whenever loaded.
 - `defer`: Don't block the parser. Execute after the document has parsed, and in order with other `defer` scripts.
