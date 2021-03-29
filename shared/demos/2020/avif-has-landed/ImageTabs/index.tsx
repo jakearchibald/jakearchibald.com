@@ -6,7 +6,7 @@ interface Props {
   images: [
     title: string,
     url: string,
-    overlayStyle?: {
+    imgStyle?: {
       [key: string]: string | number;
     },
   ][];
@@ -67,10 +67,7 @@ export default class ImageTabs extends Component<Props, State> {
     { selected, loading }: State,
   ) {
     const src = __PRERENDER__ ? undefined : images[selected][1];
-    const overlayStyle = images[selected][2] && {
-      maxWidth,
-      ...images[selected][2],
-    };
+    const imgStyle = images[selected][2] && images[selected][2];
 
     return (
       <div class="image-tabs">
@@ -95,12 +92,10 @@ export default class ImageTabs extends Component<Props, State> {
                 lazy={true}
                 onLoadStart={this._onLoadStart}
                 onLoadEnd={this._onLoadEnd}
+                imgStyle={imgStyle}
               />
             )}
           </div>
-          {overlayStyle && (
-            <div class="image-tabs-overlay" style={overlayStyle} />
-          )}
           {loading && (
             <div class="image-tabs-loading">
               <loading-spinner />
