@@ -432,7 +432,7 @@ Not as big a difference as with previous sites, but still worth doing.
   }
 }</script>
 
-Red Bull _leaps_ into first place, but will they stay there? Find out in part 3.
+Red Bull _leaps_ into first place, but will they stay there? Find out in part 4.
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
