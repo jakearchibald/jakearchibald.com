@@ -60,6 +60,9 @@ interface Props {
   src: string;
   renderWidth: number;
   lazy?: boolean;
+  imgStyle?: {
+    [key: string]: string | number;
+  };
   onLoadStart?: () => void;
   onLoadEnd?: () => void;
 }
@@ -75,7 +78,7 @@ export default class DecodedImg extends Component<Props, State> {
   private async _updateOutput() {
     if (this._updateController) this._updateController.abort();
 
-    const { renderWidth, src, lazy } = this.props;
+    const { renderWidth, src, lazy, imgStyle } = this.props;
 
     this._updateController = new AbortController();
     const { signal } = this._updateController;
@@ -120,7 +123,7 @@ export default class DecodedImg extends Component<Props, State> {
             <img
               // @ts-ignore - type doesn't exist in Preact
               decoding="sync"
-              style={{ width: renderWidth + 'px' }}
+              style={{ ...imgStyle, width: renderWidth + 'px' }}
               src={src}
             />
           ),
@@ -180,7 +183,7 @@ export default class DecodedImg extends Component<Props, State> {
           this.setState({
             output: (
               <canvas
-                style={{ width: renderWidth + 'px' }}
+                style={{ ...imgStyle, width: renderWidth + 'px' }}
                 ref={(node) => node && resolve(node)}
               />
             ),

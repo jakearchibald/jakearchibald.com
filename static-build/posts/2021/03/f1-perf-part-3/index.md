@@ -127,8 +127,7 @@ I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.
     background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
     background-size: 20px 20px;
   }
-  .image-tabs-background,
-  .image-tabs-overlay {
+  .image-tabs-background {
     position: absolute;
     top: 0;
     left: 0;
@@ -139,7 +138,8 @@ I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.
   .image-tabs-transformer {
     position: relative;
   }
-  .image-tabs-transformer > img {
+  .image-tabs-transformer img,
+  .image-tabs-transformer canvas {
     position: absolute;
     top: 0;
     left: 50%;
@@ -384,10 +384,10 @@ Anyway, I had a play around to see what I could do with 1kB:
     "initial": 3,
     "images": [
       ["Full image", "asset-url:./img-optim/red-bull-blur-2-original.avif"],
-      ["Original 150x150 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur.jpg)", "asset-url:./img-optim/red-bull-blur.jpg", { "backdropFilter": "blur(7px)" }],
-      ["48x32 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.jpg)", "asset-url:./img-optim/red-bull-blur-2.jpg", { "backdropFilter": "blur(9px)" }],
-      ["80x56 WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.webp)", "asset-url:./img-optim/red-bull-blur-2.webp", { "backdropFilter": "blur(6px)" }],
-      ["136x91 AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.avif)", "asset-url:./img-optim/red-bull-blur-2.avif", { "backdropFilter": "blur(6px)" }]
+      ["Original 150x150 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur.jpg)", "asset-url:./img-optim/red-bull-blur.jpg", { "filter": "blur(7px)" }],
+      ["48x32 JPEG, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.jpg)", "asset-url:./img-optim/red-bull-blur-2.jpg", { "filter": "blur(9px)" }],
+      ["80x56 WebP, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.webp)", "asset-url:./img-optim/red-bull-blur-2.webp", { "filter": "blur(6px)" }],
+      ["136x91 AVIF, blurred (asset-pretty-size:./img-optim/red-bull-blur-2.avif)", "asset-url:./img-optim/red-bull-blur-2.avif", { "filter": "blur(6px)" }]
     ]
   }
 }</script>
