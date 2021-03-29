@@ -77,6 +77,15 @@ import machineWebpMatchSize from 'asset-pretty-size:static-build/posts/2020/09/a
 import machineJpgMatch from 'asset-url:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg';
 import machineJpgMatchSize from 'asset-pretty-size:static-build/posts/2020/09/avif-has-landed/demos/machine-match.jpg';
 
+import redBullWebpOriginal from 'asset-url:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay.webp';
+import redBullWebpOriginalSize from 'asset-pretty-size:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay.webp';
+import redBullWebpGood from 'asset-url:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-optim.webp';
+import redBullWebpGoodSize from 'asset-pretty-size:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-optim.webp';
+import redBullAvif from 'asset-url:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay.avif';
+import redBullAvifSize from 'asset-pretty-size:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay.avif';
+import redBullAvifMobile from 'asset-url:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-mobile.avif';
+import redBullAvifMobileSize from 'asset-pretty-size:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-mobile.avif';
+
 import DecodedImg from 'shared/demos/2020/avif-has-landed/DecodedImg';
 
 const categories: {
@@ -136,6 +145,16 @@ const categories: {
       [`JPEG - ${machineJpgMatchSize}`]: machineJpgMatch,
       [`WebP - 256 color lossless - ${machineWebpDitheredSize}`]: machineWebpDithered,
       [`WebP - full color lossless - ${machineWebpLosslessSize}`]: machineWebpLossless,
+    },
+  },
+  redBull: {
+    width: 1920,
+    backgroundStyle: { backgroundColor: 'rgba(0, 0, 0, 0.7)' },
+    options: {
+      [`WebP - original - ${redBullWebpOriginalSize}`]: redBullWebpOriginal,
+      [`WebP - acceptable - ${redBullWebpGoodSize}`]: redBullWebpGood,
+      [`AVIF - acceptable - ${redBullAvifSize}`]: redBullAvif,
+      [`AVIF - mobile - ${redBullAvifMobileSize}`]: redBullAvifMobile,
     },
   },
 };
