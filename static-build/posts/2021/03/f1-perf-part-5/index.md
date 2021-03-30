@@ -239,17 +239,17 @@ Pretty good! This team was called Racing Point last year (and 2019), and their s
 
 ## Cutting the mustard
 
-I was particularly pleased to see this:
+I was particularly pleased to see this at the bottom of the `<body>`:
 
 ```html
 <script nomodule src="https://polyfill.io/v3/polyfill.min.js?…"></script>
 ```
 
-They use [Polyfill.io](https://polyfill.io/v3/) to bring in the required polyfills. Polyfill.io uses the User-Agent string to decide which polyfills are needed, which means [the script](https://polyfill.io/v3/polyfill.js?features=Array.prototype.forEach%2CNodeList.prototype.forEach%2CArray.from%2CString.prototype.startsWith%2CObject.assign%2CArray.prototype.entries%2CObject.entries%2CObject.fromEntries%2CDocumentFragment.prototype.append%2CPromise%2CPromise.prototype.finally%2CArray.prototype.includes%2Ces6%2CEvent%2CElement.prototype.remove%2CElement.prototype.append%2Cfetch%2CCustomEvent%2CElement.prototype.matches%2CNodeList.prototype.forEach%2CAbortController%2CIntersectionObserver) is empty in modern browsers. To avoid making a request that results in nothing, the Aston Martin team used [`nomodule`](https://caniuse.com/mdn-html_elements_script_nomodule) to prevent the download in browsers that support JavaScript modules.
+They use [Polyfill.io](https://polyfill.io/v3/) to bring in the required polyfills. Polyfill.io uses the User-Agent string to decide which polyfills are needed, and as a result [the script](https://polyfill.io/v3/polyfill.js?features=Array.prototype.forEach%2CNodeList.prototype.forEach%2CArray.from%2CString.prototype.startsWith%2CObject.assign%2CArray.prototype.entries%2CObject.entries%2CObject.fromEntries%2CDocumentFragment.prototype.append%2CPromise%2CPromise.prototype.finally%2CArray.prototype.includes%2Ces6%2CEvent%2CElement.prototype.remove%2CElement.prototype.append%2Cfetch%2CCustomEvent%2CElement.prototype.matches%2CNodeList.prototype.forEach%2CAbortController%2CIntersectionObserver) is empty in modern browsers. To avoid making a request that results in nothing, the Aston Martin team used [`nomodule`](https://caniuse.com/mdn-html_elements_script_nomodule) to prevent the download in browsers that support JavaScript modules.
 
-This is a loose form of feature-detection that my former BBC colleague [Tom Maslen](https://twitter.com/tmaslen/) called ["Cutting the mustard"](http://web.archive.org/web/20120718191331/http://blog.responsivenews.co.uk/post/18948466399/cutting-the-mustard). Browsers that support modules just so happen to support the rest of the stuff that's required, so `nomodule` becomes convenient feature detect.
+This is a loose form of feature-detection that my former BBC colleague [Tom Maslen](https://twitter.com/tmaslen/) called ["Cutting the mustard"](http://web.archive.org/web/20120718191331/http://blog.responsivenews.co.uk/post/18948466399/cutting-the-mustard). Browsers that support modules just so happen to support the rest of the stuff that's required, so `nomodule` becomes convenient feature-detect.
 
-I'd take this a step further. If your site's core content works without JavaScript, then you can make that the experience for those older browsers. Serve all your JavaScript with `type="module"` to prevent older browsers running it, and now you can write modern JavaScript without the stress and pain of dealing with older browsers.
+I'd take this a step further. If your site's core content works without JavaScript, then you can make that the experience for those older browsers. Serve all your JavaScript with `type="module"` to prevent older browsers running it, and now you can write modern JavaScript without the stress and pain of dealing with those older browsers.
 
 ## Possible improvements
 
@@ -258,7 +258,7 @@ I'd take this a step further. If your site's core content works without JavaScri
 - **Paragraph layout shift caused by late-loading fonts** which could be performed earlier using some preload tags.
 - **0.5 second delay to main image** caused by poor image compression.
 
-Remember these delays overlap in some cases.
+These delays overlap in some cases.
 
 ## Key issue: Font foundry CSS
 
@@ -268,7 +268,7 @@ Here's the start of the waterfall:
   <img width="687" height="245" alt="" decoding="async" loading="lazy" src="asset-url:./aston-waterfall.png">
 </figure>
 
-I see extra connections on rows 2, 3, 6, and 12. The CSS on row 3 belongs to the site, so this should be moved to the same server as the page to avoid that extra connection, [as covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers).
+I see extra connections on rows 2, 3, 6, and 12. The CSS on row 3 belongs to the site, so that should be moved to the same server as the page to avoid that extra connection, [as covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers).
 
 The lateness of 12 suggests it's being initiated by another blocking resource, and Chrome DevTools confirms it:
 
@@ -292,7 +292,7 @@ The `hello.myfonts.net` CSS request on row 6 happens in parallel with the CSS on
 
 There's a `preload` that makes the request happen in parallel. This is great to see! It doesn't solve the problem as effectively as loading the font CSS async, but it's still much faster than what we saw on the Alpha Tauri site.
 
-There are `preconnect`s too. Pre-connects are great if you don't know the full URL of an important other-site resource, but you _do_ know its origin. In this case, some fonts come from `use.typekit.net`, and we can see the benefit of the `preconnect`:
+They use `preconnect` too. Preconnects are great if you don't know the full URL of an important other-site resource, but you _do_ know its origin. In this case, some fonts come from `use.typekit.net`, and we can see the benefit of the `preconnect`:
 
 <figure class="full-figure max-figure scrollable-img">
   <img width="930" height="101" alt="" decoding="async" loading="lazy" src="asset-url:./aston-waterfall-2.png">
@@ -312,7 +312,7 @@ The connection on line 12 happens really late. But the `<head>` contains:
 
 …so what's going on? Why isn't that pre-connect happening? Well, unfortunately it is, but it isn't used.
 
-### Connections and CORS
+### Connections and credentials
 
 By default, CORS requests are made without credentials, which means no cookies and other things that directly identify the user. If browsers sent no-credentials requests down the same HTTP connection as credentialed requests, well, the whole thing is pointless as it's trivial to tie them back to the same user. So, for requests to another origin, browsers will spin up another connection for no-credential requests.
 
@@ -329,7 +329,7 @@ The `crossorigin` attribute tells the browser to make a no-credential connection
 @import url('https://p.typekit.net/p.css?s=1…');
 ```
 
-And `@import` in CSS _does not_ use CORS, it's a full credentialed request. The connection still happens, but it goes unused. In fact, it's likely taking up bandwidth that could have been used elsewhere.
+And `@import` in CSS _does not use CORS_, it's a full credentialed request. The connection still happens, but it isn't used. In fact, it's likely taking up bandwidth that could have been used elsewhere.
 
 Unfortunately Chrome DevTools doesn't show this extra connection, so I dug into `chrome://net-export/` to create a full log of browser network activity. This records _all_ browser network activity, so I started a new instance of Chrome so I wasn't capturing too much noise from other tabs. Here are the key results:
 
@@ -344,13 +344,13 @@ This is pretty low-level stuff, so don't worry if it doesn't make sense. There's
 
 Then, in row 2872 we get the actual request for the CSS resource, and sadness, we get another socket in row 2883. This connection doesn't have the `pm` code, because it's for credentialed requests.
 
-The solution here is simple, just remove the `crossorigin` attribute from the `preconnect`. All requests to that particular origin are credentialed. Sometimes you'll need two `preconnect`s for the same origin, one for credentialed fetches, and another for no-credential fetches.
+The solution here is simple; just remove the `crossorigin` attribute from the `preconnect`. All requests to that particular origin are credentialed, so that works fine. Sometimes you'll need two `preconnect`s for the same origin, one for credentialed fetches, and another for no-credential fetches.
 
 Phew!
 
 ## Issue: Main image compression
 
-The image compression on the Aston site is mostly very good. Someone clearly took time over it. Unfortunately, one place it isn't so good is the all-important main image of the page:
+The image compression on the Aston Martin site is mostly very good. Someone clearly took time over it. Unfortunately, one place it isn't so good is the all-important main image of the page:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -401,7 +401,7 @@ It isn't worlds apart. The Aston Martin site is generally well-built.
   }
 }</script>
 
-Aston Martin slot in _just_ behind Red Bull. It's incredibly close for the lead! Can anyone beat Red Bull to the title?
+Aston Martin slots in _just_ behind Red Bull. It's incredibly close for the lead! Can anyone beat Red Bull to the title?
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
