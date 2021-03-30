@@ -401,7 +401,7 @@ It isn't worlds apart. The Aston Martin site is generally well-built.
   }
 }</script>
 
-Aston Martin slots in _just_ behind Red Bull. It's incredibly close for the lead! Can anyone beat Red Bull to the title?
+Aston Martin slots in _just_ behind Red Bull. It's incredibly close for the lead! But with five teams still to go, can anyone beat Red Bull to the title?
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
