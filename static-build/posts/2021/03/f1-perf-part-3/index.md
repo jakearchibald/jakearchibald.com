@@ -412,12 +412,14 @@ The Reb Bull site is pretty good, but how fast would it be if they cut their inl
 <video src="asset-url:./red-bull-compare.mp4" controls></video>
 </figure>
 <dl class="perf-summary">
-  <dt>Links</dt>
+  <dt>Original</dt>
   <dd>
     <div class="perf-data">
-      <a href="https://www.redbull.com/int-en/redbullracing">Original</a> | <a href="https://f1-performance-demo.netlify.app/red-bull/">Optimised</a>
+      <a href="https://www.redbull.com/int-en/redbullracing">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210318_Xi66_e43703507450f1d9f6104216ab165ec7-r:1-c:0">raw results</a>)
     </div>
   </dd>
+  <dt>Optimised</dt>
+  <dd><div class="perf-data"><a href="https://f1-performance-demo.netlify.app/red-bull/">Site</a> (<a href="https://www.webpagetest.org/video/compare.php?tests=210318_Xi3N_9851c378d92ddb1e88631ebea66a161f-r%3A1-c%3A0&thumbSize=200&ival=100&end=visual">raw results</a>)</div></dd>
 </dl>
 
 Not as big a difference as with previous sites, but still worth doing.
