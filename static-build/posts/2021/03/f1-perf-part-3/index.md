@@ -405,7 +405,7 @@ When it comes to an inline preview like this, you can only pick one image size a
 
 ## How fast could it be?
 
-The Reb Bull site is pretty good, but how fast would it be if they cut their inlining down to the essentials, and optimised those images? Well…
+The Red Bull site is pretty good, but how fast would it be if they cut their inlining down to the essentials, and optimised those images? Well…
 
 <figure class="full-figure max-figure video-aspect">
 <svg viewBox="0 0 816 592"></svg>
