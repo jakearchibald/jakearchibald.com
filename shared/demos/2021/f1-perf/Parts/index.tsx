@@ -12,7 +12,12 @@ interface Props {
   includeIntro: boolean;
 }
 
-const parts = ['Methodology & Alpha Tauri', 'Alfa Romeo', 'Red Bull'];
+const parts = [
+  'Methodology & Alpha Tauri',
+  'Alfa Romeo',
+  'Red Bull',
+  'Williams',
+] as const;
 
 const Parts: FunctionalComponent<Props> = ({ includeIntro, partIndex }) => (
   <Fragment>
