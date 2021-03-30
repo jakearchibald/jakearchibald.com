@@ -5,6 +5,7 @@ import alphaTauriImg from 'asset-url:./alpha-tauri.svg';
 import alfaRomeoImg from 'asset-url:./alfa-romeo.svg';
 import redBullImg from 'asset-url:./red-bull.svg';
 import williamsImg from 'asset-url:./williams.svg';
+import astonImg from 'asset-url:./aston-martin.svg';
 
 interface Props {
   results: number;
@@ -41,6 +42,12 @@ const scores: Score[] = [
     img: williamsImg,
     score: 11.1,
     score2019: 14.1,
+  },
+  {
+    team: 'Aston Martin',
+    img: astonImg,
+    score: 8.9,
+    score2019: 84.2,
   },
 ];
 
