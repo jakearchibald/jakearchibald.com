@@ -4,6 +4,7 @@ import bgImgAvif from 'asset-url:./scores-bg.avif';
 import alphaTauriImg from 'asset-url:./alpha-tauri.svg';
 import alfaRomeoImg from 'asset-url:./alfa-romeo.svg';
 import redBullImg from 'asset-url:./red-bull.svg';
+import williamsImg from 'asset-url:./williams.svg';
 
 interface Props {
   results: number;
@@ -37,7 +38,7 @@ const scores: Score[] = [
   },
   {
     team: 'Williams',
-    img: alphaTauriImg,
+    img: williamsImg,
     score: 11.1,
     score2019: 14.1,
   },
@@ -123,7 +124,7 @@ h2 + .f1-figure {
   color: #000;
   background: white;
   display: flex;
-  --size: 1.7em;
+  --size: 1.8em;
   height: var(--size);
   width: var(--size);
   align-items: center;
