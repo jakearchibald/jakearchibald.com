@@ -358,7 +358,9 @@ Because of this, they used the WebP _lossless_ mode for the alpha channel, even 
 }</script>
 </figure>
 
-…where the alpha channel is frequently changing. This is something a lossy codec handles much better. AVIF performs lossy encoding of all channels, including the alpha channel, so it performs an order of magnitude better than WebP in this case.
+…where the alpha channel is frequently changing. This is something a lossy codec handles much better. AVIF can perform lossy encoding of all channels, including the alpha channel, so it performs an order of magnitude better than WebP in this case.
+
+For cases where you need genuine lossless images, WebP is a better choice. AVIF supports lossless encoding, but the sizes are usually around 2x of WebP.
 
 ## Issue: Overlay image loaded with JavaScript
 
