@@ -314,7 +314,7 @@ The connection on line 12 happens really late. But the `<head>` contains:
 
 ### Connections and credentials
 
-By default, CORS requests are made without credentials, which means no cookies and other things that directly identify the user. If browsers sent no-credentials requests down the same HTTP connection as credentialed requests, well, the whole thing is pointless as it's trivial to tie them back to the same user. So, for requests to another origin, browsers will spin up another connection for no-credential requests.
+By default, CORS requests are made without credentials, which means no cookies and other things that directly identify the user. If browsers sent no-credentials requests down the same HTTP connection as credentialed requests, well, the whole thing is pointless as it's trivial to tie them back to the same user. So, for requests to another origin, browsers use different connections for no-credential and credentialed requests.
 
 Which brings us back to:
 
@@ -323,13 +323,13 @@ Which brings us back to:
 <link rel="preconnect" href="https://use.typekit.net" crossorigin />
 ```
 
-The `crossorigin` attribute tells the browser to make a no-credential connection, which is ideal for requests that use CORS. Fonts use CORS, so that 2nd `preconnect` is doing the right thing. But that first preconnect is to handle:
+The `crossorigin` attribute tells the browser to make a no-credential connection, which is ideal for requests that use CORS. Font requests use CORS, so that 2nd `preconnect` is doing the right thing. But that first preconnect is to handle:
 
 ```css
 @import url('https://p.typekit.net/p.css?s=1…');
 ```
 
-And `@import` in CSS _does not use CORS_, it's a full credentialed request. The connection still happens, but it isn't used. In fact, it's likely taking up bandwidth that could have been used elsewhere.
+…and `@import` requests in CSS _does not use CORS_, it's a full credentialed request. The connection still happens, but it isn't used. In fact, it's likely taking up bandwidth that could have been used elsewhere.
 
 Unfortunately Chrome DevTools doesn't show this extra connection, so I dug into `chrome://net-export/` to create a full log of browser network activity. This records _all_ browser network activity, so I started a new instance of Chrome so I wasn't capturing too much noise from other tabs. Here are the key results:
 
