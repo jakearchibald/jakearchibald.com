@@ -17,6 +17,7 @@ const parts = [
   'Alfa Romeo',
   'Red Bull',
   'Williams',
+  'Aston Martin',
 ] as const;
 
 const Parts: FunctionalComponent<Props> = ({ includeIntro, partIndex }) => (
