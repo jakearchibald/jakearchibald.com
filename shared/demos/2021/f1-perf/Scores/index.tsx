@@ -56,6 +56,12 @@ const scores: Score[] = [
     score: 52.8,
     score2019: 46.1,
   },
+  {
+    team: 'Haas',
+    img: ferrariImg,
+    score: 28.2,
+    score2019: 12.5,
+  },
 ];
 
 const css = `

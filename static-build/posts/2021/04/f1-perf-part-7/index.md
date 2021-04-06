@@ -197,7 +197,66 @@ image: 'asset-url:./img.jpg'
   }
 </style>
 
-# TODO
+# Haas
+
+<figure class="full-figure max-figure video-aspect">
+<svg viewBox="0 0 408 592"></svg>
+<video src="asset-url:./haas.mp4" controls></video>
+</figure>
+
+<figure class="full-figure max-figure scrollable-img">
+<picture>
+  <source type="image/avif" srcset="asset-url:./film.avif">
+  <img width="6504" height="236" alt="" decoding="async" loading="lazy" src="asset-url:./film.png">
+</picture>
+</figure>
+<dl class="perf-summary">
+  <dt>Link</dt>
+  <dd>
+    <div class="perf-data">
+      <a href="https://www.haasf1team.com/">Uralkali Haas F1 Team</a>
+    </div>
+  </dd>
+  <dt>First run</dt>
+  <dd>
+    <div class="perf-data">21.1s (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_Xi8V_964e4aef102c055951b9bbcf659319a5-r:2-c:0">raw results</a>)</div>
+  </dd>
+  <dt>Second run</dt>
+  <dd>
+    <div class="perf-data">7.1s (<a href="https://www.webpagetest.org/video/compare.php?tests=210319_Xi8V_964e4aef102c055951b9bbcf659319a5-r:1-c:1">raw results</a>)</div>
+  </dd>
+  <dt>Total</dt>
+  <dd>
+    <div class="perf-data">28.2s</div>
+  </dd>
+  <dt>2019 total</dt>
+  <dd>
+    <div class="perf-data"><a href="/2019/f1-perf/#haas">12.5s (2021 site is 15.7s slower)</a></div>
+  </dd>
+</dl>
+
+Haas had the fastest F1 site in 2019, but things aren't looking so good this year.
+
+## Possible improvements
+
+- **5+ second delay to content render** caused by CSS font tracker. This is exactly the same issue [covered in part 1](/2021/f1-perf-part-1/#key-issue-css-font-tracker).
+- **3 second delay to content render** caused by CSS on other servers, plus a redirect. This problem is [covered in part 4](/2021/f1-perf-part-4/#key-issue-delayed-css), and the solution here is just to move the CSS to the same server as the page, or load them async.
+- **3 second delay to content render** caused by blocking JS on another server. This problem is [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), and the quick solution here is to use `defer` or `async` so the script doesn't block rendering.
+- **10+ second delay to main image** caused by JavaScript. Covered in detail below.
+- **Layout instability** caused by JavaScript. Covered in detail below.
+
+## Lots of little files vs one big file
+
+Here's the start of the waterfall:
+
+<figure class="full-figure max-figure scrollable-img">
+  <img width="423" height="617" alt="" decoding="async" loading="lazy" src="asset-url:./waterfall-1.png">
+</figure>
+
+## Key issue: When progressive enhancement goes wrong
+
+- Late loading main image
+- Stability
 
 # Scoreboard
 
@@ -205,7 +264,7 @@ image: 'asset-url:./img.jpg'
   "module": "shared/demos/2021/f1-perf/Scores",
   "staticOnly": true,
   "props": {
-    "results": 6
+    "results": 7
   }
 }</script>
 
