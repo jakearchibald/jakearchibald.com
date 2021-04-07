@@ -346,8 +346,8 @@ Let's take that main image at the top of the page:
     "images": [
       ["Original JPEG (asset-pretty-size:./img-optim/1.jpg)", "asset-url:./img-optim/1.jpg"],
       ["Optimised JPEG (asset-pretty-size:./img-optim/1-optim.jpg)", "asset-url:./img-optim/1-optim.jpg"],
-      ["Original JPEG (asset-pretty-size:./img-optim/1.webp)", "asset-url:./img-optim/1.webp"],
-      ["Original JPEG (asset-pretty-size:./img-optim/1.avif)", "asset-url:./img-optim/1.avif"]
+      ["WebP (asset-pretty-size:./img-optim/1.webp)", "asset-url:./img-optim/1.webp"],
+      ["AVIF (asset-pretty-size:./img-optim/1.avif)", "asset-url:./img-optim/1.avif"]
     ]
   }
 }</script>
