@@ -155,9 +155,6 @@ h2 + .f1-figure {
 .f1-scoreboard .num-col {
   width: 23%;
 }
-.f1-scoreboard .team-col {
-  width: 37%;
-}
 .f1-scoreboard .slower {
   background: #ffc800;
   color: #000;
@@ -173,6 +170,7 @@ h2 + .f1-figure {
   grid-template-columns: 1fr max-content;
   height: 100%;
   align-items: center;
+  white-space: nowrap;
 }
 .f1-scoreboard .team .name {
   padding: var(--cell-padding);
