@@ -463,7 +463,8 @@ The difference here is huge, which is why it's so important to deliver core cont
   "module": "shared/demos/2021/f1-perf/Scores",
   "staticOnly": true,
   "props": {
-    "results": 8
+    "results": 8,
+    "separate2019": false
   }
 }</script>
 

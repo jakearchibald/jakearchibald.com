@@ -10,18 +10,17 @@ import ferrariImg from 'asset-url:./ferrari.svg';
 import haasImg from 'asset-url:./haas.svg';
 import mclarenImg from 'asset-url:./mclaren.svg';
 
-interface Props {
-  results: number;
+interface ScoreWith2019 extends Score {
+  score2019: number;
 }
 
 interface Score {
   team: string;
   img: string;
   score: number;
-  score2019: number;
 }
 
-const scores: Score[] = [
+const scores: ScoreWith2019[] = [
   {
     team: 'Alpha Tauri',
     img: alphaTauriImg,
@@ -188,8 +187,33 @@ h2 + .f1-figure {
 }
 `;
 
-const Scores: FunctionalComponent<Props> = ({ results }) => {
-  const boardResults = scores.slice(0, results);
+interface Props {
+  results: number;
+  separate2019?: boolean;
+}
+
+const Scores: FunctionalComponent<Props> = ({
+  results,
+  separate2019 = false,
+}) => {
+  const boardResults: ScoreWith2019[] | Score[] = scores
+    .slice(0, results)
+    .flatMap((result) =>
+      !separate2019
+        ? (result as ScoreWith2019)
+        : [
+            {
+              team: result.team,
+              img: result.img,
+              score: result.score,
+            },
+            {
+              team: result.team + ' 2019',
+              img: result.img,
+              score: result.score2019,
+            },
+          ],
+    );
   boardResults.sort((a, b) => a.score - b.score);
 
   return (
@@ -206,12 +230,16 @@ const Scores: FunctionalComponent<Props> = ({ results }) => {
               <tr>
                 <th class="pos-col"></th>
                 <th class="team-col"></th>
-                <th class="num-col">Score</th>
-                <th class="corner-border num-col">vs 2019</th>
+                <th class={separate2019 ? 'corner-border num-col' : 'num-col'}>
+                  Score
+                </th>
+                {!separate2019 && (
+                  <th class="corner-border num-col">vs 2019</th>
+                )}
                 <th style="visibility: hidden" class="num-col"></th>
               </tr>
             </thead>
-            {boardResults.map((result, i) => (
+            {boardResults.map((result: Score | ScoreWith2019, i) => (
               <tr>
                 <th></th>
                 <th class="no-padding">
@@ -227,12 +255,17 @@ const Scores: FunctionalComponent<Props> = ({ results }) => {
                   </div>
                 </th>
                 <td>{result.score.toFixed(1)}</td>
-                <td
-                  class={result.score > result.score2019 ? 'slower' : 'faster'}
-                >
-                  {result.score > result.score2019 && '+'}
-                  {(result.score - result.score2019).toFixed(1)}
-                </td>
+                {'score2019' in result && (
+                  <td
+                    class={
+                      result.score > result.score2019 ? 'slower' : 'faster'
+                    }
+                  >
+                    {result.score > result.score2019 && '+'}
+                    {(result.score - result.score2019).toFixed(1)}
+                  </td>
+                )}
+
                 {i === 0 ? (
                   <td class="corner-border">Leader</td>
                 ) : (
