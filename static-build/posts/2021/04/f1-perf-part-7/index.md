@@ -333,6 +333,8 @@ The before-JS phase should not contain the back & forward buttons of the carouse
 
 Then, JS comes along and adds the back & forward buttons, which use [`scrollTo`](https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollTo). Adding these buttons shouldn't impact layout of other things, they should just appear.
 
+**Edit:** Turns out [such a carousel already exists](https://bravecow.github.io/native-gallery/example/). [Here's the repo](https://github.com/bravecow/native-gallery).
+
 ## Issue: Image optimisation
 
 Let's take that main image at the top of the page:
@@ -346,8 +348,8 @@ Let's take that main image at the top of the page:
     "images": [
       ["Original JPEG (asset-pretty-size:./img-optim/1.jpg)", "asset-url:./img-optim/1.jpg"],
       ["Optimised JPEG (asset-pretty-size:./img-optim/1-optim.jpg)", "asset-url:./img-optim/1-optim.jpg"],
-      ["Original JPEG (asset-pretty-size:./img-optim/1.webp)", "asset-url:./img-optim/1.webp"],
-      ["Original JPEG (asset-pretty-size:./img-optim/1.avif)", "asset-url:./img-optim/1.avif"]
+      ["WebP (asset-pretty-size:./img-optim/1.webp)", "asset-url:./img-optim/1.webp"],
+      ["AVIF (asset-pretty-size:./img-optim/1.avif)", "asset-url:./img-optim/1.avif"]
     ]
   }
 }</script>
