@@ -237,17 +237,15 @@ image: 'asset-url:./img.jpg'
 
 As you can see from the video/filmstrip, we get a first-render around 19s in, but there's a lot of layout instability, and we don't get main content until 26s.
 
-This looks almost identical to the 2019 site, which might
-
-Let's take a closer look:
+This looks almost identical to the 2019 site, which might explain why the numbers and issues are so similar. Let's take a closer look:
 
 ## Possible improvements
 
 - **14 second delay to first render** caused by font CSS. This is kinda different to other sites I've looked at in this series, so I'll cover it in detail below.
 - **2 second delay to first render** caused by a CSS on a different server. [Covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers). This CSS should be moved to the same server.
-- **Additional 2 second delay to first render** caused by large CSS, only 6% of which is actually used. We saw a (much worse) [example of this in part 6](/2021/f1-perf-part-6/#key-issue-unused-render-blocking-css).
+- **Additional 2 second delay to first render** caused by large CSS, only 6% of which is used. We covered a (much worse) [example of this in part 6](/2021/f1-perf-part-6/#key-issue-unused-render-blocking-css).
 - **20+ second delay to content render** caused by a number of JavaScript loading issues. Covered in detail below.
-- **20+ second delay to main image** caused by bad image priorities and optimisation. Covered in detail below.
+- **20+ second delay to main image** caused by bad image priorities and poor optimisation. Covered in detail below.
 - **Large delay to small icons** due to a sprite sheet. Covered in detail below.
 
 As always, some of these delays overlap.
@@ -262,7 +260,7 @@ Let's take a look at the start of the waterfall:
 
 In row 2 we get a blocking request to another server, which is bad for the reasons [covered in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers), but it issues a redirect to yet another server (row 6), so we pay the HTTP connection price yet again. This could be done in parallel with a `<link rel="preconnect">`, but that isn't the main problem here.
 
-The CSS in row 6 is 140kB, and it's all base64-encoded font data. To make matters worse, it's served over HTTP/1.1, and uncompressed. Although WOFF2 font data doesn't compress well using HTTP compression (it's already well compressed using Brotli), base64 does since it's a limited character set. Brotli shaves almost 30% off the size of this response. But again, that isn't the main problem.
+The CSS in row 6 is 140kB, and it's all base64-encoded font data. To make matters worse, it's served over HTTP/1.1 and uncompressed. Although WOFF2 font data doesn't compress well using HTTP compression (it's already compressed using Brotli), base64 does compress well since it's a limited character set. Brotli shaves almost 30% off the size of this response. But again, that isn't the main problem.
 
 There are a number of ways to load web fonts, and [all of them are bad](https://twitter.com/jaffathecake/status/1293250032632844294).
 
@@ -292,24 +290,24 @@ There's 'fallback', which is like 'optional', but gives the font a slightly long
 - ⚠️ Still creates a layout shift when the font loads. Again this can be reduced using the techniques above.
 - ⚠️ Branding people still get very angry in the cases where the font isn't displayed.
 
-Those options are controlled by the [`font-display` descriptor](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display), but you can achieve the same effects, and everything in between using the [CSS font loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API).
+Those options are controlled by the [`font-display` descriptor](https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display), but you can achieve the same effects and everything in between using the [CSS font loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API).
 
-Another option is what McLaren are doing here, by inlining the font as base64:
+Another option is what McLaren are doing here by inlining the font as base64:
 
 - ✅ No layout shifting.
-- ⚠️ Blocks text from rendering. In fact…
-- ⚠️ Blocks everything from rendering while the CSS downloads.
+- ⚠️ Blocks text from rendering until the fonts download. In fact…
+- ⚠️ Blocks everything from rendering while the fonts download.
 - ⚠️ You pay the price for all the fonts, even the ones you don't use.
 
-Like I said, there's no good choice here, only the least-bad for a given situation. And I'm not saying inlining fonts as base64 is bad; it gets you the font without any layout shifting. I used this technique [for the Squoosh logo](https://squoosh.app/c/logo-with-text-110604e5.svg) and [PROXX](https://proxx.app/), but in those cases I subsetted the font so it only contained the very small number of characters that were needed.
+Like I said, there's no good choice here, only the least-bad for a given situation. And I'm not saying inlining fonts as base64 is bad; it gets you the font without any layout shifting. I used this technique [for the Squoosh logo](https://squoosh.app/c/logo-with-text-110604e5.svg) and [PROXX](https://proxx.app/), but in those cases I subsetted the font so it only contains the very small number of characters that are needed.
 
-A little-known feature of [Google fonts](https://fonts.google.com/) is the `text` param, which subsets the fonts to the characters you provide. For instance, taking the [Patrick Hand](https://fonts.google.com/specimen/Patrick+Hand) font, the [standard WOFF2](https://fonts.googleapis.com/css2?family=Patrick+Hand) is 14kB, whereas if I [subset it to just contain the characters 'hello'](https://fonts.googleapis.com/css2?family=Patrick+Hand&text=hello) it's 1kB.
+A little-known feature of [Google fonts](https://fonts.google.com/) is the `text` param which subsets the fonts to the characters you provide. For instance, taking the [Patrick Hand](https://fonts.google.com/specimen/Patrick+Hand) font, the [standard WOFF2](https://fonts.googleapis.com/css2?family=Patrick+Hand) is 14kB, whereas if I [subset it to just contain the characters 'hello'](https://fonts.googleapis.com/css2?family=Patrick+Hand&text=hello) it's 1kB.
 
-However, McLaren aren't subsetting, they're base64-inlining multiple large fonts, and since CSS resources block rendering, the whole first render is blocked for 14 seconds by that large CSS file. That includes the base64 data for fonts they don't even use on the page.
+However, McLaren aren't subsetting, they're base64-inlining multiple large fonts, and since CSS resources block rendering, the whole first render is blocked for 14 seconds.
 
 In this case a 'swap' would have been ideal, with some [CSS font loading API](https://developer.mozilla.org/en-US/docs/Web/API/CSS_Font_Loading_API) tricks to reduce layout shifting.
 
-If McLaren have no control over how the fonts are packaged, as in it's something the foundry controls, McLaren could load the CSS async to avoid the render-blocking, as [I covered in part 1](/2021/f1-perf-part-1/#load-cross-origin-font-css-async).
+If McLaren have no control over how the fonts are packaged, as in it's something the font foundry controls, McLaren could load the CSS async to avoid the render-blocking, as [I covered in part 1](/2021/f1-perf-part-1/#load-cross-origin-font-css-async).
 
 ## Key issue: JavaScript delay
 
@@ -332,9 +330,9 @@ Although the McLaren site renders in 19s, the primary content is inserted with J
 
 The JavaScript on row 3 is a parser-blocking script in the `<head>` (I covered the [different types of script loading in part 2](/2021/f1-perf-part-2/#key-issue-low-priority-render-blocking-javascript)), _and_ it's on another server (I covered [this issue in part 1](/2021/f1-perf-part-1/#avoid-blocking-resources-on-other-servers)). But it isn't the biggest problem here.
 
-More JavaScript loads in rows 5, 7, 8 and 9. There are also parse-blocking scripts, but they're at the bottom of the `<body>`, so they're not blocking any content. Unfortunately the CSS on row 6 is doing all the content-blocking at this point.
+More JavaScript loads in rows 5, 7, 8 and 9. These are also parser-blocking scripts, but they're at the bottom of the `<body>` so they're not blocking any content. Unfortunately the CSS on row 6 is doing all the content-blocking at this point.
 
-Those scripts download in one after the other rather than in parallel. This is due to resource priorities. Chrome knows that the CSS resource in row 6 is blocking rendering so it avoids downloading too much else in parallel, so the CSS gets a large share of the bandwidth.
+Those scripts download one after the other rather than in parallel. This is due to resource priorities. Chrome knows that the CSS resource in row 6 is blocking rendering so it avoids downloading too much else in parallel, so the CSS gets a large share of the bandwidth.
 
 Anyway, those scripts are downloaded by the time the CSS lands, so why does it take so much longer to get content on the screen? Well, we need to look further down the waterfall:
 
@@ -355,7 +353,7 @@ addEventListener('DOMContentLoaded', () => {
 });
 ```
 
-The McLaren script waits for `DOMContentLoaded` before it does its work, and because those scripts in rows 55-57 are parser-blocking, they delay `DOMContentLoaded`. The McLaren script shouldn't wait for `DOMContentLoaded`; by being at the end of the `<body>` they know the relevant content has already been parsed.
+The McLaren script waits for `DOMContentLoaded` before it does its work, and because those scripts in rows 55-57 are parser-blocking, they delay `DOMContentLoaded`. The McLaren script shouldn't wait for `DOMContentLoaded`; by being at the end of the `<body>` it can rely on the relevant DOM being there already.
 
 Row 59 looks like an XHR/fetch which also delays content appearing on the page. However, I don't see this when I visit the site, so I haven't been able to dig into it.
 
@@ -397,20 +395,20 @@ The first image downloaded is on row 11, and oooo that row looks _big_. And yep,
 }</script>
 </figure>
 
-But it gets worse. The keen-eyed amongst you may have noticed that this isn't the primary image. In fact, where is that image? It took me a while to find it:
+But it gets worse. The keen-eyed amongst you may have noticed that this _isn't_ the primary image. In fact, where is that image? It took me a while to find it:
 
 <figure class="full-figure max-figure video-aspect">
 <svg viewBox="0 0 1920 1080"></svg>
 <video src="asset-url:./image.mp4" controls></video>
 </figure>
 
-So, those images are behind a menu, then behind a hover. They're not accessible by mobile. Each is 500kB-2MB, 1920x1920.
+So, those images are behind a menu, then behind a hover. They're not accessible by mobile. Each is 500kB-2MB, and 1920x1920 in size, even though it's only displayed at around 150x150.
 
-`<img>` elements (and `HTMLImageElement` objects) trigger downloads immediately, they don't wait for things like layout unless [`loading="lazy"`](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading#images_and_iframes). That image of the t-shirt is the first image in the source, so it's the first one queued. The browser tries to reshuffle priorities as it discovers which images are in the viewport, but the layout shifts make that difficult, so the browser makes some choices that turn out to be wrong.
+`<img>` elements (and `HTMLImageElement` objects) trigger downloads immediately; they don't wait for things like layout unless [`loading="lazy"`](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading#images_and_iframes). That image of the t-shirt is the first image in the source, so it's the first one queued. The browser tries to reshuffle priorities as it discovers which images are in the viewport, but the layout shifts make that difficult, so the browser makes some choices that turn out to be wrong.
 
 Once the CSS font issue is fixed, and these images are optimised, it might not be a problem. If they still end up with higher priority, and block more important resources, [`loading="lazy"`](https://developer.mozilla.org/en-US/docs/Web/Performance/Lazy_loading#images_and_iframes) might help. If not, I'd avoid adding these images to the DOM until the menu is opened.
 
-The actual main image gets queued behind lots of less important images because it's added with JavaScript, so the browser doesn't even know about it until the 24s mark. Again, this would be solved by putting the core content in HTML, rather than depending on JavaScript for it.
+The actual main image gets queued behind lots of less important images because it's added with JavaScript, so the browser doesn't even know about it until the 24s mark. Again, this would be solved by putting the core content in HTML, rather than depending on JavaScript.
 
 ## Issue: Sprite sheets are bad now
 
@@ -428,17 +426,19 @@ The actual main image gets queued behind lots of less important images because i
 }</script>
 </figure>
 
-Listen, I used to love sprite sheets. The first 'popular' bit of developer tooling I ever created was [Sprite Cow](http://www.spritecow.com/). Sprite sheets overcame the HTTP/1.1 parallel request limit by bundling many images into one image. Also, it generally produced resources that were smaller than lots of little resources.
+Ahhh a sprite sheet. I haven't seen one of these in a while. Listen, I used to love sprite sheets. The first 'popular' bit of developer tooling I ever created was [Sprite Cow](http://www.spritecow.com/). Sprite sheets overcame the HTTP/1.1 parallel request limit by bundling many images into one image. Also, it generally produced resources that were smaller than lots of little resources.
 
 With HTTP/2, lots of little requests are cheap. They're not free, [as we saw in part 7](/2021/f1-perf-part-7/#lots-of-little-resources-vs-one-big-resource), but they're cheap. The benefit of having these images separate is, if you only need one little icon, you don't need to download the whole sheet. And that's the case here. As far as I can tell, the page is only using those little flag icons in the footer, and tiny SVG flags are usually less than 300 bytes each.
 
-I guess this is legacy, as the sprite sheet features "McLaren Honda", and McLaren haven't used Honda engines since 2017. But that's another issue with sprite sheets, they're difficult to maintain.
+Even if a lot of that sprite sheet was needed, images are different to things like CSS. With CSS, all of it needs to download until anything can render (unless you're using tricks to load it async). However, images can appear one by one, as they download. By keeping the images separate, the browser can give priority to the images that are needed sooner, and they'll appear sooner as they'll be tiny.
+
+I guess this sprite sheet is legacy, as the sprite sheet features "McLaren Honda", and McLaren haven't used Honda engines since 2017. But that's another issue with sprite sheets, they're difficult to maintain.
 
 Sorry [Sprite Cow](http://www.spritecow.com/), sprite sheets are dead.
 
 ## How fast could it be?
 
-With the CSS inlined, the fonts extracted, and a better before-JavaScript render, here's how fast it would be:
+With the CSS inlined, the fonts extracted, and a better before-JavaScript render, here's how fast it would be over the same connection:
 
 <figure class="full-figure max-figure video-aspect">
 <svg viewBox="0 0 816 592"></svg>
@@ -467,7 +467,7 @@ The difference here is huge, which is why it's so important to deliver core cont
   }
 }</script>
 
-McLaren end up towards the back, but at least they're faster than they were in 2019.
+McLaren end up towards the back, but at least they're faster than they were in 2019. Two more teams to go! See you next time…
 
 <script type="component">{
   "module": "shared/demos/2021/f1-perf/Parts",
