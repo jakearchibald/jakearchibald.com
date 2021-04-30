@@ -1,5 +1,5 @@
 ---
-title: Auditing the Google I/O site
+title: Performance-testing the Google I/O site
 date: 2021-04-30 01:00:00
 summary: Deep-diving on the load performance of the Google I/O website.
 meta: Deep-diving on the load performance of the Google I/O website.
