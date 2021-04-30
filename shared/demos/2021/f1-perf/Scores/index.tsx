@@ -9,6 +9,7 @@ import astonImg from 'asset-url:./aston-martin.svg';
 import ferrariImg from 'asset-url:./ferrari.svg';
 import haasImg from 'asset-url:./haas.svg';
 import mclarenImg from 'asset-url:./mclaren.svg';
+import googleImg from 'asset-url:./google.svg';
 
 interface ScoreWith2019 extends Score {
   score2019: number;
@@ -68,6 +69,12 @@ const scores: ScoreWith2019[] = [
     img: mclarenImg,
     score: 36,
     score2019: 40.7,
+  },
+  {
+    team: 'Google I/O',
+    img: googleImg,
+    score: 39.2,
+    score2019: 0,
   },
 ];
 
@@ -199,7 +206,7 @@ const Scores: FunctionalComponent<Props> = ({
   const boardResults: ScoreWith2019[] | Score[] = scores
     .slice(0, results)
     .flatMap((result) =>
-      !separate2019
+      !separate2019 || !result.score2019
         ? (result as ScoreWith2019)
         : [
             {
@@ -258,11 +265,21 @@ const Scores: FunctionalComponent<Props> = ({
                 {'score2019' in result && (
                   <td
                     class={
-                      result.score > result.score2019 ? 'slower' : 'faster'
+                      !result.score2019
+                        ? ''
+                        : result.score > result.score2019
+                        ? 'slower'
+                        : 'faster'
                     }
                   >
-                    {result.score > result.score2019 && '+'}
-                    {(result.score - result.score2019).toFixed(1)}
+                    {result.score2019 ? (
+                      <Fragment>
+                        {result.score > result.score2019 && '+'}
+                        {(result.score - result.score2019).toFixed(1)}
+                      </Fragment>
+                    ) : (
+                      'n/a'
+                    )}
                   </td>
                 )}
 
