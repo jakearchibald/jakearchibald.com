@@ -34,7 +34,7 @@ Anyway, on with the show:
   }
   .scrollable-img svg {
     min-width: max-content;
-    width: 100%;
+    width: auto;
   }
 
   .full-figure + .scrollable-img , .full-figure + .perf-summary {
