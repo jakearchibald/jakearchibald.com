@@ -21,7 +21,7 @@ const parts = [
   { part: 6, title: 'Ferrari', url: '/2021/f1-perf-part-6/' },
   { part: 7, title: 'Haas', url: '/2021/f1-perf-part-7/' },
   { part: 8, title: 'McLaren', url: '/2021/f1-perf-part-8/' },
-  { part: 0, title: 'Google I/O', url: '/2021/io-site-audit/' },
+  { part: 0, title: 'Google I/O', url: '/2021/io-site-perf/' },
 ] as const;
 
 const css = `
