@@ -380,9 +380,15 @@ The primary image doesn't appear until very late, around 39s. It isn't a huge de
 
 The first image downloaded is on row 11, and oooo that row looks _big_. And yep, it could be a touch smaller:
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1,
     "maxWidth": 150,
@@ -414,7 +420,7 @@ The actual main image gets queued behind lots of less important images because i
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 0.818181818,
     "images": [

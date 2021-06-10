@@ -365,9 +365,15 @@ You might be thinking "a different set of rules would result in a faster page lo
 
 As we've seen with most sites so far, main images end up being a bit too big. They serve the same banner for desktop and mobile, meaning mobile is getting way more data than it needs. [Responsive images](/2015/anatomy-of-responsive-images/) mean the browser can pick the size and format that works best for the device. Here it is optimised for mobile using [Squoosh](https://squoosh.app/):
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 2.725352113,
     "maxWidth": 360,

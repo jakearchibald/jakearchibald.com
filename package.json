@@ -31,8 +31,8 @@
     "postcss-nested": "^4.2.3",
     "postcss-simple-vars": "^5.0.2",
     "postcss-url": "^8.0.0",
-    "preact": "^10.4.8",
-    "preact-render-to-string": "^5.1.10",
+    "preact": "^10.5.13",
+    "preact-render-to-string": "^5.1.19",
     "prettier": "^2.2.1",
     "pretty-bytes": "^5.4.1",
     "prismjs": "^1.23.0",
@@ -54,6 +54,5 @@
   },
   "engines": {
     "node": ">=12"
-  },
-  "dependencies": {}
+  }
 }

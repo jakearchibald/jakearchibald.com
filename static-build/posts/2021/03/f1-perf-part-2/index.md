@@ -109,92 +109,6 @@ Ohhh, you've come back for more? Excellent. I was worried it was just going to b
   }
 </style>
 
-<style>
-  .image-tabs {
-    position: relative;
-  }
-  .image-tabs-pop-out-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    fill: #fff;
-    width: 32px;
-    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.7));
-  }
-  .image-tabs-preview {
-    position: relative;
-    overflow: hidden;
-    background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
-    background-size: 20px 20px;
-  }
-  .image-tabs-background,
-  .image-tabs-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    margin: 0 auto;
-  }
-  .image-tabs-transformer {
-    position: relative;
-    display: grid;
-    align-items: stretch;
-    justify-items: stretch;
-  }
-  .image-tabs-transformer > * {
-    grid-area: 1/1;
-  }
-  .image-tabs-tabs {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    border-top: 7px solid #ffe454;
-  }
-  .image-tabs input[type=radio] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .image-tabs-label {
-    padding: 0.7em 0.7em;
-    text-align: center;
-    cursor: pointer;
-    line-height: 1.3;
-    font-size: 0.9rem;
-  }
-  input[type=radio]:checked + .image-tabs-label {
-    background: #ffe454;
-  }
-  input[type=radio]:focus-visible + .image-tabs-label {
-    background: #b9b9b9;
-  }
-  input[type=radio]:focus-visible:checked + .image-tabs-label {
-    background: #ffc254;
-  }
-  .image-tabs-tab {
-    display: grid;
-  }
-  @keyframes loading-fade-in {
-    from { opacity: 0; animation-timing-function: ease-in-out; }
-  }
-  .image-tabs-loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, .62);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: 300ms loading-fade-in;
-  }
-  .image-tabs-loading loading-spinner {
-    --color: #fff;
-  }
-</style>
-
 # Alfa Romeo
 
 <figure class="full-figure max-figure video-aspect">
@@ -366,9 +280,15 @@ It looks like someone really cared about image sizes when they built this site, 
 
 I put it through [Squoosh](https://squoosh.app/):
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.33496732,
     "maxWidth": 420,

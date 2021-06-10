@@ -40,87 +40,17 @@ Also, **[Squoosh](https://squoosh.app) now supports AVIF**, which is how I compr
 
 Let's take a look at how AVIF performs against the image formats we already know and love…
 
-<style>
-  .image-tabs {
-    position: relative;
-  }
-  .image-tabs-pop-out-icon {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    fill: #fff;
-    width: 32px;
-    filter: drop-shadow(0px 2px 3px rgba(0, 0, 0, 0.7));
-  }
-  .image-tabs-preview {
-    position: relative;
-    overflow: hidden;
-    background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2 2"><path d="M1 2V0h1v1H0v1z" fill-opacity=".025"/></svg>');
-    background-size: 20px 20px;
-  }
-  .image-tabs-transformer {
-    display: grid;
-    align-items: stretch;
-    justify-items: stretch;
-  }
-  .image-tabs-transformer > * {
-    grid-area: 1/1;
-  }
-  .image-tabs-tabs {
-    display: grid;
-    grid-auto-flow: column;
-    grid-auto-columns: 1fr;
-    border-top: 7px solid #ffe454;
-  }
-  .image-tabs input[type=radio] {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-  .image-tabs-label {
-    padding: 0.7em 0.7em;
-    text-align: center;
-    cursor: pointer;
-    line-height: 1.3;
-    font-size: 0.9rem;
-  }
-  input[type=radio]:checked + .image-tabs-label {
-    background: #ffe454;
-  }
-  input[type=radio]:focus-visible + .image-tabs-label {
-    background: #b9b9b9;
-  }
-  input[type=radio]:focus-visible:checked + .image-tabs-label {
-    background: #ffc254;
-  }
-  .image-tabs-tab {
-    display: grid;
-  }
-  @keyframes loading-fade-in {
-    from { opacity: 0; animation-timing-function: ease-in-out; }
-  }
-  .image-tabs-loading {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, .62);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: 300ms loading-fade-in;
-  }
-  .image-tabs-loading loading-spinner {
-    --color: #fff;
-  }
-</style>
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
 
 # F1 photo
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
@@ -167,7 +97,7 @@ I struggled to compress the F1 image as JPEG. If I went any lower than 74 kB, th
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
@@ -198,7 +128,7 @@ Let's take a closer look and see how the codecs work:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
@@ -230,7 +160,7 @@ One way to make the differences between the codecs really obvious is to test the
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.777,
     "maxWidth": 960,
@@ -260,7 +190,7 @@ Ok, next image:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
@@ -295,7 +225,7 @@ I went straight for palette reduction and lossless compression with this image, 
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
@@ -318,7 +248,7 @@ Turns out lossy AVIF can handle solid colour and sharp lines really well, and pr
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 1000,
@@ -348,7 +278,7 @@ Let's push the other codecs down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.333,
     "maxWidth": 400,
@@ -381,7 +311,7 @@ Right, it's time for the next image…
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 500,
@@ -410,7 +340,7 @@ AVIF aces it again at a significantly smaller size, even compared to the SVG. Pa
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 1000,
@@ -438,7 +368,7 @@ As always, let's push the other formats down to the size of the AVIF:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.5,
     "maxWidth": 500,
@@ -467,7 +397,7 @@ Ok, one more:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
@@ -496,7 +426,7 @@ JPEG doesn't do a _great_ job here – anything lower than 80 kB starts to intro
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
@@ -528,7 +458,7 @@ For one last time, let's push the other codecs down to AVIF's size:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
@@ -577,7 +507,7 @@ Maybe this could be solved if the format could provide a way to embed a 'preview
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 1.786,
     "maxWidth": 960,
@@ -636,7 +566,7 @@ Phew! I didn't expect this post to get so long. I wanted to include a dive into 
 
 I really enjoyed building the demos for this article. In case you want to dig into the details:
 
-- I built [a Preact component to handle image loading and decoding](https://github.com/jakearchibald/jakearchibald.com/blob/main/shared/demos/2020/avif-has-landed/DecodedImg/index.tsx), so AVIF/WebP works even without browser support. [A worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/decode/index.ts) handles the actual decoding, using the WebAssembly decoders from [Squoosh](https://squoosh.app/). I'd usually use [comlink](https://github.com/GoogleChromeLabs/comlink) to help with worker communication, but lack of worker-module compatibility meant I [went for something smaller/hackier](https://github.com/jakearchibald/jakearchibald.com/blob/main/shared/demos/2020/avif-has-landed/DecodedImg/decoder.ts) instead.
+- I built [a Preact component to handle image loading and decoding](https://github.com/jakearchibald/jakearchibald.com/blob/main/shared/DecodedImg/index.tsx), so AVIF/WebP works even without browser support. [A worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/decode/index.ts) handles the actual decoding, using the WebAssembly decoders from [Squoosh](https://squoosh.app/). I'd usually use [comlink](https://github.com/GoogleChromeLabs/comlink) to help with worker communication, but lack of worker-module compatibility meant I [went for something smaller/hackier](https://github.com/jakearchibald/jakearchibald.com/blob/main/shared/DecodedImg/decoder.ts) instead.
 - I wanted the demos on this page to be part of the static build to avoid layout shifting, but I [didn't want to re-render the whole page with JS](https://twitter.com/jaffathecake/status/1230388412806520833) (a pattern you see a lot with things like Gatsby and Next.JS). I hacked together a solution where my [markdown contains `<​script type="component">`](https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/2020/09/avif-has-landed/index.md), which is [replaced with the HTML for that component](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L79) when the markdown is parsed, and [becomes live on the client](https://github.com/jakearchibald/jakearchibald.com/blob/main/lib/markdown-plugin.js#L109).
 - The full page compare view uses the [two-up and pinch-zoom web components](https://github.com/jakearchibald/jakearchibald.com/blob/main/client/demos/2020/avif-has-landed/compare/ZoomableTwoUp.tsx) from Squoosh.
 - Here's the [progressive image loading demo](/2020/avif-has-landed/demos/loading/). It uses a [`TransformStream` in a service worker](https://github.com/jakearchibald/jakearchibald.com/blob/main/client-worker/avif/avif-slow-sw.ts) to throttle the image data.
