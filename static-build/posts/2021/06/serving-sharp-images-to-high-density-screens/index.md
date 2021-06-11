@@ -1,6 +1,6 @@
 ---
 title: Serving sharp images to high density screens
-date: 2021-06-10 01:00:00
+date: 2021-06-11 01:00:00
 summary: Why compressing images for dense screens is different, and how to serve them
 meta: Why compressing images for dense screens is different, and how to serve them
 image: 'asset-url:./img.jpg'
