@@ -11,48 +11,8 @@
  * limitations under the License.
  */
 import { Component, h, VNode } from 'preact';
-import { abortable } from './utils';
+import { abortable, canDecodeImageType, extensionTypes } from './utils';
 import Decoder from './decoder';
-
-/** Caches results from canDecodeImageType */
-const canDecodeCache = new Map<string, Promise<boolean>>();
-
-/**
- * Tests whether the browser supports a particular image mime type.
- *
- * @param type Mimetype
- * @example await canDecodeImageType('image/avif')
- */
-function canDecodeImageType(type: string): Promise<boolean> {
-  if (!canDecodeCache.has(type)) {
-    const resultPromise = (async () => {
-      const picture = document.createElement('picture');
-      const img = document.createElement('img');
-      const source = document.createElement('source');
-      source.srcset = 'data:,x';
-      source.type = type;
-      picture.append(source, img);
-
-      // Wait a single microtick just for the `img.currentSrc` to get populated.
-      await 0;
-      // At this point `img.currentSrc` will contain "data:,x" if format is supported and ""
-      // otherwise.
-      return !!img.currentSrc;
-    })();
-
-    canDecodeCache.set(type, resultPromise);
-  }
-
-  return canDecodeCache.get(type)!;
-}
-
-const extensionTypes: { [type: string]: string | undefined } = {
-  webp: 'image/webp',
-  avif: 'image/avif',
-  jpg: 'image/jpeg',
-  png: 'image/png',
-  svg: 'image/svg+xml',
-};
 
 const decodeCache = new Map<string, Promise<ImageData>>();
 

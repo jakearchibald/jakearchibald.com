@@ -352,9 +352,15 @@ Phew!
 
 The image compression on the Aston Martin site is mostly very good. Someone clearly took time over it. Unfortunately, one place it isn't so good is the all-important main image of the page:
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 0.5625,
     "maxWidth": 414,

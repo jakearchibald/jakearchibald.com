@@ -86,7 +86,7 @@ import redBullAvifSize from 'asset-pretty-size:static-build/posts/2021/03/f1-per
 import redBullAvifMobile from 'asset-url:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-mobile.avif';
 import redBullAvifMobileSize from 'asset-pretty-size:static-build/posts/2021/03/f1-perf-part-3/img-optim/red-bull-overlay-mobile.avif';
 
-import DecodedImg from 'shared/demos/2020/avif-has-landed/DecodedImg';
+import DecodedImg from 'shared/DecodedImg';
 
 const categories: {
   [category: string]:

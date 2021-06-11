@@ -328,9 +328,15 @@ Again, there isn't a quick fix here. That CSS just needs splitting up, so pages 
 
 Y'know what? This might be the best site so far in this series in terms of image compression. Taking the main image:
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 0.75,
     "maxWidth": 375,
@@ -348,7 +354,7 @@ Some images could be significantly smaller though:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 0.46875,
     "maxWidth": 360,

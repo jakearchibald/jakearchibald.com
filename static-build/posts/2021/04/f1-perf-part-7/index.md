@@ -339,9 +339,15 @@ Then, JS comes along and adds the back & forward buttons, which use [`scrollTo`]
 
 Let's take that main image at the top of the page:
 
+<script type="component">{
+  "module": "shared/ImageTabs",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2020/avif-has-landed/ImageTabs",
+  "module": "shared/ImageTabs",
   "props": {
     "ratio": 2.25,
     "maxWidth": 420,
