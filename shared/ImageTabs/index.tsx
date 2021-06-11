@@ -44,11 +44,15 @@ const styles = `
 }
 `;
 
+export const ImageTabsStyles: FunctionalComponent = () => (
+  <style dangerouslySetInnerHTML={{ __html: styles }} />
+);
+
 export const Styles: FunctionalComponent = () => (
   <Fragment>
     <AsyncContentStyle />
     <TabsStyles />
-    <style dangerouslySetInnerHTML={{ __html: styles }} />
+    <ImageTabsStyles />
   </Fragment>
 );
 

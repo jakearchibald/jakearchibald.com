@@ -44,16 +44,15 @@ export default class ImageTabs extends Component<Props, State> {
 
   private _loadingTimeout?: number;
 
-  constructor(props: Props) {
-    super();
-    if (props.loading && !__PRERENDER__) this._startLoadingTimeout();
-  }
-
   private _startLoadingTimeout() {
     this._loadingTimeout = setTimeout(
       () => this.setState({ showLoading: true }),
       600,
     );
+  }
+
+  componentDidMount() {
+    if (this.props.loading) this._startLoadingTimeout();
   }
 
   componentDidUpdate(previousProps: Props) {

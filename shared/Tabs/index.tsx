@@ -38,7 +38,7 @@ export const Styles: FunctionalComponent = () => (
 );
 
 interface Props {
-  titles: string[];
+  titles: readonly string[];
   selected: number;
   onChange: (index: number) => void;
 }
