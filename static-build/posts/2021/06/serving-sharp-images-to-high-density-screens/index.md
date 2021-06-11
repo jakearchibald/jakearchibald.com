@@ -262,7 +262,7 @@ Here are the sizes for 'large' images on this blog:
 
 This means, at viewport widths 1066px or greater, the image is fixed at 747px wide. Otherwise, at viewport widths 800px or greater, the image is 75% of the viewport width minus 57px. Otherwise, the image is full viewport width. `sizes` don't need to be 100% accurate like they are here, but the more accurate they are, the better choice the browser will make.
 
-So, what about the `srcset`? I can cut some corners here for 1x. The stats suggest that 1x screens are predominantly desktop, which skews towards wider viewports. In this case, I think it's fine to assume the viewport is _probably_ 1066px wide or greater, so I'm going to be a bit lazy again and create one image for 1x users:
+So, what about the `srcset`? I can cut some corners here for 1x. The stats suggest that 1x screens are predominantly desktop, which skews towards wider viewports. In this case, I think it's fine to assume the viewport is _probably_ 1066px wide or greater, so I'm going to be a bit lazy again and create one image for 1x users, at 743w:
 
 ```html
 <picture>
@@ -281,6 +281,8 @@ So, what about the `srcset`? I can cut some corners here for 1x. The stats sugge
 
 Since there's only one `src` on the `<img>`, I can remove the `sizes` there too.
 
+When I compressed the 1x image, I had it zoomed to 100% in [Squoosh](https://squoosh.app). As such as I had to drag the quality slider much higher than I would with the 2x images I was compressing earlier.
+
 Ok, what about the 2x images? Mobiles tend to have a viewport width around 320-420px, so I'm going to go with 800w for the lower end. I already decided on the higher end in the previous section: 1,598w. I'm never quite sure how many steps in between to do, so I'm going to go with one, 1200w.
 
 ```html
@@ -298,7 +300,9 @@ Ok, what about the 2x images? Mobiles tend to have a viewport width around 320-4
 </picture>
 ```
 
-Done! Well, not done, let's add some more image formats:
+I compressed these after zooming them out to the sizes they were likely to be displayed, so I was able to go much lower with the quality slider.
+
+But that's just JPEG! Let's add some more image formats:
 
 ```html
 <picture>
