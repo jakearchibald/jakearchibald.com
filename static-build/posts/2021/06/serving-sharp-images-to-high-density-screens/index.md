@@ -283,7 +283,7 @@ Since there's only one `src` on the `<img>`, I can remove the `sizes` there too.
 
 When I compressed the 1x image, I had it zoomed to 100% in [Squoosh](https://squoosh.app). As such as I had to drag the quality slider much higher than I would with the 2x images I was compressing earlier.
 
-Ok, what about the 2x images? Mobiles tend to have a viewport width around 320-420px, so I'm going to go with 800w for the lower end. I already decided on the higher end in the previous section: 1,598w. I'm never quite sure how many steps in between to do, so I'm going to go with one, 1200w.
+Ok, what about the 2x images? Mobiles tend to have a viewport width around 320-420px, so I'm going to go with 800w for the lower end. I already decided on the higher end in the previous section: 1598w. I'm never quite sure how many steps in between to do, so I'm going to go with one, 1200w.
 
 ```html
 <picture>
