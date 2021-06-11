@@ -3,7 +3,7 @@ title: Serving sharp images to high density screens
 date: 2021-06-10 01:00:00
 summary: Why compressing images for high-ppi screens is different, and how to serve them
 meta: Why compressing images for high-ppi screens is different, and how to serve them
-#image: 'asset-url:./img.jpg'
+image: 'asset-url:./img.jpg'
 ---
 
 A long time ago we had monitors of varying resolutions, but once we started to go beyond 1024x768, screens started to get bigger as resolution got bigger.
@@ -14,13 +14,13 @@ Then in 2010 the iPhone 4 came out (holy shit that's 11 years ago), and the scre
 
 Apple couldn't just run the same apps but at a higher resolution, because things like text and buttons would be tiny, so they doubled the size of everything. 1 pixel became 2 'device pixels'.
 
-On the web we call this the 'device pixel ratio'. The iPhone 4 had a device pixel ratio of 2. This is sometimes referred to as having a 2x screen, or 2dppx.
+On the web we call this the 'device pixel ratio', or DPR. The iPhone 4 had a DPR of 2. This is sometimes referred to as having a 2x screen, or 2dppx.
 
 Ok, history lesson over…
 
 # How popular are high density screens?
 
-Matt Hobbs from [gov.uk](https://www.gov.uk/) was kind enough to [share April 2021 stats on users' device pixel ratio](https://twitter.com/TheRealNooshu/status/1397862141894529027). He gave me access to the raw data, and I ran a few queries on it. It turns out **80% of all their users are on a screen with a DPR of 1.5 or above**. That's:
+Matt Hobbs from [gov.uk](https://www.gov.uk/) was kind enough to [share April 2021 stats on users' device pixel ratio](https://twitter.com/TheRealNooshu/status/1397862141894529027). I ran a few queries on it, and it turns out **80% of their users are on a screen with a DPR of 1.5 or above**. That's:
 
 - …over 99.9% of their mobile users.
 - …32% of their desktop users.
