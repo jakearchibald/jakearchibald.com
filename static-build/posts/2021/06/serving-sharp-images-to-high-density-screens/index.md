@@ -95,7 +95,7 @@ Here's a 1x version of the red panda image, 400px wide:
 
 I encoded this using WebP at quality 80. Any lower than that and significant details were lost. It comes in at asset-pretty-size:./1x-high.webp. Not bad!
 
-If I encode the 2x version at the same settings, it's asset-pretty-size:./2x-high.webp, which roughly makes sense as it's 4 times the number of pixels. But does it need to be the same quality?
+If I encode the 2x version at the same settings, it's asset-pretty-size:./2x-high.webp, which roughly makes sense as it's 4 times the number of pixels. But does it need to use the same settings?
 
 <figure class="full-figure max-figure">
 <script type="component">{
