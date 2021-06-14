@@ -151,6 +151,7 @@ export default class DensityDemo extends Component<Props, State> {
     }
 
     const ctx = canvas.getContext('2d')!;
+    ctx.imageSmoothingQuality = 'high';
     ctx.drawImage(this._image, 0, 0, canvas.width, canvas.height);
 
     const fullDensity = Math.min(
