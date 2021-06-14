@@ -1,6 +1,8 @@
 import { h, FunctionalComponent } from 'preact';
 
-import meUrl from 'asset-url:./me.jpg';
+import meWalkJpeg from 'asset-url:./me-walk.jpg';
+import meWalkWebp from 'asset-url:./me-walk.webp';
+import meWalkAvif from 'asset-url:./me-walk.avif';
 import twitterUrl from 'asset-url:./twitter.svg';
 import githubUrl from 'asset-url:./github.svg';
 import youtubeUrl from 'asset-url:./youtube.svg';
@@ -10,18 +12,22 @@ const Who: FunctionalComponent<{}> = () => (
   <section>
     <figure class="my-big-face">
       <h1>
-        <img
-          width="500"
-          height="471"
-          src={meUrl}
-          alt="Jake Archibald &amp; a black cat"
-        />
+        <picture>
+          <source srcset={meWalkAvif} type="image/avif" />
+          <source srcset={meWalkWebp} type="image/webp" />
+          <img
+            width="800"
+            height="858"
+            src={meWalkJpeg}
+            alt="Jake Archibald next to a 90km sign"
+          />
+        </picture>
       </h1>
     </figure>
 
     <p>
-      Hello, I’m Jake and one of those faces is my face. I’m a developer
-      advocate for Google Chrome.
+      Hello, I’m Jake and that is my tired face. I’m a developer advocate for
+      Google Chrome.
     </p>
 
     <h1>Elsewhere</h1>
