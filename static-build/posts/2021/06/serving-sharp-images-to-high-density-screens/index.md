@@ -167,6 +167,8 @@ This means the browser can make choices like "oh, this image is going to display
 
 Except, not so great. Let's say we encode `image-1000.jpg` as if it were being displayed on a high density mobile device, so we use a lower quality. That'll work great on high density mobile devices, as they'll get a sharp image at a low file size. Unfortunately, the browser may choose the same image for a 1x desktop device, and it'll look bad, like the zoomed-in red panda image above.
 
+This means **most sites serve images that are 100% heavier than they need to be** in terms of file size, and it's mostly mobile users that take the hit, and they're likely to be on the slowest connection.
+
 So, what's the answer?
 
 # The lazy way
