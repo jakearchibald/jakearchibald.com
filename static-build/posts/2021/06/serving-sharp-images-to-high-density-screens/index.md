@@ -262,7 +262,7 @@ Here are the sizes for 'large' images on this blog:
 </picture>
 ```
 
-This means, at viewport widths 1066px or greater, the image is fixed at 747px wide. Otherwise, at viewport widths 800px or greater, the image is 75% of the viewport width minus 57px. Otherwise, the image is full viewport width. `sizes` don't need to be 100% accurate like they are here, but the more accurate they are, the better choice the browser will make.
+This means, at viewport widths 1066px or greater, the image is fixed at 743px wide. Otherwise, at viewport widths 800px or greater, the image is 75% of the viewport width minus 57px. Otherwise, the image is full viewport width. `sizes` don't need to be 100% accurate like they are here, but the more accurate they are, the better choice the browser will make.
 
 So, what about the `srcset`? I can cut some corners here for 1x. The stats suggest that 1x screens are predominantly desktop, which skews towards wider viewports. In this case, I think it's fine to assume the viewport is _probably_ 1066px wide or greater, so I'm going to be a bit lazy again and create one image for 1x users, at 743w:
 
