@@ -78,7 +78,7 @@ function manyHappyReturns() {
 }
 ```
 
-…and the result of calling `manyHappyReturns()` is `'three'`. _The last return always wins._ The same happens in Java too. Thanks to [Daniel Ehrenberg](https://twitter.com/littledan/status/1407883941634359298) for making me aware of this little quirk!
+…and the result of calling `manyHappyReturns()` is `'three'`. _The last return always wins._ The same happens in Java and Python too. Thanks to [Daniel Ehrenberg](https://twitter.com/littledan/status/1407883941634359298) for making me aware of this little quirk!
 
 ## What's the practical application of this?
 
