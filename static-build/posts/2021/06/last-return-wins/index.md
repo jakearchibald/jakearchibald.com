@@ -100,7 +100,7 @@ There isn't one. Thanks for reading! Please never quiz folks about this in a job
 
 # Bonus: Promises
 
-Async functions behave the same as above, except they return a promise. However, promise objects behave differently:
+Async functions behave the same as above (aside from returning a promise). However, `promise.finally()` behaves differently:
 
 ```js
 const promise = Promise.resolve('one').finally(() => 'two');
