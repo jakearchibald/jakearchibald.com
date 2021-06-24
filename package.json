@@ -23,7 +23,7 @@
     "husky": "^4.2.5",
     "lint-staged": "^10.3.0",
     "lodash.camelcase": "^4.3.0",
-    "marked": "^1.1.1",
+    "marked": "^2.0.0",
     "pinch-zoom-element": "^1.1.1",
     "postcss": "^7.0.32",
     "postcss-import": "^12.0.1",
