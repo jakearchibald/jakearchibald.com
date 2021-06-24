@@ -45,7 +45,7 @@ console.log('four');
 
 The above logs `'one'`, `'two'`, `'three'`, `'four'`. The `finally` block always runs after a `try`/`catch`, even if the `try` or `catch` return.
 
-I hadn't used `finally` much in JavaScript, but I find myself using it quite a bit in async functions, in patterns like this:
+I hadn't used `finally` much in JavaScript until recently, where I find myself using it like this in async functions:
 
 ```js
 async function someAsyncThing() {
