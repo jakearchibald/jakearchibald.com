@@ -78,7 +78,9 @@ function manyHappyReturns() {
 }
 ```
 
-…and the result of calling `manyHappyReturns()` is `'three'`. _The last return always wins._ The same happens in Java and Python too. Thanks to [Daniel Ehrenberg](https://twitter.com/littledan/status/1407883941634359298) for making me aware of this little quirk!
+…and the result of calling `manyHappyReturns()` is `'three'`.
+
+_The last return always wins._ Not the last to appear in the function, no, that would be mad, but the last _execute_. The last return wins in the same way the last variable assignment wins; we don't count variable assignments that don't happen. In fact, it's spec'd very much like an assignment. The `return` assigns a conclusion to the function, and in the same way that a `return` overrides a previous `throw`, a `return` overrides a previous `return`. The same happens in Java and Python too. Thanks to [Daniel Ehrenberg](https://twitter.com/littledan/status/1407883941634359298) for making me aware of this little quirk!
 
 As a side-effect, returning from `finally` clears a thrown error:
 
