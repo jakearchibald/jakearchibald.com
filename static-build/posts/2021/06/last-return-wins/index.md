@@ -80,6 +80,20 @@ function manyHappyReturns() {
 
 …and the result of calling `manyHappyReturns()` is `'three'`. _The last return always wins._ The same happens in Java and Python too. Thanks to [Daniel Ehrenberg](https://twitter.com/littledan/status/1407883941634359298) for making me aware of this little quirk!
 
+As a side-effect, returning from `finally` clears a thrown error:
+
+```js
+function catchThis() {
+  try {
+    throw Error('boom');
+  } finally {
+    return 'phew';
+  }
+}
+```
+
+The result of calling `catchThis()` is `'phew'`.
+
 ## What's the practical application of this?
 
 There isn't one. Thanks for reading! Please never quiz folks about this in a job interview.
