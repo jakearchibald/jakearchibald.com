@@ -1,5 +1,5 @@
 ---
-title: In JS functions, the last return wins
+title: In JS functions, the 'last' return wins
 date: 2021-06-24 01:00:00
 summary: An edge case has convinced me it's the 'last' return that always wins…
 meta: An edge case has convinced me it's the 'last' return that always wins…
