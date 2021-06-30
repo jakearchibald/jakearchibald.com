@@ -235,7 +235,7 @@ world
 ------WebKitFormBoundaryUekOXqmLphEavsu5--
 ```
 
-That's what `multipart/form-data` looks like. It's more complex than `application/x-www-form-urlencoded`, bit it can include file data. However, some servers can't handle `multipart/form-data`, including [Express](https://expressjs.com/). If you want to support `multipart/form-data` in Express, you need to use something like [busboy](https://www.npmjs.com/package/busboy) or [formidable](https://www.npmjs.com/package/formidable).
+That's what `multipart/form-data` looks like. It's more complex than `application/x-www-form-urlencoded`, but it can include file data. However, some servers can't handle `multipart/form-data`, including [Express](https://expressjs.com/). If you want to support `multipart/form-data` in Express, you need to use something like [busboy](https://www.npmjs.com/package/busboy) or [formidable](https://www.npmjs.com/package/formidable).
 
 But what if you want to send a form as `application/x-www-form-urlencoded`? Well…
 
