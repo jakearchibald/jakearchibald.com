@@ -170,7 +170,7 @@ async function isPositive(text) {
 }
 ```
 
-If you use `URLSearchParams` as a body, the `Content-Type` header is automatically set to `application/x-www-form-urlencoded`, which is great because even after 20+ years of being a web developer, I need to look that name up every time. You can still provide your own `Content-Type` header to override the default.
+If you use `URLSearchParams` as a body, the `Content-Type` header is automatically set to `application/x-www-form-urlencoded`, which is great because even after 20+ years of being a web developer, I can never remember that content type. You can still provide your own `Content-Type` header to override the default.
 
 You can't read a `Request` or `Response` body as `URLSearchParams`, but there are ways around that…
 
@@ -186,7 +186,7 @@ formData.set('foo', 'bar');
 formData.set('hello', 'world');
 ```
 
-It's also an iterator, so it can be converted to an array-of-arrays or an object in the same way as `URLSearchParams`. But, unlike `URLSearchParams`, you can read an HTML form directly as `FormData`:
+It's also an iterator, so it can be converted to an array of name/value pairs, or an object, just as you can with `URLSearchParams`. But, unlike `URLSearchParams`, you can read an HTML form directly as `FormData`:
 
 ```js
 const formElement = document.querySelector('form');
