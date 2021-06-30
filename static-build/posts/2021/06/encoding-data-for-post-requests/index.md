@@ -317,3 +317,5 @@ This doesn't set the `Content-Type` header automatically, so you need to do that
 And finally, fetch bodies can be streams! For `Response` objects, this allows [all kinds of fun with a service worker](/2016/streams-ftw/), and more recently they [can be used with requests too](https://web.dev/fetch-upload-streaming/).
 
 So yeah, don't try to handle `multipart/form-data` or `application/x-www-form-urlencoded` yourself, let `FormData` and `URLSearchParams` do the hard work!
+
+I'm not against things like GitHub Copilot either. Just treat the output like an answer on StackOverflow, and review it before committing it.
