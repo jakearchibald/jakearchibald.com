@@ -313,6 +313,6 @@ This doesn't set the `Content-Type` header automatically, so you need to do that
 
 ## Streams
 
-And finally, fetch bodies can be streams, but they need articles of their own. For `Response` objects, this allows [all kinds of fun with a service worker](/2016/streams-ftw/), and more recently [can be used with requests too](https://web.dev/fetch-upload-streaming/).
+And finally, fetch bodies can be streams! For `Response` objects, this allows [all kinds of fun with a service worker](/2016/streams-ftw/), and more recently they [can be used with requests too](https://web.dev/fetch-upload-streaming/).
 
 So yeah, don't try to handle `multipart/form-data` or `application/x-www-form-urlencoded` yourself, let `FormData` and `URLSearchParams` do the hard work!
