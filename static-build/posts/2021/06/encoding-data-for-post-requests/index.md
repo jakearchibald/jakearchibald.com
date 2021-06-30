@@ -93,7 +93,7 @@ Which means you can easily convert it into an array of name/value pairs:
 const keyValuePairs = [...searchParams];
 ```
 
-Or an object:
+Or use it with APIs that support iterators that yield name/value pairs, such as `Object.fromEntries`, which converts it into an object:
 
 ```js
 // To { foo: 'bar', hello: 'world' }
