@@ -191,6 +191,7 @@ It's also an iterator, so it can be converted to an array of name/value pairs, o
 ```js
 const formElement = document.querySelector('form');
 const formData = new FormData(formElement);
+console.log(formData.get('username'));
 ```
 
 This gives you the data that would be submitted by the form. I often find this much easier than getting the data from each element individually.
