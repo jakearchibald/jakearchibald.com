@@ -298,7 +298,7 @@ This automatically sets the `Content-Type` to `text/plain;charset=UTF-8`, but as
 
 ## Buffers
 
-`ArrayBuffer` objects, and anything backed by an array buffer such as `Unint8Array`, can be used as a fetch body:
+`ArrayBuffer` objects, and anything backed by an array buffer such as `Uint8Array`, can be used as a fetch body:
 
 ```js
 fetch(url, {
