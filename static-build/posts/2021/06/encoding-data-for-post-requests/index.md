@@ -43,7 +43,7 @@ searchParams.set('hello', 'world');
 console.log(searchParams.toString());
 ```
 
-The constructor also accepts an array of name/value pairs:
+The constructor also accepts an array of name/value pairs, or an iterator that yields name/value pairs:
 
 ```js
 const searchParams = new URLSearchParams([
@@ -241,7 +241,7 @@ But what if you want to send a form as `application/x-www-form-urlencoded`? Well
 
 ## Converting to URLSearchParams
 
-You can convert `FormData` to `URLSearchParams`:
+Since the `URLSearchParams` constructor accepts an iterator that yields name/value pairs, and `FormData`'s iterator does exactly that, you can convert from one to the other:
 
 ```js
 const formElement = document.querySelector('form');
