@@ -407,15 +407,13 @@ And to convert it:
 ```js
 const data = Object.fromEntries(
   // Get a de-duped set of keys
-  [...new Set(formData.keys())]
-    // Map to [key, arrayOfValues]
-    .map((key) =>
-      key.endsWith('[]')
-        ? // Remove [] from the end and get an array of values
-          [key.slice(0, -2), formData.getAll(key)]
-        : // Use the key as-is and get a single value
-          [key, formData.get(key)],
-    ),
+  [...new Set(formData.keys())].map((key) =>
+    key.endsWith('[]')
+      ? // Remove [] from the end and get an array of values
+        [key.slice(0, -2), formData.getAll(key)]
+      : // Use the key as-is and get a single value
+        [key, formData.get(key)],
+  ),
 );
 ```
 
