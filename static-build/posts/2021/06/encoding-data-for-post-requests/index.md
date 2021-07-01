@@ -351,7 +351,7 @@ Forms can contain fields like this:
 </fieldset>
 ```
 
-The result is a `FromData` object that has multiple entries with the same name, like this:
+The result is a `FormData` object that has multiple entries with the same name, like this:
 
 ```js
 const formData = new FormData();
