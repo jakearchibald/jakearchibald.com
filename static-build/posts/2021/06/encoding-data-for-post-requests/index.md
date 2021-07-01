@@ -394,7 +394,7 @@ const data = Object.fromEntries(
 }
 ```
 
-I like that every value is an array, even if it only has one item. That prevents a lot of code branching on the server. Although, you might prefer the PHP/Perl convention where a field name that ends with `[]` signifies "this should produce an array":
+I like that every value is an array, even if it only has one item. That prevents a lot of code branching on the server, and simplifies validation. Although, you might prefer the PHP/Perl convention where a field name that ends with `[]` signifies "this should produce an array":
 
 ```html
 <select multiple name="tvShows[]">
