@@ -51,6 +51,7 @@ function jsFileName(chunkInfo) {
 }
 
 export default async function ({ watch }) {
+  const production = !watch;
   await del('.tmp/build');
 
   const tsPluginInstance = simpleTS('static-build', { watch });
@@ -97,7 +98,7 @@ export default async function ({ watch }) {
             staticEntryURLPlugin(),
             ...commonPlugins(),
             replace({ __PRERENDER__: false }),
-            terser({ module: true }),
+            production ? terser({ module: true }) : {},
           ],
         },
         {

@@ -319,3 +319,113 @@ And finally, fetch bodies can be streams! For `Response` objects, this allows [a
 So yeah, don't try to handle `multipart/form-data` or `application/x-www-form-urlencoded` yourself, let `FormData` and `URLSearchParams` do the hard work!
 
 I'm not against things like GitHub Copilot either. Just treat the output like an answer on StackOverflow, and review it before committing it.
+
+# Bonus round: Converting FormData to JSON
+
+[Nicholas Mendez tweeted me](https://twitter.com/snickdx/status/1410423939604561930) to ask how `FormData` could be serialised as JSON without data loss.
+
+Forms can contain fields like this:
+
+```html
+<select multiple name="tvShows">
+  <option>Motherland</option>
+  <option>Taskmaster</option>
+  …
+</select>
+```
+
+…where multiple values can be selected, or you can have multiple inputs with the same name:
+
+```html
+<fieldset>
+  <legend>TV Shows</legend>
+  <label>
+    <input type="checkbox" name="tvShows" value="Motherland" />
+    Motherland
+  </label>
+  <label>
+    <input type="checkbox" name="tvShows" value="Taskmaster" />
+    Taskmaster
+  </label>
+  …
+</fieldset>
+```
+
+The result is a `FromData` object that has multiple entries with the same name, like this:
+
+```js
+const formData = new FormData();
+formData.append('foo', 'bar');
+formData.append('tvShows', 'Motherland');
+formData.append('tvShows', 'Taskmaster');
+```
+
+And as we saw with `URLSearchParams`, some object conversions are lossy:
+
+```js
+// { foo: 'bar', tvShows: 'Taskmaster' }
+const data = Object.fromEntries(formData);
+```
+
+There are a few ways to avoid data loss and still end up with something JSON-stringifyable. Firstly, there's the array of name/value pairs:
+
+```js
+// [['foo', 'bar'], ['tvShows', 'Motherland'], ['tvShows', 'taskMaster']]
+const data = [...formData];
+```
+
+But if you want an object rather than an array, you can do this:
+
+```js
+const data = Object.fromEntries(
+  // Get a de-duped set of keys
+  [...new Set(formData.keys())]
+    // Map to [key, arrayOfValues]
+    .map((key) => [key, formData.getAll(key)]),
+);
+```
+
+…which gives you:
+
+```json
+{
+  "foo": ["bar"],
+  "tvShows": ["Motherland", "Taskmaster"]
+}
+```
+
+I like that every value is an array, even if it only has one item. That prevents a lot of code branching on the server. Although, you might prefer the PHP/Perl convention where a field name that ends with `[]` signifies "this should produce an array":
+
+```html
+<select multiple name="tvShows[]">
+  …
+</select>
+```
+
+And to convert it:
+
+```js
+const data = Object.fromEntries(
+  // Get a de-duped set of keys
+  [...new Set(formData.keys())]
+    // Map to [key, arrayOfValues]
+    .map((key) =>
+      key.endsWith('[]')
+        ? // Remove [] from the end and get an array of values
+          [key.slice(0, -2), formData.getAll(key)]
+        : // Use the key as-is and get a single value
+          [key, formData.get(key)],
+    ),
+);
+```
+
+…which gives you:
+
+```json
+{
+  "foo": "bar",
+  "tvShows": ["Motherland", "Taskmaster"]
+}
+```
+
+Remember, don't try to convert a form to JSON if the form contains files. If that's the case, you're much better off with `multipart/form-data`.
