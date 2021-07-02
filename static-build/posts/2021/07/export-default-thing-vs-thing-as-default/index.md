@@ -1,9 +1,9 @@
 ---
-title: '`export default val` is different to `export { val as default }`'
+title: '`export default thing` is different to `export { thing as default }`'
 date: 2021-07-05 01:00:00
 summary: Here's how they differ, and when it matters…
 meta: Here's how they differ, and when it matters…
-#image: 'asset-url:./img.png'
+image: 'asset-url:./img.png'
 ---
 
 [Dominic Elm](https://twitter.com/elmd_) DM'd me on Twitter to ask me questions about circular dependencies, and, well, I didn't know the answer. After some testing, discussion, and _\*ahem\*_ chatting to the V8 team, we figured it out, but I learned something new about JavaScript along the way.
@@ -47,11 +47,13 @@ const module = await import('./module.js');
 let { thing } = await import('./module.js');
 
 setTimeout(() => {
-  console.log(importedThing, module.thing, thing);
+  console.log(importedThing); // "changed"
+  console.log(module.thing); // "changed"
+  console.log(thing); // "initial"
 }, 1000);
 ```
 
-This logs `"changed", "changed", "initial"` because imports are live references. The destructured import works differently because destructuing assigns the current value to a new identifier rather than a live reference.
+Imports are live references, so they pick up the changes. The destructured import doesn't pick up the change because destructuing assigns the current value to a new identifier rather than a live reference.
 
 It's similar to how this works:
 
@@ -90,11 +92,13 @@ import { thing, default as defaultThing } from './module.js';
 import anotherDefaultThing from './module.js';
 
 setTimeout(() => {
-  console.log(thing, defaultThing, anotherDefaultThing);
+  console.log(thing); // "changed"
+  console.log(defaultThing); // "initial"
+  console.log(anotherDefaultThing); // "initial"
 }, 1000);
 ```
 
-This logs `"changed", "initial", "initial"`, and that was news to me!
+…and I wasn't expecting those to be `"initial"`!
 
 ## But… why?
 
@@ -111,13 +115,7 @@ export default 'hello!';
 export { 'hello!' as thing };
 ```
 
-To make the `export default 'hello!'` thing work, the [spec defines it](https://tc39.es/ecma262/#sec-identifiers-static-semantics-boundnames) as:
-
-```
-ExportDeclaration : export default AssignmentExpression ;
-```
-
-Because it's an `AssignmentExpression`, you're assigning a value to the default, rather than passing it by reference. This means it behaves more like the destructured import from earlier.
+To make `export default 'hello!'` work, the spec gives `export default thing` different semantics. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported. So, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
 
 # And 'export { thing as default }' is different
 
@@ -142,15 +140,17 @@ import { thing, default as defaultThing } from './module.js';
 import anotherDefaultThing from './module.js';
 
 setTimeout(() => {
-  console.log(thing, defaultThing, anotherDefaultThing);
+  console.log(thing); // "changed"
+  console.log(defaultThing); // "changed"
+  console.log(anotherDefaultThing); // "changed"
 }, 1000);
 ```
 
-…logs `"changed", "changed", "changed"`. Fun eh? Oh, we're not done yet…
+Unlike `export default thing`, `export { thing as default }` exports `thing` as a live reference. Fun eh? Oh, we're not done yet…
 
-# But 'export default function' is a special case
+# 'export default function' is another special case
 
-The spec has a special case for this, so:
+So, with:
 
 ```js
 // module.js
@@ -168,11 +168,11 @@ And:
 import thing from './module.js';
 
 setTimeout(() => {
-  console.log(thing);
+  console.log(thing); // "changed"
 }, 1000);
 ```
 
-…logs `"changed"`, because `export default function` is treated differently; the function is passed by reference. If we change `module.js` to:
+It logs `"changed"`, because `export default function` is given its own special semantics; the function _is_ passed by reference in this case. If we change `module.js` to:
 
 ```js
 // module.js
@@ -185,7 +185,7 @@ setTimeout(() => {
 }, 500);
 ```
 
-…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's an `AssignmentExpression` again.
+…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's passed by value again.
 
 # What about circular dependencies?
 
@@ -207,17 +207,17 @@ Function definitions are essentially moved to the top of the file. That only rea
 
 ```js
 // Doesn't work
-doesntWorker();
+assignedFunction();
 // Doesn't work either
-new DoesntWork();
+new SomeClass();
 
-const doesntWork = function () {
+const assignedFunction = function () {
   console.log('nope');
 };
-class DoesntWork {}
+class SomeClass {}
 ```
 
-In fact, if you try to access a `let`/`const`/`class` identifier before it's declared, it's a parse error.
+If you try to access a `let`/`const`/`class` identifier before it's declared, it throws an error.
 
 ## var is different
 
@@ -234,7 +234,7 @@ function test() {
 test();
 ```
 
-The above logs `undefined`, because the declaration of `var foo` in the function is hoisted, but the assignment is left where it is.
+The above logs `undefined`, because the declaration of `var foo` in the function is hoisted to the start of the function, but the assignment of `'hello'` is left where it is.
 
 ## What about circular dependencies?
 
@@ -286,7 +286,7 @@ hello();
 export const foo = () => console.log('foo');
 ```
 
-…it fails. `module.js` would execute first, and as a result it tries to access `hello` before it's declared, triggering a parse error.
+…it fails. `module.js` would execute first, and as a result it tries to access `hello` before it's declared, and throws an error.
 
 Let's get `export default` involved with:
 
@@ -318,8 +318,10 @@ function foo() {
 export default foo;
 ```
 
-This is the example Dominic messaged me with. The above fails, because `hello` is accessed before it's declared, and that's down to how `export default` works like an assignment.
+This is the example Dominic messaged me with. The above fails, because `hello` in `module.js` points to the hidden variable exported by `main.js`, and it's accessed before it's initialized.
 
 If `main.js` used `export { hello as default }`, it doesn't fail, because it's passing the function by reference and gets hoisted. If `main.js` used `export default function hello()`, again it doesn't fail, but this time it's because it hits that super-magic-special-case of `export default function`.
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
+
+Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) for making sure I'm using the correct terminology throughout this post, and of course to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!
