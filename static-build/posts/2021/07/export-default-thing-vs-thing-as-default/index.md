@@ -286,7 +286,7 @@ hello();
 export const foo = () => console.log('foo');
 ```
 
-…it fails. `module.js` would execute first, and as a result it tries to access `hello` before it's declared, and throws an error.
+…it fails. `module.js` executes first, and as a result it tries to access `hello` before it's declared, and throws an error.
 
 Let's get `export default` involved with:
 
@@ -318,10 +318,10 @@ function foo() {
 export default foo;
 ```
 
-This is the example Dominic messaged me with. The above fails, because `hello` in `module.js` points to the hidden variable exported by `main.js`, and it's accessed before it's initialized.
+This is the example Dominic gave me. The above fails, because `hello` in `module.js` points to the hidden variable exported by `main.js`, and it's accessed before it's initialized.
 
-If `main.js` used `export { hello as default }`, it doesn't fail, because it's passing the function by reference and gets hoisted. If `main.js` used `export default function hello()`, again it doesn't fail, but this time it's because it hits that super-magic-special-case of `export default function`.
+If `main.js` is changed to use `export { hello as default }`, it doesn't fail, because it's passing the function by reference and gets hoisted. If `main.js` is changed to use `export default function hello()`, again it doesn't fail, but this time it's because it hits that super-magic-special-case of `export default function`.
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
 
-Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) for making sure I'm using the correct terminology throughout this post, and of course to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!
+Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) from the V8 team for making sure I'm using the correct terminology throughout this post, [Surma](https://twitter.com/DasSurma) from Team Surma, and of course thanks to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!
