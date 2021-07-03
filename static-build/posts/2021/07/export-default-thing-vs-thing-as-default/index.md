@@ -53,7 +53,7 @@ setTimeout(() => {
 }, 1000);
 ```
 
-Imports are live references, so they pick up the changes. The destructured import doesn't pick up the change because destructuing assigns the current value to a new identifier rather than a live reference.
+Imports are live references, so they pick up the changes. The destructured import doesn't pick up the change because destructuring assigns the current value to a new identifier rather than a live reference.
 
 It's similar to how this works:
 
