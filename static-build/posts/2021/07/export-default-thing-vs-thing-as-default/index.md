@@ -1,6 +1,6 @@
 ---
 title: '`export default thing` is different to `export { thing as default }`'
-date: 2021-07-05 01:00:00
+date: 2021-07-03 01:00:00
 summary: Here's how they differ, and when it matters…
 meta: Here's how they differ, and when it matters…
 image: 'asset-url:./img.png'
@@ -68,6 +68,18 @@ obj.foo = 'hello';
 console.log(foo); // Still "bar"
 ```
 
+Ok, so here's where we're at:
+
+```js
+// These give you a live reference to the exported thing(s):
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+// This assigns the current value of the export to a new identifier:
+let { thing } = await import('./module.js');
+```
+
 # But 'export default' works differently
 
 Here's `./module.js`:
@@ -115,7 +127,26 @@ export default 'hello!';
 export { 'hello!' as thing };
 ```
 
-To make `export default 'hello!'` work, the spec gives `export default thing` different semantics. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported. So, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
+To make `export default 'hello!'` work, the spec gives `export default thing` different semantics. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported, and as such, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
+
+So:
+
+```js
+// These give you a live reference to the exported thing(s):
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+// This assigns the current value of the export to a new identifier:
+let { thing } = await import('./module.js');
+
+// These export a live reference:
+export { thing };
+export { thing as otherName };
+// These export the current value:
+export default thing;
+export default 'hello!';
+```
 
 # And 'export { thing as default }' is different
 
@@ -146,7 +177,27 @@ setTimeout(() => {
 }, 1000);
 ```
 
-Unlike `export default thing`, `export { thing as default }` exports `thing` as a live reference. Fun eh? Oh, we're not done yet…
+Unlike `export default thing`, `export { thing as default }` exports `thing` as a live reference. So:
+
+```js
+// These give you a live reference to the exported thing(s):
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+// This assigns the current value of the export to a new identifier:
+let { thing } = await import('./module.js');
+
+// These export a live reference:
+export { thing };
+export { thing as otherName };
+export { thing as default };
+// These export the current value:
+export default thing;
+export default 'hello!';
+```
+
+Fun eh? Oh, we're not done yet…
 
 # 'export default function' is another special case
 
@@ -185,7 +236,26 @@ setTimeout(() => {
 }, 500);
 ```
 
-…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's passed by value again.
+…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's passed by value again. To sum up:
+
+```js
+// These give you a live reference to the exported thing(s):
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+// This assigns the current value of the export to a new identifier:
+let { thing } = await import('./module.js');
+
+// These export a live reference:
+export { thing };
+export { thing as otherName };
+export { thing as default };
+export default function thing() {}
+// These export the current value:
+export default thing;
+export default 'hello!';
+```
 
 # What about circular dependencies?
 
@@ -217,7 +287,7 @@ const assignedFunction = function () {
 class SomeClass {}
 ```
 
-If you try to access a `let`/`const`/`class` identifier before it's declared, it throws an error.
+If you try to access a `let`/`const`/`class` identifier before it's instantiated, it throws an error.
 
 ## var is different
 
@@ -286,7 +356,7 @@ hello();
 export const foo = () => console.log('foo');
 ```
 
-…it fails. `module.js` executes first, and as a result it tries to access `hello` before it's declared, and throws an error.
+…it fails. `module.js` executes first, and as a result it tries to access `hello` before it's instantiated, and throws an error.
 
 Let's get `export default` involved with:
 
@@ -324,4 +394,4 @@ If `main.js` is changed to use `export { hello as default }`, it doesn't fail, b
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
 
-Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) from the V8 team for making sure I'm using the correct terminology throughout this post, [Surma](https://twitter.com/DasSurma) from Team Surma, and of course thanks to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!
+<small>Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) from the V8 team for making sure I'm using the correct terminology throughout this post, proof-readers [Surma](https://twitter.com/DasSurma), [Adam Argyle](https://twitter.com/argyleink), [Ada Rose Cannon](https://twitter.com/AdaRoseCannon), [Remy Sharp](https://twitter.com/rem), [Lea Verou](https://twitter.com/LeaVerou) (heh, I got a lot of folks to read this, I wanted it to make as much sense as possible) and of course thanks to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!</small>
