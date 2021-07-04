@@ -257,6 +257,8 @@ export default thing;
 export default 'hello!';
 ```
 
+This seems really weird to me. I get that `export default 'hello!'` needs to be passed by value, but since there's a special case to make `export default function` passed by reference, it feels like there should be a special case for `export default identifier` too.
+
 # What about circular dependencies?
 
 This came to light when Dominic messaged me about circular dependencies. First we need to talk about 'hoisting':
@@ -391,6 +393,8 @@ export default foo;
 This is the example Dominic gave me. The above fails, because `hello` in `module.js` points to the hidden variable exported by `main.js`, and it's accessed before it's initialized.
 
 If `main.js` is changed to use `export { hello as default }`, it doesn't fail, because it's passing the function by reference and gets hoisted. If `main.js` is changed to use `export default function hello()`, again it doesn't fail, but this time it's because it hits that super-magic-special-case of `export default function`.
+
+I suspect `export default function` special-cased for this exact reason; to make hoisting work as expected. But again, it feels like `export default identifier` should have been special-cased in the same way.
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
 
