@@ -370,7 +370,7 @@ const data = Object.fromEntries(formData);
 There are a few ways to avoid data loss and still end up with something JSON-stringifyable. Firstly, there's the array of name/value pairs:
 
 ```js
-// [['foo', 'bar'], ['tvShows', 'Motherland'], ['tvShows', 'taskMaster']]
+// [['foo', 'bar'], ['tvShows', 'Motherland'], ['tvShows', 'Taskmaster']]
 const data = [...formData];
 ```
 
