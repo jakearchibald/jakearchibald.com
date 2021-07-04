@@ -1,5 +1,5 @@
 ---
-title: Serving sharp images to high density screens
+title: Half the size of images by optimising for high density displays
 date: 2021-06-11 01:00:00
 summary: Why compressing images for dense screens is different, and how to serve them
 meta: Why compressing images for dense screens is different, and how to serve them
