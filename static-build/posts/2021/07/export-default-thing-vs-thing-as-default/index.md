@@ -257,7 +257,7 @@ export default thing;
 export default 'hello!';
 ```
 
-This seems really weird to me. I get that `export default 'hello!'` needs to be passed by value, but since there's a special case to make `export default function` passed by reference, it feels like there should be a special case for `export default identifier` too.
+This kinda makes `export default identifier` the odd one out. I get that `export default 'hello!'` needs to be passed by value, but since there's a special case to make `export default function` passed by reference, it feels like there should be a special case for `export default identifier` too. I guess it's too late to change it now.
 
 # What about circular dependencies?
 
