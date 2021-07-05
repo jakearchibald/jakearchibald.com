@@ -53,9 +53,9 @@ setTimeout(() => {
 }, 1000);
 ```
 
-Imports are live references, so they pick up the changes. The destructured import doesn't pick up the change because destructuring assigns the current value to a new identifier rather than a live reference.
+Imports are 'live bindings' or what some other languages call a 'reference'. This means when a different value is assigned to `thing` in `module.js`, that change is reflected in the import in `main.js`. The destructured import doesn't pick up the change because destructuring assigns the _current value_ (rather than a live reference) to a new identifier.
 
-It's similar to how this works:
+The destructuring behaviour isn't unique to imports:
 
 ```js
 const obj = { foo: 'bar' };
@@ -67,6 +67,8 @@ let { foo } = obj;
 obj.foo = 'hello';
 console.log(foo); // Still "bar"
 ```
+
+The above feels natural in my opinion. The potential gotcha here is that named static imports (`import { thing } …`) kinda look like destructuring, but they don't behave like destructuring.
 
 Ok, so here's where we're at:
 
@@ -127,7 +129,7 @@ export default 'hello!';
 export { 'hello!' as thing };
 ```
 
-To make `export default 'hello!'` work, the spec gives `export default thing` different semantics. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported, and as such, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
+To make `export default 'hello!'` work, the spec gives `export default thing` different semantics to `export thing`. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported, and as such, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
 
 So:
 
@@ -163,7 +165,7 @@ setTimeout(() => {
 }, 500);
 ```
 
-And:
+And the same `./main.js` as before:
 
 ```js
 // main.js
@@ -236,7 +238,42 @@ setTimeout(() => {
 }, 500);
 ```
 
-…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's passed by value again. To sum up:
+…it no longer matches the special case, so it logs `ƒ thing() {}`, as it's passed by value again.
+
+## But… why?
+
+`export default class` is special-cased in the same way, and it's to do with how these statements change behaviour when they're expressions:
+
+```js
+function someFunction() {}
+class SomeClass {}
+
+console.log(typeof someFunction); // "function"
+console.log(typeof SomeClass); // "function"
+```
+
+But if we make them expressions:
+
+```js
+(function someFunction() {});
+(class SomeClass {});
+
+console.log(typeof someFunction); // "undefined"
+console.log(typeof SomeClass); // "undefined"
+```
+
+`function` and `class` statements create an identifier in the scope/block, whereas `function` and `class` _expressions_ do not (although their names can be used internal to the function/class).
+
+So:
+
+```js
+export default function someFunction() {}
+console.log(typeof someFunction); // "function"
+```
+
+If `export default function` wasn't special-cased, then the function would be treated as an expression, and the log would be `"undefined"`. Special-casing functions also helps with circular dependencies, but I'll get onto that shortly.
+
+To sum up:
 
 ```js
 // These give you a live reference to the exported thing(s):
@@ -257,7 +294,9 @@ export default thing;
 export default 'hello!';
 ```
 
-This kinda makes `export default identifier` the odd one out. I get that `export default 'hello!'` needs to be passed by value, but since there's a special case to make `export default function` passed by reference, it feels like there should be a special case for `export default identifier` too. I guess it's too late to change it now.
+This kinda makes `export default identifier` the odd one out. I get that `export default 'hello!'` needs to be passed by value, but since there's a special case that makes `export default function` passed by reference, it feels like there should be a special case for `export default identifier` too. I guess it's too late to change it now.
+
+I had a chat with [Dave Herman](https://twitter.com/littlecalculist) about this, who was involved in the design of JavaScript modules. He said that some earlier designs of default exports were in the form `export default = thing`, which would have made it more obvious that `thing` is treated as an expression. I agree!
 
 # What about circular dependencies?
 
@@ -306,7 +345,7 @@ function test() {
 test();
 ```
 
-The above logs `undefined`, because the declaration of `var foo` in the function is hoisted to the start of the function, but the assignment of `'hello'` is left where it is.
+The above logs `undefined`, because the declaration of `var foo` in the function is hoisted to the start of the function, but the assignment of `'hello'` is left where it is. This was seen as a bit of a gotcha, which is why `let`/`const`/`class` throw an error in similar cases.
 
 ## What about circular dependencies?
 
@@ -398,4 +437,4 @@ I suspect `export default function` is special-cased for this exact reason; to m
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
 
-<small>Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) from the V8 team for making sure I'm using the correct terminology throughout this post, proof-readers [Surma](https://twitter.com/DasSurma), [Adam Argyle](https://twitter.com/argyleink), [Ada Rose Cannon](https://twitter.com/AdaRoseCannon), [Remy Sharp](https://twitter.com/rem), [Lea Verou](https://twitter.com/LeaVerou) (heh, I got a lot of folks to read this, I wanted it to make as much sense as possible) and of course thanks to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!</small>
+<small>Huge thanks to [Toon Verwaest](https://twitter.com/tverwaes), [Marja Hölttä](https://twitter.com/marjakh), and [Mathias Bynens](https://twitter.com/mathias) from the V8 team for making sure I'm using the correct terminology throughout this post, [Dave Herman](https://twitter.com/littlecalculist) and [Daniel Ehrenberg](https://twitter.com/littledan) for giving me some of the history around this, proof-readers [Surma](https://twitter.com/DasSurma), [Adam Argyle](https://twitter.com/argyleink), [Ada Rose Cannon](https://twitter.com/AdaRoseCannon), [Remy Sharp](https://twitter.com/rem), [Lea Verou](https://twitter.com/LeaVerou) (heh, I got a lot of folks to read this, I wanted it to make as much sense as possible) and of course thanks to [Dominic Elm](https://twitter.com/elmd_) for triggering this whole adventure!</small>
