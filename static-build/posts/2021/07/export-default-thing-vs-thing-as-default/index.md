@@ -433,7 +433,7 @@ This is the example Dominic gave me. The above fails, because `hello` in `module
 
 If `main.js` is changed to use `export { hello as default }`, it doesn't fail, because it's passing the function by reference and gets hoisted. If `main.js` is changed to use `export default function hello()`, again it doesn't fail, but this time it's because it hits that super-magic-special-case of `export default function`.
 
-I suspect `export default function` is special-cased for this exact reason; to make hoisting work as expected. But again, it feels like `export default identifier` should have been special-cased in the same way for consistency.
+I suspect this is another reason `export default function` was special-cased; to make hoisting work as expected. But again, it feels like `export default identifier` should have been special-cased in the same way for consistency.
 
 So there you go! I learned something new. But, as with my last few posts, please don't add this to your interview questions, just avoid circular dependencies 😀.
 
