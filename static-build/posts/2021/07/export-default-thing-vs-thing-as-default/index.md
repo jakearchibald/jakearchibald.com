@@ -129,7 +129,7 @@ export default 'hello!';
 export { 'hello!' as thing };
 ```
 
-To make `export default 'hello!'` work, the spec gives `export default thing` different semantics to `export thing`. Instead of passing `thing` by reference (which would be impossible with `'hello!'`), it passes it by value. It's as if it's assigned to a hidden variable before it's exported, and as such, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
+To make `export default 'hello!'` work, the spec gives `export default thing` different semantics to `export thing`. The bit after `export default` is treated like an expression, which allows for things like `export default 'hello!'` and `export default 1 + 2`. This also 'works' for `export default thing`, but since `thing` is treated as an expression it causes `thing` to be passed by value. It's as if it's assigned to a hidden variable before it's exported, and as such, when `thing` is assigned a new value in the `setTimeout`, that change isn't reflected in the hidden variable that's actually exported.
 
 So:
 
@@ -203,7 +203,7 @@ Fun eh? Oh, we're not done yet…
 
 # 'export default function' is another special case
 
-So, with:
+I said that the bit after `export default` is treated like an expression, but there are exceptions to that rule. Taking:
 
 ```js
 // module.js
@@ -242,7 +242,7 @@ setTimeout(() => {
 
 ## But… why?
 
-`export default class` is special-cased in the same way, and it's to do with how these statements change behaviour when they're expressions:
+It isn't just `export default function` – `export default class` is special-cased in the same way. It's to do with how these statements change behaviour when they're expressions:
 
 ```js
 function someFunction() {}
