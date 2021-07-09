@@ -400,7 +400,7 @@ Phew! And here's a live example:
   </picture>
 </figure>
 
-This technique gets a lot easier if you use an image service or sorts. In fact, [The Guardian](https://www.theguardian.com/uk) use a very similar technique, although the 'type' decision is made server side using the browser's `Accept` header.
+This technique gets a lot easier if you use an image service of sorts. In fact, [The Guardian](https://www.theguardian.com/uk) use a very similar technique, although the 'type' decision is made server side using the browser's `Accept` header.
 
 # And that's it!
 
