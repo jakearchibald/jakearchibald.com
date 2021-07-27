@@ -12,7 +12,7 @@
  */
 import { h, FunctionalComponent, Fragment } from 'preact';
 import BasePage from 'static-build/components/base';
-import { getPostUrl } from 'static-build/utils';
+import { getPostUrl, siteOrigin } from 'static-build/utils';
 import date from 'date-and-time';
 import Who from 'static-build/components/who';
 
@@ -41,30 +41,27 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
               <meta name="twitter:card" content="summary_large_image" />
               <meta
                 property="og:image"
-                content={`https://jakearchibald.com${post.image}`}
+                content={`${siteOrigin}${post.image}`}
               />
               <meta
                 name="twitter:image"
-                content={`https://jakearchibald.com${post.image}`}
+                content={`${siteOrigin}${post.image}`}
               />
             </Fragment>
           ) : (
             <Fragment>
               <meta name="twitter:card" content="summary" />
-              <meta
-                property="og:image"
-                content={`https://jakearchibald.com${iconUrl}`}
-              />
+              <meta property="og:image" content={`${siteOrigin}${iconUrl}`} />
               <meta
                 property="twitter:image"
-                content={`https://jakearchibald.com${iconUrl}`}
+                content={`${siteOrigin}${iconUrl}`}
               />
             </Fragment>
           )}
           <meta name="twitter:site" content="@jaffathecake" />
           <meta
             property="og:url"
-            content={`https://jakearchibald.com${getPostUrl(post)}`}
+            content={`${siteOrigin}${getPostUrl(post)}`}
           />
           <meta property="twitter:title" content={post.title} />
           <meta property="og:title" content={post.title} />
