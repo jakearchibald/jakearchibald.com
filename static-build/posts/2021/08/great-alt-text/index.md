@@ -84,7 +84,7 @@ Take this image:
         100vw
       "
     />
-    <img src="asset-url:./bike-pic/743.jpg" width="743" height="477" alt="An Asian woman cycling along a street on a  bicycle. The bicycle looks like one that's part of a public bicycle hire scheme. In the background are two buildings, 'Cafe bar hotel' and 'Alpen hotel restaurant', both have similar Alpen architecture. The main difference between the two is the cafe is painted white, whereas the restaurant is painted light yellow" />
+    <img src="asset-url:./bike-pic/743.jpg" width="743" height="495" style="height:auto" alt="An Asian woman cycling along a street on a  bicycle. The bicycle looks like one that's part of a public bicycle hire scheme. In the background are two buildings, 'Cafe bar hotel' and 'Alpen hotel restaurant', both have similar Alpen architecture. The main difference between the two is the cafe is painted white, whereas the restaurant is painted light yellow" />
   </picture>
   <figcaption><a href="https://unsplash.com/photos/TFOiqh6fU40">Photo by Zhang Kaiyv</a></figcaption>
 </figure>
