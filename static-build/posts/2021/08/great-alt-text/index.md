@@ -93,7 +93,7 @@ What's the alt text for this image? You could fill pages describing every detail
 
 If it's used in an article about a public bicycle hire scheme named Hire-a-bike, then the bike is the focus, and the alt text could be "A woman rides a Hire-a-bike along a city road".
 
-Howver, if it's used in an article about a dispute between the cafe and the restaurant, the alt text might be "The fronts of the 'Cafe bar hotel' and 'Alpen hotel restaurant'". Although if the dispute is about colour of the buildings, the guttering, or the window frames, then those details should be part of the alt text.
+However, if it's used in an article about a dispute between the café and the restaurant, the alt text might be "The storefronts of the 'Café Bar Hotel' and 'Alpen Hotel Restaurant'". Although if the dispute is about colour of the buildings, the guttering, or the window frames, then those details should be part of the alt text.
 
 In fact, if you tried to detail everything in the image, then the actual focus, the bit that mattered in terms of the article, might get lost among the irrelevant detail. Like when you look up a recipe, and the bulk of the content is about how the smell of rosemary reminds the author of their childhood – sorry, don't care, I just want to know how to roast potatoes.
 
@@ -125,7 +125,7 @@ The relevant parts of an image aren't limited to the cold hard facts. Images can
   </div>
 </figure>
 
-It isn't just a head-shot of me. I'm doing a thing. I'm peering from behind a plant and pulling a bit of a silly face. There's humour expressed in the image. I'm not saying the it's going to win any comedy awards, but the image expresses a particular tone, and that matters. So, it should go in the alt:
+It isn't just a head-shot of me. I'm doing a thing. I'm peering from behind a plant and pulling a bit of a silly face. There's humour expressed in the image. I'm not saying that it's going to win any comedy awards, but the image expresses a particular tone, and that matters. So, it should go in the alt:
 
 ```html
 <img
