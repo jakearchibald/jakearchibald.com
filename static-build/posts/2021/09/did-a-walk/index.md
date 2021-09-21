@@ -88,7 +88,7 @@ And because it's my family, we talk about poo, underwear, cats, how I once broke
 
 # Hour 6: What a mess
 
-<blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">So I guess it&#39;s just that but 4 more times <a href="https://t.co/pf9a5hGcmF">pic.twitter.com/pf9a5hGcmF</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398589659421327362?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">So I guess it&#39;s just that but 4 more times <a href="https://t.co/pf9a5hGcmF">pic.twitter.com/pf9a5hGcmF</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398589659421327362?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote>
 
 Then I jumped on a call with [Surma](https://twitter.com/DasSurma):
 
@@ -96,7 +96,7 @@ Then I jumped on a call with [Surma](https://twitter.com/DasSurma):
 <div class="video"><iframe src="https://www.youtube.com/embed/QaP50brumvg" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </figure>
 
-This 'episode' is a disaster due to connectivity issues, so I include it mostly for completeness, although Surma does a stellar job filling. In fact, I'm writing this watching it for the first time myself.
+This 'episode' is a disaster due to connectivity issues, so I include it mostly for completeness, although Surma does a stellar job filling. In fact, I'm watching it for the first time myself.
 
 # Hour 7: Spicy crisps, batteries, and changing the web
 
@@ -104,18 +104,90 @@ This 'episode' is a disaster due to connectivity issues, so I include it mostly 
 <div class="video"><iframe name="hour-7" src="https://www.youtube.com/embed/ft8TdeEIH6o" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </figure>
 
-This time I found some 5g, and things went much better. Surma asks me <a target="hour-7" href="https://www.youtube.com/embed/ft8TdeEIH6o?start=340&autoplay=1">what I'd change about the web if I had total authority</a>, and the answer is 'CORS', but also URLs.
+This time I found some 5g, and things went much better. Surma asks me <a target="hour-7" href="https://www.youtube.com/embed/ft8TdeEIH6o?start=340&autoplay=1">what I'd change about the web if I had total authority</a>, and the answer is CORS, it's always CORS… but also URLs.
 
 Also, watching this back, why am I walking around in circles? What a waste of energy.
 
-- [Hour 8 AMA](https://www.youtube.com/watch?v=cH9ukbu-2po).
-- [Hour 9 AMA](https://www.youtube.com/watch?v=cVXxWSNBcys).
-- [Hour 10 AMA](https://www.youtube.com/watch?v=xz4TWpN23Nc).
-- [Hour 11 AMA](https://www.youtube.com/watch?v=p5PFcoNfbdw).
-- [Hour 12 AMA](https://www.youtube.com/watch?v=hiAiMmcbC6Q).
-- [Hour 13 AMA](https://www.youtube.com/watch?v=ZttXQLW93-k).
-- [Hour 14 AMA](https://www.youtube.com/watch?v=fH_0o8jZnhs).
-- [Hour 15 AMA](https://www.youtube.com/watch?v=TGEfryVZ5vk).
+# Hour 8: Someone who actually knows what they're talking about
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe src="https://www.youtube.com/embed/cH9ukbu-2po" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+In this one, we were joined by [Dr Alice](https://twitter.com/AliceEmmaLouise), a real cancer researcher, and also a host of the [Skeptics with a K](http://www.merseysideskeptics.org.uk/podcasts/) podcast which I thoroughly recommend.
+
+I was really stressed about this one given the connection issues I'd already had; I really didn't want to waste Alice's time. But it all went well! A huge thanks to Dr Alice for bringing some actual knowledge to the proceedings.
+
+# Hour 9: Zombie apocalypses (apocali?)
+
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">I guess it&#39;s that another 2.33333333 times (if my maths is right, brain not working) <a href="https://t.co/IKaIGld32W">pic.twitter.com/IKaIGld32W</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398638765627875334?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote>
+
+Then I chatted to the one and only [Paul Lewis](https://twitter.com/aerotwist).
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe src="https://www.youtube.com/embed/cVXxWSNBcys" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+This is a nice silly one. Just what I needed. I'll happily chat for hours about zombies.
+
+# Hour 10: Remember Flash?
+
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">Definitely not in London now <a href="https://t.co/knZeYm6WYQ">pic.twitter.com/knZeYm6WYQ</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398652360134696966?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote>
+
+Then I chatted _both Paul and Surma_!
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-10" src="https://www.youtube.com/embed/xz4TWpN23Nc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+Some connection issues at the start of this, so you might want to <a target="hour-10" href="https://www.youtube.com/embed/xz4TWpN23Nc?autoplay=1&start=137">skip to 2:17</a>, where I'm answering "What would you do if you weren't at Google?" We all chat about why we do what we do, and reminisce about Flash (both Paul and I started out as Flash developers).
+
+# Hour 11: Standards, appcache, and sheep go baa
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-11" src="https://www.youtube.com/embed/p5PFcoNfbdw" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+This time me and Surma are joined by Maud Nalpas. If you want to skip to the AMA question, it's at <a target="hour-11" href="https://www.youtube.com/embed/p5PFcoNfbdw?autoplay=1&start=296">4:56</a>, "how did you get involved in browser standards?"
+
+[Here's the 'contributing to web standards' HTTP 203 episode we refer to](https://www.youtube.com/watch?v=y1TEPQz02iU).
+
+We also did another question at <a href="https://www.youtube.com/embed/p5PFcoNfbdw?autoplay=1&start=959" target="hour-11">15:59</a>, "what advice would you give to students starting out in web development?"
+
+# Hour 12: That new sock feeling, and number puzzles
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-12" src="https://www.youtube.com/embed/hiAiMmcbC6Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+This time I'm joined by [Phil Hawksworth](https://twitter.com/philhawksworth). A highlight is an <a target="hour-12" href="https://www.youtube.com/embed/hiAiMmcbC6Q?autoplay=1&start=235">interesting maths puzzle</a> that Phil presents me with, then we chat about the <a target="hour-12" href="https://www.youtube.com/embed/hiAiMmcbC6Q?autoplay=1&start=499">best conference talks we've seen</a>.
+
+# Hour 13: Another disaster
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-13" src="https://www.youtube.com/embed/ZttXQLW93-k" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+Oof, this one is one big connection issue. I'll leave it here for completeness, and to show how well Phil coped with it.
+
+# Hour 14: Suncream, tiredness, and Beat Saber
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-14" src="https://www.youtube.com/embed/fH_0o8jZnhs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+Whoa, I'm starting to sound really tired now. There are a few connection issues with this one, but it seems to sort itself out in time for the question <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=315">"what do you do day to day as a dev rel?"</a>. And then it features a <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=626">live crossing of the half way mark</a>!
+
+Seeing how much happier I am at the end of this video vs the start makes me realise how much doing these videos _helped_. A huge thanks to everyone who joined me on these calls.
+
+# Hour 15: The Proclaimers, love-hating Star Trek, and toilet chat again
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-15" src="https://www.youtube.com/embed/TGEfryVZ5vk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+I'm joined by [Paul Kinlan](https://twitter.com/Paul_Kinlan) who tries to do a joke/maths. Eventually we get onto the important questions, which since Paul picked them, are all toilet-based, starting with <a target="hour-15" href="https://www.youtube.com/embed/TGEfryVZ5vk?autoplay=1&start=422">"what do you do if you need a poo and there's no toilet?"</a>.
+
 - [Hour 16 AMA](https://www.youtube.com/watch?v=Jbxd5iXVsJ4).
 - [Hour 17 AMA](https://www.youtube.com/watch?v=-enYw2mY48g).
 - [Hour 18 AMA](https://www.youtube.com/watch?v=LkS-XOaUgdE).
@@ -132,3 +204,4 @@ TODO
 - Remaining AMA
 - Time it took
 - More about the charity. "Don't need to tell you why cancer research is important"
+- Picture of band at midnight
