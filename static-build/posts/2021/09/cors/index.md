@@ -6,7 +6,7 @@ meta: TODO
 #image: 'asset-url:./img.jpg'
 ---
 
-Understanding CORS is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser, over thirty years ago, and has been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
+Understanding CORS is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
 
 I'm going to try to explain why CORS is the way it is, by looking at how it came into existence, and how it fits into other kinds of fetches. Wish me luck…
 
@@ -26,7 +26,7 @@ Browsers have been able to include images from other sites for almost 30 years. 
 
 APIs like these let you make a request to another website and process the response in a particular way, without the other site's consent.
 
-This started getting complicated in 1994 with the advent of HTTP cookies. HTTP cookies became part of a set of things we call _credentials_, which also includes TLS client certificates, and the state that automatically goes in the `Authorization` request header when using HTTP authentication (which no one really uses these days, because it's shite).
+This started getting complicated in 1994 with the advent of HTTP cookies. HTTP cookies became part of a set of things we call _credentials_, which also includes TLS client certificates, and the state that automatically goes in the `Authorization` request header when using HTTP authentication (if you've never heard of this, don't worry, it's shite).
 
 Credentials mean web content can be tailored for a particular user. It's how Twitter shows you _your_ feed, it's how your bank shows you _your_ accounts.
 
@@ -126,7 +126,7 @@ Unfortunately there's a lot of HTTP endpoints out there that 'secure' themselves
 
 A lot of company intranets assume they're 'private' because they're only accessible from a particular network. Some routers and IoT devices assume they're only accessible by well-meaning folks because they're restricted to your home network (remember, the 's' in 'IoT' stands for security). Some websites offer different content depending on the IP address they're accessed from.
 
-So, if you visit my website from your home, I could start making requests to common hostnames and IP addresses, looking for unsecure IoT devices, looking for routers using default passwords, and generally make your life very miserable, all without needing browser credentials.
+So, if you visit my website from your home, I could start making requests to common hostnames and IP addresses, looking for insecure IoT devices, looking for routers using default passwords, and generally make your life very miserable, all without needing browser credentials.
 
 Removing credentials is part of the solution, but it isn't enough on its own. There's no way to know that a resource contains private data, so we need some way for the resource to declare "hey, it's fine, let the other site read my content".
 
@@ -145,7 +145,11 @@ The origin could have some special resource that details its permissions regardi
 </cross-domain-policy>
 ```
 
-Unfortunately this is a bit all-or-nothing. You can imagine a similar format that lets you allow-list particular resources, but the resource would start to get quite large. It also means this potentially large resource would need to be downloaded before downloading the actual thing you want.
+There are a few issues with this:
+
+- It changes the behaviour for the whole origin. You can imagine a similar format that lets you specify rules for particular resources, but the resource would start to get quite large.
+- You end up with two request, one for the `/crossdomain.xml`, and one for the actual resource. This becomes more of an issue the bigger `/crossdomain.xml` gets.
+- For larger sites built by multiple teams, you end up with issues over ownership of `/crossdomain.xml`.
 
 ## In-resource opt-in
 
@@ -207,7 +211,7 @@ By default, a cross-origin CORS request is made without credentials. So, no cook
 
 By the time CORS was developed, the `Referer` header was frequently spoofed or removed by browser extensions, so a new header, `Origin` was created, which provides the origin of the page that made the request.
 
-`Origin` is generally useful, so it's been added to lots of other types of request, such as websocket and `POST` requests. We tried adding it to regular `GET` requests too, but it broke a bunch of sites that assumed the presence of the `Origin` header means it's a CORS request 😬. Maybe one day.
+`Origin` is generally useful, so it's been added to lots of other types of request, such as WebSocket and `POST` requests. We tried adding it to regular `GET` requests too, but it broke a bunch of sites that assumed the presence of the `Origin` header means it's a CORS request 😬. Maybe one day.
 
 # CORS responses
 
@@ -228,7 +232,7 @@ This give the other origin access to the response body, and also a subset of the
 - `Last-Modified`
 - `Pragma`
 
-The response can include another header, `Access-Control-Expose-Headers`, to reveal additional headers, as long as they're not part of the [💀 FORBIDDEN LIST 💀](https://fetch.spec.whatwg.org/#forbidden-header-name), which are always hidden for security reasons.
+The response can include another header, `Access-Control-Expose-Headers`, to reveal additional headers.
 
 ```
 Access-Control-Expose-Headers: Custom-Header-1, Custom-Header-2
@@ -335,7 +339,7 @@ Access-Control-Allow-Headers: fancy, here-we
 ```
 
 - `Access-Control-Allow-Methods` - The _unusual_ methods to allow. This can be a comma-separated list. If the main request is to be sent without credentials, this can be `*` to allow any method.
-- `Access-Control-Allow-Headers` - The _unusual_ headers to allow. If the main request is to be sent without credentials, this can be `*` to allow any [not-forbidden](https://fetch.spec.whatwg.org/#forbidden-header-name) header.
+- `Access-Control-Allow-Headers` - The _unusual_ headers to allow. If the main request is to be sent without credentials, this can be `*` to allow any header that isn't on the [💀 FORBIDDEN LIST 💀](https://fetch.spec.whatwg.org/#forbidden-header-name).
 
 The preflight response must also pass a regular CORS check, so it needs `Access-Control-Allow-Origin`, and also `Access-Control-Allow-Credentials: true` if the main request is to be sent with credentials.
 
