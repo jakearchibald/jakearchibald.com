@@ -345,4 +345,6 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 
 # TODO
 
-Outro.
+- Outro
+- Access-Control-Max-Age on preflight responses
+- Correct Vary header usage
