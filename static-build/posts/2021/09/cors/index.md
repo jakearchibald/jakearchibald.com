@@ -128,7 +128,7 @@ A lot of company intranets assume they're 'private' because they're only accessi
 
 So, if you visit my website from your home, I could start making requests to common hostnames and IP addresses, looking for unsecure IoT devices, looking for routers using default passwords, and generally make your life very miserable, all without needing browser credentials.
 
-Removing credentials is part of the solution, but it isn't enough on its own. There's no way to know that a resource contains private data without browser credentials, so we need some way for the resource to declare "hey, it's fine, let the other site read my content".
+Removing credentials is part of the solution, but it isn't enough on its own. There's no way to know that a resource contains private data, so we need some way for the resource to declare "hey, it's fine, let the other site read my content".
 
 ## Separate resource opt-in
 
