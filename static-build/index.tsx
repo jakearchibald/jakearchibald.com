@@ -12,6 +12,7 @@
  */
 import { h } from 'preact';
 import { Feed } from 'feed';
+import dedent from 'dedent';
 
 import { renderPage, writeFiles, getPostPath, getPostUrl } from './utils';
 import IndexPage from './pages/index';
@@ -26,6 +27,10 @@ interface Output {
 }
 const toOutput: Output = {
   'who/index.html': renderPage(<WhoPage />),
+  _headers: dedent`
+    /*
+      Access-Control-Allow-Origin: *
+  `,
 };
 
 // Paginated index pages
