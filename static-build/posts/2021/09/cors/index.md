@@ -68,7 +68,7 @@ Netscape realised that this presented a security issue, so they decided that cro
 }
 .origin {
   grid-area: 1 / 1;
-  color: #569cd6;
+  color: #ff824a;
 }
 .path {
   grid-area: 1 / 2;
@@ -80,7 +80,7 @@ Netscape realised that this presented a security issue, so they decided that cro
   grid-template-columns: 1fr max-content 1fr;
   align-items: top;
   gap: 0.3em;
-  color: #569cd6;
+  color: #ff824a;
 }
 .origin-label::before,
 .origin-label::after {
@@ -151,7 +151,7 @@ Unfortunately this is a bit all-or-nothing. You can imagine a similar format tha
 
 To cut down the number of requests, the opt-in could be granted within the resource itself. This technique was proposed by the W3C Voice Browser Working Group back in 2005, using an XML processing instruction:
 
-```xml
+```
 <?access-control allow="*.example.com" deny="*.visitors.example.com"?>
 ```
 
@@ -163,7 +163,7 @@ But what about accessing the raw bytes of the resource? In that case it doesn't 
 
 ## HTTP header opt-in
 
-The proposal by the Voice Browser Working Group was generalised using an HTTP header, and that became CORS.
+The proposal by the Voice Browser Working Group was generalised using HTTP headers, and that became CORS.
 
 ```
 Access-Control-Allow-Origin: *
