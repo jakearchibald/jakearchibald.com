@@ -57,9 +57,9 @@ It's become pretty clear that the above was a mistake in the design of the web, 
 
 ## The same-origin policy
 
-In 1995, Netscape 2 landed with two amazing new features: LiveScript (you probably know this better as 'JavaScript'), and HTML frames. Frames let you embed one page in another, and LiveScript could interact with both pages.
+Back in 1995, Netscape 2 landed with two amazing new features: LiveScript (you probably know this better as 'JavaScript'), and HTML frames. Frames let you embed one page in another, and LiveScript could interact with both pages.
 
-Netscape realised that this presented a security issue, so they decided that cross-frame scripting would only be allowed if both pages were from the same _origin_.
+Netscape realised that this presented a security issue, so they decided that cross-frame scripting would only be allowed if both pages had the same _origin_.
 
 <style>
 .origin-example {
@@ -110,7 +110,7 @@ But how does the browser know that `https://help.yourbank.com` and `https://prof
 
 Well, the answer was a bunch of heuristics in each browser, but in 2007 Mozilla swapped their heuristics for a list. That list is now maintained as a separate community project known as the [public suffix list](https://publicsuffix.org/), and it's used by all browsers and many other projects.
 
-If someone says they understand the security implications of a URL without UI intervention, be sure to check they can recite all 9000+ entries of the public suffix list from memory.
+If someone says they understand the security implications of URLs without UI hints, be sure to check they can recite all 9000+ entries of the public suffix list from memory.
 
 # Opening things up again
 
@@ -132,7 +132,7 @@ Removing credentials is part of the solution, but it isn't enough on its own. Th
 
 ## Separate resource opt-in
 
-The origin could have some special resource that details its permissions regarding cross-origin access. That's the [security model Flash went with](https://www.adobe.com/devnet-docs/acrobatetk/tools/AppSec/xdomain.html). Flash looked for a `/corssdomain.xml` in the root of the site that looked like this:
+The origin could have some special resource that details its permissions regarding cross-origin access. That's the [security model Flash went with](https://www.adobe.com/devnet-docs/acrobatetk/tools/AppSec/xdomain.html). Flash looked for a `/crossdomain.xml` in the root of the site that looked like this:
 
 ```xml
 <?xml version="1.0"?>
