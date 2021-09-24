@@ -175,7 +175,7 @@ Access-Control-Allow-Origin: *
 
 # Making a CORS request
 
-Most modern web features require CORS by default, such as `fetch()`. The exception is modern features that are designed to support older features that don't use CORS, eg `<link rel="preload">`.
+Most modern web features require CORS by default, such as `fetch()`. The exception is modern features that are designed to support older features that don't use CORS, e.g., `<link rel="preload">`.
 
 Unfortunately there's no easy rule here. For example:
 
