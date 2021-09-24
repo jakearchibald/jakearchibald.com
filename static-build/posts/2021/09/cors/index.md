@@ -122,7 +122,7 @@ How could we allow those more powerful APIs to work _across_ origins?
 
 Let's say we provide an opt-in so the request is sent without credentials. The response will be the 'logged-out' view, so it won't contain any private data, and can be revealed without concern, right?
 
-Unfortunately there's a lot of HTTP endpoints out there that 'secure' themselves using things other than browser credentials.
+Unfortunately there're a lot of HTTP endpoints out there that 'secure' themselves using things other than browser credentials.
 
 A lot of company intranets assume they're 'private' because they're only accessible from a particular network. Some routers and IoT devices assume they're only accessible by well-meaning folks because they're restricted to your home network (remember, the 's' in 'IoT' stands for security). Some websites offer different content depending on the IP address they're accessed from.
 
