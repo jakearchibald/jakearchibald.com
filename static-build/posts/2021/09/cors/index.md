@@ -223,7 +223,7 @@ Access-Control-Allow-Origin: *
 
 The `*` can be replaced with the value of the request's `Origin` header, but `*` works for any requesting origin provided the request is sent without credentials (more on that in a bit).
 
-This give the other origin access to the response body, and also a subset of the headers:
+This gives the other origin access to the response body, and also a subset of the headers:
 
 - `Cache-Control`
 - `Content-Language`
