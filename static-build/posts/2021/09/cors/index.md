@@ -331,7 +331,7 @@ The preflight request never includes credentials, even if the main request will.
 
 ## Preflight response
 
-The server responds to indicate whether its happy for the main request to go ahead, using headers like this:
+The server responds to indicate whether it's happy for the main request to go ahead, using headers like this:
 
 ```
 Access-Control-Allow-Methods: wibbley-wobbley
