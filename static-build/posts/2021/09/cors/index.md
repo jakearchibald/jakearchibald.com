@@ -148,7 +148,7 @@ The origin could have some special resource that details its permissions regardi
 There are a few issues with this:
 
 - It changes the behaviour for the whole origin. You can imagine a similar format that lets you specify rules for particular resources, but the resource would start to get quite large.
-- You end up with two request, one for the `/crossdomain.xml`, and one for the actual resource. This becomes more of an issue the bigger `/crossdomain.xml` gets.
+- You end up with two requests, one for the `/crossdomain.xml`, and one for the actual resource. This becomes more of an issue the bigger `/crossdomain.xml` gets.
 - For larger sites built by multiple teams, you end up with issues over ownership of `/crossdomain.xml`.
 
 ## In-resource opt-in
