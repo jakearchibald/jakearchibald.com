@@ -209,7 +209,7 @@ With `<link rel="preload">`, you need to ensure it uses CORS if the eventual req
 
 By default, a cross-origin CORS request is made without credentials. So, no cookies, no client certs, and no automatic `Authorization` header. However, same-origin requests include credentials.
 
-By the time CORS was developed, the `Referer` header was frequently spoofed or removed by browser extensions, so a new header, `Origin` was created, which provides the origin of the page that made the request.
+By the time CORS was developed, the [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) header was frequently spoofed or removed by browser extensions, so a new header, [`Origin`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin), was created, which provides the origin of the page that made the request.
 
 `Origin` is generally useful, so it's been added to lots of other types of request, such as WebSocket and `POST` requests. We tried adding it to regular `GET` requests too, but it broke a bunch of sites that assumed the presence of the `Origin` header means it's a CORS request 😬. Maybe one day.
 
