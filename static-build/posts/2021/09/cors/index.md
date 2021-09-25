@@ -269,7 +269,10 @@ However, this makes the opt-in stronger. The response must contain:
 ```
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: https://jakearchibald.com
+Vary: Cookie, Access-Control-Allow-Origin
 ```
+
+TODO: vary stuff
 
 If the CORS request includes credentials, the response must include the `Access-Control-Allow-Credentials: true` header, and the value of `Access-Control-Allow-Origin` must reflect the request's `Origin` header (`*` isn't an acceptable value if the request has credentials).
 
@@ -352,3 +355,25 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 - Outro
 - Access-Control-Max-Age on preflight responses
 - Correct Vary header usage
+- Create a demo where folks can set various parts of the request/response and see if it works
+  - Request
+    - Set method
+    - Set headers
+    - Set body
+    - Set credentials
+  - Response
+    - Access-Control-Allow-Origin (text field with \* default and 'don't send' placeholder)
+    - Access-Control-Allow-Credentials (text field with \* default and 'don't send' placeholder)
+    - Access-Control-Expose-Headers (text field with \* default and 'don't send' placeholder)
+    - Set extra headers (would this be secure??)
+  - Preflight response
+    - Allow checkbox
+    - Access-Control-Allow-Origin (text field with \* default and 'don't send' placeholder)
+    - Access-Control-Allow-Credentials (text field with \* default and 'don't send' placeholder)
+    - Access-Control-Allow-Methods
+    - Access-Control-Allow-Headers
+    - Access-Control-Max-Age
+  - Output
+    - If failure, "see devtools"
+    - Was a preflight used?
+    - Show JS-visible response
