@@ -41,13 +41,13 @@ interface Props {}
 interface State {
   url1: string;
   url2: string;
-  result: Result | string;
+  result: Result | undefined | Error;
 }
 
 export default class SiteVsOrigin extends Component<Props, State> {
   state: State = {
-    url1: 'https://jakearchibald.com',
-    url2: 'https://app.jakearchibald.com',
+    url1: 'https://jakearchibald.com/foo',
+    url2: 'https://app.jakearchibald.com/bar',
     result: { sameOrigin: false, sameSite: true },
   };
 
@@ -59,20 +59,43 @@ export default class SiteVsOrigin extends Component<Props, State> {
   private _onInput = () => {
     if (this._processTimeout) clearTimeout(this._processTimeout);
 
-    this._processTimeout = setTimeout(() => this._process(), 500);
+    this._processTimeout = setTimeout(() => this._process(), 100);
 
     this.setState({
-      result: '…',
+      result: undefined,
       url1: this._url1Input.current!.value,
       url2: this._url2Input.current!.value,
     });
   };
 
   private async _process() {
-    const url1 = new URL(this.state.url1);
-    const url2 = new URL(this.state.url2);
-    console.log(await getSite(url1.hostname), await getSite(url2.hostname));
-    this.setState({ result: 'processed' });
+    let url1: URL | undefined;
+    let url2: URL | undefined;
+    let url1Site: string | undefined;
+    let url2Site: string | undefined;
+
+    try {
+      url1 = new URL(this.state.url1);
+      url1Site = await getSite(url1.hostname);
+    } catch (error) {
+      this.setState({ result: Error(`URL 1: ${(error as Error).message}`) });
+      return;
+    }
+
+    try {
+      url2 = new URL(this.state.url2);
+      url2Site = await getSite(url2.hostname);
+    } catch (error) {
+      this.setState({ result: Error(`URL 2: ${(error as Error).message}`) });
+      return;
+    }
+
+    this.setState({
+      result: {
+        sameOrigin: url1.origin === url2.origin,
+        sameSite: url1Site === url2Site,
+      },
+    });
   }
 
   render(_: Props, { url1, url2, result }: State) {
@@ -112,8 +135,10 @@ export default class SiteVsOrigin extends Component<Props, State> {
           <div class="field">
             <div class="label">Same origin:</div>
             <div class="input">
-              {typeof result === 'string'
-                ? result
+              {!result
+                ? '…'
+                : result instanceof Error
+                ? result.message
                 : result.sameOrigin
                 ? '✅'
                 : '❌'}
@@ -122,8 +147,10 @@ export default class SiteVsOrigin extends Component<Props, State> {
           <div class="field">
             <div class="label">Same site:</div>
             <div class="input">
-              {typeof result === 'string'
-                ? result
+              {!result
+                ? '…'
+                : result instanceof Error
+                ? ''
                 : result.sameSite
                 ? '✅'
                 : '❌'}
