@@ -72,7 +72,7 @@ export default async function ({ watch }) {
     assetStringPlugin(),
     cssPlugin(resolveFileUrl),
     markdownPlugin(),
-    resolve(),
+    resolve({ preferBuiltins: false }),
     commonjs(),
   ];
   const dir = '.tmp/build';

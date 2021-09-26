@@ -112,6 +112,17 @@ Well, the answer was a bunch of heuristics in each browser, but in 2007 Mozilla 
 
 If someone says they understand the security implications of URLs without UI hints, be sure to check they can recite all 9000+ entries of the public suffix list from memory.
 
+<script type="component">{
+  "module": "shared/demos/2021/cors/SiteVsOrigin",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
+<script type="component">{
+  "module": "shared/demos/2021/cors/SiteVsOrigin",
+  "props": {}
+}</script>
+
 # Opening things up again
 
 Ok, so we've got these APIs like `<img>` that can access resources from other origins, but visibility into the response is limited (but not limited enough in hindsight), and we've got these more powerful APIs like cross-frame scripting and `XMLHttpRequest` which only work same-origin.
