@@ -141,7 +141,7 @@ So, if you visit my website from your home, I could start making requests to com
 
 Removing credentials is part of the solution, but it isn't enough on its own. There's no way to know that a resource contains private data, so we need some way for the resource to declare "hey, it's fine, let the other site read my content".
 
-## Separate resource opt-in
+## Separate resource opt-in?
 
 The origin could have some special resource that details its permissions regarding cross-origin access. That's the [security model Flash went with](https://www.adobe.com/devnet-docs/acrobatetk/tools/AppSec/xdomain.html). Flash looked for a `/crossdomain.xml` in the root of the site that looked like this:
 
@@ -162,7 +162,7 @@ There are a few issues with this:
 - You end up with two requests, one for the `/crossdomain.xml`, and one for the actual resource. This becomes more of an issue the bigger `/crossdomain.xml` gets.
 - For larger sites built by multiple teams, you end up with issues over ownership of `/crossdomain.xml`.
 
-## In-resource opt-in
+## In-resource opt-in?
 
 To cut down the number of requests, the opt-in could be granted within the resource itself. This technique was proposed by the W3C Voice Browser Working Group back in 2005, using an XML processing instruction:
 
@@ -280,10 +280,8 @@ However, this makes the opt-in stronger. The response must contain:
 ```
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: https://jakearchibald.com
-Vary: Cookie, Access-Control-Allow-Origin
+Vary: Cookie, Origin
 ```
-
-TODO: vary stuff
 
 If the CORS request includes credentials, the response must include the `Access-Control-Allow-Credentials: true` header, and the value of `Access-Control-Allow-Origin` must reflect the request's `Origin` header (`*` isn't an acceptable value if the request has credentials).
 
@@ -292,6 +290,16 @@ If the CORS request includes credentials, the response must include the `Access-
 The opt-in is stronger because, well, exposing private data is risky, and should only be done for origins you really trust.
 
 The same-site rules around cookies still apply, as do the kinds of isolation we see in Firefox and Safari. But these only come into effect cross-site, not cross-origin.
+
+## Why `Vary`?
+
+```
+Vary: Cookie, Origin
+```
+
+It's important to use the `Vary` header if your response is cacheable in any way. And not just by the browser, but also intermediate things like a CDN. Use `Vary` to tell browsers and intermediates that the response is different depending on particular request headers.
+
+Although the `Origin` request header doesn't result in a different response body, it does change the response headers (`Access-Control-Allow-Origin` in this case), so it needs to go in `Vary`.
 
 # Unusual requests and preflights
 
