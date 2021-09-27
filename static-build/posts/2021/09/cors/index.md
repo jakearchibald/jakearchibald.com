@@ -125,6 +125,10 @@ If someone says they understand the security implications of URLs without UI hin
   "props": {}
 }</script>
 
+The above uses a live version of the public suffix list, but I had to proxy it because the actual list doesn't use CORS. The irony.
+
+So `app.jakearchibald.com` and `other-app.jakearchibald.com` are part of the same site, but `app.glitch.me` and `other-app.glitch.me` are different sites. These cases are different because `glitch.me` is on the public suffix list whereas `jakearchibald.com` is not. This is 'correct', because different people 'own' the subdomains of `glitch.me`, whereas I own all the subdomains of `jakearchibald.com`.
+
 # Opening things up again
 
 Ok, so we've got these APIs like `<img>` that can access resources from other origins, but visibility into the response is limited (but not limited enough in hindsight), and we've got these more powerful APIs like cross-frame scripting and `XMLHttpRequest` which only work same-origin.

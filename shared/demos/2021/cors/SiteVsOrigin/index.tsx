@@ -31,28 +31,46 @@ export const Styles: FunctionalComponent = () => (
   </Fragment>
 );
 
-interface Result {
-  sameOrigin: boolean;
-  sameSite: boolean;
+const enum ResultState {
+  Loading,
+  Success,
+  Error,
+}
+
+interface URLState {
+  url: string;
+  origin: string;
+  site: string;
 }
 
 interface Props {}
 
 interface State {
-  url1: string;
-  url2: string;
-  result: Result | undefined | Error;
+  urlState: [URLState, URLState];
+  resultState: ResultState;
 }
 
 export default class SiteVsOrigin extends Component<Props, State> {
   state: State = {
-    url1: 'https://jakearchibald.com/foo',
-    url2: 'https://app.jakearchibald.com/bar',
-    result: { sameOrigin: false, sameSite: true },
+    urlState: [
+      {
+        url: 'https://app.jakearchibald.com/foo',
+        origin: 'https://app.jakearchibald.com',
+        site: 'jakearchibald.com',
+      },
+      {
+        url: 'https://other-app.jakearchibald.com/bar',
+        origin: 'https://other-app.jakearchibald.com',
+        site: 'jakearchibald.com',
+      },
+    ],
+    resultState: ResultState.Success,
   };
 
   private _url1Input = createRef<HTMLInputElement>();
   private _url2Input = createRef<HTMLInputElement>();
+
+  private _processQueue: Promise<unknown> = Promise.resolve();
 
   private _processTimeout?: number;
 
@@ -62,84 +80,94 @@ export default class SiteVsOrigin extends Component<Props, State> {
     this._processTimeout = setTimeout(() => this._process(), 100);
 
     this.setState({
-      result: undefined,
-      url1: this._url1Input.current!.value,
-      url2: this._url2Input.current!.value,
+      urlState: [
+        { url: this._url1Input.current!.value, origin: '…', site: '…' },
+        { url: this._url2Input.current!.value, origin: '…', site: '…' },
+      ],
+      resultState: ResultState.Loading,
     });
   };
 
   private async _process() {
-    let url1: URL | undefined;
-    let url2: URL | undefined;
-    let url1Site: string | undefined;
-    let url2Site: string | undefined;
+    let errored = false;
+    let results: { site: string; origin: string }[];
 
-    try {
-      url1 = new URL(this.state.url1);
-      url1Site = await getSite(url1.hostname);
-    } catch (error) {
-      this.setState({ result: Error(`URL 1: ${(error as Error).message}`) });
-      return;
-    }
+    await (this._processQueue = this._processQueue
+      .catch(() => {})
+      .then(async () => {
+        results = await Promise.all(
+          this.state.urlState.map(async ({ url }) => {
+            let urlObj: URL;
 
-    try {
-      url2 = new URL(this.state.url2);
-      url2Site = await getSite(url2.hostname);
-    } catch (error) {
-      this.setState({ result: Error(`URL 2: ${(error as Error).message}`) });
-      return;
-    }
+            try {
+              urlObj = new URL(url);
+            } catch (error) {
+              errored = true;
+              return { site: '', origin: (error as Error).message };
+            }
+
+            try {
+              const site = await getSite(urlObj.hostname);
+              return { site, origin: urlObj.origin };
+            } catch (error) {
+              errored = true;
+              return {
+                origin: urlObj.origin,
+                site: (error as Error).message,
+              };
+            }
+          }),
+        );
+      }));
 
     this.setState({
-      result: {
-        sameOrigin: url1.origin === url2.origin,
-        sameSite: url1Site === url2Site,
-      },
+      urlState: [
+        { ...this.state.urlState[0], ...results![0] },
+        { ...this.state.urlState[1], ...results![1] },
+      ],
+      resultState: errored ? ResultState.Error : ResultState.Success,
     });
   }
 
-  render(_: Props, { url1, url2, result }: State) {
+  render(_: Props, { urlState, resultState }: State) {
     return (
       <form class="form-rows">
         <div class="form-rows-inner">
-          <div class="field">
-            <label for="url-1-input" class="label">
-              URL 1:
-            </label>
-            <div class="input">
-              <input
-                onInput={this._onInput}
-                ref={this._url1Input}
-                id="url-1-input"
-                required
-                type="url"
-                value={url1}
-              />
-            </div>
-          </div>
-          <div class="field">
-            <label for="url-2-input" class="label">
-              URL 2:
-            </label>
-            <div class="input">
-              <input
-                onInput={this._onInput}
-                ref={this._url2Input}
-                id="url-2-input"
-                required
-                type="url"
-                value={url2}
-              />
-            </div>
-          </div>
+          {urlState.map(({ url, origin, site }, index) => (
+            <Fragment>
+              <div class="field">
+                <label for={`url-${index}-input`} class="label">
+                  URL {index + 1}:
+                </label>
+                <div class="input">
+                  <input
+                    onInput={this._onInput}
+                    ref={index === 0 ? this._url1Input : this._url2Input}
+                    id={`url-${index}-input`}
+                    required
+                    type="url"
+                    value={url}
+                  />
+                </div>
+              </div>
+              <div class="field">
+                <div class="label">Origin:</div>
+                <div class="input">{origin}</div>
+              </div>
+              <div class="field">
+                <div class="label">Site:</div>
+                <div class="input">{site}</div>
+              </div>
+            </Fragment>
+          ))}
           <div class="field">
             <div class="label">Same origin:</div>
             <div class="input">
-              {!result
+              {resultState === ResultState.Loading
                 ? '…'
-                : result instanceof Error
-                ? result.message
-                : result.sameOrigin
+                : resultState === ResultState.Error
+                ? ''
+                : urlState[0].origin === urlState[1].origin
                 ? '✅'
                 : '❌'}
             </div>
@@ -147,11 +175,11 @@ export default class SiteVsOrigin extends Component<Props, State> {
           <div class="field">
             <div class="label">Same site:</div>
             <div class="input">
-              {!result
+              {resultState === ResultState.Loading
                 ? '…'
-                : result instanceof Error
+                : resultState === ResultState.Error
                 ? ''
-                : result.sameSite
+                : urlState[0].site === urlState[1].site
                 ? '✅'
                 : '❌'}
             </div>
