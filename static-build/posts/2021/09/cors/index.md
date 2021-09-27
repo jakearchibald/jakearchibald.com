@@ -50,7 +50,7 @@ This gets worse with a format like CSS, which has more capabilities, but doesn't
 
 It's become pretty clear that the above was a mistake in the design of the web, so we no longer create APIs that can process these kinds of requests. Meanwhile, we've spent the last few decades patching things up as best we can:
 
-- CSS from another origin (I'll get to a definition of that shortly) now needs to be sent with a CSS `Content-Type`. Unfortunately we can't enforce the same thing for scripts and images without breaking significant portions of the web. However…
+- CSS from another origin (I'll get to a definition of that shortly) now needs to be sent with a CSS `Content-Type`. Unfortunately we can't enforce the same thing for scripts and images, or CSS on [quirks mode](https://en.wikipedia.org/wiki/Quirks_mode) pages, without breaking significant portions of the web. However…
 - We prevent particular response types from another origin being loaded as image/script/etc., such as HTML, JSON, and XML (except SVG). This protection is called [CORB](https://fetch.spec.whatwg.org/#corb).
 - More recently, we don't send cookies along with the request from site-A to site-B, unless site-B has opted-in using the [`SameSite` cookie attribute](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite). Without cookies, the site generally returns the 'logged-out' view, without private data.
 - Firefox and Safari go a step further, and try to fully isolate sites, although how this works is currently pretty different between the two.
