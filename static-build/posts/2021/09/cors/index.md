@@ -46,6 +46,8 @@ This gets worse with a format like CSS, which has more capabilities, but doesn't
 
 …which is loaded using `yahoo.com`'s cookies, the CSS parses, and sends private information to `evil.com`. Oh no.
 
+And that's just the tip of the shiteberg. From [browser bugs](/2018/i-discovered-a-browser-bug/) to [CPU exploits](<https://en.wikipedia.org/wiki/Meltdown_(security_vulnerability)>), these leaky resources have given us decades of problems.
+
 # Locking things down
 
 It's become pretty clear that the above was a mistake in the design of the web, so we no longer create APIs that can process these kinds of requests. Meanwhile, we've spent the last few decades patching things up as best we can:
@@ -59,7 +61,7 @@ It's become pretty clear that the above was a mistake in the design of the web, 
 
 Back in 1995, Netscape 2 landed with two amazing new features: LiveScript (you probably know this better as 'JavaScript'), and HTML frames. Frames let you embed one page in another, and LiveScript could interact with both pages.
 
-Netscape realised that this presented a security issue, so they decided that cross-frame scripting would only be allowed if both pages had the same _origin_.
+Netscape realised that this presented a security issue; you don't want an evil page to be able to read the DOM of your banking page, so they decided that cross-frame scripting would only be allowed if both pages had the same _origin_.
 
 <style>
 .origin-example {
