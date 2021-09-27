@@ -213,7 +213,7 @@ If an HTML element causes a no-CORS fetch, you can use the badly-named `crossori
 When you switch these over to CORS, you get more visibility into the cross-origin resource:
 
 - You can paint the `<img>` to a `<canvas>` and read back the pixels.
-- You get more detailed stack traces for script.
+- You get more detailed stack traces for script [in particular weird cases](https://github.com/whatwg/html/issues/2440).
 - You can explore the parsed stylesheet via [`link.sheet`](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleSheet).
 
 With `<link rel="preload">`, you need to ensure it uses CORS if the eventual request will also use CORS, otherwise it won't match in the preload cache.
