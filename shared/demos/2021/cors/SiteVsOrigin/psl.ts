@@ -5,7 +5,7 @@ import { toASCII } from 'punycode';
 
 // Hopefully I can replace this with the real resource eventually.
 // https://github.com/publicsuffix/list/issues/1433
-import publicSuffixListUrl from 'asset-url:./psl.dat';
+const publicSuffixListUrl = 'https://cors-playground-endpoints.glitch.me/psl';
 
 interface PSLRule {
   rule: string;
@@ -19,23 +19,29 @@ let pslPromise: Promise<PSLRule[]> | undefined;
 
 function getRules(): Promise<PSLRule[]> {
   if (!pslPromise) {
-    pslPromise = fetch(publicSuffixListUrl).then(async (response) => {
-      const text = await response.text();
-      return text
-        .split('\n')
-        .map((line) => line.trim())
-        .filter((line) => line && !line.startsWith('//'))
-        .map((rule) => {
-          const suffix = rule.replace(/^(\*\.|\!)/, '');
-          return {
-            rule,
-            suffix,
-            punySuffix: toASCII(suffix),
-            wildcard: rule.charAt(0) === '*',
-            exception: rule.charAt(0) === '!',
-          };
-        });
-    });
+    pslPromise = (async () => {
+      try {
+        const response = await fetch(publicSuffixListUrl);
+        const text = await response.text();
+        return text
+          .split('\n')
+          .map((line) => line.trim())
+          .filter((line) => line && !line.startsWith('//'))
+          .map((rule) => {
+            const suffix = rule.replace(/^(\*\.|\!)/, '');
+            return {
+              rule,
+              suffix,
+              punySuffix: toASCII(suffix),
+              wildcard: rule.charAt(0) === '*',
+              exception: rule.charAt(0) === '!',
+            };
+          });
+      } catch (err) {
+        console.error(err);
+        throw Error('Failed to fetch Public Suffix List');
+      }
+    })();
   }
 
   return pslPromise;
@@ -58,8 +64,16 @@ async function findRule(asciiHostname: string): Promise<PSLRule | undefined> {
   return matchingRule;
 }
 
+const ipv6 = /^(?:[a-f0-9]{1,4}:){7}[a-f0-9]{1,4}$/;
+const ipv4 =
+  /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+
 export async function getSite(hostname: string): Promise<string> {
   hostname = hostname.toLowerCase();
+
+  // I'm not 100% confident on some of this, so don't use it in security-sensitive situations :)
+  if (ipv6.test(hostname) || ipv4.test(hostname)) return hostname;
+
   if (hostname.endsWith('.')) hostname = hostname.slice(0, -1);
 
   const asciiHostname = toASCII(hostname);
