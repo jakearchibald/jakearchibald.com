@@ -1,5 +1,6 @@
 import { Component, Fragment, FunctionalComponent, h, createRef } from 'preact';
 
+import 'shared/loading-spinner';
 import { getSite } from './psl';
 
 const styles = `
@@ -19,6 +20,10 @@ const styles = `
 .form-rows .input {
   padding: 0.5em;
 }
+
+.form-rows .input loading-spinner {
+  --size: 24px;
+}
 `;
 
 export const SiteVsOriginStyles: FunctionalComponent = () => (
@@ -32,7 +37,7 @@ export const Styles: FunctionalComponent = () => (
 );
 
 const enum ResultState {
-  Loading,
+  LongLoading,
   Success,
   Error,
 }
@@ -75,27 +80,34 @@ export default class SiteVsOrigin extends Component<Props, State> {
   private _processTimeout?: number;
 
   private _onInput = () => {
-    if (this._processTimeout) clearTimeout(this._processTimeout);
-
-    this._processTimeout = setTimeout(() => this._process(), 100);
-
     this.setState({
       urlState: [
-        { url: this._url1Input.current!.value, origin: '…', site: '…' },
-        { url: this._url2Input.current!.value, origin: '…', site: '…' },
+        { ...this.state.urlState[0], url: this._url1Input.current!.value },
+        { ...this.state.urlState[1], url: this._url2Input.current!.value },
       ],
-      resultState: ResultState.Loading,
     });
+
+    if (this._processTimeout) clearTimeout(this._processTimeout);
+    this._processTimeout = setTimeout(() => this._process(), 100);
   };
 
   private async _process() {
-    let errored = false;
-    let results: { site: string; origin: string }[];
-
-    await (this._processQueue = this._processQueue
+    this._processQueue = this._processQueue
       .catch(() => {})
       .then(async () => {
-        results = await Promise.all(
+        const longLoadTimeout = setTimeout(() => {
+          this.setState({
+            urlState: [
+              { ...this.state.urlState[0], origin: '', site: '' },
+              { ...this.state.urlState[1], origin: '', site: '' },
+            ],
+            resultState: ResultState.LongLoading,
+          });
+        }, 900);
+
+        let errored = false;
+
+        const results = await Promise.all(
           this.state.urlState.map(async ({ url }) => {
             let urlObj: URL;
 
@@ -118,15 +130,17 @@ export default class SiteVsOrigin extends Component<Props, State> {
             }
           }),
         );
-      }));
 
-    this.setState({
-      urlState: [
-        { ...this.state.urlState[0], ...results![0] },
-        { ...this.state.urlState[1], ...results![1] },
-      ],
-      resultState: errored ? ResultState.Error : ResultState.Success,
-    });
+        clearTimeout(longLoadTimeout);
+
+        this.setState({
+          urlState: [
+            { ...this.state.urlState[0], ...results![0] },
+            { ...this.state.urlState[1], ...results![1] },
+          ],
+          resultState: errored ? ResultState.Error : ResultState.Success,
+        });
+      });
   }
 
   render(_: Props, { urlState, resultState }: State) {
@@ -152,7 +166,13 @@ export default class SiteVsOrigin extends Component<Props, State> {
               </div>
               <div class="field">
                 <div class="label">Origin:</div>
-                <div class="input">{origin}</div>
+                <div class="input">
+                  {resultState === ResultState.LongLoading && index === 0 ? (
+                    <loading-spinner />
+                  ) : (
+                    origin
+                  )}
+                </div>
               </div>
               <div class="field">
                 <div class="label">Site:</div>
@@ -163,9 +183,7 @@ export default class SiteVsOrigin extends Component<Props, State> {
           <div class="field">
             <div class="label">Same origin:</div>
             <div class="input">
-              {resultState === ResultState.Loading
-                ? '…'
-                : resultState === ResultState.Error
+              {resultState !== ResultState.Success
                 ? ''
                 : urlState[0].origin === urlState[1].origin
                 ? '✅'
@@ -175,9 +193,7 @@ export default class SiteVsOrigin extends Component<Props, State> {
           <div class="field">
             <div class="label">Same site:</div>
             <div class="input">
-              {resultState === ResultState.Loading
-                ? '…'
-                : resultState === ResultState.Error
+              {resultState !== ResultState.Success
                 ? ''
                 : urlState[0].site === urlState[1].site
                 ? '✅'
