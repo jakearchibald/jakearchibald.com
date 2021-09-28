@@ -127,7 +127,7 @@ If someone says they understand the security implications of URLs without UI hin
 
 The above uses a live version of the public suffix list, but I had to proxy it because the actual list doesn't use CORS. The irony.
 
-So `app.jakearchibald.com` and `other-app.jakearchibald.com` are part of the same site, but `app.glitch.me` and `other-app.glitch.me` are different sites. These cases are different because `glitch.me` is on the public suffix list whereas `jakearchibald.com` is not. This is 'correct', because different people 'own' the subdomains of `glitch.me`, whereas I own all the subdomains of `jakearchibald.com`.
+So `https://app.jakearchibald.com` and `https://other-app.jakearchibald.com` are part of the same site, but `https://app.glitch.me` and `https://other-app.glitch.me` are different sites. These cases are different because `glitch.me` is on the public suffix list whereas `jakearchibald.com` is not. This is 'correct', because different people 'own' the subdomains of `glitch.me`, whereas I own all the subdomains of `jakearchibald.com`.
 
 # Opening things up again
 
@@ -259,7 +259,7 @@ Access-Control-Expose-Headers: Custom-Header-1, Custom-Header-2
 
 `Access-Control-Allow-Origin: *` only grants response visibility if the request is made without credentials, so it's totally safe to use on all resources _unless_ that resource contains private data that's 'secured' using something other than browser credentials.
 
-If you _are_ securing things using something other than browser credentials, _stop doing that_. It's not actually secure.
+If you _are_ securing things using something other than browser credentials, _stop doing that_. It's not actually secure. Platform apps will be able to get at that data and send it wherever they want.
 
 Open the resource in an incognito/private browser tab. Are you happy with other sites having access to that, including the source and the response headers listed above? Then it's safe to expose it via CORS.
 
@@ -362,12 +362,16 @@ The preflight request never includes credentials, even if the main request will.
 The server responds to indicate whether it's happy for the main request to go ahead, using headers like this:
 
 ```
+Access-Control-Max-Age: 600
 Access-Control-Allow-Methods: wibbley-wobbley
 Access-Control-Allow-Headers: fancy, here-we
 ```
 
+- `Access-Control-Max-Age` - The number of seconds to cache this preflight response, to avoid the need for further preflights to this URL. The default is 5 seconds. Some browsers have an upper-limit on this. In Chrome it's 600 (10 minutes), and in Firefox it's 86400 (24 hours).
 - `Access-Control-Allow-Methods` - The _unusual_ methods to allow. This can be a comma-separated list. If the main request is to be sent without credentials, this can be `*` to allow any method.
-- `Access-Control-Allow-Headers` - The _unusual_ headers to allow. If the main request is to be sent without credentials, this can be `*` to allow any header that isn't on the [💀 FORBIDDEN LIST 💀](https://fetch.spec.whatwg.org/#forbidden-header-name).
+- `Access-Control-Allow-Headers` - The _unusual_ headers to allow. If the main request is to be sent without credentials, this can be `*` to allow any header that isn't on the <span style="white-space: nowrap">[🔥💀 FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-header-name)</span>.
+
+Headers in the <span style="white-space: nowrap">[🔥💀 FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-header-name)</span> are headers that must remain in the browser's control for security reasons. They're automatically (and silently) stripped from CORS requests and `Access-Control-Allow-Headers`.
 
 The preflight response must also pass a regular CORS check, so it needs `Access-Control-Allow-Origin`, and also `Access-Control-Allow-Credentials: true` if the main request is to be sent with credentials.
 
@@ -378,8 +382,6 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 # TODO
 
 - Outro
-- Access-Control-Max-Age on preflight responses
-- Correct Vary header usage
 - Create a demo where folks can set various parts of the request/response and see if it works
   - Request
     - Set method
