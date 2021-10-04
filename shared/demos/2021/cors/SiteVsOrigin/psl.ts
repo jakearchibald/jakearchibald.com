@@ -1,11 +1,8 @@
-// A lot of this is adapted from https://github.com/lupomontero/psl/blob/master/index.js
-// But uses a 'live' list, and targeted at browsers.
-
 import { toASCII } from 'punycode';
 
 // Hopefully I can replace this with the real resource eventually.
 // https://github.com/publicsuffix/list/issues/1433
-const publicSuffixListUrl = 'https://cors-playground-endpoints.glitch.me/psl';
+const publicSuffixListUrl = 'https://cors-playground.deno.dev/psl';
 
 interface PSLRule {
   rule: string;
@@ -73,6 +70,9 @@ export async function getSite(hostname: string): Promise<string> {
 
   // I'm not 100% confident on some of this, so don't use it in security-sensitive situations :)
   if (ipv6.test(hostname) || ipv4.test(hostname)) return hostname;
+
+  // A lot of this is adapted from https://github.com/lupomontero/psl/blob/master/index.js
+  // But uses a 'live' list, and targeted at browsers.
 
   if (hostname.endsWith('.')) hostname = hostname.slice(0, -1);
 

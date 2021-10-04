@@ -382,6 +382,7 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 # TODO
 
 - Outro
+- Go through Matt's feedback
 - Create a demo where folks can set various parts of the request/response and see if it works
   - Request
     - Set method
