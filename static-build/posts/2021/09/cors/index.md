@@ -383,6 +383,8 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 
 - Outro
 - Go through Matt's feedback
+- Why the body of request isn't restricted
+- When in no-credentials mode, cookies aren't set either
 - Create a demo where folks can set various parts of the request/response and see if it works
   - Request
     - Set method
