@@ -216,11 +216,15 @@ h2 {
 
 .field-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 21px;
 }
 
 .field {
   display: grid;
   align-items: center;
+}
+
+.new-row {
+  grid-column: 1;
 }
