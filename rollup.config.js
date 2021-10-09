@@ -40,6 +40,7 @@ function resolveFileUrl({ fileName }) {
 
 const staticPath = 'static/c/[name]-[hash][extname]';
 const jsPath = staticPath.replace('[extname]', '.js');
+const limitPostsDevBuild = 'static-build/posts/2021/09';
 
 function jsFileName(chunkInfo) {
   if (!chunkInfo.facadeModuleId) return jsPath;
@@ -110,7 +111,7 @@ export default async function ({ watch }) {
         resolveFileUrl,
       ),
       ...commonPlugins(),
-      postData(),
+      postData({ pathsStartWithFilter: production ? '' : limitPostsDevBuild }),
       rootStaticPlugin(),
       nodeExternalPlugin(),
       replace({ __PRERENDER__: true }),
