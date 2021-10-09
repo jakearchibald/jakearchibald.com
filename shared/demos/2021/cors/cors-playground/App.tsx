@@ -1,99 +1,78 @@
-import { Component, h } from 'preact';
+import { Component, h, createRef } from 'preact';
+import MaterialCheckbox from './MaterialCheckbox';
+import MaterialText from './MaterialText';
 
 interface Props {}
 
-interface State {}
+interface State {
+  requestMethod: string;
+}
 
 export default class App extends Component<Props, State> {
-  state = {};
+  state: State = {
+    requestMethod: 'GET',
+  };
 
-  render(_: Props, {}: State) {
+  private _requestMethod = createRef<HTMLInputElement>();
+
+  onInput = () => {
+    this.setState({
+      requestMethod: this._requestMethod.current!.value,
+    });
+  };
+
+  render(_: Props, { requestMethod }: State) {
     return (
       <div class="app">
-        <div class="settings">
+        <header></header>
+        <main>
           <form>
             <h2>Request</h2>
-            <div class="input-row">
-              <label>
-                Method <input required value="GET" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                <input type="checkbox" /> Credentials
-              </label>
-            </div>
-            <h3>Headers</h3>
-            <div class="input-row">
-              <input placeholder="Header name" />
-              :
-              <input placeholder="Header value" />
-            </div>
-            <div class="input-row">
-              <button type="button">Add header</button>
-            </div>
-            <h2>Preflight response</h2>
-            <div class="input-row">
-              <label>
-                <input type="checkbox" /> Allow preflight response
-              </label>
-            </div>
-            <h3>Headers</h3>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Origin{' '}
-                <input value="*" placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Credentials{' '}
-                <input placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Methods{' '}
-                <input placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Headers{' '}
-                <input placeholder="[don't send]" />
-              </label>
-            </div>
-            <h2>Response</h2>
-            <h3>Set cookie</h3>
-            <div class="input-row">
-              <input placeholder="Name" value="foo" />
-              =
-              <input placeholder="Value" value="bar" />
-            </div>
-            <h3>Headers</h3>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Origin{' '}
-                <input value="*" placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                Access-Control-Allow-Credentials{' '}
-                <input placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <label>
-                Access-Control-Expose-Headers{' '}
-                <input placeholder="[don't send]" />
-              </label>
-            </div>
-            <div class="input-row">
-              <button>Send</button>
+            <div class="field-grid">
+              <div class="field">
+                <label class="checkbox-field">
+                  <MaterialCheckbox input={{}} /> Use CORS
+                </label>
+              </div>
+              <div class="field">
+                <label class="checkbox-field">
+                  <MaterialCheckbox input={{}} /> Send credentials
+                </label>
+              </div>
+              <div class="field">
+                <MaterialText
+                  label="Method"
+                  input={{
+                    value: requestMethod,
+                    ref: this._requestMethod,
+                    onInput: this.onInput,
+                  }}
+                />
+              </div>
+
+              <div class="field">
+                <MaterialText
+                  label="Method"
+                  input={{
+                    value: requestMethod,
+                    ref: this._requestMethod,
+                    onInput: this.onInput,
+                  }}
+                />
+              </div>
+              <div class="field">
+                <MaterialText
+                  label="Method"
+                  input={{
+                    value: requestMethod,
+                    ref: this._requestMethod,
+                    onInput: this.onInput,
+                  }}
+                />
+              </div>
             </div>
           </form>
-        </div>
+        </main>
       </div>
     );
   }
