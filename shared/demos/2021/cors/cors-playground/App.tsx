@@ -66,6 +66,14 @@ export default class App extends Component<Props, State> {
     }));
   };
 
+  private _onRemoveHeaderClick = (event: Event) => {
+    const button = event.currentTarget as HTMLButtonElement;
+    const index = Number(button.dataset.index);
+    this.setState((state) => ({
+      requestHeaders: state.requestHeaders.filter((_, i) => i !== index),
+    }));
+  };
+
   render(
     _: Props,
     {
@@ -82,6 +90,16 @@ export default class App extends Component<Props, State> {
           <form ref={this._formRef}>
             <h2>Request</h2>
             <div class="field-grid">
+              <div class="field">
+                <MaterialText
+                  label="Method"
+                  input={{
+                    name: 'requestMethod',
+                    value: requestMethod,
+                    onInput: this._onInput,
+                  }}
+                />
+              </div>
               <div class="field">
                 <label class="checkbox-field">
                   <MaterialCheckbox
@@ -106,18 +124,8 @@ export default class App extends Component<Props, State> {
                   Send credentials
                 </label>
               </div>
-              <div class="field">
-                <MaterialText
-                  label="Method"
-                  input={{
-                    name: 'requestMethod',
-                    value: requestMethod,
-                    onInput: this._onInput,
-                  }}
-                />
-              </div>
-              {requestHeaders.map(([name, value]) => (
-                <Fragment>
+              {requestHeaders.map(([name, value], i) => (
+                <Fragment key={i}>
                   <div class="field new-row">
                     <MaterialText
                       label="Header name"
@@ -138,10 +146,21 @@ export default class App extends Component<Props, State> {
                       }}
                     />
                   </div>
+                  <div class="field">
+                    <div class="button-field">
+                      <button
+                        type="button"
+                        data-index={i}
+                        onClick={this._onRemoveHeaderClick}
+                      >
+                        Remove header
+                      </button>
+                    </div>
+                  </div>
                 </Fragment>
               ))}
               <div class="field new-row">
-                <div>
+                <div class="button-field">
                   <button type="button" onClick={this._onAddHeaderClick}>
                     Add header
                   </button>

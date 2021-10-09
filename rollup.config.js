@@ -98,7 +98,10 @@ export default async function ({ watch }) {
             entryURLPlugin(),
             staticEntryURLPlugin(),
             ...commonPlugins(),
-            replace({ __PRERENDER__: false }),
+            replace({
+              preventAssignment: true,
+              values: { __PRERENDER__: false },
+            }),
             production ? terser({ module: true }) : {},
           ],
         },
@@ -114,7 +117,10 @@ export default async function ({ watch }) {
       postData({ pathsStartWithFilter: production ? '' : limitPostsDevBuild }),
       rootStaticPlugin(),
       nodeExternalPlugin(),
-      replace({ __PRERENDER__: true }),
+      replace({
+        preventAssignment: true,
+        values: { __PRERENDER__: true },
+      }),
       runScript(dir + '/static-build/index.js'),
     ],
   };

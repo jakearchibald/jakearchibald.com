@@ -154,7 +154,7 @@ export default class DecodedImg extends Component<Props, State> {
       canvas.width = decodedImage.width;
       canvas.height = decodedImage.height;
       canvas.getContext('2d')!.putImageData(decodedImage, 0, 0);
-    } catch (err) {
+    } catch (err: any) {
       if (err.name === 'AbortError') return;
       throw err;
     }
