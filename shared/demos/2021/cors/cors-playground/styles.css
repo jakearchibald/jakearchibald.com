@@ -4,6 +4,29 @@ html {
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
 }
 
+body {
+  margin: 0 16px;
+
+  @media (min-width: 600px) {
+    margin: 0 32px;
+  }
+
+  @media (min-width: 905px) {
+    margin: 0 auto;
+    width: 840px;
+  }
+
+  @media (min-width: 1240px) {
+    margin: 0 200px;
+    width: auto;
+  }
+
+  @media (min-width: 1440px) {
+    margin: 0 auto;
+    width: 1040px;
+  }
+}
+
 h2 {
   font-size: 3.75rem;
   line-height: 3.75rem;
@@ -216,7 +239,10 @@ h2 {
 
 .field-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(var(--min-cell-width, 300px), 1fr)
+  );
   gap: 21px;
 }
 
