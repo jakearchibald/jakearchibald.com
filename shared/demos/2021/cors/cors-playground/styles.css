@@ -9,6 +9,9 @@ html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif,
     'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
+
+  --mdc-theme-primary: #417604;
+  --mdc-theme-secondary: #2397c9;
 }
 
 body {
