@@ -367,256 +367,263 @@ export default class App extends Component<Props, State> {
   render(_: Props, state: State) {
     return (
       <div class="app">
-        <header></header>
         <main>
-          <form ref={this._formRef} onSubmit={this._onFormSubmit}>
-            <h2>Request</h2>
-            <div class="field-grid" style="--min-cell-width: 250px">
-              <TextField
-                label="Method"
-                name="requestMethod"
-                state={state}
-                onInput={this._onInput}
-              />
-              <CheckboxField
-                label="Use CORS"
-                name="requestUseCORS"
-                state={state}
-                onInput={this._onInput}
-              />
-              <CheckboxField
-                label="Send credentials"
-                name="requestSendCredentials"
-                state={state}
-                onInput={this._onInput}
-              />
-            </div>
-            {state.requestHeaders.map(([name, value], i) => (
-              <Fragment key={i}>
-                <div class="divider">
-                  <h3>Header</h3>
-                </div>
-                <div class="field-grid" style="--min-cell-width: 250px">
-                  <div class="field new-row">
-                    <MaterialText
-                      label="Name"
-                      input={{
-                        name: 'requestHeaderName',
-                        value: name,
-                        onInput: this._onInput,
-                      }}
-                    />
+          <div class="content-margin">
+            <form ref={this._formRef} onSubmit={this._onFormSubmit}>
+              <h2>Request</h2>
+              <div class="field-grid" style="--min-cell-width: 250px">
+                <TextField
+                  label="Method"
+                  name="requestMethod"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <CheckboxField
+                  label="Use CORS"
+                  name="requestUseCORS"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <CheckboxField
+                  label="Send credentials"
+                  name="requestSendCredentials"
+                  state={state}
+                  onInput={this._onInput}
+                />
+              </div>
+              {state.requestHeaders.map(([name, value], i) => (
+                <Fragment key={i}>
+                  <div class="divider">
+                    <h3>Header</h3>
                   </div>
-                  <div class="field">
-                    <MaterialText
-                      label="Value"
-                      input={{
-                        name: 'requestHeaderValue',
-                        value: value,
-                        onInput: this._onInput,
-                      }}
-                    />
-                  </div>
-                  <div class="field at-end">
-                    <div class="button-field">
-                      <button
-                        class="md-button"
-                        type="button"
-                        data-index={i}
-                        onClick={this._onRemoveHeaderClick}
-                      >
-                        Remove
-                      </button>
+                  <div class="field-grid" style="--min-cell-width: 250px">
+                    <div class="field new-row">
+                      <MaterialText
+                        label="Name"
+                        input={{
+                          name: 'requestHeaderName',
+                          value: name,
+                          onInput: this._onInput,
+                        }}
+                      />
+                    </div>
+                    <div class="field">
+                      <MaterialText
+                        label="Value"
+                        input={{
+                          name: 'requestHeaderValue',
+                          value: value,
+                          onInput: this._onInput,
+                        }}
+                      />
+                    </div>
+                    <div class="field at-end">
+                      <div class="button-field">
+                        <button
+                          class="md-button"
+                          type="button"
+                          data-index={i}
+                          onClick={this._onRemoveHeaderClick}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Fragment>
-            ))}
-            <div class="divider"></div>
-            <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="field at-end">
-                <div class="button-field">
-                  <button
-                    class="md-button"
-                    type="button"
-                    onClick={this._onAddHeaderClick}
-                  >
-                    Add header
-                  </button>
+                </Fragment>
+              ))}
+              <div class="divider"></div>
+              <div class="field-grid" style="--min-cell-width: 250px">
+                <div class="field at-end">
+                  <div class="button-field">
+                    <button
+                      class="md-button"
+                      type="button"
+                      onClick={this._onAddHeaderClick}
+                    >
+                      Add header
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-            <h2>Preflight response</h2>
-            <div class="field-grid">
-              <TextField
-                label="Status"
-                name="preflightStatus"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Allow-Origin"
-                name="preflightAllowOrigin"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Allow-Credentials"
-                name="preflightAllowCredentials"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Allow-Methods"
-                name="preflightAllowMethods"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Allow-Headers"
-                name="preflightAllowHeaders"
-                state={state}
-                onInput={this._onInput}
-              />
-            </div>
-            <h2>Main response</h2>
-            <div class="field-grid">
-              <TextField
-                label="Access-Control-Allow-Origin"
-                name="responseAllowOrigin"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Allow-Credentials"
-                name="responseAllowCredentials"
-                state={state}
-                onInput={this._onInput}
-              />
-              <TextField
-                label="Access-Control-Expose-Headers"
-                name="responseExposeHeaders"
-                state={state}
-                onInput={this._onInput}
-              />
-            </div>
+              <h2>Preflight response</h2>
+              <div class="field-grid">
+                <TextField
+                  label="Status"
+                  name="preflightStatus"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Allow-Origin"
+                  name="preflightAllowOrigin"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Allow-Credentials"
+                  name="preflightAllowCredentials"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Allow-Methods"
+                  name="preflightAllowMethods"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Allow-Headers"
+                  name="preflightAllowHeaders"
+                  state={state}
+                  onInput={this._onInput}
+                />
+              </div>
+              <h2>Main response</h2>
+              <div class="field-grid">
+                <TextField
+                  label="Access-Control-Allow-Origin"
+                  name="responseAllowOrigin"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Allow-Credentials"
+                  name="responseAllowCredentials"
+                  state={state}
+                  onInput={this._onInput}
+                />
+                <TextField
+                  label="Access-Control-Expose-Headers"
+                  name="responseExposeHeaders"
+                  state={state}
+                  onInput={this._onInput}
+                />
+              </div>
 
-            {state.responseCookies.map(([name, value], i) => (
-              <Fragment key={i}>
-                <div class="divider">
-                  <h3>Cookie</h3>
-                </div>
-                <div class="field-grid" style="--min-cell-width: 250px">
-                  <div class="field new-row">
-                    <MaterialText
-                      label="Name"
-                      input={{
-                        name: 'responseCookieName',
-                        value: name,
-                        onInput: this._onInput,
-                      }}
-                    />
+              {state.responseCookies.map(([name, value], i) => (
+                <Fragment key={i}>
+                  <div class="divider">
+                    <h3>Cookie</h3>
                   </div>
-                  <div class="field">
-                    <MaterialText
-                      label="Value"
-                      input={{
-                        name: 'responseCookieValue',
-                        value: value,
-                        onInput: this._onInput,
-                      }}
-                    />
-                  </div>
-                  <div class="field">
-                    <div class="button-field at-end">
-                      <button
-                        class="md-button"
-                        type="button"
-                        data-index={i}
-                        onClick={this._onRemoveCookieClick}
-                      >
-                        Remove
-                      </button>
+                  <div class="field-grid" style="--min-cell-width: 250px">
+                    <div class="field new-row">
+                      <MaterialText
+                        label="Name"
+                        input={{
+                          name: 'responseCookieName',
+                          value: name,
+                          onInput: this._onInput,
+                        }}
+                      />
+                    </div>
+                    <div class="field">
+                      <MaterialText
+                        label="Value"
+                        input={{
+                          name: 'responseCookieValue',
+                          value: value,
+                          onInput: this._onInput,
+                        }}
+                      />
+                    </div>
+                    <div class="field">
+                      <div class="button-field at-end">
+                        <button
+                          class="md-button"
+                          type="button"
+                          data-index={i}
+                          onClick={this._onRemoveCookieClick}
+                        >
+                          Remove
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Fragment>
-            ))}
-            <div class="divider"></div>
-            <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="field at-end">
-                <div class="button-field">
-                  <button
-                    class="md-button"
-                    type="button"
-                    onClick={this._onAddCookieClick}
-                  >
-                    Add cookie
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div class="divider"></div>
-            <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="field at-end">
-                <div class="button-field">
-                  <button class="md-button-heavy">Make request</button>
+                </Fragment>
+              ))}
+              <div class="divider"></div>
+              <div class="field-grid" style="--min-cell-width: 250px">
+                <div class="field at-end">
+                  <div class="button-field">
+                    <button
+                      class="md-button"
+                      type="button"
+                      onClick={this._onAddCookieClick}
+                    >
+                      Add cookie
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </form>
+              <div class="divider"></div>
+              <div class="field-grid" style="--min-cell-width: 250px">
+                <div class="field at-end">
+                  <div class="button-field">
+                    <button class="md-button-heavy">Make request</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
           {(state.result || state.loading) && (
             <div class="result-area" ref={this._resultsAreaRef}>
-              <h2>Result</h2>
-              {state.loading && (
-                <p>
-                  <loading-spinner />
-                </p>
-              )}
-              {state.result && (
-                <Fragment>
-                  {state.result.error ? (
-                    <p>{state.result.error}</p>
-                  ) : (
-                    <Fragment>
-                      <h3>Preflight request</h3>
-                      {state.result.preflightHeaders ? (
-                        <Fragment>
-                          <p>
-                            Received a preflight request with the following
-                            headers:
-                          </p>
+              <div class="content-margin">
+                <h2>Result</h2>
+                {state.loading && (
+                  <p>
+                    <loading-spinner />
+                  </p>
+                )}
+                {state.result && (
+                  <Fragment>
+                    {state.result.error ? (
+                      <p>{state.result.error}</p>
+                    ) : (
+                      <Fragment>
+                        <h3>Preflight request</h3>
+                        {state.result.preflightHeaders ? (
+                          <Fragment>
+                            <p>
+                              Received a preflight request with the following
+                              headers:
+                            </p>
+                            <HeadersTable
+                              headers={state.result.preflightHeaders}
+                            />
+                          </Fragment>
+                        ) : (
+                          <p>No preflight request received.</p>
+                        )}
+                        <h3>Main request</h3>
+                        {state.result.requestHeaders ? (
+                          <Fragment>
+                            <p>
+                              Received a request with method "
+                              <code>{state.result.requestMethod || ''}</code>"
+                              with the following headers:
+                            </p>
+                            <HeadersTable
+                              headers={state.result.requestHeaders}
+                            />
+                          </Fragment>
+                        ) : (
+                          <p>No main request received.</p>
+                        )}
+                        <h3>Response</h3>
+                        {state.result.responseInfo && (
+                          <p>{state.result.responseInfo}</p>
+                        )}
+                        {state.result.responseHeaders && (
                           <HeadersTable
-                            headers={state.result.preflightHeaders}
+                            headers={state.result.responseHeaders}
                           />
-                        </Fragment>
-                      ) : (
-                        <p>No preflight request received.</p>
-                      )}
-                      <h3>Main request</h3>
-                      {state.result.requestHeaders ? (
-                        <Fragment>
-                          <p>
-                            Received a request with method "
-                            <code>{state.result.requestMethod || ''}</code>"
-                            with the following headers:
-                          </p>
-                          <HeadersTable headers={state.result.requestHeaders} />
-                        </Fragment>
-                      ) : (
-                        <p>No main request received.</p>
-                      )}
-                      <h3>Response</h3>
-                      {state.result.responseInfo && (
-                        <p>{state.result.responseInfo}</p>
-                      )}
-                      {state.result.responseHeaders && (
-                        <HeadersTable headers={state.result.responseHeaders} />
-                      )}
-                    </Fragment>
-                  )}
-                </Fragment>
-              )}
+                        )}
+                      </Fragment>
+                    )}
+                  </Fragment>
+                )}
+              </div>
             </div>
           )}
         </main>

@@ -110,8 +110,8 @@ toOutput['2020/avif-has-landed/demos/loading/index.html'] = renderPage(
 
 import corsPlaygroundDemoScript, {
   imports as corsPlaygroundDemoScriptImports,
-} from 'client-bundle:shared/demos/2021/cors/cors-playground/index';
-import CorsPlayground from 'shared/demos/2021/cors/cors-playground/App';
+} from 'client-bundle:shared/demos/2021/cors/cors-playground/client-index';
+import CorsPlaygroundPage from 'shared/demos/2021/cors/cors-playground/static-index';
 import corsPlaygroundDemoStyles from 'css-bundle:shared/demos/2021/cors/cors-playground/styles.css';
 toOutput['2021/cors/playground/index.html'] = renderPage(
   <ClientDemo
@@ -119,7 +119,7 @@ toOutput['2021/cors/playground/index.html'] = renderPage(
     script={corsPlaygroundDemoScript}
     scriptPreload={corsPlaygroundDemoScriptImports}
     styles={corsPlaygroundDemoStyles}
-    initialBody={<CorsPlayground />}
+    initialBody={<CorsPlaygroundPage />}
   />,
 );
 

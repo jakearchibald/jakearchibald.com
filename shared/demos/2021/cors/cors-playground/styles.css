@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Gaegu';
+  font-style: normal;
+  font-weight: 400;
+  src: url('./logo-font.woff2') format('woff2');
+}
+
 html {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
     Ubuntu, Cantarell, 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif,
@@ -5,8 +12,58 @@ html {
 }
 
 body {
-  margin: 0 16px;
+  margin: 0;
   padding-bottom: 5rem;
+}
+
+.site-header {
+  background: #c9fcb3;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 34px;
+    background: #b3e7fc;
+  }
+}
+
+.header-layout {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+
+  svg {
+    position: relative;
+    height: 200px;
+    padding: 18px 0;
+  }
+}
+
+.title {
+  font-family: Gaegu;
+  position: relative;
+
+  h1 {
+    font-weight: normal;
+    margin: 0;
+    font-size: 1.7rem;
+    line-height: 0.7;
+    text-align: right;
+    color: #416830;
+
+    @media (min-width: 370px) {
+      font-size: 2.4rem;
+    }
+    @media (min-width: 460px) {
+      font-size: 3.2rem;
+    }
+  }
+}
+
+.content-margin {
+  margin: 0 16px;
 
   @media (min-width: 600px) {
     margin: 0 32px;
@@ -296,6 +353,8 @@ h3 {
 
 .result-area {
   min-height: 100vh;
+  overflow: hidden;
+  background: #f9f9f9;
 }
 
 loading-spinner {
@@ -303,6 +362,7 @@ loading-spinner {
 }
 
 .headers-table {
+  background: #fff;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
   box-sizing: border-box;
