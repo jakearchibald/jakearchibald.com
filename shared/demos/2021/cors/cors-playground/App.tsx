@@ -304,7 +304,7 @@ export default class App extends Component<Props, State> {
           if (response.type === 'opaque') {
             result.responseInfo = `A response was received, but it's opaque, so the headers & body are not visible to JavaScript on this page.`;
           } else {
-            result.responseInfo = `The response is visible to JavaScript on this page. Here are the visible headers:`;
+            result.responseInfo = `The response is visible to JavaScript on this page. Congratulations, you win at CORS! Here are the visible headers:`;
             result.responseHeaders = [...response.headers];
           }
         }
@@ -417,9 +417,10 @@ export default class App extends Component<Props, State> {
                       }}
                     />
                   </div>
-                  <div class="field">
+                  <div class="field at-end">
                     <div class="button-field">
                       <button
+                        class="md-button"
                         type="button"
                         data-index={i}
                         onClick={this._onRemoveHeaderClick}
@@ -433,9 +434,13 @@ export default class App extends Component<Props, State> {
             ))}
             <div class="divider"></div>
             <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="field new-row">
+              <div class="field at-end">
                 <div class="button-field">
-                  <button type="button" onClick={this._onAddHeaderClick}>
+                  <button
+                    class="md-button"
+                    type="button"
+                    onClick={this._onAddHeaderClick}
+                  >
                     Add header
                   </button>
                 </div>
@@ -523,8 +528,9 @@ export default class App extends Component<Props, State> {
                     />
                   </div>
                   <div class="field">
-                    <div class="button-field">
+                    <div class="button-field at-end">
                       <button
+                        class="md-button"
                         type="button"
                         data-index={i}
                         onClick={this._onRemoveCookieClick}
@@ -538,9 +544,13 @@ export default class App extends Component<Props, State> {
             ))}
             <div class="divider"></div>
             <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="field new-row">
+              <div class="field at-end">
                 <div class="button-field">
-                  <button type="button" onClick={this._onAddCookieClick}>
+                  <button
+                    class="md-button"
+                    type="button"
+                    onClick={this._onAddCookieClick}
+                  >
                     Add cookie
                   </button>
                 </div>
@@ -548,8 +558,10 @@ export default class App extends Component<Props, State> {
             </div>
             <div class="divider"></div>
             <div class="field-grid" style="--min-cell-width: 250px">
-              <div class="button-field">
-                <button>Make request</button>
+              <div class="field at-end">
+                <div class="button-field">
+                  <button class="md-button-heavy">Make request</button>
+                </div>
               </div>
             </div>
           </form>

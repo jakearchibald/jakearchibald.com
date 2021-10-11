@@ -265,6 +265,11 @@ h3 {
   grid-column: 1;
 }
 
+.at-end {
+  grid-column: -2;
+  justify-self: end;
+}
+
 .divider {
   display: grid;
   grid-template-columns: max-content 1fr;
@@ -329,4 +334,55 @@ loading-spinner {
   tr:first-child td {
     border-top: none;
   }
+}
+
+.md-button,
+.md-button-heavy {
+  color: var(--mdc-theme-primary, #6200ee);
+  background-color: transparent;
+  margin: 0;
+  height: 36px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.0892857143em;
+  text-transform: uppercase;
+  padding: 0 8px;
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  min-width: 64px;
+  border: none;
+  outline: none;
+  line-height: inherit;
+  user-select: none;
+  -webkit-appearance: none;
+  overflow: hidden;
+  vertical-align: middle;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.md-button {
+  &:hover {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--mdc-theme-primary, #6200ee);
+      opacity: 0.04;
+    }
+  }
+}
+
+.md-button-heavy {
+  background-color: var(--mdc-theme-primary, #6200ee);
+  color: #fff;
+  padding: 0 16px;
+}
+
+p {
+  line-height: 1.7;
 }
