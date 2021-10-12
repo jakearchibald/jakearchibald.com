@@ -53,7 +53,7 @@ const defaultState: State = {
   requestSendCredentials: false,
   requestMethod: 'GET',
   requestHeaders: [],
-  preflightStatus: 206,
+  preflightStatus: 204,
   preflightAllowOrigin: '',
   preflightAllowCredentials: '',
   preflightAllowMethods: '',
@@ -75,7 +75,7 @@ function dataToState(data: FormData | URLSearchParams) {
       'requestHeaderName',
       'requestHeaderValue',
     ),
-    preflightStatus: Number(data.get('preflightStatus') ?? 206),
+    preflightStatus: Number(data.get('preflightStatus') ?? 204),
     preflightAllowOrigin: (data.get('preflightAllowOrigin') ?? '').toString(),
     preflightAllowCredentials: (
       data.get('preflightAllowCredentials') ?? ''
