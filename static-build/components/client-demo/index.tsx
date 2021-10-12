@@ -10,7 +10,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { h, FunctionalComponent, RenderableProps } from 'preact';
+import {
+  h,
+  FunctionalComponent,
+  RenderableProps,
+  ComponentChildren,
+} from 'preact';
 
 import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
 import faviconURL from 'asset-url:static-build/imgs/favicon.png';
@@ -20,6 +25,7 @@ interface Props {
   script?: string;
   scriptPreload?: string[];
   styles?: string;
+  initialBody?: ComponentChildren;
 }
 
 const ClientDemo: FunctionalComponent<Props> = ({
@@ -27,6 +33,7 @@ const ClientDemo: FunctionalComponent<Props> = ({
   styles,
   script,
   scriptPreload,
+  initialBody,
 }: RenderableProps<Props>) => {
   return (
     <html lang="en">
@@ -45,7 +52,7 @@ const ClientDemo: FunctionalComponent<Props> = ({
             <link rel="preload" as="script" href={v} crossOrigin="" />
           ))}
       </head>
-      <body />
+      <body>{initialBody}</body>
     </html>
   );
 };
