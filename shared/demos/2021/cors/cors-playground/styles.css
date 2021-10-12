@@ -27,7 +27,7 @@ body {
     content: '';
     position: absolute;
     inset: 0 0 auto 0;
-    height: 34px;
+    height: 54px;
     background: #b3e7fc;
   }
 }
@@ -62,6 +62,10 @@ body {
     @media (min-width: 460px) {
       font-size: 3.2rem;
     }
+  }
+  a {
+    all: unset;
+    cursor: pointer;
   }
 }
 
@@ -219,7 +223,8 @@ h3 {
     --border-color: var(--mdc-theme-primary, #6200ee);
 
     .md-text-outline-label-text {
-      color: rgba(98, 0, 238, 0.87);
+      color: #417604;
+      opacity: 0.86;
     }
   }
 }
@@ -364,7 +369,7 @@ loading-spinner {
   --color: var(--mdc-theme-secondary, #018786);
 }
 
-.headers-table {
+.data-table {
   background: #fff;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
@@ -448,4 +453,8 @@ loading-spinner {
 
 p {
   line-height: 1.7;
+}
+
+.result {
+  font-size: 1.4em;
 }

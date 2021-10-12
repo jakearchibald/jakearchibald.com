@@ -304,7 +304,7 @@ export default class App extends Component<Props, State> {
           if (response.type === 'opaque') {
             result.responseInfo = `A response was received, but it's opaque, so the headers & body are not visible to JavaScript on this page.`;
           } else {
-            result.responseInfo = `The response is visible to JavaScript on this page. Congratulations, you win at CORS! Here are the visible headers:`;
+            result.responseInfo = `The response is visible to JavaScript on this page. Congratulations! Here are the visible headers:`;
             result.responseHeaders = [...response.headers];
           }
         }
@@ -577,6 +577,33 @@ export default class App extends Component<Props, State> {
                 )}
                 {state.result && (
                   <Fragment>
+                    {state.result.responseHeaders ? (
+                      <p class="result">🥳🎉 You win at CORS! 🎉🥳</p>
+                    ) : (
+                      <p class="result">Oh no!</p>
+                    )}
+                    <KeyValTable
+                      entries={[
+                        [
+                          'Preflight request sent',
+                          state.result.preflightHeaders
+                            ? '✅'
+                            : `❌${
+                                state.result.requestHeaders
+                                  ? ` (wasn't required)`
+                                  : ''
+                              }`,
+                        ],
+                        [
+                          'Request sent',
+                          state.result.requestHeaders ? '✅' : '❌',
+                        ],
+                        [
+                          'Response visible',
+                          state.result.responseHeaders ? '✅' : '❌',
+                        ],
+                      ]}
+                    />
                     {state.result.error ? (
                       <p>{state.result.error}</p>
                     ) : (
@@ -585,26 +612,26 @@ export default class App extends Component<Props, State> {
                         {state.result.preflightHeaders ? (
                           <Fragment>
                             <p>
-                              Received a preflight request with the following
-                              headers:
+                              The server received a preflight request with the
+                              following headers:
                             </p>
-                            <HeadersTable
-                              headers={state.result.preflightHeaders}
+                            <KeyValTable
+                              entries={state.result.preflightHeaders}
                             />
                           </Fragment>
                         ) : (
-                          <p>No preflight request received.</p>
+                          <p>No preflight request.</p>
                         )}
                         <h3>Main request</h3>
                         {state.result.requestHeaders ? (
                           <Fragment>
                             <p>
-                              Received a request with method "
-                              <code>{state.result.requestMethod || ''}</code>"
-                              with the following headers:
+                              The server received a request with method "
+                              {state.result.requestMethod || ''}" with the
+                              following headers:
                             </p>
-                            <HeadersTable
-                              headers={state.result.requestHeaders}
+                            <KeyValTable
+                              entries={state.result.requestHeaders}
                             />
                           </Fragment>
                         ) : (
@@ -615,9 +642,7 @@ export default class App extends Component<Props, State> {
                           <p>{state.result.responseInfo}</p>
                         )}
                         {state.result.responseHeaders && (
-                          <HeadersTable
-                            headers={state.result.responseHeaders}
-                          />
+                          <KeyValTable entries={state.result.responseHeaders} />
                         )}
                       </Fragment>
                     )}
@@ -678,13 +703,13 @@ const Field: FunctionalComponent<Field> = (props) => (
   <div class={'field' + (props.newRow ? ' new-row' : '')}>{props.children}</div>
 );
 
-interface HeadersTable {
-  headers: KeyValue[];
+interface KeyValTable {
+  entries: KeyValue[];
 }
 
-const HeadersTable: FunctionalComponent<HeadersTable> = (props) => (
-  <table class="headers-table">
-    {props.headers.map(([name, value]) => (
+const KeyValTable: FunctionalComponent<KeyValTable> = (props) => (
+  <table class="data-table">
+    {props.entries.map(([name, value]) => (
       <tr>
         <td>{name}</td>
         <td>{value}</td>
