@@ -511,7 +511,7 @@ Oh, and the preflight only gives the go-ahead for the request. The eventual resp
 
 HTTP method names are somewhat case sensitive. I say 'somewhat' because if you use a method name that's a case-insensitive match for `get`, `post`, `head`, `delete`, `options`, or `put` then it's automatically uppercased, but other methods maintain the casing you use.
 
-Unfortunately, Chrome expects the value to be uppercased in `Access-Control-Allow-Methods`. If your method is `Wibbley-Wobbly` and the preflight responds with:
+Unfortunately, Chrome expects the value to be uppercased in `Access-Control-Allow-Methods`. If your method is `Wibbley-Wobbley` and the preflight responds with:
 
 ```
 Access-Control-Allow-Methods: Wibbley-Wobbley
