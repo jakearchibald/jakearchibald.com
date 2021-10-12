@@ -544,4 +544,4 @@ Ok, let's put all of that together, for one last time, in the CORS playground:
 
 Whoa, you made it to the end! Sorry, this post ended up way longer than I intended, but I hope it helps make sense of the whole CORS thing.
 
-A huge thanks to [Anne van Kesteren](https://twitter.com/annevk), [Simon Pieters](https://twitter.com/zcorpan), [Thomas Steiner](https://twitter.com/tomayac), [Ethan](https://twitter.com/Booligoosh), and [Matt Hobbs](https://twitter.com/TheRealNooshu) for proof-reading, fact-checking, and spotting bits that needed more detail.
+A huge thanks to [Anne van Kesteren](https://twitter.com/annevk), [Simon Pieters](https://twitter.com/zcorpan), [Thomas Steiner](https://twitter.com/tomayac), [Ethan](https://twitter.com/Booligoosh), [Mathias Bynens](https://twitter.com/mathias), and [Matt Hobbs](https://twitter.com/TheRealNooshu) for proof-reading, fact-checking, and spotting bits that needed more detail.
