@@ -389,6 +389,20 @@ If you _are_ securing things using something other than browser credentials, _st
 
 Open the resource in an incognito/private browser tab. Are you happy with other sites having access to that, including the source and the response headers listed above? Then it's safe to expose it via CORS.
 
+# Should CORS headers be served conditionally?
+
+As we've already seen, CORS requests look different to regular requests. I've seen some endpoints use these signals to decide whether to add `Access-Control-Allow-Origin: *` to the response, but I think that's unnecessary complication. `Access-Control-Allow-Origin: *` doesn't do any harm on a no-CORS response, and conditionally adding CORS headers can land you with a tricky bug:
+
+Let's say a user makes a no-CORS request for a resource, then later makes a CORS request for the same resource. If the browser/CDN doesn't know any better, it might re-serve the first response without `Access-Control-Allow-Origin: *`, and the CORS check fails.
+
+If you insist on adding `Access-Control-Allow-Origin: *` conditionally, then make sure you also add a `Vary` header:
+
+```
+Vary: Origin
+```
+
+This tells the browser, and any intermediate things like a CDN, that the response differs depending on the value of the `Origin` header. This header needs to go on the no-CORS response as well as the CORS response. Of course, if you're using some other header as the trigger, `Vary` on that header too.
+
 # Adding credentials
 
 Cross-origin CORS requests are made without credentials by default. However, various APIs will allow you to add the credentials back in.
@@ -421,17 +435,9 @@ The opt-in is stronger because, well, exposing private data is risky, and should
 
 The same-site rules around cookies still apply, as do the kinds of isolation we see in Firefox and Safari. But these only come into effect cross-site, not cross-origin.
 
+It's important to use the `Vary` header in this case if your response is cacheable in any way. And not just by the browser, but also intermediate things like a CDN. Use `Vary` to tell browsers and intermediates that the response is different depending on particular request headers, else the user might end up with a response with the wrong `Access-Control-Allow-Origin` value.
+
 <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=1&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com&responseAllowCredentials=true&responseExposeHeaders=&responseCookieName=hello&responseCookieValue=world" target="playground">Try it in the CORS playground</a> - This request meets all the criteria, and also sets a cookie. If you make the request a second time, you'll see the cookie being sent back.
-
-## Why `Vary`?
-
-```
-Vary: Cookie, Origin
-```
-
-It's important to use the `Vary` header if your response is cacheable in any way. And not just by the browser, but also intermediate things like a CDN. Use `Vary` to tell browsers and intermediates that the response is different depending on particular request headers.
-
-Although the `Origin` request header doesn't result in a different response body, it does change the response headers (`Access-Control-Allow-Origin` in this case), so it needs to go in `Vary`.
 
 # Unusual requests and preflights
 
