@@ -110,7 +110,7 @@ Browsers have been able to include images from other sites for almost 30 years. 
 
 APIs like these let you make a request to another website and process the response in a particular way, without the other site's consent.
 
-This started getting complicated in 1994 with the advent of HTTP cookies. HTTP cookies became part of a set of things we call _credentials_, which also includes TLS client certificates, and the state that automatically goes in the `Authorization` request header when using HTTP authentication (if you've never heard of this, don't worry, it's shite).
+This started getting complicated in 1994 with the advent of HTTP cookies. HTTP cookies became part of a set of things we call [_credentials_](https://fetch.spec.whatwg.org/#credentials), which also includes TLS client certificates (not to be confused with server certificates), and the state that automatically goes in the `Authorization` request header when using HTTP authentication (if you've never heard of this, don't worry, it's shite).
 
 Credentials mean web content can be tailored for a particular user. It's how Twitter shows you _your_ feed, it's how your bank shows you _your_ accounts.
 
