@@ -130,7 +130,7 @@ This gets worse with a format like CSS, which has more capabilities, but doesn't
 <li class="email-subject">…private data…</li>
 <li class="email-subject">…private data…</li>
 <li class="email-subject">…private data…</li>
-<li class="email-subject">Yo );}</li>
+<li class="email-subject">Yo ');}</li>
 …
 ```
 
