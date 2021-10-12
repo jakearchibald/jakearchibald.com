@@ -232,7 +232,9 @@ export default class App extends Component<Props, State> {
 
       try {
         const id = Math.random().toString();
-        const url = new URL('https://cors-playground.deno.dev/resource');
+        const url = new URL(
+          'https://cors-playground-a63c2044.deno.dev/resource',
+        );
         const params = url.searchParams;
 
         params.set('id', id);
