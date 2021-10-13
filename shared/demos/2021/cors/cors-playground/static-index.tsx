@@ -20,6 +20,27 @@ const Page: FunctionalComponent<{}> = () => (
     <div class="app-container">
       <App />
     </div>
+    <footer class="site-footer">
+      <div class="content-margin">
+        <nav>
+          <ul class="nav-list">
+            <li>
+              <a href="../">Back to the article</a>
+            </li>
+            <li>
+              <a href="https://github.com/jakearchibald/jakearchibald.com/tree/main/shared/demos/2021/cors/cors-playground">
+                App source
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/jakearchibald/cors-playground/blob/main/index.ts">
+                Server source
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </footer>
   </div>
 );
 
