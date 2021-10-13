@@ -514,6 +514,8 @@ If the intended method is allowed, and all the intended headers are allowed, the
 
 Oh, and the preflight only gives the go-ahead for the request. The eventual response must also pass a CORS check.
 
+The status code restriction creates a bit of a gotcha. If you have an API like `/artists/Pip-Blom`, you might want to return a 404 if 'Pip Blom' isn't in the database. You want the 404 code (and the response body) to be visible, so the client knows they requested something that was 'not found', rather than some other kind of server error. But if the request requires a preflight, the preflight must return a 200-299 code, even if the eventual response is going to be 404.
+
 ### There's a Chrome bug with method names
 
 [Chrome has a bug here](https://bugs.chromium.org/p/chromium/issues/detail?id=1228178) that I didn't know about until writing this post.
