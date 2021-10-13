@@ -44,17 +44,16 @@ body {
 }
 
 .nav-list {
-  padding: 0;
+  padding: 1em;
   margin: 0;
-  display: grid;
-  grid-auto-columns: max-content;
-  grid-auto-flow: column;
-  gap: 1.7em;
+  display: flex;
+  gap: 0 1.7em;
   justify-content: center;
+  flex-flow: row wrap;
 
   li {
     display: block;
-    padding: 1.6em 0;
+    padding: 0.7em 0;
   }
 
   a {
