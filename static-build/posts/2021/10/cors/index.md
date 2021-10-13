@@ -112,7 +112,7 @@ APIs like these let you make a request to another website and process the respon
 
 This started getting complicated in 1994 with the advent of HTTP cookies. HTTP cookies became part of a set of things we call [_credentials_](https://fetch.spec.whatwg.org/#credentials), which also includes TLS client certificates (not to be confused with server certificates), and the state that automatically goes in the `Authorization` request header when using HTTP authentication (if you've never heard of this, don't worry, it's shite).
 
-Credentials mean web content can be tailored for a particular user. It's how Twitter shows you _your_ feed, it's how your bank shows you _your_ accounts.
+Credentials allow the server to maintain state about a particular user across multiple requests. It's how Twitter shows you _your_ feed, it's how your bank shows you _your_ accounts.
 
 When you request other-site content using one of the methods above, it sends along the credentials for the other-site. And over the years that's created a colossal sackload of security issues.
 
@@ -148,8 +148,9 @@ And that's just the tip of the shitberg. From [browser bugs](/2018/i-discovered-
 
 It's become pretty clear that the above was a mistake in the design of the web, so we no longer create APIs that can process these kinds of requests. Meanwhile, we've spent the last few decades patching things up as best we can:
 
-- CSS from another origin (I'll get to a definition of 'origin' shortly) now needs to be sent with a CSS `Content-Type`. Unfortunately we can't enforce the same thing for scripts and images, or CSS on [quirks mode](https://en.wikipedia.org/wiki/Quirks_mode) pages, without breaking significant portions of the web. However…
-- We prevent particular response types from another origin being loaded as image/script/etc., such as HTML, JSON, and XML (except SVG). This protection is called [CORB](https://fetch.spec.whatwg.org/#corb).
+- CSS from another origin (I'll get to a definition of 'origin' shortly) now needs to be sent with a CSS `Content-Type`. Unfortunately we can't enforce the same thing for scripts and images, or CSS on [quirks mode](https://en.wikipedia.org/wiki/Quirks_mode) pages, without breaking significant portions of the web.
+- The [`X-Content-Type-Options: nosniff` header](https://fetch.spec.whatwg.org/#x-content-type-options-header) lets the server say "hey, don't allow this to be parsed as CSS or JS unless I've sent the right `Content-Type`".
+- Later, the `nosniff` rules were expanded to prevent particular no-CORS response types from another origin, such as HTML, JSON, and XML (except SVG). This protection is called [CORB](https://fetch.spec.whatwg.org/#corb).
 - More recently, we don't send cookies along with the request from site-A to site-B, unless site-B has opted-in using the [`SameSite` cookie attribute](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Set-Cookie/SameSite). Without cookies, the site generally returns the 'logged-out' view, without private data.
 - Firefox and Safari go a step further, and try to fully isolate sites, although how this works is currently pretty different between the two.
 
@@ -260,7 +261,7 @@ The origin could have some special resource that details its permissions regardi
 
 There are a few issues with this:
 
-- It changes the behaviour for the whole origin. You can imagine a similar format that lets you specify rules for particular resources, but the resource would start to get quite large.
+- It changes the behaviour for the whole origin. You can imagine a similar format that lets you specify rules for particular resources, but the `/crossdomain.xml` resource would start to get quite large.
 - You end up with two requests, one for the `/crossdomain.xml`, and one for the actual resource. This becomes more of an issue the bigger `/crossdomain.xml` gets.
 - For larger sites built by multiple teams, you end up with issues over ownership of `/crossdomain.xml`.
 
@@ -323,9 +324,9 @@ With `<link rel="preload">`, you need to ensure it uses CORS if the eventual req
 
 # CORS requests
 
-By default, a cross-origin CORS request is made without credentials. So, no cookies, no client certs, and no automatic `Authorization` header, and `Set-Cookie` on the response is ignored. However, same-origin requests include credentials.
+By default, a cross-origin CORS request is made without credentials. So, no cookies, no client certs, no automatic `Authorization` header, and `Set-Cookie` on the response is ignored. However, same-origin requests include credentials.
 
-By the time CORS was developed, the [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) header was frequently spoofed or removed by browser extensions, so a new header, [`Origin`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin), was created, which provides the origin of the page that made the request.
+By the time CORS was developed, the [`Referer`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer) header was frequently spoofed or removed by browser extensions and 'internet security' software, so a new header, [`Origin`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Origin), was created, which provides the origin of the page that made the request.
 
 `Origin` is generally useful, so it's been added to lots of other types of request, such as WebSocket and `POST` requests. Browsers tried adding it to regular `GET` requests too, but it broke a bunch of sites that assumed the presence of the `Origin` header means it's a CORS request 😬. Maybe one day.
 
@@ -341,15 +342,17 @@ Access-Control-Allow-Origin: *
 
 The `*` can be replaced with the value of the request's `Origin` header, but `*` works for any requesting origin provided the request is sent without credentials (more on that in a bit). As with all headers, the header name is case-insensitive, but the value is case sensitive.
 
-Try it in the CORS playground:
+Try it in the CORS playground! The following values work:
 
-- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=*&responseAllowCredentials=&responseExposeHeaders=" target="playground">`*` works</a>.
-- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com&responseAllowCredentials=&responseExposeHeaders=" target="playground">`https://jakearchibald.com` works</a>.
-- The following _do not work_, as the only accepted values are `*` and the exact case-sensitive value of the request's `Origin` header:
-  - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com%2F&responseAllowCredentials=&responseExposeHeaders=" target="playground">"https://jakearchibald.com/"</a> - the trailing `/` means it doesn't match the `Origin` header.
-  - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2FJAKEarchibald.com&responseAllowCredentials=&responseExposeHeaders=" target="playground">"https://JAKEarchibald.com"</a> - the casing doesn't match the `Origin` header.
-  - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.*&responseAllowCredentials=&responseExposeHeaders=" target="playground">"https://jakearchibald.\*"</a> - nah, wildcards don't work like that.
-  - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com%2C+https%3A%2F%2Fexample.com&responseAllowCredentials=&responseExposeHeaders=" target="playground">"https://jakearchibald.com, https://example.com"</a> - only one value can be provided.
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=*&responseAllowCredentials=&responseExposeHeaders=" target="playground">`*`</a>.
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com&responseAllowCredentials=&responseExposeHeaders=" target="playground">`https://jakearchibald.com`</a>.
+
+Whereas the following _do not work_, as the only accepted values are `*` and the exact case-sensitive value of the request's `Origin` header:
+
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com%2F&responseAllowCredentials=&responseExposeHeaders=" target="playground">`https://jakearchibald.com/`</a> - the trailing `/` means it doesn't match the `Origin` header.
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2FJAKEarchibald.com&responseAllowCredentials=&responseExposeHeaders=" target="playground">`https://JakeArchibald.com`</a> - the casing doesn't match the `Origin` header.
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.*&responseAllowCredentials=&responseExposeHeaders=" target="playground">`https://jakearchibald.*`</a> - nah, wildcards don't work like that here.
+- <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=https%3A%2F%2Fjakearchibald.com%2C+https%3A%2F%2Fexample.com&responseAllowCredentials=&responseExposeHeaders=" target="playground"><code style="white-space: normal">https://jakearchibald.com, https://example.com</code></a> - only one value can be provided.
 
 A valid value gives the other origin access to the response body, and also a subset of the headers:
 
@@ -366,7 +369,7 @@ The response can include another header, `Access-Control-Expose-Headers`, to rev
 Access-Control-Expose-Headers: Custom-Header-1, Custom-Header-2
 ```
 
-The matching is case-insensitive since header names are case-insensitive . You can also use:
+The matching is case-insensitive since header names are case-insensitive. You can also use:
 
 ```
 Access-Control-Expose-Headers: *
@@ -385,7 +388,7 @@ Try it in the CORS playground:
 
 `Access-Control-Allow-Origin: *` only grants response visibility if the request is made without credentials, so it's totally safe to use on all resources _unless_ that resource contains private data that's 'secured' using something other than browser credentials.
 
-If you _are_ securing things using something other than browser credentials, _stop doing that_. It's not actually secure. Platform apps will be able to get at that data and send it wherever they want.
+If you're 'securing' the data using things like the sender's IP address, or by assuming you're safe because your server is limited to an 'internal' network, _stop doing that_. It's not actually secure. Platform apps will be able to get at that data and send it wherever they want.
 
 Open the resource in an incognito/private browser tab. Are you happy with other sites having access to that, including the source and the response headers listed above? Then it's safe to expose it via CORS.
 
@@ -393,7 +396,7 @@ Open the resource in an incognito/private browser tab. Are you happy with other 
 
 As we've already seen, CORS requests look different to regular requests. I've seen some endpoints use these signals to decide whether to add `Access-Control-Allow-Origin: *` to the response, but I think that's unnecessary complication. `Access-Control-Allow-Origin: *` doesn't do any harm on a no-CORS response, and conditionally adding CORS headers can land you with a tricky bug:
 
-Let's say a user makes a no-CORS request for a resource, then later makes a CORS request for the same resource. If the browser/CDN doesn't know any better, it might re-serve the first response without `Access-Control-Allow-Origin: *`, and the CORS check fails.
+Let's say a user makes a no-CORS request for a resource, then later makes a CORS request for the same resource. If the browser/CDN doesn't know any better, it might have cached the original response, and re-serves it. If the original response didn't have `Access-Control-Allow-Origin: *`, the CORS check fails.
 
 If you insist on adding `Access-Control-Allow-Origin: *` conditionally, then make sure you also add a `Vary` header:
 
@@ -447,7 +450,7 @@ So far, the response has been opting into exposing its data. All of the _request
 fetch(url, { credentials: 'include' });
 ```
 
-There's nothing unusual about the above, because the request is really similar to what an `<img>` can do already.
+There's nothing unusual about the above, because the request is really similar to what an `<img>` can already do.
 
 ```js
 fetch(url, {
@@ -500,7 +503,7 @@ Access-Control-Allow-Headers: fancy, here-we
 ```
 
 - `Access-Control-Max-Age` - The number of seconds to cache this preflight response, to avoid the need for further preflights to this URL. The default is 5 seconds. Some browsers have an upper-limit on this. In Chrome it's 600 (10 minutes), and in Firefox it's 86400 (24 hours).
-- `Access-Control-Allow-Methods` - The _unusual_ methods to allow. This can be a comma-separated list, and values are case-sensitive. If the main request is to be sent without credentials, this can be `*` to allow any method. You can't allow `CONNECT`, `TRACE`, or `TRACK` as these are on a <span style="white-space: nowrap">[🔥💀 FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-method)</span> for security reasons.
+- `Access-Control-Allow-Methods` - The _unusual_ methods to allow. This can be a comma-separated list, and values are case-sensitive. If the main request is to be sent without credentials, this can be `*` to allow (almost) any method. You can't allow `CONNECT`, `TRACE`, or `TRACK` as these are on a <span style="white-space: nowrap">[🔥💀 FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-method)</span> for security reasons.
 - `Access-Control-Allow-Headers` - The _unusual_ headers to allow. This can be a comma-separated list, and values are case-insensitive since header names are case-insensitive. If the main request is to be sent without credentials, this can be `*` to allow any header that isn't on a <span style="white-space: nowrap">[🔥💀 DIFFERENT FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-header-name)</span>.
 
 Headers in the <span style="white-space: nowrap">[🔥💀 FORBIDDEN LIST 💀🔥](https://fetch.spec.whatwg.org/#forbidden-header-name)</span> are headers that must remain in the browser's control for security reasons. They're automatically (and silently) stripped from CORS requests and `Access-Control-Allow-Headers`.
