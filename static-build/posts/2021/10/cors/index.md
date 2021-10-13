@@ -377,7 +377,7 @@ Access-Control-Expose-Headers: *
 
 …to expose (almost) all the headers, if the request is sent without credentials (more on that in a bit).
 
-The `Set-Cookie` and `Set-Cookie2` (a deprecated failed 'sequel' to `Set-Cookie`) headers are never exposed to avoid leaking cookies across sites.
+The `Set-Cookie` and `Set-Cookie2` (a deprecated failed 'sequel' to `Set-Cookie`) headers are never exposed, to avoid leaking cookies across sites.
 
 Try it in the CORS playground:
 
