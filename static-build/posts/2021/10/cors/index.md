@@ -386,25 +386,28 @@ Try it in the CORS playground:
 
 # Is it safe to expose resources via CORS?
 
-`Access-Control-Allow-Origin: *` only grants response visibility if the request is made without credentials, so it's totally safe to use on all resources _unless_ that resource contains private data that's 'secured' using something other than browser credentials.
+If a resource never contains private data, then it's totally safe to put `Access-Control-Allow-Origin: *` on it. Do it!
 
-If you're 'securing' the data using things like the sender's IP address, or by assuming you're safe because your server is limited to an 'internal' network, _stop doing that_. It's not actually secure. Platform apps will be able to get at that data and send it wherever they want.
+If a resource contains private data when it's requested with cookies, but you only want to expose the without-cookies data, then it's best to only include the `Access-Control-Allow-Origin: *` header if the request doesn't have a `Cookie` header. This avoids accidental cases where a CDN or browser cache reuses a response containing private data:
 
-Open the resource in an incognito/private browser tab. Are you happy with other sites having access to that, including the source and the response headers listed above? Then it's safe to expose it via CORS.
+1. The browser fetches a resource without CORS, so the request includes cookies.
+1. The response, containing private data, goes into a cache.
+1. The browser makes a CORS fetch for the same resource, so it doesn't include cookies.
+1. The cache returns the same response as before.
 
-# Should CORS headers be served conditionally?
+In this case, the browser didn't send cookies along with the second request, but it received a response that contains private data due to some cookies sent with a previous request. You don't want this passing a CORS check and revealing private data.
 
-As we've already seen, CORS requests look different to regular requests. I've seen some endpoints use these signals to decide whether to add `Access-Control-Allow-Origin: *` to the response, but I think that's unnecessary complication. `Access-Control-Allow-Origin: *` doesn't do any harm on a no-CORS response, and conditionally adding CORS headers can land you with a tricky bug:
+The cache might not be a browser cache (in fact, Firefox and Safari already partition the browser cache based on whether the request included credentials), it could be a CDN cache.
 
-Let's say a user makes a no-CORS request for a resource, then later makes a CORS request for the same resource. If the browser/CDN doesn't know any better, it might have cached the original response, and re-serves it. If the original response didn't have `Access-Control-Allow-Origin: *`, the CORS check fails.
-
-If you insist on adding `Access-Control-Allow-Origin: *` conditionally, then make sure you also add a `Vary` header:
+But the above 'bug' only happens if another important instruction is missing from the headers:
 
 ```
-Vary: Origin
+Vary: Cookie
 ```
 
-This tells the browser, and any intermediate things like a CDN, that the response differs depending on the value of the `Origin` header. This header needs to go on the no-CORS response as well as the CORS response. Of course, if you're using some other header as the trigger, `Vary` on that header too.
+This means "you can only serve a cached version of this if the value of the `Cookie` header matches the original request". You should include that on all responses to the URL, whether the request has a `Cookie` header or not.
+
+Finally, if you're 'securing' the data using things like the sender's IP address, or by assuming you're safe because your server is limited to an 'internal' network, it isn't safe to use `Access-Control-Allow-Origin: *` at all. But also, arghh, _stop doing that_! The data isn't actually secure. Platform apps will be able to get at that data and send it wherever they want.
 
 # Adding credentials
 
