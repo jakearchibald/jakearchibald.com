@@ -397,7 +397,7 @@ If a resource contains private data when it's requested with cookies, but you on
 
 In this case, the browser didn't send cookies along with the second request, but it received a response that contains private data due to some cookies sent with a previous request. You don't want this passing a CORS check and revealing private data.
 
-The cache might not be a browser cache (in fact, Firefox and Safari already partition the browser cache based on whether the request included credentials), it could be a CDN cache.
+The cache might not be a browser cache (in fact, Firefox already partitions the browser cache based on whether the request included credentials), it could be a CDN cache.
 
 But the above 'bug' only happens if another important instruction is missing from the headers:
 
