@@ -386,7 +386,7 @@ Try it in the CORS playground:
 
 # Is it safe to expose resources via CORS?
 
-If a resource never contains private data, then it's totally safe to put `Access-Control-Allow-Origin: *` on it. Do it!
+If a resource never contains private data, then it's totally safe to put `Access-Control-Allow-Origin: *` on it. Do it! I've seen some services only add the header if the request looks like a CORS request, but it's unnecessary complication, and can land you with caching problems if you don't use the correct `Vary` header.
 
 If a resource contains private data when it's requested with cookies, but you only want to expose the without-cookies data, then it's best to only include the `Access-Control-Allow-Origin: *` header if the request doesn't have a `Cookie` header. This avoids accidental cases where a CDN or browser cache reuses a response containing private data:
 
