@@ -281,7 +281,7 @@ But what about accessing the raw bytes of the resource? In that case it doesn't 
 
 ## HTTP header opt-in
 
-The proposal by the Voice Browser Working Group was generalised using HTTP headers, and that became CORS.
+The proposal by the Voice Browser Working Group was generalised using HTTP headers, and that became Cross-Origin-Resource-Sharing, or CORS.
 
 ```
 Access-Control-Allow-Origin: *
