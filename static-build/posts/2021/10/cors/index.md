@@ -6,7 +6,7 @@ meta: The 'how' and 'why' of CORS, from start to finish.
 image: 'asset-url:./img.png'
 ---
 
-CORS is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
+CORS (Cross Origin Resource Sharing) is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
 
 Anyway, I figured I'd write down pretty much everything I know about CORS, and to make things _interactive_, I built an exciting new app:
 
