@@ -26,6 +26,7 @@ interface State {
   preflightAllowCredentials: string;
   preflightAllowMethods: string;
   preflightAllowHeaders: string;
+  responseStatus: number;
   responseAllowOrigin: string;
   responseAllowCredentials: string;
   responseExposeHeaders: string;
@@ -58,6 +59,7 @@ const defaultState: State = {
   preflightAllowCredentials: '',
   preflightAllowMethods: '',
   preflightAllowHeaders: '',
+  responseStatus: 200,
   responseAllowOrigin: '*',
   responseAllowCredentials: '',
   responseExposeHeaders: '',
@@ -82,6 +84,7 @@ function dataToState(data: FormData | URLSearchParams) {
     ).toString(),
     preflightAllowMethods: (data.get('preflightAllowMethods') ?? '').toString(),
     preflightAllowHeaders: (data.get('preflightAllowHeaders') ?? '').toString(),
+    responseStatus: Number(data.get('responseStatus') ?? 200),
     responseAllowOrigin: (data.get('responseAllowOrigin') ?? '').toString(),
     responseAllowCredentials: (
       data.get('responseAllowCredentials') ?? ''
@@ -184,6 +187,7 @@ export default class App extends Component<Props, State> {
       'preflightAllowCredentials',
       'preflightAllowMethods',
       'preflightAllowHeaders',
+      'responseStatus',
       'responseAllowOrigin',
       'responseAllowCredentials',
       'responseExposeHeaders',
@@ -253,6 +257,7 @@ export default class App extends Component<Props, State> {
           'preflight-access-control-allow-headers',
           state.preflightAllowHeaders,
         );
+        params.set('status', state.responseStatus.toString());
         params.set('access-control-allow-origin', state.responseAllowOrigin);
         params.set(
           'access-control-allow-credentials',
@@ -481,6 +486,12 @@ export default class App extends Component<Props, State> {
               </div>
               <h2>Main response</h2>
               <div class="field-grid">
+                <TextField
+                  label="Status"
+                  name="responseStatus"
+                  state={state}
+                  onInput={this._onInput}
+                />
                 <TextField
                   label="Access-Control-Allow-Origin"
                   name="responseAllowOrigin"
