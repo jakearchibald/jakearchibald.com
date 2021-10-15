@@ -6,7 +6,7 @@ meta: The 'how' and 'why' of CORS, from start to finish.
 image: 'asset-url:./img.png'
 ---
 
-CORS (Cross Origin Resource Sharing) is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
+CORS (Cross-Origin Resource Sharing) is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.
 
 Anyway, I figured I'd write down pretty much everything I know about CORS, and to make things _interactive_, I built an exciting new app:
 
@@ -281,7 +281,7 @@ But what about accessing the raw bytes of the resource? In that case it doesn't 
 
 ## HTTP header opt-in
 
-The proposal by the Voice Browser Working Group was generalised using HTTP headers, and that became Cross-Origin-Resource-Sharing, or CORS.
+The proposal by the Voice Browser Working Group was generalised using HTTP headers, and that became Cross-Origin Resource Sharing, or CORS.
 
 ```
 Access-Control-Allow-Origin: *
@@ -384,9 +384,19 @@ Try it in the CORS playground:
 - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=*&responseAllowCredentials=&responseExposeHeaders=foo%2C+date" target="playground">Exposing particular headers</a>.
 - <a href="playground/?prefillForm=1&requestMethod=GET&requestUseCORS=1&requestSendCredentials=&preflightStatus=206&preflightAllowOrigin=&preflightAllowCredentials=&preflightAllowMethods=&preflightAllowHeaders=&responseAllowOrigin=*&responseAllowCredentials=&responseExposeHeaders=*" target="playground">Exposing all headers</a>.
 
-# Is it safe to expose resources via CORS?
+# CORS and caching
 
-If a resource never contains private data, then it's totally safe to put `Access-Control-Allow-Origin: *` on it. Do it! I've seen some services only add the header if the request looks like a CORS request, but it's unnecessary complication, and can land you with caching problems if you don't use the correct `Vary` header.
+A CORS request doesn't bypass caches. Firefox partitions its HTTP cache according to whether the request has credentials, and Chrome plans to do the same, but you still have CDN caches to worry about.
+
+## Adding CORS to a long-caching resource
+
+If you have assets with a long cache lifetime, you might be used to changing the file name when the content changes, so users pick up the new content. Well, the same thing applies when it comes to header changes.
+
+If you add `Access-Control-Allow-Origin: *` to a resource with a long cache lifetime, be sure to change the URL so clients go back to your server and pick up the new header, rather than reuse a cached version without the header.
+
+If you don't feel like I'm taking up enough of your time, I have [an article that covers long-term caching](/2016/caching-best-practices/) in detail.
+
+## Conditionally serving CORS headers
 
 If a resource contains private data when it's requested with cookies, but you only want to expose the without-cookies data, then it's best to only include the `Access-Control-Allow-Origin: *` header if the request doesn't have a `Cookie` header. This avoids accidental cases where a CDN or browser cache reuses a response containing private data:
 
@@ -397,15 +407,31 @@ If a resource contains private data when it's requested with cookies, but you on
 
 In this case, the browser didn't send cookies along with the second request, but it received a response that contains private data due to some cookies sent with a previous request. You don't want this passing a CORS check and revealing private data.
 
-The cache might not be a browser cache (in fact, Firefox already partitions the browser cache based on whether the request included credentials), it could be a CDN cache.
-
 But the above 'bug' only happens if another important instruction is missing from the headers:
 
 ```
 Vary: Cookie
 ```
 
-This means "you can only serve a cached version of this if the value of the `Cookie` header matches the original request". You should include that on all responses to the URL, whether the request has a `Cookie` header or not.
+This means "you can only serve a cached version of this if the state of the `Cookie` header matches the original request". You should include that on all responses to the URL, whether the request has a `Cookie` header or not.
+
+I've also seen some services add `Access-Control-Allow-Origin: *` conditionally depending on whether the request looks like a CORS request or not, using the presence of the `Origin` header as a rough signal. This is unnecessary complication, but if you insist on doing this, it's important again to use the right `Vary` header:
+
+```
+Vary: Origin
+```
+
+`Vary` can list many headers to use as conditions, so if you're adding `Access-Control-Allow-Origin: *` depending on the presence of the `Origin` _and_ `Cookie` headers, then use:
+
+```
+Vary: Origin, Cookie
+```
+
+# Is it safe to expose resources via CORS?
+
+If a resource never contains private data, then it's totally safe to put `Access-Control-Allow-Origin: *` on it. Do it! Do it now!
+
+If a resources sometimes contains private data depending on cookies, it's safe to add `Access-Control-Allow-Origin: *` as long as you also include a `Vary: Cookie` header.
 
 Finally, if you're 'securing' the data using things like the sender's IP address, or by assuming you're safe because your server is limited to an 'internal' network, it isn't safe to use `Access-Control-Allow-Origin: *` at all. But also, arghh, _stop doing that_! The data isn't actually secure. Platform apps will be able to get at that data and send it wherever they want.
 
