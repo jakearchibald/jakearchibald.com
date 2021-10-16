@@ -421,6 +421,8 @@ I've also seen some services add `Access-Control-Allow-Origin: *` conditionally 
 Vary: Origin
 ```
 
+**A lot of popular "cloud storage" hosts get this wrong.** They add CORS headers conditionally, and don't include the `Vary` header. Don't trust their defaults, check they're actually doing the right thing.
+
 `Vary` can list many headers to use as conditions, so if you're adding `Access-Control-Allow-Origin: *` depending on the presence of the `Origin` _and_ `Cookie` headers, then use:
 
 ```
