@@ -1,9 +1,9 @@
 import { inline as shadowStyles } from 'css-bundle:./styles.css';
 
 // So it doesn't cause an error when running in node
-const HTMLEl = ((__PRERENDER__
+const HTMLEl = (__PRERENDER__
   ? Object
-  : HTMLElement) as unknown) as typeof HTMLElement;
+  : HTMLElement) as unknown as typeof HTMLElement;
 
 /**
  * A simple spinner. This custom element has no JS API. Just put it in the document, and it'll

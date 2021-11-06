@@ -12,6 +12,7 @@
  */
 import { h } from 'preact';
 import { Feed } from 'feed';
+import dedent from 'dedent';
 
 import { renderPage, writeFiles, getPostPath, getPostUrl } from './utils';
 import IndexPage from './pages/index';
@@ -26,6 +27,10 @@ interface Output {
 }
 const toOutput: Output = {
   'who/index.html': renderPage(<WhoPage />),
+  _headers: dedent`
+    /*
+      Access-Control-Allow-Origin: *
+  `,
 };
 
 // Paginated index pages
@@ -100,6 +105,21 @@ toOutput['2020/avif-has-landed/demos/loading/index.html'] = renderPage(
     script={avifLoadingDemoScript}
     scriptPreload={avifLoadingDemoScriptImports}
     styles={avifLoadingDemoStyles}
+  />,
+);
+
+import corsPlaygroundDemoScript, {
+  imports as corsPlaygroundDemoScriptImports,
+} from 'client-bundle:shared/demos/2021/cors/cors-playground/client-index';
+import CorsPlaygroundPage from 'shared/demos/2021/cors/cors-playground/static-index';
+import corsPlaygroundDemoStyles from 'css-bundle:shared/demos/2021/cors/cors-playground/styles.css';
+toOutput['2021/cors/playground/index.html'] = renderPage(
+  <ClientDemo
+    title="CORS playground"
+    script={corsPlaygroundDemoScript}
+    scriptPreload={corsPlaygroundDemoScriptImports}
+    styles={corsPlaygroundDemoStyles}
+    initialBody={<CorsPlaygroundPage />}
   />,
 );
 

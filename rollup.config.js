@@ -40,6 +40,7 @@ function resolveFileUrl({ fileName }) {
 
 const staticPath = 'static/c/[name]-[hash][extname]';
 const jsPath = staticPath.replace('[extname]', '.js');
+const limitPostsDevBuild = 'static-build/posts/2021/10';
 
 function jsFileName(chunkInfo) {
   if (!chunkInfo.facadeModuleId) return jsPath;
@@ -72,7 +73,7 @@ export default async function ({ watch }) {
     assetStringPlugin(),
     cssPlugin(resolveFileUrl),
     markdownPlugin(),
-    resolve(),
+    resolve({ preferBuiltins: false }),
     commonjs(),
   ];
   const dir = '.tmp/build';
@@ -97,7 +98,10 @@ export default async function ({ watch }) {
             entryURLPlugin(),
             staticEntryURLPlugin(),
             ...commonPlugins(),
-            replace({ __PRERENDER__: false }),
+            replace({
+              preventAssignment: true,
+              values: { __PRERENDER__: false },
+            }),
             production ? terser({ module: true }) : {},
           ],
         },
@@ -110,10 +114,13 @@ export default async function ({ watch }) {
         resolveFileUrl,
       ),
       ...commonPlugins(),
-      postData(),
+      postData({ pathsStartWithFilter: production ? '' : limitPostsDevBuild }),
       rootStaticPlugin(),
       nodeExternalPlugin(),
-      replace({ __PRERENDER__: true }),
+      replace({
+        preventAssignment: true,
+        values: { __PRERENDER__: true },
+      }),
       runScript(dir + '/static-build/index.js'),
     ],
   };
