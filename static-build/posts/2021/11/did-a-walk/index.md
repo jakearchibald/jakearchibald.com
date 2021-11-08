@@ -1,6 +1,6 @@
 ---
 title: I did a walk while you all raised £20k
-date: 2021-09-04 01:00:00
+date: 2021-11-04 01:00:00
 summary: TODO
 meta: TODO
 #image: 'asset-url:./img.jpg'
@@ -176,7 +176,7 @@ Oof, this one is one big connection issue. I'll leave it here for completeness, 
 <div class="video"><iframe name="hour-14" src="https://www.youtube.com/embed/fH_0o8jZnhs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </figure>
 
-Whoa, I'm starting to sound really tired now. There are a few connection issues with this one, but it seems to sort itself out in time for the question <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=315">"what do you do day to day as a dev rel?"</a>. And then it features a <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=626">live crossing of the half way mark</a>!
+This time it's [Mariko's](https://twitter.com/kosamari) turn to join me, and whoa, I'm starting to sound really tired. There are a few connection issues with this one, but it seems to sort itself out in time for the question <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=315">"what do you do day to day as a dev rel?"</a>. And then it features a <a target="hour-14" href="https://www.youtube.com/embed/fH_0o8jZnhs?autoplay=1&start=626">live crossing of the half way mark</a>!
 
 Seeing how much happier I am at the end of this video vs the start makes me realise how much doing these videos _helped_. A huge thanks to everyone who joined me on these calls.
 
@@ -188,9 +188,56 @@ Seeing how much happier I am at the end of this video vs the start makes me real
 
 I'm joined by [Paul Kinlan](https://twitter.com/Paul_Kinlan) who tries to do a joke/maths. Eventually we get onto the important questions, which since Paul picked them, are all toilet-based, starting with <a target="hour-15" href="https://www.youtube.com/embed/TGEfryVZ5vk?autoplay=1&start=422">"what do you do if you need a poo and there's no toilet?"</a>.
 
-- [Hour 16 AMA](https://www.youtube.com/watch?v=Jbxd5iXVsJ4).
-- [Hour 17 AMA](https://www.youtube.com/watch?v=-enYw2mY48g).
-- [Hour 18 AMA](https://www.youtube.com/watch?v=LkS-XOaUgdE).
+# Hour 16: Curry and my best friend array.reduce
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-16" src="https://www.youtube.com/embed/Jbxd5iXVsJ4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+It's Mariko again! We talk about <a target="hour-16" href="https://www.youtube.com/embed/Jbxd5iXVsJ4?autoplay=1&start=70">food options</a>, I <a target="hour-16" href="https://www.youtube.com/embed/Jbxd5iXVsJ4?autoplay=1&start=106">reminisce about a diet coke I had earlier and lament that there's been none since</a>, then Mariko drops a tech question, <a target="hour-16" href="https://www.youtube.com/embed/Jbxd5iXVsJ4?autoplay=1&start=278">"if you have to walk 100km every week, or use `array.reduce` every day, which do you choose?"</a>. I'm sorry to say, rather than answer the question, I just went on a massive rant about `array.reduce` and "smart code".
+
+As if by magic, the food that Mariko recommended turned up!
+
+<blockquote class="twitter-tweet"><p lang="und" dir="ltr"><a href="https://t.co/9ttonKTapt">pic.twitter.com/9ttonKTapt</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398752867343818756?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote>
+
+# Hour 17: Night of the living chuckle sisters
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-17" src="https://www.youtube.com/embed/-enYw2mY48g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+By this point I'd ran out of friends to jump on the calls, so it was left to the chuckle sisters [Frances](https://twitter.com/phae) and [Monica](https://twitter.com/notwaldorf) to handle the _next six calls_.
+
+I mentioned that I had a curry, which lead to Frances and Monica throwing down an impromptu AMA question, <a target="hour-17" href="https://www.youtube.com/embed/-enYw2mY48g?autoplay=1&start=58">"would you rather never poo again or poo continually forever"</a>. That's it. That's the tone for the rest of the calls.
+
+The previous diet coke story <a target="hour-17" href="https://www.youtube.com/embed/-enYw2mY48g?autoplay=1&start=204">reaches a happy conclusion</a>, which leads onto the next 'real' AMA question, not about poo, <a target="hour-17" href="https://www.youtube.com/embed/-enYw2mY48g?autoplay=1&start=257">"what snacks have you taken?"</a>.
+
+The chuckle sisters take the piss by asking yet another question, <a target="hour-17" href="https://www.youtube.com/embed/-enYw2mY48g?autoplay=1&start=488">"what animals have you observed on the route?"</a>, and the answer is very dull. Oh, and [here's the Mitchel and Webb sketch we chat about](https://www.youtube.com/watch?v=HjIeA5CLiNk).
+
+Then, it was time to get moving again.
+
+<blockquote class="twitter-tweet" data-conversation="none"><p lang="en" dir="ltr">Bring on the night <a href="https://t.co/XocDcvvFQu">pic.twitter.com/XocDcvvFQu</a></p>&mdash; Jake Archibald (@jaffathecake) <a href="https://twitter.com/jaffathecake/status/1398770280928063490?ref_src=twsrc%5Etfw">May 29, 2021</a></blockquote> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+# Hour 18: Impressions, faux pas, and quadra-nipples
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-18" src="https://www.youtube.com/embed/LkS-XOaUgdE" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+I try to paint a picture of what it's like walking at night, then Monica dives in with the next question <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=90">"what's the most useless talent you have?"</a>, and I reveal an impression I can do, that I describe as "passable". Then I chat a bit about the <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=227">over-the-top head torch I'm wearing</a>.
+
+Oh and Frances mentions that [Alex Russell](https://twitter.com/slightlylate) is next to her, who I knew was leaving Google. Anyway, I start to mention that, then realised it wasn't public knowledge yet, so <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=307">spectacularly back out of mentioning it</a> 😬.
+
+We dive into another question <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=496">"how often are you bothered by a wild Surma?"</a>, and naturally we move on to <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=747">Harry Styles and his quadra-nipples</a>.
+
+# Hour 19:
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-19" src="https://www.youtube.com/embed/ZkgqLLncBNY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+This chat starts with back pain, but also a rucksack itinerary. Exciting stuff!
+
 - [Hour 19 AMA](https://www.youtube.com/watch?v=ZkgqLLncBNY).
 - [Hour 20 AMA](https://www.youtube.com/watch?v=lsee1sYhyYQ).
 - [Hour 21 AMA](https://www.youtube.com/watch?v=-dk3J-_KkwU).
@@ -205,3 +252,4 @@ TODO
 - Time it took
 - More about the charity. "Don't need to tell you why cancer research is important"
 - Picture of band at midnight
+- Chatted to guy at the end who talking about loud guy
