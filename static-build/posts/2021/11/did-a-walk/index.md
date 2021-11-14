@@ -230,17 +230,51 @@ Oh and Frances mentions that [Alex Russell](https://twitter.com/slightlylate) is
 
 We dive into another question <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=496">"how often are you bothered by a wild Surma?"</a>, and naturally we move on to <a target="hour-18" href="https://www.youtube.com/embed/LkS-XOaUgdE?autoplay=1&start=747">Harry Styles and his quadra-nipples</a>.
 
-# Hour 19:
+# Hour 19: Pain, mud, and university
 
 <figure class="full-figure max-figure">
 <div class="video"><iframe name="hour-19" src="https://www.youtube.com/embed/ZkgqLLncBNY" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
 </figure>
 
-This chat starts with back pain, but also a rucksack itinerary. Exciting stuff!
+This chat starts with back pain, but also a rucksack itinerary, then moves onto the secret weapon I bought to handle muddiness. I recall a time <a target="hour-19" href="https://www.youtube.com/embed/ZkgqLLncBNY?autoplay=1&start=397">I bought Alex a bright blue cocktail</a> and he was not amused. Eventually we get onto the question, which is <a target="hour-19" href="https://www.youtube.com/embed/ZkgqLLncBNY?autoplay=1&start=496">"do you need a degree to work on the web?"</a>, and chat about whether is it's better to start off learning the high level or low level. We also reminisce about [Dave Shea's](https://twitter.com/mezzoblue) [CSS zen garden](http://www.csszengarden.com/).
 
-- [Hour 19 AMA](https://www.youtube.com/watch?v=ZkgqLLncBNY).
-- [Hour 20 AMA](https://www.youtube.com/watch?v=lsee1sYhyYQ).
-- [Hour 21 AMA](https://www.youtube.com/watch?v=-dk3J-_KkwU).
+# Hour 20: Hair, counting, and movies
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-20" src="https://www.youtube.com/embed/lsee1sYhyYQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+In an incredible _twist to the format_, I ask Monica how to pronounce "Ardingly", which is a local village. The chuckle sisters are not impressed that I'm messing with the format. I get a question from a 5 year old, and it's <a target="hour-20" href="https://www.youtube.com/embed/lsee1sYhyYQ?autoplay=1&start=209">"What is your hair colour, and which hair colour would walk the fastest?"</a>. We also chat about the genre of music Frances and I are obsessed with, <a target="hour-20" href="https://www.youtube.com/embed/lsee1sYhyYQ?autoplay=1&start=377">songs with counting in them</a>. Then we get to the actual question <a target="hour-20" href="https://www.youtube.com/embed/lsee1sYhyYQ?autoplay=1&start=546">"what's your most unpopular opinion?"</a> but we end up just talking about movie. At some point I mention Jon Pertwee but I mean Sean Pertwee. Look, I'm tired.
+
+# Hour 21: Podcasts, Glow, and test articles
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-21" src="https://www.youtube.com/embed/-dk3J-_KkwU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+We jump straight into chatting about chocolate. We chat a bit about podcasts we like, which are:
+
+- [All Killa No Filla](https://allkillanofilla.libsyn.com/), an excellent podcast by a couple of comedians who have a shared interest in the history of serial killers.
+- [Skeptics with a K](http://www.merseysideskeptics.org.uk/podcasts/), the science podcast mentioned earlier.
+- [The Taskmaster podcast](https://taskmaster.tv/podcast), which is a companion to the excellent TV show.
+- [The Adam Buxton podcast](https://www.adam-buxton.co.uk/podcasts), which is an interview series.
+- [The comedian's comedian](https://www.comedianscomedian.com/), a series which interviews comedians on how they write and perform.
+- [Off the menu](https://www.offmenupodcast.co.uk/), a comedy podcast about food.
+
+Then we get onto actual question, <a target="hour-21" href="https://www.youtube.com/embed/-dk3J-_KkwU?autoplay=1&start=451">"when will Glow 2.0 be released?"</a> which is someone trolling about a JavaScript I worked on over 10 years ago. If you want to dive into history, [here are the docs](https://www.bbc.co.uk/glow/).
+
+I tell the story of <a target="hour-21" href="https://www.youtube.com/embed/-dk3J-_KkwU?autoplay=1&start=796">fake Steve</a>. Here are [the photos](https://photos.app.goo.gl/DhMggvgq4eoV4oYZ8). Then I get all of the connection difficulties, while the chuckle sisters do a great job of filling by talking about Taskmaster.
+
+# Hour 22: "Aggressive triangle tits"
+
+<figure class="full-figure max-figure">
+<div class="video"><iframe name="hour-22" src="https://www.youtube.com/embed/MJ4oa1WaQ38" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>
+</figure>
+
+The final AMA. The sun is rising again. Sorry my volume is low on this one, my phone was as tired as I was and refused to connect properly to my earphones.
+
+Just to reiterate what I said in the video, thank you to all the folks who took time to chat to me on these episodes, particularly Frances and Monica who did 6 of them.
+
 - [Hour 22 AMA](https://www.youtube.com/watch?v=MJ4oa1WaQ38).
 - [Crossing the finish line](https://www.youtube.com/watch?v=2s1fPjF08Eg).
 
