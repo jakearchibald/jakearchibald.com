@@ -358,6 +358,7 @@ A valid value gives the other origin access to the response body, and also a sub
 
 - `Cache-Control`
 - `Content-Language`
+- `Content-Length`
 - `Content-Type`
 - `Expires`
 - `Last-Modified`
