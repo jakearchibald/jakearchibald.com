@@ -286,3 +286,182 @@ And that works! The red value goes from 1 to 0, the blue goes from 0 to 1, and t
 - Bonus round: SVG
 - Bonus round: Linear rgb
 - Thought I was going to be able to do this with SVG, but no. Maybe in old Edge?
+
+# Linear demo
+
+<figure class="full-figure max-figure checkd">
+  <div class="example-stage">
+    <canvas id="linear-canvas"></canvas>
+  </div>
+  <div class="mix-input"><input id="mix-input-5" type="range" min="0" max="1" step="any" value="0"></div>
+</figure>
+
+<script type="module">
+  const range = $('#mix-input-5');
+  const canvas = $('#linear-canvas');
+  let gl;
+  let fadeLoc;
+
+  const fragmentShaderSource = `
+precision lowp float;
+
+// our textures
+uniform sampler2D u_from;
+uniform sampler2D u_to;
+uniform float fadeAmount;
+
+// the texCoords passed in from the vertex shader.
+varying vec2 v_texCoord;
+
+void main() {
+  vec4 fromTex = texture2D(u_from, v_texCoord);
+  vec4 toTex = texture2D(u_to, v_texCoord);
+
+  vec4 premultipliedFrom = vec4(fromTex.rgb * fromTex.a * (1.0 - fadeAmount), fromTex.a * (1.0 - fadeAmount));
+  vec4 premultipliedTo = vec4(toTex.rgb * toTex.a * fadeAmount, toTex.a * fadeAmount);
+  vec4 lighter = premultipliedTo + premultipliedFrom;
+  
+  gl_FragColor = vec4(lighter.rgb / lighter.a, lighter.a);
+}
+`;
+
+  const vertexShaderSource = `
+precision lowp float;
+attribute vec2 a_position;
+uniform mat3 u_matrix;
+varying vec2 v_texCoord;
+
+void main() {
+  gl_Position = vec4(u_matrix * vec3(a_position, 1), 1);
+
+  // because we're using a unit quad we can just use
+  // the same data for our texcoords.
+  v_texCoord = a_position;
+}
+`;
+
+  function loadShader(gl, source, type) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      const error = gl.getShaderInfoLog(shader);
+      gl.deleteShader(shader);
+      throw Error(error || 'unknown error');
+    }
+
+    return shader;
+  }
+
+  function createProgram(gl, shaders) {
+    const program = gl.createProgram();
+    for (const shader of shaders) gl.attachShader(program, shader);
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+      const error = gl.getProgramInfoLog(program);
+      gl.deleteProgram(program);
+      throw Error(error || 'unknown error');
+    }
+
+    return program;
+  }
+
+  function createTextureFromBitmap(gl, img, smooth=false) {
+    const texture = gl.createTexture();
+    gl.bindTexture(gl.TEXTURE_2D, texture);
+
+    // Set the parameters so we can render any size image.
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_MIN_FILTER,
+      smooth ? gl.LINEAR : gl.NEAREST,
+    );
+    gl.texParameteri(
+      gl.TEXTURE_2D,
+      gl.TEXTURE_MAG_FILTER,
+      smooth ? gl.LINEAR : gl.NEAREST,
+    );
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+
+    return texture;
+  }
+
+  async function setup() {
+    canvas.width = 600 * 2.1;
+    canvas.height = 600;
+
+    gl = canvas.getContext('webgl', {
+      antialias: false,
+      powerPreference: 'low-power',
+      premultipliedAlpha: false,
+    });
+
+    if (!gl) throw Error(`Couldn't create GL context`);
+
+    gl.viewport(0, 0, canvas.width, canvas.height);
+
+    const frag = loadShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
+    const vert = loadShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
+    const program = createProgram(gl, [frag, vert]);
+    gl.useProgram(program);
+
+    // look up where the vertex data needs to go.
+    const positionLocation = gl.getAttribLocation(program, 'a_position');
+
+    // look up uniform locations
+    const fromLoc = gl.getUniformLocation(program, 'u_from');
+    gl.uniform1i(fromLoc, 0); // texture unit 0
+    const toLoc = gl.getUniformLocation(program, 'u_to');
+    gl.uniform1i(toLoc, 1); // texture unit 1
+    const matrixLoc = gl.getUniformLocation(program, 'u_matrix');
+    // Options
+    fadeLoc = gl.getUniformLocation(program, 'fadeAmount');
+
+    // provide texture coordinates for the rectangle.
+    const positionBuffer = gl.createBuffer();
+    // prettier-ignore
+    const rect = new Float32Array([
+      0.0,  0.0,
+      1.0,  0.0,
+      0.0,  1.0,
+      0.0,  1.0,
+      1.0,  0.0,
+      1.0,  1.0
+    ]);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, rect, gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(positionLocation);
+    gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    gl.uniformMatrix3fv(matrixLoc, false, [2, 0, 0, 0, -2, 0, -1, 1, 1]);
+
+    const imageURLs = [
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+    ];
+
+    for (const [i, imageURL] of imageURLs.entries()) {
+      const img = new Image();
+      img.src = imageURL;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      gl.activeTexture(gl[`TEXTURE${i}`]);
+      gl.bindTexture(gl.TEXTURE_2D, createTextureFromBitmap(gl, img));
+    }
+  }
+
+  const setupPromise = setup();
+
+  async function update(mix) {
+    await setupPromise;
+    gl.uniform1f(fadeLoc, mix);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+  }
+
+  range.oninput = () => update(range.valueAsNumber);
+  update(range.valueAsNumber);
+</script>
