@@ -1,14 +1,25 @@
-import { Component, Fragment, FunctionalComponent, h, createRef } from 'preact';
-import { compositeUnmultiplied, lighter, Pixel, sourceOver } from './composite';
+import {
+  Component,
+  FunctionalComponent,
+  h,
+  createRef,
+  ComponentChildren,
+} from 'preact';
+import { Pixel } from './utils';
 
 const styles = `
-.form-rows input[type=number] {
-  width: 100%;
+.pixel-calculator input[type=number] {
   margin: 0;
-  box-sizing: border-box;
   font: inherit;
   line-height: 1.5;
   padding: 0 0.2em;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 0.4rem;
+  border: 1px solid #ccc;
+  color: inherit;
+  font: inherit;
+  border-radius: 0;
 }
 
 input::-webkit-outer-spin-button,
@@ -22,189 +33,238 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.form-rows .label {
-  vertical-align: top;
+.pixel-calculator-figure {
+  overflow: visible;
+  background: #fff;
 }
 
-.form-rows .input {
-  padding: 0.5em;
-}
-
-.form-rows .input-result {
-  padding: 0.5em calc(0.5em + 0.2em + 2px);
-}
-
-@media (max-width: 450px) {
-  .ination {
-    display: none;
-  }
-}
-
-.color-view {
-  position: relative;
-  height: 28px;
-  box-sizing: border-box;
-  width: 100%;
-  border: 1px solid rgb(118, 118, 118);
-  border-radius: 2px;
-  overflow: hidden;
-}
-
-.color-view > div {
-  position: absolute;
-  inset: 0;
-}
-
-.pixel-calc-grid-table {
+.pixel-calculator {
   display: grid;
-  grid-template-columns: max-content 1fr 1fr 1fr 1fr minmax(10px, 56px);
+  grid-template-columns: auto 1fr;
 }
 
-.pixel-calc-grid-table .field {
+.pixel-calculator-row {
   display: contents;
 }
 
-.pixel-calc-grid-table .label,
-.pixel-calc-grid-table .input {
-  display: block;
-  width: auto;
+.pixel-calculator-row > :first-child {
+  grid-column: 1;
+}
+
+.pixel-calculator-inner-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #ececec;
+  padding: 0.5em;
+  gap: 0.5em;
+}
+
+.pixel-calculator-row:nth-child(odd) .pixel-calculator-inner-grid {
+  background: #f7f7f7;
+}
+
+.pixel-calculator-row:nth-child(odd) .pixel-calculator-label {
+  background: #3cb39d;
+}
+
+.pixel-calculator-label {
+  padding: 0.5em;
+}
+
+.pixel-calculator-label,
+.pixel-calculator-header.pixel-calculator-row .pixel-calculator-inner-grid {
+  color: #fff;
+  background: #009d81;
+}
+
+.pixel-calculator-header {
+  text-align: center;
+  top: 0;
+}
+
+.pixel-calculator-label {
+  padding-left: 20px;
+}
+
+@media (min-width: 530px) {
+  .pixel-calculator-label {
+    padding-left: 32px;
+  }
+}
+
+.pixel-calculator-field {
+  display: grid;
+  align-items: center;
+}
+
+.pixel-calculator-range {
+  grid-column-end: span 3;
+}
+
+.pixel-calculator-range input {
+  width: 100%;
+}
+
+.pixel-calculator-result {
+  padding-left: calc(1px + 0.4em);
+}
+
+.pixel-calculator-colors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  height: 100px;
+}
+
+.pixel-calculator-colors > * {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.pixel-calculator-color-label {
+  color: #fff;
+  font-size: 1.4rem;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
 }
 `;
 
-export const PixelCalculatorStyles: FunctionalComponent = () => (
+export const Styles: FunctionalComponent = () => (
   <style dangerouslySetInnerHTML={{ __html: styles }} />
 );
 
-export const Styles: FunctionalComponent = () => (
-  <Fragment>
-    <PixelCalculatorStyles />
-  </Fragment>
+export const Header: FunctionalComponent = () => (
+  <div class="pixel-calculator-row pixel-calculator-header">
+    <div class="pixel-calculator-inner-grid" style="grid-column: 2">
+      <div>Red</div>
+      <div>Green</div>
+      <div>Blue</div>
+      <div>Alpha</div>
+    </div>
+  </div>
 );
 
-type Methods = 'source-over' | 'lighter';
-
-const compositeMethods = {
-  'source-over': sourceOver,
-  lighter: lighter,
-};
-
-interface Props {
-  initialMethod: Methods;
-  initialPixel: Pixel;
+interface ResultsProps {
+  pixel: Pixel;
+  label: ComponentChildren;
 }
 
-interface State {
+export const Results: FunctionalComponent<ResultsProps> = ({
+  pixel,
+  label,
+}) => (
+  <div class="pixel-calculator-row pixel-calculator-fields">
+    <div class="pixel-calculator-label">{label}</div>
+    <div class="pixel-calculator-inner-grid">
+      {pixel.map((channel) => (
+        <div class="pixel-calculator-field pixel-calculator-result">
+          {channel.toFixed(3)}
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+interface FieldsProps {
+  pixel: Pixel;
+  label: ComponentChildren;
+  onChange: (pixel: Pixel) => void;
+}
+
+export class Fields extends Component<FieldsProps> {
+  private _refs = this.props.pixel.map(() => createRef<HTMLInputElement>());
+
+  private _onInput = () => {
+    this.props.onChange(
+      this._refs.map((ref) => ref.current!.valueAsNumber) as Pixel,
+    );
+  };
+
+  render({ pixel, label }: FieldsProps) {
+    return (
+      <div class="pixel-calculator-row pixel-calculator-fields">
+        <div class="pixel-calculator-label">{label}</div>
+        <div class="pixel-calculator-inner-grid">
+          {pixel.map((channel, i) => (
+            <div class="pixel-calculator-field">
+              <input
+                onInput={this._onInput}
+                ref={this._refs[i]}
+                type="number"
+                required
+                value={channel}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
+
+interface CrossFadeRangeProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+export class CrossFadeRange extends Component<CrossFadeRangeProps> {
+  private _onInput = (event: Event) => {
+    const input = event.target as HTMLInputElement;
+    this.props.onChange(input.valueAsNumber);
+  };
+
+  render({ value }: CrossFadeRangeProps) {
+    return (
+      <div class="pixel-calculator-row pixel-calculator-cross-fade">
+        <div class="pixel-calculator-label">Cross-fade</div>
+        <div class="pixel-calculator-inner-grid">
+          <div class="pixel-calculator-field pixel-calculator-range">
+            <input
+              min="0"
+              max="1"
+              step="0.001"
+              type="range"
+              onInput={this._onInput}
+              value={value}
+            />
+          </div>
+          <div class="pixel-calculator-field">
+            <input
+              onInput={this._onInput}
+              type="number"
+              required
+              value={value}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+interface ColorsProps {
   source: Pixel;
   destination: Pixel;
   result: Pixel;
 }
 
-export default class PixelCalculator extends Component<Props, State> {
-  state: State = {
-    source: this.props.initialPixel,
-    destination: this.props.initialPixel,
-    result: compositeUnmultiplied(
-      compositeMethods[this.props.initialMethod],
-      this.props.initialPixel,
-      this.props.initialPixel,
-    ),
-  };
+const pixelToCSSColor = (pixel: Pixel) =>
+  `rgba(${pixel.map((channel) => channel * 100 + '%').join(',')})`;
 
-  private _sourceRefs = this.props.initialPixel.map(() =>
-    createRef<HTMLInputElement>(),
-  );
-  private _destinationRefs = this.props.initialPixel.map(() =>
-    createRef<HTMLInputElement>(),
-  );
-
-  private _onInput = () => {
-    const source = this._sourceRefs.map(
-      (ref) => ref.current!.valueAsNumber,
-    ) as Pixel;
-    const destination = this._destinationRefs.map(
-      (ref) => ref.current!.valueAsNumber,
-    ) as Pixel;
-
-    this.setState({
-      source,
-      destination,
-      result: compositeUnmultiplied(
-        compositeMethods[this.props.initialMethod],
-        source,
-        destination,
-      ),
-    });
-  };
-
-  render(_: Props, { result, source, destination }: State) {
-    return (
-      <form class="form-rows">
-        <div class="form-rows-inner pixel-calc-grid-table">
-          <div class="field">
-            <div></div>
-            <div class="label">Red</div>
-            <div class="label">Green</div>
-            <div class="label">Blue</div>
-            <div class="label">Alpha</div>
-            <div class="label"></div>
-          </div>
-          <div class="field">
-            <div class="label">Source:</div>
-            {source.map((num, i) => (
-              <div class="input">
-                <input
-                  onInput={this._onInput}
-                  ref={this._sourceRefs[i]}
-                  type="number"
-                  required
-                  value={num}
-                />
-              </div>
-            ))}
-            <div class="input">
-              <ColorView color={source} />
-            </div>
-          </div>
-          <div class="field">
-            <div class="label">
-              Dest<span class="ination">ination</span>:
-            </div>
-            {destination.map((num, i) => (
-              <div class="input">
-                <input
-                  onInput={this._onInput}
-                  ref={this._destinationRefs[i]}
-                  type="number"
-                  required
-                  value={num}
-                />
-              </div>
-            ))}
-            <div class="input">
-              <ColorView color={destination} />
-            </div>
-          </div>
-          <div class="field">
-            <div class="label">Result:</div>
-            {result.map((num) => (
-              <div class="input input-result">{num.toFixed(3)}</div>
-            ))}
-            <div class="input">
-              <ColorView color={result} />
-            </div>
-          </div>
-        </div>
-      </form>
-    );
-  }
-}
-
-export const ColorView: FunctionalComponent<{ color: Pixel }> = ({ color }) => (
-  <div class="checkd color-view">
-    <div
-      style={{
-        background: `rgba(${color.map((n) => n * 100 + '%').join(',')})`,
-      }}
-    ></div>
+export const Colors: FunctionalComponent<ColorsProps> = ({
+  destination,
+  result,
+  source,
+}) => (
+  <div class="pixel-calculator-colors checkd">
+    <div style={{ background: pixelToCSSColor(destination) }}>
+      <div class="pixel-calculator-color-label">Destination</div>
+    </div>
+    <div style={{ background: pixelToCSSColor(source) }}>
+      <div class="pixel-calculator-color-label">Source</div>
+    </div>
+    <div style={{ background: pixelToCSSColor(result) }}>
+      <div class="pixel-calculator-color-label">Result</div>
+    </div>
   </div>
 );

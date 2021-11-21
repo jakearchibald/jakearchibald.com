@@ -59,7 +59,7 @@ Ok, it isn't _always_ impossible. Be _amazed_ as I cross-fade the word "good" wi
 
 Cross-fading is easy when one of the elements is opaque and covers the other element. As you adjust the slider, the element displaying "goat" moves from `opacity: 0` to `opacity: 1`. Job done!
 
-But, what if neither element is fully opaque? The same technique doesn't work:
+But, what if neither element is fully opaque? Well, you can't use the same technique:
 
 <figure class="full-figure max-figure checkd">
   <div class="example-stage">
@@ -81,7 +81,7 @@ But, what if neither element is fully opaque? The same technique doesn't work:
   update(range.valueAsNumber);
 </script>
 
-You can't just fade the second item on top, as you can still see the first item underneath. In this situation, you've probably done the same as me, and also faded the other item out:
+…as you can still see the first item underneath. In this situation, you've probably done the same as me, and faded the other item out at the same time:
 
 <figure class="full-figure max-figure checkd">
   <div class="example-stage">
@@ -114,30 +114,18 @@ A true cross-fade should be a weighted average of each pixel, meaning there's no
 
 The process of layering one thing over another is called _compositing_, which takes each pixel of the _source_ ('goat' in this case) and _destination_ ('good' in this case) and combines them in some way.
 
-For these operations, pixels have four values called _channels_. They are red, green, blue, and alpha (transparency). Channel values are generally in the range 0-1, where 0 means 'none' and 1 means 'full'.
+For these operations, pixels have four values called _channels_: red, green, blue, and alpha (transparency). Channel values are generally in the range 0-1, where 0 means 'none' and 1 means 'full'.
 
-The default compositing method on the web is [source-over](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_srcover), which combines pixels like this:
-
-```js
-// Both pixels are black at 50% opacity
-const sourcePixel = [0, 0, 0, 0.5];
-const destinationPixel = [0, 0, 0, 0.5];
-
-const resultPixel = destinationPixel
-  // Source-over transforms the destination pixel
-  // using the alpha of the source pixel
-  .map((channel) => channel * (1 - sourcePixel[3]))
-  // Then adds the result to the source pixel
-  .map((channel, i) => channel + sourcePixel[i]);
-```
-
-The result is `[0, 0, 0, 0.75]`, which is what we see in the demo.
-
-Compositing colour is a little more complicated, as compositing operations assume the colours are _premultiplied_, meaning they've been multiplied with the alpha channel. This is pretty common in image processing, but not something you'll encounter in web APIs unless you work with WebGL.
-
-To convert to and from those formats:
+The default compositing method on the web and most applications is [source-over](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_srcover). Here's a worked example of how source-over combines two pixels:
 
 ```js
+// Red 50% opacity
+const source = [1, 0, 0, 0.5];
+// Blue 50% opacity
+const destination = [0, 1, 0, 0.5];
+
+// source-over works with premultiplied colours,
+// meaning their colour values are multiplied with their alpha:
 function multiplyAlpha(pixel) {
   return pixel.map((channel, i) => {
     // Pass the alpha channel through unchanged
@@ -147,6 +135,21 @@ function multiplyAlpha(pixel) {
   });
 }
 
+const premultipliedSource = multiplyAlpha(source);
+const premultipliedDestination = multiplyAlpha(destination);
+
+// Then, source-over creates a fraction of the destination,
+// using the alpha of the source:
+const transformedDestination = premultipliedDestination.map(
+  (channel) => channel * (1 - premultipliedSource[3]),
+);
+
+// Then, the premultipliedSource is added:
+const premultipliedResult = transformedDestination.map(
+  (channel, i) => channel + premultipliedSource[i],
+);
+
+// Then, the alpha is unmultiplied:
 function unmultiplyAlpha(pixel) {
   return pixel.map((channel, i) => {
     // Pass the alpha channel through unchanged
@@ -157,11 +160,13 @@ function unmultiplyAlpha(pixel) {
     return channel / pixel[3];
   });
 }
+
+const result = unmultiplyAlpha(premultipliedResult);
 ```
 
 Note: The code above is for educational purposes 🤪, it doesn't have the optimisations you'd need for production. There are [libraries for that](https://github.com/thi-ng/umbrella/tree/develop/packages/porter-duff) if you need them.
 
-And here's the implementation of source-over running in a form:
+Anyway here are the values:
 
 <script type="component">{
   "module": "shared/demos/2021/compositing/PixelCalculator",
@@ -170,14 +175,18 @@ And here's the implementation of source-over running in a form:
 }</script>
 
 <script type="component">{
-  "module": "shared/demos/2021/compositing/PixelCalculator",
+  "module": "shared/demos/2021/compositing/PixelCalculator/SourceOver",
   "props": {
-    "initialMethod": "source-over",
-    "initialPixel": [0, 0.62, 0.51, 0.5]
+    "initialFrom": [1, 0, 0, 1],
+    "initialTo": [0, 0, 1, 1]
   }
 }</script>
 
-So what's the solution? Well…
+And there we see the `0.750` alpha in the result, when we want `1.000` for a proper cross-fade. In fact, the colour is wrong too. If we're fading from red to blue, the mid point should be 50% red and 50% blue, but it's 33% red and 66% blue.
+
+In terms of what we want for cross-fading, things seem to go wrong when we get to "transformed destination". In fact, if missed out that step, and just added the premultiplied destination to the premultiplied source, we'd get the answer we want.
+
+So what's the solution?
 
 # CSS has a function for this!
 
@@ -212,7 +221,7 @@ It's called [`cross-fade()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/c
   update(range.valueAsNumber);
 </script>
 
-Perfect! Except it only works in Chromium and WebKit browsers, with a `-webkit-` prefix, and only works with images, so it can't be used to cross-fade DOM elements.
+Perfect! Except it only works in Chromium and WebKit browsers, with a `-webkit-` prefix, and more fundamentally, it only works with images, so it can't be used to cross-fade DOM elements. I had to use two SVG images to make the above demo work.
 
 ```css
 .whatever {
@@ -226,115 +235,54 @@ It isn't really what we're looking for, but…
 
 Chromium engineer [Khushal Sagar](https://github.com/khushalsagar) went digging into the implementation of `-webkit-cross-fade()`, and it turns out it's implemented using a different compositing function, [plus-lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus_lighter).
 
-Plus-lighter just adds the pixels together and clamps them to 0-1:
+It's basically the same as source-over, but it doesn't do that "transformed destination" step:
 
 ```js
-// Both pixels are black at 50% opacity
-const sourcePixel = [0, 0, 0, 0.5];
-const destinationPixel = [0, 0, 0, 0.5];
+// Red 50% opacity
+const source = [1, 0, 0, 0.5];
+// Blue 50% opacity
+const destination = [0, 1, 0, 0.5];
 
-function clamp01(value) {
-  if (value < 0) return 0;
-  if (value > 1) return 1;
-  return value;
-}
+// plus-lighter also works with premultiplied colours:
+const premultipliedSource = multiplyAlpha(source);
+const premultipliedDestination = multiplyAlpha(destination);
 
-const resultPixel = destinationPixel
-  // Plus-lighter adds the pixels together
-  // And clamps the result to 0-1
-  .map((channel, i) => clamp01(channel + sourcePixel[i]));
+const premultipliedResult = premultipliedDestination
+  // But then the pixels are just added together:
+  .map((channel, i) => clamp01(channel + premultipliedSource[i]))
+  // Clamped to 0-1:
+  .map((channel) => {
+    if (channel < 0) return 0;
+    if (channel > 1) return 1;
+    return channel;
+  });
+
+// Then, the alpha is unmultiplied:
+const result = unmultiplyAlpha(premultipliedResult);
 ```
 
-And the result is `[0, 0, 0, 1]`. TODO: just log the alpha in these examples.
+And here we go:
 
 <script type="component">{
-  "module": "shared/demos/2021/compositing/PixelCalculator",
+  "module": "shared/demos/2021/compositing/PixelCalculator/Lighter",
   "props": {
-    "initialMethod": "lighter",
-    "initialPixel": [0, 0.62, 0.51, 0.5]
+    "initialFrom": [1, 0, 0, 1],
+    "initialTo": [0, 0, 1, 1]
   }
 }</script>
 
-It might not seem like the colours are being added together, but remember that the colours are premultiplied by the alpha channel before they're added together.
+And that works! The red value goes from 1 to 0, the blue goes from 0 to 1, and the alpha stays full.
 
-So, how can we use `plus-lighter`?
+# We should have this in CSS!
 
-- Here's it running if you want to throw some numbers at it:
-- (Demo form)
-- CSS has a cross-fade() function!
-- But it only works with images
-- (code example)
-- Here it is in action
+- Unfortunately 'lighter' isn't available in CSS, but it is available in canvas (make passing mention and a quick demo)
 - (demo)
-- To make this work, I've had to make "foo" and "fop" images
-- Not only that, I've had to make them images of the same size, as `cross-fade` also interpolates the sizes
-- So it works, but not for general DOM.
-- But how does it work?
-- Kushal went digging in the implementation and it turns out it uses a different compositing mode, 'lighter'.
-- Lighter is:
-  - Source: 100% of it
-  - Destination: 100% of it
-- So it's adding the two pixels together, which would easily end up with everything looking lighter, hence the name, but since we're fading the opacity of each, the colours add together fine.
-- So 50% opacity + 50% opacity is 100% opacity. Exactly what we want.
-- Unfortunately 'lighter' isn't available in CSS, but it is available in canvas:
-
-```js
-const mainCanvas = document.createElement('canvas');
-const mainCtx = backgroundCanvas.getContext('2d');
-// …draw background stuff…
-
-const fadeFromCanvas = document.createElement('canvas');
-// …draw the thing we're fading from…
-
-const fadeToCanvas = document.createElement('canvas');
-// …draw the thing we're fading to…
-
-// Now cross-fade them!
-const mixCanvas = document.createElement('canvas');
-const mixCtx = mixCanvas.getContext('2d');
-// The amount of cross-fade
-const mix = 0.5;
-
-mixCtx.globalAlpha = 1 - mix;
-mixCtx.drawImage(fadeFromCanvas, 0, 0);
-
-// The secret sauce:
-mixCtx.globalCompositeOperation = 'lighter';
-mixCtx.globalAlpha = mix;
-mixCtx.drawImage(fadeToCanvas, 0, 0);
-
-// Draw the cross-faded result onto the background
-mainCtx.drawImage(mixCanvas, 0, 0);
-```
-
-- (demo)
-- It's important to mix the two items together in their own canvas, because you don't want the 'lighter' operation to mess with the background. The composition with the background needs to be regular ol' 'source-over'. This is what `cross-fade` does under the hood.
-- We can add this to our JS implementation:
-
-```js
-const lighter = {
-  source: () => 1,
-  destination: () => 1,
-};
-
-const sourcePixel = [0, 200, 200, 127];
-const destinationPixel = [0, 200, 200, 127];
-
-const resultPixel = composite(
-  lighter,
-  multiplyAlpha(sourcePixel),
-  multiplyAlpha(destinationPixel),
-);
-
-console.log(unmultiplyAlpha(resultPixel));
-```
-
-- (demo)
-- We need this in CSS!
+- We need this in CSS, then we can just do this
 - Currently working on SET
 - We need cross-fading
 - Hopefully we can just do this
 - (code - hover example)
 - Talk about isolation
 - Bonus round: SVG
+- Bonus round: Linear rgb
 - Thought I was going to be able to do this with SVG, but no. Maybe in old Edge?
