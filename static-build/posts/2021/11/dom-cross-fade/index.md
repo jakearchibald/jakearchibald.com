@@ -398,27 +398,82 @@ Whether `mix-blend-mode` is the right place for this feature isn't 100% clear ri
 
 # Bonus round: Browser compositing is inaccurate
 
-# We should have this in CSS!
+We've been talking about colours as 0-1, where 0.5 means "half of that colour", but that isn't how it works.
 
-- Unfortunately 'lighter' isn't available in CSS, but it is available in canvas (make passing mention and a quick demo)
-- (demo)
-- We need this in CSS, then we can just do this
-- Currently working on SET
-- We need cross-fading
-- Hopefully we can just do this
-- (code - hover example)
-- Talk about isolation
-- Bonus round: SVG
-- Bonus round: Linear rgb
-- Thought I was going to be able to do this with SVG, but no. Maybe in old Edge?
+The human eye is much more sensitive to small changes in intensity at lower levels than higher levels, so values are transformed to take advantage of that. That transformation is called the [electro-optical transfer function](<https://en.wikipedia.org/wiki/SRGB#Transfer_function_(%22gamma%22)>). However, the compositing maths is not designed for these non-linear values, so the result picks up an error.
 
-# Linear demo
+Here's the 2D canvas example again, but this time the text is fading from red to green:
+
+<figure class="full-figure max-figure checkd">
+  <div class="example-stage">
+    <canvas id="linear-canvas-2d-2" class="canvas-demo"></canvas>
+  </div>
+  <div class="mix-input"><input id="mix-input-7" type="range" min="0" max="1" step="any" value="0.5"></div>
+</figure>
+
+<script type="module">
+  const range = $('#mix-input-7');
+  const canvas = $('#linear-canvas-2d-2');
+
+  async function setup() {
+    canvas.width = 600 * 2.1;
+    canvas.height = 600;
+
+    const ctx = canvas.getContext('2d');
+    const images = [
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+    ].map(async (imageURL) => {
+      const img = new Image();
+      img.src = imageURL;
+      img.width = canvas.width;
+      img.height = canvas.height;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      return img;
+    });
+
+    return [ctx, ...(await Promise.all(images))];
+  }
+
+  const setupPromise = setup();
+
+  async function update(mix) {
+    const [ctx, from, to] = await setupPromise;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1 - mix;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(from, 0, 0);
+    ctx.globalAlpha = mix;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.drawImage(to, 0, 0);
+  }
+
+  let pendingFrame = false;
+
+  function queueFrame(callback) {
+    if (pendingFrame) return;
+    pendingFrame = true;
+    requestAnimationFrame(() => {
+      pendingFrame = false;
+      callback();
+    });
+  }
+
+  range.oninput = () => queueFrame(() => update(range.valueAsNumber));
+  update(range.valueAsNumber);
+</script>
+
+See how it seems to get darker at the 50% mark, as it reaches baby-poo green-brown? That's caused by these non-linear values.
+
+Here's a WebGL version that manually converts the colours to linear values before doing the compositing:
 
 <figure class="full-figure max-figure checkd">
   <div class="example-stage">
     <canvas id="linear-canvas" class="canvas-demo"></canvas>
   </div>
-  <div class="mix-input"><input id="mix-input-5" type="range" min="0" max="1" step="any" value="0"></div>
+  <div class="mix-input"><input id="mix-input-5" type="range" min="0" max="1" step="any" value="0.5"></div>
 </figure>
 
 <script type="module">
