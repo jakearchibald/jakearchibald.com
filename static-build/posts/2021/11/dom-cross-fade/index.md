@@ -271,11 +271,12 @@ And here we go:
 
 And that works! The red value goes from 1 to 0, the blue goes from 0 to 1, and the alpha stays full.
 
-# It's already in canvas
+# It's already in 2D canvas
 
 Well, plus-lighter isn't, but [lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus) is, and it does the same thing but without the clamping.
 
 ```js
+const ctx = canvas.getContext('2d');
 const mix = 0.5;
 ctx.globalCompositeOperation = 'source-over';
 ctx.globalAlpha = 1 - mix;
@@ -355,6 +356,47 @@ And here it is in action:
   range.oninput = () => queueFrame(() => update(range.valueAsNumber));
   update(range.valueAsNumber);
 </script>
+
+# We should be able to do this in CSS
+
+One of the things I'm working on right now is [shared element transitions](https://github.com/WICG/shared-element-transitions/blob/main/explainer.md), a feature to allow developers to create transitions between pages, and cross-fading is a big part of that. Hopefully we'll be able to ship cross-fading in a way that isn't limited to shared element transitions, but can be used everywhere.
+
+The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any two DOM elements. Something like this:
+
+```html
+<div class="cross-fade-container">
+  <div class="from">…</div>
+  <div class="to">…</div>
+</div>
+<style>
+  .cross-fade-container {
+    display: grid;
+    /* Make sure the compositing is limited to this element */
+    isolation: isolate;
+  }
+  .cross-fade-container > * {
+    /* Layer the elements on top of each other */
+    grid-area: 1 / 1;
+    transition: opacity 1s ease-in-out;
+  }
+  .cross-fade-container .to {
+    /* The new feature */
+    mix-blend-mode: plus-lighter;
+    opacity: 0;
+  }
+  /* Perform the cross-fade on hover */
+  .cross-fade-container:hover .from {
+    opacity: 0;
+  }
+  .cross-fade-container:hover .to {
+    opacity: 1;
+  }
+</style>
+```
+
+Whether `mix-blend-mode` is the right place for this feature isn't 100% clear right now. If we need to keep the distinction between 'blending' and 'compositing', we might end up with something like `mix-composite-mode` instead.
+
+# Bonus round: Browser compositing is inaccurate
 
 # We should have this in CSS!
 
