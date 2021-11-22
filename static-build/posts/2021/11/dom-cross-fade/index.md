@@ -110,11 +110,11 @@ If you have a material that blocks out half the light behind it, you're left wit
 
 `opacity: 0.5` works in the same way. If you put `opacity: 0.5` on top of `opacity: 0.5` you get the equivalent of `opacity: 0.75`, and that's why the "go" appears to fade out a bit during the cross-fade.
 
-The process of layering one thing over another is called _compositing_, which takes each pixel of the _source_ ('goat' in this case) and _destination_ ('good' in this case) and combines them in some way.
+On the web, we layer things on top of other things all the time, but how it works is actually kinda complicated. The process is called _compositing_. Compositing takes each pixel of the _source_ ('goat' in this case) and _destination_ ('good' in this case) and combines them in some way, depending on the compositing operator.
 
 For these operations, pixels have four values called _channels_: red, green, blue, and alpha (transparency). Channel values are generally in the range 0-1, where 0 means 'none' and 1 means 'full'.
 
-The default compositing method on the web and most applications is [source-over](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_srcover). Here's a worked example of how source-over combines two pixels:
+The default compositing operator on the web and most applications is [source-over](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_srcover). Here's a worked example of how source-over combines two pixels:
 
 ```js
 // Red 50% opacity
@@ -231,7 +231,7 @@ It isn't really what we're looking for, but…
 
 # Plus-lighter
 
-Chromium engineer [Khushal Sagar](https://github.com/khushalsagar) went digging into the implementation of `-webkit-cross-fade()`, and it turns out it's implemented using a different compositing function, [plus-lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus_lighter).
+Chromium engineer [Khushal Sagar](https://github.com/khushalsagar) went digging into the implementation of `-webkit-cross-fade()`, and it turns out it's implemented using a different compositing operator, [plus-lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus_lighter).
 
 It's basically the same as source-over, except it doesn't do that "transformed destination" step:
 
@@ -361,7 +361,7 @@ And here it is in action:
 
 One of the projects I'm involved in right now is [shared element transitions](https://github.com/WICG/shared-element-transitions/blob/main/explainer.md), a feature to allow developers to create transitions between pages. Cross-fading DOM elements is a big part of that, so we need to solve the problem, but we'd like to solve it in a general way so it can be used by other features.
 
-The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any two DOM elements. Something like this:
+The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any two DOM elements. Since we already have a way to change the blending of pixels in CSS, it could look something like this:
 
 ```html
 <div class="cross-fade-container">
