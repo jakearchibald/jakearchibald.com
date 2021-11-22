@@ -433,7 +433,6 @@ Here's the 2D canvas example again, but this time the text is fading from red to
       await new Promise((resolve) => {
         img.onload = resolve;
       });
-      console.log(img.width, img.height);
       return img;
     });
 
