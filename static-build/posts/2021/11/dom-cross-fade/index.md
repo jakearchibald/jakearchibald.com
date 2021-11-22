@@ -192,8 +192,8 @@ It's called [`cross-fade()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/c
 
 <style>
   .css-cross-fade {
-    --destination: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e");
-    --source: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e");
+    --destination: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e");
+    --source: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -280,10 +280,10 @@ const ctx = canvas.getContext('2d');
 const mix = 0.5;
 ctx.globalCompositeOperation = 'source-over';
 ctx.globalAlpha = 1 - mix;
-ctx.drawImage(from, 0, 0);
+ctx.drawImage(from, 0, 0, canvas.width, canvas.height);
 ctx.globalCompositeOperation = 'lighter';
 ctx.globalAlpha = mix;
-ctx.drawImage(to, 0, 0);
+ctx.drawImage(to, 0, 0, canvas.width, canvas.height);
 ```
 
 And here it is in action:
@@ -313,8 +313,8 @@ And here it is in action:
 
     const ctx = canvas.getContext('2d');
     const images = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e`,
     ].map(async (imageURL) => {
       const img = new Image();
       img.src = imageURL;
@@ -336,10 +336,10 @@ And here it is in action:
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = 1 - mix;
     ctx.globalCompositeOperation = 'source-over';
-    ctx.drawImage(from, 0, 0);
+    ctx.drawImage(from, 0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = mix;
     ctx.globalCompositeOperation = 'lighter';
-    ctx.drawImage(to, 0, 0);
+    ctx.drawImage(to, 0, 0, canvas.width, canvas.height);
   }
 
   let pendingFrame = false;
@@ -396,6 +396,8 @@ The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any 
 
 Whether `mix-blend-mode` is the right place for this feature isn't 100% clear right now. If we need to keep the distinction between 'blending' and 'compositing', we might end up with something like `mix-composite-mode` instead.
 
+Cross-fading any two DOM elements is currently impossible, but hopefully it won't always be.
+
 # Bonus round: Browser compositing is inaccurate
 
 We've been talking about colours as 0-1, where 0.5 means "half of that colour", but that isn't how it works.
@@ -421,8 +423,8 @@ Here's the 2D canvas example again, but this time the text is fading from red to
 
     const ctx = canvas.getContext('2d');
     const images = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
     ].map(async (imageURL) => {
       const img = new Image();
       img.src = imageURL;
@@ -431,6 +433,7 @@ Here's the 2D canvas example again, but this time the text is fading from red to
       await new Promise((resolve) => {
         img.onload = resolve;
       });
+      console.log(img.width, img.height);
       return img;
     });
 
@@ -444,10 +447,10 @@ Here's the 2D canvas example again, but this time the text is fading from red to
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = 1 - mix;
     ctx.globalCompositeOperation = 'source-over';
-    ctx.drawImage(from, 0, 0);
+    ctx.drawImage(from, 0, 0, canvas.width, canvas.height);
     ctx.globalAlpha = mix;
     ctx.globalCompositeOperation = 'lighter';
-    ctx.drawImage(to, 0, 0);
+    ctx.drawImage(to, 0, 0, canvas.width, canvas.height);
   }
 
   let pendingFrame = false;
@@ -483,7 +486,7 @@ Here's a WebGL version that manually converts the colours to linear values befor
   let fadeLoc;
 
   const fragmentShaderSource = `
-precision lowp float;
+precision mediump float;
 
 // our textures
 uniform sampler2D u_from;
@@ -494,34 +497,37 @@ uniform float fadeAmount;
 varying vec2 v_texCoord;
 
 vec4 fromLinear(vec4 linearRGB) {
-  vec3 cutoff = vec3(lessThan(linearRGB.rgb, vec3(0.0031308)));
-  vec3 higher = vec3(1.055)*pow(linearRGB.rgb, vec3(1.0/2.4)) - vec3(0.055);
+  vec3 unmultiplied = clamp(linearRGB.rgb / linearRGB.a, 0.0, 1.0);
+  vec3 cutoff = vec3(lessThan(unmultiplied, vec3(0.0031308)));
+  vec3 higher = vec3(1.055)*pow(unmultiplied, vec3(1.0/2.4)) - vec3(0.055);
   vec3 lower = linearRGB.rgb * vec3(12.92);
 
-  return vec4(mix(higher, lower, cutoff), linearRGB.a);
+  return vec4(mix(higher, lower, cutoff) * linearRGB.a, linearRGB.a);
 }
 
 // Converts a color from sRGB gamma to linear light gamma
 vec4 toLinear(vec4 sRGB) {
-  vec3 cutoff = vec3(lessThan(sRGB.rgb, vec3(0.04045)));
-  vec3 higher = pow((sRGB.rgb + vec3(0.055))/vec3(1.055), vec3(2.4));
-  vec3 lower = sRGB.rgb/vec3(12.92);
+  vec3 unmultiplied = clamp(sRGB.rgb / sRGB.a, 0.0, 1.0);
+  vec3 cutoff = vec3(lessThan(unmultiplied, vec3(0.04045)));
+  vec3 higher = pow((unmultiplied + vec3(0.055))/vec3(1.055), vec3(2.4));
+  vec3 lower = unmultiplied/vec3(12.92);
 
-  return vec4(mix(higher, lower, cutoff), sRGB.a);
+  return vec4(mix(higher, lower, cutoff) * sRGB.a, sRGB.a);
 }
 
 void main() {
-  vec4 fromTex = toLinear(texture2D(u_from, v_texCoord));
-  vec4 toTex = toLinear(texture2D(u_to, v_texCoord));
-  vec4 premultipliedFrom = vec4(fromTex.rgb * fromTex.a * (1.0 - fadeAmount), fromTex.a * (1.0 - fadeAmount));
-  vec4 premultipliedTo = vec4(toTex.rgb * toTex.a * fadeAmount, toTex.a * fadeAmount);
-  vec4 lighter = premultipliedTo + premultipliedFrom;
-  gl_FragColor = fromLinear(vec4(lighter.rgb / lighter.a, lighter.a));
+  vec4 from = texture2D(u_from, v_texCoord);
+  vec4 to = texture2D(u_to, v_texCoord);
+  vec4 linearFrom = toLinear(from);
+  vec4 linearTo = toLinear(to);
+  vec4 linearResult = linearFrom * (1.0 - fadeAmount) + linearTo * fadeAmount;
+
+  gl_FragColor = fromLinear(linearResult);
 }
 `;
 
   const vertexShaderSource = `
-precision lowp float;
+precision mediump float;
 attribute vec2 a_position;
 uniform mat3 u_matrix;
 varying vec2 v_texCoord;
@@ -591,12 +597,14 @@ void main() {
     gl = canvas.getContext('webgl', {
       antialias: false,
       powerPreference: 'low-power',
-      premultipliedAlpha: false,
     });
 
     if (!gl) throw Error(`Couldn't create GL context`);
 
     gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
 
     const frag = loadShader(gl, fragmentShaderSource, gl.FRAGMENT_SHADER);
     const vert = loadShader(gl, vertexShaderSource, gl.VERTEX_SHADER);
@@ -634,8 +642,8 @@ void main() {
     gl.uniformMatrix3fv(matrixLoc, false, [2, 0, 0, 0, -2, 0, -1, 1, 1]);
 
     const imageURLs = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
     ];
 
     for (const [i, imageURL] of imageURLs.entries()) {
@@ -652,7 +660,6 @@ void main() {
   }
 
   const setupPromise = setup();
-
 
   async function update(mix) {
     await setupPromise;
@@ -674,3 +681,13 @@ void main() {
   range.oninput = () => queueFrame(() => update(range.valueAsNumber));
   update(range.valueAsNumber);
 </script>
+
+This version doesn't pick up the error, so the brightness doesn't dip half way through.
+
+It isn't just cross-fading where browsers pick up this error, it happens with gradients, resizing, blurring… all kinds of image processing.
+
+Unfortunately, lots of code on the web depends on this wrongness, so we're unlikely to see a change here without some kind of opt-in. [CSS Color Level 4](https://www.w3.org/TR/css-color-4/) lays the groundwork for this by defining [interpolation for various colour spaces](https://www.w3.org/TR/css-color-4/#interpolation).
+
+There's an [HTTP 203 episode on colour spaces](https://www.youtube.com/watch?v=cGyLHxn16pE) if for some reason you want to hear more about colour spaces.
+
+<small>Please don't look at my WebGL code. I don't really know what I'm doing.</small>
