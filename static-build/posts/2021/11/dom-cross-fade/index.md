@@ -359,7 +359,7 @@ And here it is in action:
 
 # We should be able to do this in CSS
 
-One of the things I'm working on right now is [shared element transitions](https://github.com/WICG/shared-element-transitions/blob/main/explainer.md), a feature to allow developers to create transitions between pages, and cross-fading is a big part of that. Hopefully we'll be able to ship cross-fading in a way that isn't limited to shared element transitions, but can be used everywhere.
+One of the projects I'm involved in right now is [shared element transitions](https://github.com/WICG/shared-element-transitions/blob/main/explainer.md), a feature to allow developers to create transitions between pages. Cross-fading DOM elements is a big part of that, so we need to solve the problem, but we'd like to solve it in a general way so it can be used by other features.
 
 The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any two DOM elements. Something like this:
 
