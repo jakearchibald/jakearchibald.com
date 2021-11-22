@@ -1,5 +1,5 @@
 ---
-title: 'Cross fading any two DOM elements is currently impossible'
+title: 'Cross-fading any two DOM elements is currently impossible'
 date: 2021-11-12 01:00:00
 summary: TODO
 meta: TODO
@@ -164,7 +164,7 @@ const result = unmultiplyAlpha(premultipliedResult);
 
 Note: The code above is for educational purposes 🤪, it doesn't have the optimisations you'd need for production. There are [libraries for that](https://github.com/thi-ng/umbrella/tree/develop/packages/porter-duff) if you need them.
 
-Anyway here are the values:
+Anyway here's what happens to the values:
 
 <script type="component">{
   "module": "shared/demos/2021/compositing/PixelCalculator",
@@ -180,9 +180,9 @@ Anyway here are the values:
   }
 }</script>
 
-And there we see the `0.750` alpha in the result, when we want `1.000` for a proper cross-fade. In fact, the colour is wrong too. If we're fading from red to blue, the mid point should be 50% red and 50% blue, but it's 33% red and 66% blue.
+And there's the `0.750` alpha in the result, instead of what we want for a true cross-fade, `1.000`. In fact, the colour is wrong too. If we're fading from red to blue, the mid point should be 50% red and 50% blue, but it's 33% red and 66% blue.
 
-In terms of what we want for cross-fading, things seem to go wrong when we get to "transformed destination". That's where the values of the back layer are reduced, giving more weight to the top layer. A cross-fade isn't layered – the order shouldn't matter. In fact, if missed out that step, and just added the premultiplied destination to the premultiplied source, we'd get the answer we want.
+In terms of what we want for cross-fading, things seem to go wrong when we get to "transformed destination". That's where the values of the back layer are reduced, giving more weight to the top layer. A cross-fade isn't layered – the order shouldn't matter. In fact, if we missed out that step, and just added the premultiplied destination to the premultiplied source, we'd get the answer we want.
 
 So what's the solution?
 
@@ -192,8 +192,8 @@ It's called [`cross-fade()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/c
 
 <style>
   .css-cross-fade {
-    --destination: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e");
-    --source: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e");
+    --destination: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e");
+    --source: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e");
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -233,7 +233,7 @@ It isn't really what we're looking for, but…
 
 Chromium engineer [Khushal Sagar](https://github.com/khushalsagar) went digging into the implementation of `-webkit-cross-fade()`, and it turns out it's implemented using a different compositing function, [plus-lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus_lighter).
 
-It's basically the same as source-over, but it doesn't do that "transformed destination" step:
+It's basically the same as source-over, except it doesn't do that "transformed destination" step:
 
 ```js
 // Red 50% opacity
@@ -313,8 +313,8 @@ And here it is in action:
 
     const ctx = canvas.getContext('2d');
     const images = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e`,
     ].map(async (imageURL) => {
       const img = new Image();
       img.src = imageURL;
@@ -423,8 +423,8 @@ Here's the 2D canvas example again, but this time the text is fading from red to
 
     const ctx = canvas.getContext('2d');
     const images = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
     ].map(async (imageURL) => {
       const img = new Image();
       img.src = imageURL;
@@ -642,8 +642,8 @@ void main() {
     gl.uniformMatrix3fv(matrixLoc, false, [2, 0, 0, 0, -2, 0, -1, 1, 1]);
 
     const imageURLs = [
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
-      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width="1260" height="600" viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23f00'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='1260' height='600' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%230f0'%3egoat%3c/text%3e%3c/svg%3e`,
     ];
 
     for (const [i, imageURL] of imageURLs.entries()) {
@@ -690,4 +690,4 @@ Unfortunately, lots of code on the web depends on this wrongness, so we're unlik
 
 There's an [HTTP 203 episode on colour spaces](https://www.youtube.com/watch?v=cGyLHxn16pE) if for some reason you want to hear more about colour spaces.
 
-<small>Please don't look at my WebGL code. I don't really know what I'm doing.</small>
+<small>Oh, and please don't look at my WebGL code. I don't really know what I'm doing.</small>
