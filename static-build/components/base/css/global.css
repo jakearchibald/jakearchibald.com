@@ -63,3 +63,7 @@ a:active {
 svg {
   overflow: hidden;
 }
+
+details summary {
+  cursor: pointer;
+}

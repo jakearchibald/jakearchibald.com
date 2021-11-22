@@ -606,10 +606,17 @@ h2 + .max-figure {
     width: 1px;
     white-space: nowrap;
     padding: 0.5em;
-    padding-left: 20px;
 
-    @media screen and (min-width: $mobile-boundry) {
-      padding-left: 32px;
+    &:first-child {
+      padding-left: 20px;
+
+      @media screen and (min-width: $mobile-boundry) {
+        padding-left: 32px;
+      }
+    }
+
+    &:not(:first-child) {
+      text-align: center;
     }
   }
   & .input {
