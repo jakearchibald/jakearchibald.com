@@ -371,7 +371,7 @@ The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any 
 <style>
   .cross-fade-container {
     display: grid;
-    /* Make sure the compositing is limited to this element */
+    /* Make sure the different compositing is limited to this element */
     isolation: isolate;
   }
   .cross-fade-container > * {
