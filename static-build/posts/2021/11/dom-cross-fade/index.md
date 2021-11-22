@@ -1,8 +1,8 @@
 ---
 title: 'Cross-fading any two DOM elements is currently impossible'
-date: 2021-11-12 01:00:00
-summary: TODO
-meta: TODO
+date: 2021-11-23 01:00:00
+summary: Here's why, and how we can fix it…
+meta: Here's why, and how we can fix it…
 #image: 'asset-url:./img.png'
 ---
 
