@@ -110,8 +110,6 @@ If you have a material that blocks out half the light behind it, you're left wit
 
 `opacity: 0.5` works in the same way. If you put `opacity: 0.5` on top of `opacity: 0.5` you get the equivalent of `opacity: 0.75`, and that's why the "go" appears to fade out a bit during the cross-fade.
 
-A true cross-fade should be a weighted average of each pixel, meaning there's no change if the before and after pixels are the same.
-
 The process of layering one thing over another is called _compositing_, which takes each pixel of the _source_ ('goat' in this case) and _destination_ ('good' in this case) and combines them in some way.
 
 For these operations, pixels have four values called _channels_: red, green, blue, and alpha (transparency). Channel values are generally in the range 0-1, where 0 means 'none' and 1 means 'full'.
@@ -184,7 +182,7 @@ Anyway here are the values:
 
 And there we see the `0.750` alpha in the result, when we want `1.000` for a proper cross-fade. In fact, the colour is wrong too. If we're fading from red to blue, the mid point should be 50% red and 50% blue, but it's 33% red and 66% blue.
 
-In terms of what we want for cross-fading, things seem to go wrong when we get to "transformed destination". In fact, if missed out that step, and just added the premultiplied destination to the premultiplied source, we'd get the answer we want.
+In terms of what we want for cross-fading, things seem to go wrong when we get to "transformed destination". That's where the values of the back layer are reduced, giving more weight to the top layer. A cross-fade isn't layered – the order shouldn't matter. In fact, if missed out that step, and just added the premultiplied destination to the premultiplied source, we'd get the answer we want.
 
 So what's the solution?
 
@@ -221,7 +219,7 @@ It's called [`cross-fade()`](<https://developer.mozilla.org/en-US/docs/Web/CSS/c
   update(range.valueAsNumber);
 </script>
 
-Perfect! Except it only works in Chromium and WebKit browsers, with a `-webkit-` prefix, and more fundamentally, it only works with images, so it can't be used to cross-fade DOM elements. I had to use two SVG images to make the above demo work.
+Perfect! Except it only works in Chromium and WebKit browsers and uses a `-webkit-` prefix. But more fundamentally, it only works with images, so it can't be used to cross-fade DOM elements. I had to use two SVG images to make the above demo work.
 
 ```css
 .whatever {
@@ -231,7 +229,7 @@ Perfect! Except it only works in Chromium and WebKit browsers, with a `-webkit-`
 
 It isn't really what we're looking for, but…
 
-# Lighter
+# Plus-lighter
 
 Chromium engineer [Khushal Sagar](https://github.com/khushalsagar) went digging into the implementation of `-webkit-cross-fade()`, and it turns out it's implemented using a different compositing function, [plus-lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus_lighter).
 
@@ -249,7 +247,7 @@ const premultipliedDestination = multiplyAlpha(destination);
 
 const premultipliedResult = premultipliedDestination
   // But then the pixels are just added together:
-  .map((channel, i) => clamp01(channel + premultipliedSource[i]))
+  .map((channel, i) => channel + premultipliedSource[i])
   // Clamped to 0-1:
   .map((channel) => {
     if (channel < 0) return 0;
@@ -273,6 +271,91 @@ And here we go:
 
 And that works! The red value goes from 1 to 0, the blue goes from 0 to 1, and the alpha stays full.
 
+# It's already in canvas
+
+Well, plus-lighter isn't, but [lighter](https://drafts.fxtf.org/compositing/#porterduffcompositingoperators_plus) is, and it does the same thing but without the clamping.
+
+```js
+const mix = 0.5;
+ctx.globalCompositeOperation = 'source-over';
+ctx.globalAlpha = 1 - mix;
+ctx.drawImage(from, 0, 0);
+ctx.globalCompositeOperation = 'lighter';
+ctx.globalAlpha = mix;
+ctx.drawImage(to, 0, 0);
+```
+
+And here it is in action:
+
+<style>
+  .canvas-demo {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+</style>
+
+<figure class="full-figure max-figure checkd">
+  <div class="example-stage">
+    <canvas id="linear-canvas-2d" class="canvas-demo"></canvas>
+  </div>
+  <div class="mix-input"><input id="mix-input-6" type="range" min="0" max="1" step="any" value="0"></div>
+</figure>
+
+<script type="module">
+  const range = $('#mix-input-6');
+  const canvas = $('#linear-canvas-2d');
+
+  async function setup() {
+    canvas.width = 600 * 2.1;
+    canvas.height = 600;
+
+    const ctx = canvas.getContext('2d');
+    const images = [
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egood%3c/text%3e%3c/svg%3e`,
+      `data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 21 10'%3e%3ctext textLength='20' text-anchor='middle' dominant-baseline='middle' font-family='Courier New' x='50%25' y='5' font-size='8.9' font-weight='bold' fill='%23009D81'%3egoat%3c/text%3e%3c/svg%3e`,
+    ].map(async (imageURL) => {
+      const img = new Image();
+      img.src = imageURL;
+      img.width = canvas.width;
+      img.height = canvas.height;
+      await new Promise((resolve) => {
+        img.onload = resolve;
+      });
+      return img;
+    });
+
+    return [ctx, ...(await Promise.all(images))];
+  }
+
+  const setupPromise = setup();
+
+  async function update(mix) {
+    const [ctx, from, to] = await setupPromise;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.globalAlpha = 1 - mix;
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.drawImage(from, 0, 0);
+    ctx.globalAlpha = mix;
+    ctx.globalCompositeOperation = 'lighter';
+    ctx.drawImage(to, 0, 0);
+  }
+
+  let pendingFrame = false;
+
+  function queueFrame(callback) {
+    if (pendingFrame) return;
+    pendingFrame = true;
+    requestAnimationFrame(() => {
+      pendingFrame = false;
+      callback();
+    });
+  }
+
+  range.oninput = () => queueFrame(() => update(range.valueAsNumber));
+  update(range.valueAsNumber);
+</script>
+
 # We should have this in CSS!
 
 - Unfortunately 'lighter' isn't available in CSS, but it is available in canvas (make passing mention and a quick demo)
@@ -291,7 +374,7 @@ And that works! The red value goes from 1 to 0, the blue goes from 0 to 1, and t
 
 <figure class="full-figure max-figure checkd">
   <div class="example-stage">
-    <canvas id="linear-canvas"></canvas>
+    <canvas id="linear-canvas" class="canvas-demo"></canvas>
   </div>
   <div class="mix-input"><input id="mix-input-5" type="range" min="0" max="1" step="any" value="0"></div>
 </figure>
@@ -313,15 +396,30 @@ uniform float fadeAmount;
 // the texCoords passed in from the vertex shader.
 varying vec2 v_texCoord;
 
-void main() {
-  vec4 fromTex = texture2D(u_from, v_texCoord);
-  vec4 toTex = texture2D(u_to, v_texCoord);
+vec4 fromLinear(vec4 linearRGB) {
+  vec3 cutoff = vec3(lessThan(linearRGB.rgb, vec3(0.0031308)));
+  vec3 higher = vec3(1.055)*pow(linearRGB.rgb, vec3(1.0/2.4)) - vec3(0.055);
+  vec3 lower = linearRGB.rgb * vec3(12.92);
 
+  return vec4(mix(higher, lower, cutoff), linearRGB.a);
+}
+
+// Converts a color from sRGB gamma to linear light gamma
+vec4 toLinear(vec4 sRGB) {
+  vec3 cutoff = vec3(lessThan(sRGB.rgb, vec3(0.04045)));
+  vec3 higher = pow((sRGB.rgb + vec3(0.055))/vec3(1.055), vec3(2.4));
+  vec3 lower = sRGB.rgb/vec3(12.92);
+
+  return vec4(mix(higher, lower, cutoff), sRGB.a);
+}
+
+void main() {
+  vec4 fromTex = toLinear(texture2D(u_from, v_texCoord));
+  vec4 toTex = toLinear(texture2D(u_to, v_texCoord));
   vec4 premultipliedFrom = vec4(fromTex.rgb * fromTex.a * (1.0 - fadeAmount), fromTex.a * (1.0 - fadeAmount));
   vec4 premultipliedTo = vec4(toTex.rgb * toTex.a * fadeAmount, toTex.a * fadeAmount);
   vec4 lighter = premultipliedTo + premultipliedFrom;
-  
-  gl_FragColor = vec4(lighter.rgb / lighter.a, lighter.a);
+  gl_FragColor = fromLinear(vec4(lighter.rgb / lighter.a, lighter.a));
 }
 `;
 
@@ -446,6 +544,8 @@ void main() {
     for (const [i, imageURL] of imageURLs.entries()) {
       const img = new Image();
       img.src = imageURL;
+      img.width = canvas.width;
+      img.height = canvas.height;
       await new Promise((resolve) => {
         img.onload = resolve;
       });
@@ -456,12 +556,24 @@ void main() {
 
   const setupPromise = setup();
 
+
   async function update(mix) {
     await setupPromise;
     gl.uniform1f(fadeLoc, mix);
     gl.drawArrays(gl.TRIANGLES, 0, 6);
   }
 
-  range.oninput = () => update(range.valueAsNumber);
+  let pendingFrame = false;
+
+  function queueFrame(callback) {
+    if (pendingFrame) return;
+    pendingFrame = true;
+    requestAnimationFrame(() => {
+      pendingFrame = false;
+      callback();
+    });
+  }
+
+  range.oninput = () => queueFrame(() => update(range.valueAsNumber));
   update(range.valueAsNumber);
 </script>
