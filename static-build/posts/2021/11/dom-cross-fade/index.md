@@ -37,7 +37,7 @@ Ok, it isn't _always_ impossible. Be _amazed_ as I cross-fade the word "good" wi
 
 <figure class="full-figure max-figure checkd">
   <div class="example-stage">
-    <svg class="fade-item" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 10"><text textLength="20" text-anchor="middle" dominant-baseline="middle" font-family="Courier New" x="50%" y="5" font-size="8.9" font-weight="bold" fill="#009D81">good</text></svg>
+    <svg class="fade-item" viewBox="0 0 21 10"><text textLength="20" text-anchor="middle" dominant-baseline="middle" font-family="Courier New" x="50%" y="5" font-size="8.9" font-weight="bold" fill="#009D81">good</text></svg>
     <svg id="source-1" class="fade-item" viewBox="0 0 21 10" style="background: #cdcdcd;"><text textLength="20" text-anchor="middle" dominant-baseline="middle" font-family="Courier New" x="50%" y="5" font-size="8.9" font-weight="bold" fill="#009D81">goat</text></svg>
   </div>
   <div class="mix-input"><input id="mix-input-1" type="range" min="0" max="1" step="any" value="0"></div>
@@ -396,7 +396,7 @@ The bit we're missing is being able to use 'lighter' or 'plus-lighter' with any 
 
 Whether `mix-blend-mode` is the right place for this feature isn't 100% clear right now. If we need to keep the distinction between 'blending' and 'compositing', we might end up with something like `mix-composite-mode` instead.
 
-Cross-fading any two DOM elements is currently impossible, but hopefully it won't always be.
+Khushal has [filed an issue with the CSS working group](https://github.com/w3c/csswg-drafts/issues/6821), so hopefully the ability to cross-fade two DOM elements won't be impossible for long!
 
 # Bonus round: Browser compositing is inaccurate
 
