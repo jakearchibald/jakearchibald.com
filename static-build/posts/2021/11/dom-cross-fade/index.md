@@ -120,7 +120,7 @@ The default compositing operator on the web and most applications is [source-ove
 // Red 50% opacity
 const source = [1, 0, 0, 0.5];
 // Blue 50% opacity
-const destination = [0, 1, 0, 0.5];
+const destination = [0, 0, 1, 0.5];
 
 // source-over works with premultiplied colours,
 // meaning their colour values are multiplied with their alpha:
@@ -239,7 +239,7 @@ It's basically the same as source-over, except it doesn't do that "transformed d
 // Red 50% opacity
 const source = [1, 0, 0, 0.5];
 // Blue 50% opacity
-const destination = [0, 1, 0, 0.5];
+const destination = [0, 0, 1, 0.5];
 
 // plus-lighter also works with premultiplied colours:
 const premultipliedSource = multiplyAlpha(source);
