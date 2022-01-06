@@ -398,6 +398,43 @@ Whether `mix-blend-mode` is the right place for this feature isn't 100% clear ri
 
 Khushal has [filed an issue with the CSS working group](https://github.com/w3c/csswg-drafts/issues/6821), so hopefully the ability to cross-fade two DOM elements won't be impossible for long!
 
+## Update: It already works in Safari!
+
+As part of standardising this, folks from Safari mentioned that they already added `plus-lighter` (and `plus-darker`) to `mix-blend-mode`. Here's a demo:
+
+<style>
+  .isolate {
+    isolation: isolate;
+  }
+
+  #source-real {
+    mix-blend-mode: plus-lighter;
+  }
+</style>
+
+<figure class="full-figure max-figure checkd">
+  <div class="example-stage isolate">
+    <svg id="destination-real" class="fade-item" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 21 10"><text textLength="20" text-anchor="middle" dominant-baseline="middle" font-family="Courier New" x="50%" y="5" font-size="8.9" font-weight="bold" fill="#009D81">good</text></svg>
+    <svg id="source-real" class="fade-item" viewBox="0 0 21 10"><text textLength="20" text-anchor="middle" dominant-baseline="middle" font-family="Courier New" x="50%" y="5" font-size="8.9" font-weight="bold" fill="#009D81">goat</text></svg>
+  </div>
+  <div class="mix-input"><input id="mix-input-real" type="range" min="0" max="1" step="any" value="0"></div>
+</figure>
+<script type="module">
+  const range = $('#mix-input-real');
+  const destination = $('#destination-real');
+  const source = $('#source-real');
+  function update(mix) {
+    destination.style.opacity = 1 - mix;
+    source.style.opacity = mix;
+  }
+  range.oninput = () => update(range.valueAsNumber);
+  update(range.valueAsNumber);
+</script>
+
+If you're in Safari, you should see a true cross-fade. It's a little buggy in places, eg I see the tail of the 'd' hanging around even after fading to 'goat', but the intent and syntax is correct.
+
+I wish they'd done the web standards work around this rather than just shipping it. But not to worry, we'll pick up the standardisation side so we can have this feature working the same across browsers.
+
 # Bonus round: Browser compositing is inaccurate
 
 We've been talking about colours as 0-1, where 0.5 means "half of that colour", but that isn't how it works.
