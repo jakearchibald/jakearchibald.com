@@ -431,7 +431,7 @@ As part of standardising this, folks from Safari mentioned that they already add
   update(range.valueAsNumber);
 </script>
 
-If you're in Safari, you should see a true cross-fade. It's a little buggy in places, eg I see the tail of the 'd' hanging around even after fading to 'goat', but the intent and syntax is correct.
+If you're in Safari, you should see a true cross-fade. It's a little buggy in places, eg I see the tail of the 'd' hanging around even after fading to 'goat', but the intent and syntax is correct. I've [filed an issue for the bugs](https://bugs.webkit.org/show_bug.cgi?id=235106).
 
 I wish they'd done the web standards work around this rather than just shipping it. But not to worry, we'll pick up the standardisation side so we can have this feature working the same across browsers.
 
