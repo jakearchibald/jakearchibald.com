@@ -6,6 +6,8 @@ meta: Here's why, and the features we need to enable it…
 image: 'asset-url:./img.png'
 ---
 
+**Update:** A [spec change](https://github.com/w3c/fxtf-drafts/pull/444) has landed to make this possible!
+
 Ok, it isn't _always_ impossible. Be _amazed_ as I cross-fade the word "good" with the word "goat":
 
 <style>
