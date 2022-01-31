@@ -179,7 +179,7 @@ The long thin light-yellow bit means the browser knew about the resource for a l
   <img style="height: auto" width="1462" height="152" alt="" decoding="async" loading="lazy" src="asset-url:./alfa-romeo-devtools.png">
 </figure>
 
-It has a 'low' prioirty, but it's a _render-blocking script!_ Why did Chrome choose to download it so late? Well, the problem is, the browser doesn't know it's render-blocking.
+It has a 'low' priority, but it's a _render-blocking script!_ Why did Chrome choose to download it so late? Well, the problem is, the browser doesn't know it's render-blocking.
 
 Usually when we talk about render-blocking scripts, we mean a script that appears before the content in the source, and _doesn't_ have one of the following attributes:
 
