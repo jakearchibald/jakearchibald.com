@@ -6,7 +6,7 @@ meta: Here's why, and the features we need to enable it…
 image: 'asset-url:./img.png'
 ---
 
-**Update:** A [spec change](https://github.com/w3c/fxtf-drafts/pull/444) has landed to make this possible!
+**Update:** A [spec change](https://github.com/w3c/fxtf-drafts/pull/444) has landed to make this possible, it'll [ship in Chrome 100](https://groups.google.com/a/chromium.org/g/blink-dev/c/KXAJlJsbBak/m/JisA_CS2AAAJ), it's been [implemented in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1746248), and it already existed as a non-standard feature in Safari. Soon this feature will be supported across all major browsers!
 
 Ok, it isn't _always_ impossible. Be _amazed_ as I cross-fade the word "good" with the word "goat":
 
@@ -400,9 +400,15 @@ Whether `mix-blend-mode` is the right place for this feature isn't 100% clear ri
 
 Khushal has [filed an issue with the CSS working group](https://github.com/w3c/csswg-drafts/issues/6821), so hopefully the ability to cross-fade two DOM elements won't be impossible for long!
 
-## Update: It already works in Safari!
+**Update:** The proposal was accepted, and a [spec change](https://github.com/w3c/fxtf-drafts/pull/444) landed!
 
-As part of standardising this, folks from Safari mentioned that they already added `plus-lighter` (and `plus-darker`) to `mix-blend-mode`. Here's a demo:
+## Update: It's landing in browsers!
+
+As part of standardising this, folks from Safari mentioned that they already added `plus-lighter` (and `plus-darker`) to `mix-blend-mode`, so it was already supported as a non-standard feature in Safari.
+
+It was implemented in Chrome, and it'll [ship in Chrome 100](https://groups.google.com/a/chromium.org/g/blink-dev/c/KXAJlJsbBak/m/JisA_CS2AAAJ). It's also been [implemented in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1746248).
+
+Here's a demo:
 
 <style>
   .isolate {
@@ -433,9 +439,9 @@ As part of standardising this, folks from Safari mentioned that they already add
   update(range.valueAsNumber);
 </script>
 
-If you're in Safari, you should see a true cross-fade. It's a little buggy in places, eg I see the tail of the 'd' hanging around even after fading to 'goat', but the intent and syntax is correct. I've [filed an issue for the bugs](https://bugs.webkit.org/show_bug.cgi?id=235106).
+If your browser supports it, you should see a true cross-fade.
 
-I wish they'd done the web standards work around this rather than just shipping it. But not to worry, we'll pick up the standardisation side so we can have this feature working the same across browsers.
+It's a little buggy in Safari, eg I see the tail of the 'd' hanging around even after fading to 'goat'. I've [filed an issue](https://bugs.webkit.org/show_bug.cgi?id=235106).
 
 # Bonus round: Browser compositing is inaccurate
 
