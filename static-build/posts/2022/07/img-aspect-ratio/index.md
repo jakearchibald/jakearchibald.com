@@ -54,7 +54,7 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
 
 When you run the demo, you'll see the `<figcaption>` immediately. Then, after a few seconds, this paragraph and subsequent page content shifts downwards to make room for the image. This makes the user experience massively frustrating, as content moves out from under the user's eyes/finger/pointer.
 
-For over a decade, we had to use [silly hacks](https://css-tricks.com/aspect-ratio-boxes/#aa-the-core-concept-padding-in-percentages-is-based-on-width) to manually apply an aspect ratio, and then, bloody typical, two better solutions arrived at roughly the same time. They are CSS `aspect-ratio`, and intrinsic aspect ratios on `<img>`.
+For over a decade, we had to use [silly hacks](https://css-tricks.com/aspect-ratio-boxes/#aa-the-core-concept-padding-in-percentages-is-based-on-width) to manually apply an aspect ratio, and then, bloody typical, two better solutions arrived at roughly the same time. They are CSS `aspect-ratio`, and `width` & `height` presentational hints.
 
 So, which should you use? First, let's take a look at how the features work, as there's quite a bit of misinformation out there…
 
@@ -126,7 +126,7 @@ img {
 
 This time, the image reserves space for its content as soon as it appears in the document, so stuff doesn't shift around once it loads.
 
-# Intrinsic aspect ratio
+# Width & height presentational hints
 
 If you set dimensions on your image:
 
@@ -454,7 +454,7 @@ In this case, the two images have different aspect ratios. Chrome and Safari use
 
 Ok, until now the article has been a massive side-quest. Now we're at the actual point. And, in my opinion, the answer is… nothing new.
 
-We've got one solution, `aspect-ratio`, which is CSS-based. And the other solution, intrinsic aspect ratio, uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
+We've got one solution, `aspect-ratio`, which is CSS-based. And the other solution, presentational hinting, uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
 
 If I'm adding an image to an article on my blog, that's content. I want the space reserved to be the aspect ratio of the content. If I get the `width` and `height` attributes wrong, I'd rather the correct values were used from the content. Therefore, `width` and `height` attributes feel like the best fit. This means I can just author content, I don't need to dip into inline styles.
 
