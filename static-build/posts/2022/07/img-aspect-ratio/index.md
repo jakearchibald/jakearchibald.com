@@ -1,5 +1,5 @@
 ---
-title: 'Avoiding <img> layout shifts: aspect-ratio vs width & height'
+title: 'Avoiding <img> layout shifts: aspect-ratio vs width & height attributes'
 date: 2022-07-11 01:00:00
 summary: Two ways to do the same thing, but which is best?
 meta: Two ways to do the same thing, but which is best?
