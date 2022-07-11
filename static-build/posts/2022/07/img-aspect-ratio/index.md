@@ -6,12 +6,6 @@ meta: Two ways to do the same thing, but which is best?
 image: 'asset-url:./img.png'
 ---
 
-```html
-<img width="1920" height="1080" … />
-<!-- vs -->
-<img style="aspect-ratio: 16/9" … />
-```
-
 By default, an `<img>` takes up zero space until the browser loads enough of the image to know its dimensions:
 
 <div class="demo-1"></div>
