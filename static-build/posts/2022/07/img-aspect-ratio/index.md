@@ -126,6 +126,8 @@ img {
 
 This time, the image reserves space for its content as soon as it appears in the document, so stuff doesn't shift around once it loads.
 
+The other solution is…
+
 # Width & height presentational hints
 
 If you set dimensions on your image:
@@ -270,13 +272,13 @@ The new bit is `auto`. Here's what the spec says:
 
 A lot of articles gloss over this, probably because the spec text is a little hard to read, but it adds an important bit of behaviour:
 
-An `<img>` is a "replaced element", but it doesn't have a "natural aspect ratio" until the browser has loaded enough of the image to know its real width & height. That means the `16 / 9` bit is ignored once the browser has the real data from the image. Usually this doesn't matter, because the result is the same. But, let's say I got the width and height wrong:
+An `<img>` is a "replaced element", but it doesn't have a "natural aspect ratio" until the browser has loaded enough of the image to know its real width & height. That means the `16 / 9` bit is ignored once the browser has the real data from the image. This doesn't usually matter, because the result is the same. But, let's say I got the width and height wrong:
 
 ```html
 <img width="4" height="3" src="…" alt="…" />
 ```
 
-The browser will use an internal rule of `aspect-ratio: auto 4 / 3`, but the image is actually `16 / 9`. Here's what happens:
+The browser will use an presentational hint of `aspect-ratio: auto 4 / 3`, but the image is actually `16 / 9`. Here's what happens:
 
 <div class="demo-4"></div>
 
@@ -454,11 +456,11 @@ In this case, the two images have different aspect ratios. Chrome and Safari use
 
 Ok, until now the article has been a massive side-quest. Now we're at the actual point. And, in my opinion, the answer is… nothing new.
 
-We've got one solution, `aspect-ratio`, which is CSS-based. And the other solution, presentational hinting, uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
+We've got one solution, `aspect-ratio`, which is CSS-based. And the other solution, presentational hinting, which uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
 
-If I'm adding an image to an article on my blog, that's content. I want the space reserved to be the aspect ratio of the content. If I get the `width` and `height` attributes wrong, I'd rather the correct values were used from the content. Therefore, `width` and `height` attributes feel like the best fit. This means I can just author content, I don't need to dip into inline styles.
+If I'm adding an image to an article on my blog, that's content. I want the reserved space to be the aspect ratio of the content. If I get the `width` and `height` attributes wrong, I'd rather the correct values were used from the content image. Therefore, `width` and `height` attributes feel like the best fit. This means I can just author content, I don't need to dip into inline styles.
 
-If it's a design requirement that the layout of an image is a particular aspect ratio, enforcing that with `aspect-ratio` in CSS can be appropriate. For example, a hero image that _must_ be `16 / 9` – if the image isn't quite `16 / 9` I don't want it messing up my design, I want the design to be enforced. Although, if the image isn't actually that aspect ratio, you'll either end up with the image stretched (`object-fit: fill`), letter-boxed (`object-fit: contain`), or cropped (`object-fit: cover`). None of which are ideal.
+If it's a design requirement that the layout of an image is a particular aspect ratio, enforcing that with `aspect-ratio` in CSS can be appropriate. For example, a hero image that _must_ be `16 / 9` – if the image isn't quite `16 / 9` I don't want it messing up my design, I want the design to be enforced. Although, if the image isn't actually that aspect ratio, it'll either end up stretched (`object-fit: fill`), letter-boxed (`object-fit: contain`), or cropped (`object-fit: cover`). None of which are ideal.
 
 You could use `aspect-ratio` and media queries to make up for the lack of support in Firefox when it comes to `<picture>` and art direction. But, I'm hoping that they'll fix that bug sooner rather than later, so we don't need to hack around it.
 
