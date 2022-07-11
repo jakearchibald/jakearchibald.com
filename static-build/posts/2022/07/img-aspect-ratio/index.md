@@ -1,6 +1,6 @@
 ---
 title: 'Avoiding <img> layout shifts: aspect-ratio vs width & height'
-date: 2022-07-13 01:00:00
+date: 2022-07-11 01:00:00
 summary: Two ways to do the same thing, but which is best?
 meta: Two ways to do the same thing, but which is best?
 image: 'asset-url:./img.png'
