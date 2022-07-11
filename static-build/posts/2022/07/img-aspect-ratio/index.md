@@ -52,13 +52,11 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
   }
 </script>
 
-When you run the demo, you'll see the `<figcaption>` immediately. Then, after a few seconds, this paragraph and subsequent page content shifts downwards to make room for the image.
+When you run the demo, you'll see the `<figcaption>` immediately. Then, after a few seconds, this paragraph and subsequent page content shifts downwards to make room for the image. This makes the user experience massively frustrating, as content moves out from under the user's eyes/finger/pointer.
 
-Add a few images, and the user experience becomes massively frustrating, as content moves out from under the user's eyes/finger/pointer.
+For over a decade, we had to use [silly hacks](https://css-tricks.com/aspect-ratio-boxes/#aa-the-core-concept-padding-in-percentages-is-based-on-width) to manually apply an aspect ratio, and then, bloody typical, two better solutions arrived at roughly the same time. They are CSS `aspect-ratio`, and intrinsic aspect ratios on `<img>`.
 
-For over a decade, we had to use [silly hacks](https://css-tricks.com/aspect-ratio-boxes/#aa-the-core-concept-padding-in-percentages-is-based-on-width) to manually apply an aspect ratio, and then, bloody typical, two better solutions arrived at roughly the same time in 2021: CSS `aspect-ratio`, and intrinsic aspect ratios on `<img>`.
-
-So, which should you use? First let's take a look at the features, as there's quite a bit of misinformation about these features…
+So, which should you use? First, let's take a look at how the features work, as there's quite a bit of misinformation out there…
 
 # CSS aspect-ratio
 
@@ -126,7 +124,7 @@ img {
   }
 </script>
 
-This time, the image reserves space for its content as soon as it appears in the document, it doesn't change page layout once it loads.
+This time, the image reserves space for its content as soon as it appears in the document, so stuff doesn't shift around once it loads.
 
 # Intrinsic aspect ratio
 
@@ -144,7 +142,7 @@ img {
 }
 ```
 
-Then the image will have an aspect ratio applied as soon as it enters the document:
+…the image will have an aspect ratio applied, even before it loads.
 
 <div class="demo-3"></div>
 
@@ -180,7 +178,7 @@ This landed in Chrome and Firefox back in 2019, and became cross-browser compati
 
 In addition to `<img>`, this feature also works on `<video>` and `<input type="image">`.
 
-However, there's a bit of misinformation floating around about this feature…
+However, there's a bit of misinformation floating around…
 
 ## No, this doesn't use `attr()`
 
@@ -225,7 +223,7 @@ table {
 }
 ```
 
-Firstly, this feature doesn't work on `embed`, `iframe`, `marquee`, `object`, or `table`. But also, this usage of `attr()` wouldn't work in practice because it returns a string. However, CSS allows you to cast the attribute data to other types:
+Firstly, this feature doesn't work on `embed`, `iframe`, `marquee`, `object`, or `table`. But also, this usage of `attr()` wouldn't work in practice because it returns a string. To make it work properly, you'd need to cast the attribute to a number, which CSS supports!
 
 <p class="code-warning">This isn't how it works either</p>
 
@@ -456,11 +454,11 @@ In this case, the two images have different aspect ratios. Chrome and Safari use
 
 Ok, until now the article has been a massive side-quest. Now we're at the actual point. And, in my opinion, the answer is… nothing new.
 
-We've got one solution, `aspect-ratio`, which is in CSS. The other solution, intrinsic aspect ratio, which uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
+We've got one solution, `aspect-ratio`, which is CSS-based. And the other solution, intrinsic aspect ratio, uses `width` and `height` attributes. The question is very similar to "should this image be a `<img>` or a CSS `background-image`?" and the answer is the same: Is it content or design?
 
-If I'm adding an image to an article on my blog, that's content. I want the space reserved to be the aspect ratio of the content. So, width and height attributes feel like the best fit. This means I can just author content, I don't need to dip into inline styles.
+If I'm adding an image to an article on my blog, that's content. I want the space reserved to be the aspect ratio of the content. If I get the `width` and `height` attributes wrong, I'd rather the correct values were used from the content. Therefore, `width` and `height` attributes feel like the best fit. This means I can just author content, I don't need to dip into inline styles.
 
-If it's a design requirement that the layout of an image is a particular aspect ratio, enforcing that with `aspect-ratio` in CSS can be appropriate. A hero image that _must_ be `16 / 9` for instance. Although, if the image isn't actually that aspect ratio, you'll either end up with the image stretched (`object-fit: fill`), letter-boxed (`object-fit: contain`), or cropped (`object-fit: cover`). None of which are really ideal.
+If it's a design requirement that the layout of an image is a particular aspect ratio, enforcing that with `aspect-ratio` in CSS can be appropriate. For example, a hero image that _must_ be `16 / 9` – if the image isn't quite `16 / 9` I don't want it messing up my design, I want the design to be enforced. Although, if the image isn't actually that aspect ratio, you'll either end up with the image stretched (`object-fit: fill`), letter-boxed (`object-fit: contain`), or cropped (`object-fit: cover`). None of which are ideal.
 
 You could use `aspect-ratio` and media queries to make up for the lack of support in Firefox when it comes to `<picture>` and art direction. But, I'm hoping that they'll fix that bug sooner rather than later, so we don't need to hack around it.
 
