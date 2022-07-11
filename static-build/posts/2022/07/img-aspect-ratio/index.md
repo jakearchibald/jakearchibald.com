@@ -11,7 +11,7 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
 <div class="demo-1"></div>
 
 <script>
-  self.figureSource = `
+  self.figureSource = () => `
     <figure class="full-figure">
       <picture>
         <source type="image/avif" srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.avif">
@@ -38,7 +38,7 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         state = 'demo';
       } else {
         demoEl.innerHTML = self.buttonSource;
@@ -106,7 +106,7 @@ img {
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         Object.assign(demoEl.querySelector('img').style, {
           aspectRatio: '16 / 9',
           width: '100%',
@@ -153,7 +153,7 @@ img {
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         Object.assign(demoEl.querySelector('img'), {
           width: '1598',
           height: '899',
@@ -287,7 +287,7 @@ The browser will use an internal rule of `aspect-ratio: auto 4 / 3`, but the ima
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         Object.assign(demoEl.querySelector('img'), {
           width: '4',
           height: '3',
@@ -329,7 +329,7 @@ img {
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         Object.assign(demoEl.querySelector('img').style, {
           aspectRatio: '4 / 3',
           width: '100%',
@@ -366,7 +366,7 @@ img {
 
     const toggle = () => {
       if (state === 'button') {
-        demoEl.innerHTML = self.figureSource;
+        demoEl.innerHTML = self.figureSource();
         Object.assign(demoEl.querySelector('img').style, {
           aspectRatio: '4 / 3',
           width: '100%',
