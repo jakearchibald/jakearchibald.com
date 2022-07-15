@@ -10,6 +10,8 @@ Back in ancient July [I released a video](https://www.youtube.com/watch?v=F1kYBn
 
 AVIF is a new image format derived from the keyframes of [AV1 video](https://en.wikipedia.org/wiki/AV1). It's a royalty-free format, and it's already supported in Chrome 85 on desktop. Android support will be added soon, Firefox is [working on an implementation](https://bugzilla.mozilla.org/show_bug.cgi?id=avif), and although it took Safari 10 years to add WebP support, I don't think we'll see the same delay here, as Apple are a member of the group that created AV1.
 
+**Update:** Support was added in Firefox 93, Android Chrome 89, and Safari on macOS Ventura and iOS 16.
+
 What I'm saying is, the time to care about AVIF is _now_. You don't need to wait for all browsers to support it – you can use [content negotiation](https://developer.mozilla.org/en-US/docs/Web/HTTP/Content_negotiation/List_of_default_Accept_values#Values_for_an_image) to determine browser support on the server, or use `<picture>` to provide a fallback on the client:
 
 <style>
