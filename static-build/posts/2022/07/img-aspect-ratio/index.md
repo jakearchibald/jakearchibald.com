@@ -180,6 +180,8 @@ This landed in Chrome and Firefox back in 2019, and became cross-browser compati
 
 In addition to `<img>`, this feature also works on `<video>` and `<input type="image">`.
 
+**Update:** Although browsers implemented the feature for `<video>` as per the spec, [the spec is broken](https://github.com/w3c/csswg-drafts/issues/7524), so it doesn't work in practice.
+
 However, there's a bit of misinformation floating around…
 
 ## No, this doesn't use `attr()`
