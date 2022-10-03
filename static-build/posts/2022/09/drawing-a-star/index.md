@@ -118,7 +118,7 @@ And here's the result:
     );
 
     const svgNS = 'http://www.w3.org/2000/svg';
-    const points = 5;
+    const points = 10;
 
     const path = document.createElementNS(svgNS, 'path');
     path.setAttribute('stroke', 'white');
@@ -144,7 +144,7 @@ And here's the result:
     const draw = () => {
       cancelAnimationFrame(frameId);
       frameId = requestAnimationFrame(() => {
-        const starPoints = createStar({ x: 50, y: 50, size: 23 });
+        const starPoints = createStar({ x: 50, y: 50, size: 23, points, });
         const pathValue = `M ${starPoints.map(point => `${point.x} ${point.y}`).join(', ')} z`;
         clipPath.setAttribute('d', pathValue);
         path.setAttribute('d', pathValue);
@@ -195,7 +195,7 @@ And the result:
 <script>
   {
     const createStar = ({ points = 10, x = 0, y = 0, size = 1, translateMultiplier = 1}) =>
-      Array.from({ length: points * 2 }, (_, i) =>
+      Array.from({ length: points }, (_, i) =>
         new DOMMatrix()
           .translate(x, y)
           .scale(size)
@@ -547,7 +547,6 @@ Which looks like this:
     };
 
     draw();
-    range.addEventListener('input', () => draw());
   }
 </script>
 
