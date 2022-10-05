@@ -568,7 +568,7 @@ I quickly tested the code, and it looked fine. But… it's not quite right. Can 
 
 <blockquote class="quote"><p>Wait… If the index in the array from loop is <code>0 <= i < points * 2</code>, how does it produce the correct star when dividing by points? Doesn't that rotate around the circle twice?</p></blockquote>
 
-And, they're right! I correctly multiply `points` for the array length, but I forgot to do it for the `rotate`. I didn't notice it, because for stars with odd-numbered points, it creates a shape that's almost identical.
+And, he's right! I correctly multiply `points` for the array length, but I forgot to do it for the `rotate`. I didn't notice it, because for stars with odd-numbered points, it creates a shape that's almost identical.
 
 <figure class="full-figure max-figure checkd">
   <svg viewBox="0 0 100 100" class="star-svg">
