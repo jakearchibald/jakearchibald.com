@@ -116,4 +116,4 @@ async function foo() {
 }
 ```
 
-Note: Outside of try/catch blocks, `return await` is redundant. There's even an [ESLint rule to detect it](https://github.com/eslint/eslint/blob/master/docs/rules/no-return-await.md), but it allows it in try/catch.
+Note: Outside of try/catch blocks, `return await` is redundant. There's even an [ESLint rule to detect it](https://eslint.org/docs/latest/rules/no-return-await), but it allows it in try/catch.
