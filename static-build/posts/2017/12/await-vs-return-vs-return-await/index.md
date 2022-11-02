@@ -1,23 +1,22 @@
 ---
 title: await vs return vs return await
 date: 2017-12-07 13:23:56
-summary: When writing async functions, there are differences between `await` vs
+summary:
+  When writing async functions, there are differences between `await` vs
   `return` vs `return await`, and picking the right one is important.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: ''
+meta: ''
 ---
 
 When writing async functions, there are differences between `await` vs `return` vs `return await`, and picking the right one is important.
-
 
 Let's start with this async function:
 
 ```js
 async function waitAndMaybeReject() {
   // Wait one second
-  await new Promise(r => setTimeout(r, 1000));
+  await new Promise((r) => setTimeout(r, 1000));
   // Toss a coin
   const isHeads = Boolean(Math.round(Math.random()));
 
@@ -34,8 +33,7 @@ This returns a promise that waits a second, then has a 50/50 chance of fulfillin
 async function foo() {
   try {
     waitAndMaybeReject();
-  }
-  catch (e) {
+  } catch (e) {
     return 'caught';
   }
 }
@@ -51,8 +49,7 @@ Since we don't await or return the result of `waitAndMaybeReject()`, we don't re
 async function foo() {
   try {
     await waitAndMaybeReject();
-  }
-  catch (e) {
+  } catch (e) {
     return 'caught';
   }
 }
@@ -68,8 +65,7 @@ Because we await the result of `waitAndMaybeReject()`, its rejection will be tur
 async function foo() {
   try {
     return waitAndMaybeReject();
-  }
-  catch (e) {
+  } catch (e) {
     return 'caught';
   }
 }
@@ -87,8 +83,7 @@ The thing you want in try/catch blocks, is `return await`:
 async function foo() {
   try {
     return await waitAndMaybeReject();
-  }
-  catch (e) {
+  } catch (e) {
     return 'caught';
   }
 }
@@ -110,8 +105,7 @@ async function foo() {
     // throws, and we jump to the catch block.
     // Otherwise, this block continues to run:
     return fulfilledValue;
-  }
-  catch (e) {
+  } catch (e) {
     return 'caught';
   }
 }
