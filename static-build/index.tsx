@@ -56,7 +56,7 @@ const feed = new Feed({
   copyright: 'https://creativecommons.org/licenses/by/4.0/',
 });
 
-for (const post of posts) {
+for (const post of posts.slice(0, 10)) {
   toOutput[getPostPath(post) + 'index.html'] = renderPage(
     <PostPage post={post} />,
   );
