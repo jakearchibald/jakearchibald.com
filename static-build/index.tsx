@@ -56,11 +56,8 @@ const feed = new Feed({
   copyright: 'https://creativecommons.org/licenses/by/4.0/',
 });
 
-for (const post of posts) {
-  toOutput[getPostPath(post) + 'index.html'] = renderPage(
-    <PostPage post={post} />,
-  );
-
+// The feed only holds the first page of posts
+for (const post of paginatedPosts[0]) {
   feed.addItem({
     title: post.title,
     id: getPostUrl(post),
@@ -75,6 +72,12 @@ for (const post of posts) {
 }
 
 toOutput['posts.rss'] = feed.atom1();
+
+for (const post of posts) {
+  toOutput[getPostPath(post) + 'index.html'] = renderPage(
+    <PostPage post={post} />,
+  );
+}
 
 // Demos
 import avifCompareDemoScript, {
