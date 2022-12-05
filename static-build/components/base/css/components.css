@@ -134,6 +134,11 @@
   line-height: 1;
 }
 
+.article-content :is(h1, h2, h3, h4, h5, h6) a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
 /* content styles */
 .article-date {
   font-size: 0.8rem;
