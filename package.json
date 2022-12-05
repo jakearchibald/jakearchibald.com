@@ -44,9 +44,6 @@
     "two-up-element": "^1.0.1",
     "typescript": "^4.9.3"
   },
-  "engines": {
-    "node": ">=16"
-  },
   "dependencies": {
     "@rollup/plugin-terser": "^0.1.0"
   },
