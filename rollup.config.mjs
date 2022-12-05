@@ -14,25 +14,25 @@ import { parse as parsePath } from 'path';
 
 import del from 'del';
 import resolve from '@rollup/plugin-node-resolve';
-import { terser } from 'rollup-plugin-terser';
+import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 
-import simpleTS from './lib/simple-ts';
-import clientBundlePlugin from './lib/client-bundle-plugin';
-import nodeExternalPlugin from './lib/node-external-plugin';
-import cssPlugin from './lib/css-plugin';
-import assetPlugin from './lib/asset-plugin';
-import assetStringPlugin from './lib/asset-string-plugin';
-import resolveDirsPlugin from './lib/resolve-dirs-plugin';
-import postData from './lib/post-data-plugin';
-import runScript from './lib/run-script';
-import markdownPlugin from './lib/markdown-plugin';
-import rootStaticPlugin from './lib/add-root-static';
-import entryURLPlugin from './lib/entry-url-plugin';
-import staticEntryURLPlugin from './lib/static-entry-url-plugin';
-import assetPrettySizePlugin from './lib/asset-pretty-size-plugin';
-import prefixDefaultPlugin from './lib/prefix-default-plugin';
+import simpleTS from './lib/simple-ts.mjs';
+import clientBundlePlugin from './lib/client-bundle-plugin.mjs';
+import nodeExternalPlugin from './lib/node-external-plugin.mjs';
+import cssPlugin from './lib/css-plugin.mjs';
+import assetPlugin from './lib/asset-plugin.mjs';
+import assetStringPlugin from './lib/asset-string-plugin.mjs';
+import resolveDirsPlugin from './lib/resolve-dirs-plugin.mjs';
+import postData from './lib/post-data-plugin.mjs';
+import runScript from './lib/run-script.mjs';
+import markdownPlugin from './lib/markdown-plugin.mjs';
+import rootStaticPlugin from './lib/add-root-static.mjs';
+import entryURLPlugin from './lib/entry-url-plugin.mjs';
+import staticEntryURLPlugin from './lib/static-entry-url-plugin.mjs';
+import assetPrettySizePlugin from './lib/asset-pretty-size-plugin.mjs';
+import prefixDefaultPlugin from './lib/prefix-default-plugin.mjs';
 
 function resolveFileUrl({ fileName }) {
   return JSON.stringify(fileName.replace(/^static\//, '/'));
@@ -79,16 +79,16 @@ export default async function ({ watch }) {
   const dir = '.tmp/build';
 
   return {
-    input: 'static-build/index.tsx',
+    input: './static-build/index.tsx',
     output: {
       dir,
       format: 'cjs',
       assetFileNames: staticPath,
       exports: 'named',
+      preserveModules: true,
     },
     // Don't watch the ts files. Instead we watch the output from the ts compiler.
     watch: { clearScreen: false, exclude: ['**/*.ts', '**/*.tsx'] },
-    preserveModules: true,
     plugins: [
       { resolveFileUrl },
       clientBundlePlugin(
