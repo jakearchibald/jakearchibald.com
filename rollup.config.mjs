@@ -12,7 +12,7 @@
  */
 import { parse as parsePath } from 'path';
 
-import del from 'del';
+import { deleteAsync } from 'del';
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
@@ -53,7 +53,7 @@ function jsFileName(chunkInfo) {
 
 export default async function ({ watch }) {
   const production = !watch;
-  await del('.tmp/build');
+  await deleteAsync('.tmp/build');
 
   const tsPluginInstance = simpleTS('static-build', { watch });
   const commonPlugins = () => [
