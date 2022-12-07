@@ -26,6 +26,7 @@ interface Script {
 }
 
 interface Post {
+  template?: 'event-loop' | 'generic';
   content: string;
   slug: string;
   title: string;

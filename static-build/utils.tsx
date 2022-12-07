@@ -45,6 +45,18 @@ export function writeFiles(toOutput: OutputMap) {
   });
 }
 
+/**
+ * Escape a string for insertion in a style or script tag
+ */
+export function escapeStyleScriptContent(str: string): string {
+  return str
+    .replace(/<!--/g, '<\\!--')
+    .replace(/<script/g, '<\\script')
+    .replace(/<\/script/g, '<\\/script')
+    .replace(/<style/g, '<\\style')
+    .replace(/<\/style/g, '<\\/style');
+}
+
 export function getPostPath(post: Post): string {
   const postDate = new Date(post.date);
   return `${postDate.getUTCFullYear()}/${post.slug}/`;

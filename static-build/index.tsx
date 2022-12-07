@@ -75,7 +75,11 @@ toOutput['posts.rss'] = feed.atom1();
 
 for (const post of posts) {
   toOutput[getPostPath(post) + 'index.html'] = renderPage(
-    <PostPage post={post} />,
+    post.template === 'event-loop' ? (
+      <EventLoopPage post={post} />
+    ) : (
+      <PostPage post={post} />
+    ),
   );
 }
 
@@ -111,6 +115,7 @@ import corsPlaygroundDemoScript, {
 } from 'client-bundle:shared/demos/2021/cors/cors-playground/client-index';
 import CorsPlaygroundPage from 'shared/demos/2021/cors/cors-playground/static-index';
 import corsPlaygroundDemoStyles from 'css-bundle:shared/demos/2021/cors/cors-playground/styles.css';
+import EventLoopPage from './pages/event-loop';
 toOutput['2021/cors/playground/index.html'] = renderPage(
   <ClientDemo
     title="CORS playground"
