@@ -18,8 +18,8 @@ import IndexPage from './pages/index';
 import posts from 'post-data:';
 import WhoPage from './pages/who';
 import PostPage from './pages/post';
-import iconUrl from 'asset-url:./pages/post/icon.png';
-import ClientDemo from './components/client-demo';
+import iconUrl from 'asset-url:./components/post-meta/icon.png';
+import ClientDemo from './pages/client-demo';
 
 interface Output {
   [outputPath: string]: string;

@@ -17,8 +17,7 @@ import {
   ComponentChildren,
 } from 'preact';
 
-import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
-import faviconURL from 'asset-url:static-build/imgs/favicon.png';
+import GenericHead from 'static-build/components/generic-head';
 
 interface Props {
   title: string;
@@ -38,14 +37,8 @@ const ClientDemo: FunctionalComponent<Props> = ({
   return (
     <html lang="en">
       <head>
-        <title>{title} - JakeArchibald.com</title>
-        <meta
-          name="viewport"
-          content="width=device-width, minimum-scale=1.0"
-        ></meta>
-        <link rel="icon" type="image/png" href={faviconURL} />
+        <GenericHead title={title} />
         {styles && <link rel="stylesheet" href={styles} />}
-        <script type="module" async src={analyticsBundleURL}></script>
         {script && <script type="module" src={script} />}
         {scriptPreload &&
           scriptPreload.map((v) => (
