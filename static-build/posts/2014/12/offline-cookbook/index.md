@@ -1,13 +1,13 @@
 ---
 title: The offline cookbook
 date: 2014-12-09 00:00:08
-summary: ServiceWorker [brief overview](/2014/service-worker-first-draft/) gives
+summary:
+  ServiceWorker [brief overview](/2014/service-worker-first-draft/) gives
   you control over caching and how requests are handled. It doesn't give you
   patterns, you create them yourself. Let's look at a few!
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: ''
+meta: ''
 ---
 
 **Update:** Together with Udacity I created a [free offline-first interactive course](https://www.udacity.com/course/offline-web-applications--ud899). It involves taking an online-only site to full offline-first glory. Many of the patterns in this article are used.
@@ -22,7 +22,28 @@ For a working demo of some of these patterns, see [Trained-to-thrill](https://ja
 
 ## Contents
 
-<ol><li><a href="#the-cache-machine-when-to-store-resources">The cache machine - when to store resources</a><ol><li><a href="#on-install-as-a-dependency">On install - as a dependency</a></li><li><a href="#on-install-not-as-a-dependency">On install - not as a dependency</a></li><li><a href="#on-activate">On activate</a></li><li><a href="#on-user-interaction">On user interaction</a></li><li><a href="#on-network-response">On network response</a></li><li><a href="#stale-while-revalidate">Stale-while-revalidate</a></li><li><a href="#on-push-message">On push message</a></li><li><a href="#on-background-sync">On background-sync</a></li></ol></li><li><a href="#cache-persistence">Cache persistence</a></li><li><a href="#serving-suggestions-responding-to-requests">Serving suggestions - responding to requests</a><ol><li><a href="#cache-only">Cache only</a></li><li><a href="#network-only">Network only</a></li><li><a href="#cache-falling-back-to-network">Cache, falling back to network</a></li><li><a href="#cache-network-race">Cache &amp; network race</a></li><li><a href="#network-falling-back-to-cache">Network falling back to cache</a></li><li><a href="#cache-then-network">Cache then network</a></li><li><a href="#generic-fallback">Generic fallback</a></li><li><a href="#serviceworker-side-templating">ServiceWorker-side templating</a></li></ol></li><li><a href="#putting-it-together">Putting it together</a></li></ol>
+<!-- in case I need it again: copy($$('h2, h3').slice(1, -2).map(h => `${h.tagName === 'H3' ? '  ' : ''}1. [${h.textContent}](#${h.id})`).join('\n')) -->
+
+1. [The cache machine - when to store resources](#the-cache-machine---when-to-store-resources)
+   1. [On install - as a dependency](#on-install---as-a-dependency)
+   1. [On install - not as a dependency](#on-install---not-as-a-dependency)
+   1. [On activate](#on-activate)
+   1. [On user interaction](#on-user-interaction)
+   1. [On network response](#on-network-response)
+   1. [Stale-while-revalidate](#stale-while-revalidate)
+   1. [On push message](#on-push-message)
+   1. [On background-sync](#on-background-sync)
+1. [Cache persistence](#cache-persistence)
+1. [Serving suggestions - responding to requests](#serving-suggestions---responding-to-requests)
+   1. [Cache only](#cache-only)
+   1. [Network only](#network-only)
+   1. [Cache, falling back to network](#cache-falling-back-to-network)
+   1. [Cache & network race](#cache--network-race)
+   1. [Network falling back to cache](#network-falling-back-to-cache)
+   1. [Cache then network](#cache-then-network)
+   1. [Generic fallback](#generic-fallback)
+   1. [ServiceWorker-side templating](#serviceworker-side-templating)
+1. [Putting it together](#putting-it-together)
 
 # The cache machine - when to store resources
 
@@ -231,16 +252,18 @@ These are things that would make your site entirely non-functional if they faile
 
 ```js
 self.addEventListener('install', (event) => {
-  event.waitUntil(async function() {
-    const cache = await caches.open('mysite-static-v3');
-    await cache.addAll([
-      '/css/whatever-v3.css',
-      '/css/imgs/sprites-v6.png',
-      '/css/fonts/whatever-v8.woff',
-      '/js/all-min-v4.js'
-      // etc
-    ]);
-  }());
+  event.waitUntil(
+    (async function () {
+      const cache = await caches.open('mysite-static-v3');
+      await cache.addAll([
+        '/css/whatever-v3.css',
+        '/css/imgs/sprites-v6.png',
+        '/css/fonts/whatever-v8.woff',
+        '/js/all-min-v4.js',
+        // etc
+      ]);
+    })(),
+  );
 });
 ```
 
@@ -258,15 +281,19 @@ Similar to above, but won't delay install completing and won't cause installatio
 
 ```js
 self.addEventListener('install', (event) => {
-  event.waitUntil(async function() {
-    const cache = await caches.open('mygame-core-v1');
-    cache.addAll(
-      // levels 11-20
-    );
-    await cache.addAll(
-      // core assets & levels 1-10
-    );
-  }());
+  event.waitUntil(
+    (async function () {
+      const cache = await caches.open('mygame-core-v1');
+      cache
+        .addAll
+        // levels 11-20
+        ();
+      await cache
+        .addAll
+        // core assets & levels 1-10
+        ();
+    })(),
+  );
 });
 ```
 
@@ -280,24 +307,28 @@ The ServiceWorker may be killed while levels 11-20 download since it's finished 
 
 **Ideal for:** Clean-up & migration.
 
-Once a new ServiceWorker has installed & a previous version isn't being used, the new one activates, and you get an `activate` event. Because the old version is out of the way, it's a good time to handle schema migrations in IndexedDB and also delete unused caches. 
+Once a new ServiceWorker has installed & a previous version isn't being used, the new one activates, and you get an `activate` event. Because the old version is out of the way, it's a good time to handle schema migrations in IndexedDB and also delete unused caches.
 
 ```js
 self.addEventListener('activate', (event) => {
-  event.waitUntil(async function() {
-    const cacheNames = await caches.keys();
-    await Promise.all(
-      cacheNames.filter((cacheName) => {
-        // Return true if you want to remove this cache,
-        // but remember that caches are shared across
-        // the whole origin
-      }).map(cacheName => caches.delete(cacheName))
-    );
-  }());
+  event.waitUntil(
+    (async function () {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames
+          .filter((cacheName) => {
+            // Return true if you want to remove this cache,
+            // but remember that caches are shared across
+            // the whole origin
+          })
+          .map((cacheName) => caches.delete(cacheName)),
+      );
+    })(),
+  );
 });
 ```
 
-During activation, other events such as `fetch` are put into a queue, so a long activation could potentially block page loads. Keep your activation as lean as possible, only use it for things you *couldn't* do while the old version was active.
+During activation, other events such as `fetch` are put into a queue, so a long activation could potentially block page loads. Keep your activation as lean as possible, only use it for things you _couldn't_ do while the old version was active.
 
 On [trained-to-thrill](https://jakearchibald.github.io/trained-to-thrill/) I use this to [remove old caches](https://github.com/jakearchibald/trained-to-thrill/blob/3291dd40923346e3cc9c83ae527004d502e0464f/www/static/js-unmin/sw/index.js#L17).
 
@@ -310,15 +341,17 @@ On [trained-to-thrill](https://jakearchibald.github.io/trained-to-thrill/) I use
 Give the user a "Read later" or "Save for offline" button. When it's clicked, fetch what you need from the network & pop it in the cache.
 
 ```js
-document.querySelector('.cache-article').addEventListener('click', async (event) => {
-  event.preventDefault();
+document
+  .querySelector('.cache-article')
+  .addEventListener('click', async (event) => {
+    event.preventDefault();
 
-  const id = this.dataset.articleId;
-  const cache = await caches.open('mysite-article-' + id);
-  const response = await fetch('/get-article-urls?id=' + id);
-  const urls = await response.json();
-  await cache.addAll(urls);
-});
+    const id = this.dataset.articleId;
+    const cache = await caches.open('mysite-article-' + id);
+    const response = await fetch('/get-article-urls?id=' + id);
+    const urls = await response.json();
+    await cache.addAll(urls);
+  });
 ```
 
 The caches API is available from pages as well as service workers, meaning you don't need to involve the service worker to add things to the cache.
@@ -335,16 +368,16 @@ If you do this for a range of URLs, such as avatars, you'll need to be careful y
 
 ```js
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    const cache = await caches.open('mysite-dynamic');
-    const cachedResponse = await cache.match(event.request);
-    if (cachedResponse) return cachedResponse;
-    const networkResponse = await fetch(event.request);
-    event.waitUntil(
-      cache.put(event.request, networkResponse.clone())
-    );
-    return networkResponse;
-  }());
+  event.respondWith(
+    (async function () {
+      const cache = await caches.open('mysite-dynamic');
+      const cachedResponse = await cache.match(event.request);
+      if (cachedResponse) return cachedResponse;
+      const networkResponse = await fetch(event.request);
+      event.waitUntil(cache.put(event.request, networkResponse.clone()));
+      return networkResponse;
+    })(),
+  );
 });
 ```
 
@@ -362,19 +395,23 @@ If there's a cached version available, use it, but fetch an update for next time
 
 ```js
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    const cache = await caches.open('mysite-dynamic');
-    const cachedResponse = await cache.match(event.request);
-    const networkResponsePromise = fetch(event.request);
+  event.respondWith(
+    (async function () {
+      const cache = await caches.open('mysite-dynamic');
+      const cachedResponse = await cache.match(event.request);
+      const networkResponsePromise = fetch(event.request);
 
-    event.waitUntil(async function() {
-      const networkResponse = await networkResponsePromise;
-      await cache.put(event.request, networkResponse.clone());
-    }());
+      event.waitUntil(
+        (async function () {
+          const networkResponse = await networkResponsePromise;
+          await cache.put(event.request, networkResponse.clone());
+        })(),
+      );
 
-    // Returned the cached response if we have one, otherwise return the network response.
-    return cachedResponse || networkResponsePromise;
-  }());
+      // Returned the cached response if we have one, otherwise return the network response.
+      return cachedResponse || networkResponsePromise;
+    })(),
+  );
 });
 ```
 
@@ -388,7 +425,7 @@ The [Push API](https://w3c.github.io/push-api/) is another feature built on top 
 
 **Ideal for**: Content relating to a notification, such as a chat message, a breaking news story, or an email. Also infrequently changing content that benefits from immediate sync, such as a todo list update or a calendar alteration.
 
-The common final outcome is a notification which, when tapped, opens/focuses a relevant page, but updating caches before this happens is *extremely* important. The user is obviously online at the time of receiving the push message, but they may not be when they finally interact with the notification, so making this content available offline is important. The Twitter native app, which is for the most part an excellent example of offline-first, gets this a bit wrong:
+The common final outcome is a notification which, when tapped, opens/focuses a relevant page, but updating caches before this happens is _extremely_ important. The user is obviously online at the time of receiving the push message, but they may not be when they finally interact with the notification, so making this content available offline is important. The Twitter native app, which is for the most part an excellent example of offline-first, gets this a bit wrong:
 
 <figure class="full-figure">
 <div class="video" style="padding-top:100%"><iframe src="//www.youtube.com/embed/0i7YdSEQI1w?rel=0&amp;html5=1" frameborder="0" allowfullscreen></iframe></div>
@@ -438,10 +475,12 @@ self.addEventListener('notificationclick', function(event) {
 ```js
 self.addEventListener('sync', (event) => {
   if (event.id == 'update-leaderboard') {
-    event.waitUntil(async function() {
-      const cache = await caches.open('mygame-dynamic');
-      await cache.add('/leaderboard.json');
-    }());
+    event.waitUntil(
+      (async function () {
+        const cache = await caches.open('mygame-dynamic');
+        await cache.add('/leaderboard.json');
+      })(),
+    );
   }
 });
 ```
@@ -453,7 +492,7 @@ Your origin is given a certain amount of free space to do what it wants with. Th
 The amount you get isn't spec'd, it will differ depending on device and storage conditions. You can find out how much you've got via:
 
 ```js
-navigator.storageQuota.queryInfo("temporary").then((info) => {
+navigator.storageQuota.queryInfo('temporary').then((info) => {
   console.log(info.quota);
   // Result: <quota in bytes>
   console.log(info.usage);
@@ -522,10 +561,12 @@ self.addEventListener('fetch', (event) => {
 
 ```js
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    const response = await caches.match(event.request);
-    return response || fetch(event.request);
-  }());
+  event.respondWith(
+    (async function () {
+      const response = await caches.match(event.request);
+      return response || fetch(event.request);
+    })(),
+  );
 });
 ```
 
@@ -546,21 +587,19 @@ With some combinations of older hard drives, virus scanners, and faster internet
 function promiseAny(promises) {
   return new Promise((resolve, reject) => {
     // make sure promises are all promises
-    promises = promises.map(p => Promise.resolve(p));
+    promises = promises.map((p) => Promise.resolve(p));
     // resolve this promise as soon as one resolves
-    promises.forEach(p => p.then(resolve));
+    promises.forEach((p) => p.then(resolve));
     // reject if all promises reject
-    promises.reduce((a, b) => a.catch(() => b))
-      .catch(() => reject(Error("All failed")));
+    promises
+      .reduce((a, b) => a.catch(() => b))
+      .catch(() => reject(Error('All failed')));
   });
-};
+}
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    promiseAny([
-      caches.match(event.request),
-      fetch(event.request)
-    ])
+    promiseAny([caches.match(event.request), fetch(event.request)]),
   );
 });
 ```
@@ -577,13 +616,15 @@ However, this method has flaws. If the user has an intermittent or slow connecti
 
 ```js
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    try {
-      return await fetch(event.request);
-    } catch (err) {
-      return caches.match(event.request);
-    }
-  }());
+  event.respondWith(
+    (async function () {
+      try {
+        return await fetch(event.request);
+      } catch (err) {
+        return caches.match(event.request);
+      }
+    })(),
+  );
 });
 ```
 
@@ -623,7 +664,6 @@ async function update() {
   stopSpinner();
 
   const networkResponse = await networkPromise;
-
 }
 
 async function displayUpdate(response) {
@@ -642,22 +682,24 @@ If you fail to serve something from the cache and/or network you may want to pro
 
 ```js
 self.addEventListener('fetch', (event) => {
-  event.respondWith(async function() {
-    // Try the cache
-    const cachedResponse = await caches.match(event.request);
-    if (cachedResponse) return cachedResponse;
+  event.respondWith(
+    (async function () {
+      // Try the cache
+      const cachedResponse = await caches.match(event.request);
+      if (cachedResponse) return cachedResponse;
 
-    try {
-      // Fall back to network
-      return await fetch(event.request);
-    } catch (err) {
-      // If both fail, show a generic fallback:
-      return caches.match('/offline.html');
-      // However, in reality you'd have many different
-      // fallbacks, depending on URL & headers.
-      // Eg, a fallback silhouette image for avatars.
-    }
-  }());
+      try {
+        // Fall back to network
+        return await fetch(event.request);
+      } catch (err) {
+        // If both fail, show a generic fallback:
+        return caches.match('/offline.html');
+        // However, in reality you'd have many different
+        // fallbacks, depending on URL & headers.
+        // Eg, a fallback silhouette image for avatars.
+      }
+    })(),
+  );
 });
 ```
 
@@ -679,16 +721,18 @@ importScripts('templating-engine.js');
 self.addEventListener('fetch', (event) => {
   const requestURL = new URL(event.request);
 
-  event.responseWith(async function() {
-    const [template, data] = await Promise.all([
-      caches.match('/article-template.html').then(r => r.text()),
-      caches.match(requestURL.path + '.json').then(r => r.json()),
-    ]);
+  event.responseWith(
+    (async function () {
+      const [template, data] = await Promise.all([
+        caches.match('/article-template.html').then((r) => r.text()),
+        caches.match(requestURL.path + '.json').then((r) => r.json()),
+      ]);
 
-    return new Response(renderTemplate(template, data), {
-      headers: {'Content-Type': 'text/html'}
-    })
-  }());
+      return new Response(renderTemplate(template, data), {
+        headers: { 'Content-Type': 'text/html' },
+      });
+    })(),
+  );
 });
 ```
 
@@ -696,10 +740,10 @@ self.addEventListener('fetch', (event) => {
 
 You don't have to pick one of these methods, you'll likely use many of them depending on request URL. For example, [trained-to-thrill](https://jakearchibald.github.io/trained-to-thrill/) uses:
 
-* [Cache on install](#on-install-as-a-dependency), for the static UI and behaviour
-* [Cache on network response](#on-network-response), for the Flickr images and data
-* [Fetch from cache, falling back to network](#cache-falling-back-to-network), for most requests
-* [Fetch from cache, then network](#cache-then-network), for the Flickr search results
+- [Cache on install](#on-install-as-a-dependency), for the static UI and behaviour
+- [Cache on network response](#on-network-response), for the Flickr images and data
+- [Fetch from cache, falling back to network](#cache-falling-back-to-network), for most requests
+- [Fetch from cache, then network](#cache-then-network), for the Flickr search results
 
 Just look at the request and decide what to do:
 
@@ -730,19 +774,21 @@ self.addEventListener('fetch', (event) => {
     }
     if (/cheese/.test(requestURL.pathname)) {
       event.respondWith(
-        new Response("Flagrant cheese error", {
-          status: 512
-        })
+        new Response('Flagrant cheese error', {
+          status: 512,
+        }),
       );
       return;
     }
   }
 
   // A sensible default pattern
-  event.respondWith(async function() {
-    const cachedResponse = await caches.match(event.request);
-    return cachedResponse || fetch(event.request);
-  }());
+  event.respondWith(
+    (async function () {
+      const cachedResponse = await caches.match(event.request);
+      return cachedResponse || fetch(event.request);
+    })(),
+  );
 });
 ```
 
@@ -754,20 +800,20 @@ If you come up with additional patterns, throw them at me in the comments!
 
 …for the lovely icons:
 
-* [Code](http://thenounproject.com/term/code/17547/) by buzzyrobot
-* [Calendar](http://thenounproject.com/term/calendar/4672/) by Scott Lewis
-* [Network](http://thenounproject.com/term/network/12676/) by Ben Rizzo
-* [SD](http://thenounproject.com/term/sd-card/6185/) by Thomas Le Bas
-* [CPU](http://thenounproject.com/term/cpu/72043/) by iconsmind.com
-* [Trash](http://thenounproject.com/term/trash/20538/) by trasnik
-* [Notification](http://thenounproject.com/term/notification/32514/) by @daosme
-* [Layout](http://thenounproject.com/term/layout/36872/) by Mister Pixel
-* [Cloud](http://thenounproject.com/term/cloud/2788/) by P.J. Onori
+- [Code](http://thenounproject.com/term/code/17547/) by buzzyrobot
+- [Calendar](http://thenounproject.com/term/calendar/4672/) by Scott Lewis
+- [Network](http://thenounproject.com/term/network/12676/) by Ben Rizzo
+- [SD](http://thenounproject.com/term/sd-card/6185/) by Thomas Le Bas
+- [CPU](http://thenounproject.com/term/cpu/72043/) by iconsmind.com
+- [Trash](http://thenounproject.com/term/trash/20538/) by trasnik
+- [Notification](http://thenounproject.com/term/notification/32514/) by @daosme
+- [Layout](http://thenounproject.com/term/layout/36872/) by Mister Pixel
+- [Cloud](http://thenounproject.com/term/cloud/2788/) by P.J. Onori
 
 And thanks to [Jeff Posnick](https://twitter.com/jeffposnick) for catching many howling errors before I hit "publish".
 
 # Further reading
 
-* [Intro to ServiceWorkers](http://www.html5rocks.com/en/tutorials/service-worker/introduction/)
-* [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - track the implementation status across the main browsers
-* [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
+- [Intro to ServiceWorkers](http://www.html5rocks.com/en/tutorials/service-worker/introduction/)
+- [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - track the implementation status across the main browsers
+- [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
