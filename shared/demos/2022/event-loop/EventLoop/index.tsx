@@ -76,46 +76,48 @@ export default class EventLoop extends Component<Props, State> {
             class="event-loop-svg"
             viewBox={`${size / -2} ${size / -2} ${size} ${size}`}
           >
-            <g class="path-tracks">
-              <path
-                d={generateCircularArc({
-                  radius: arcRadius,
-                  startAngle: 0,
-                  endAngle: 180,
-                })}
-              />
-              <path
-                d={generateCircularArc({
-                  radius: arcRadius,
-                  startAngle: 180,
-                  endAngle: 0,
-                })}
-              />
-              <path
-                d={`M 0 ${-arcRadius} l ${detourOffset} 0 ${generateCircularArc(
-                  {
-                    midX: detourOffset,
+            <g class="event-loop-canvas">
+              <g class="path-tracks">
+                <path
+                  d={generateCircularArc({
                     radius: arcRadius,
                     startAngle: 0,
                     endAngle: 180,
-                  },
-                )} M ${detourOffset} ${arcRadius} l ${-detourOffset} 0`}
-              />
-              <path
-                d={`M 0 ${arcRadius} l ${-detourOffset} 0 ${generateCircularArc(
-                  {
-                    midX: -detourOffset,
+                  })}
+                />
+                <path
+                  d={generateCircularArc({
                     radius: arcRadius,
                     startAngle: 180,
-                    endAngle: 270 - taskSize / 2,
-                  },
-                )} ${generateCircularArc({
-                  midX: -detourOffset,
-                  radius: arcRadius,
-                  startAngle: 270 + taskSize / 2,
-                  endAngle: 0,
-                })} M ${-detourOffset} ${-arcRadius} l ${detourOffset} 0`}
-              />
+                    endAngle: 0,
+                  })}
+                />
+                <path
+                  d={`M 0 ${-arcRadius} l ${detourOffset} 0 ${generateCircularArc(
+                    {
+                      midX: detourOffset,
+                      radius: arcRadius,
+                      startAngle: 0,
+                      endAngle: 180,
+                    },
+                  )} M ${detourOffset} ${arcRadius} l ${-detourOffset} 0`}
+                />
+                <path
+                  d={`M 0 ${arcRadius} l ${-detourOffset} 0 ${generateCircularArc(
+                    {
+                      midX: -detourOffset,
+                      radius: arcRadius,
+                      startAngle: 180,
+                      endAngle: 270 - taskSize / 2,
+                    },
+                  )} ${generateCircularArc({
+                    midX: -detourOffset,
+                    radius: arcRadius,
+                    startAngle: 270 + taskSize / 2,
+                    endAngle: 0,
+                  })} M ${-detourOffset} ${-arcRadius} l ${detourOffset} 0`}
+                />
+              </g>
             </g>
           </svg>
         </div>

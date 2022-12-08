@@ -25,6 +25,24 @@
   translate: 0 -50%;
 }
 
+@container (orientation: portrait) {
+  .event-loop-cropper {
+    aspect-ratio: var(--height) / var(--width);
+  }
+
+  .event-loop-canvas {
+    rotate: 90deg;
+  }
+
+  .event-loop-svg {
+    top: 0;
+    left: 50%;
+    translate: -50% 0;
+    width: auto;
+    height: 100%;
+  }
+}
+
 .path-tracks {
   opacity: 0.3;
 
