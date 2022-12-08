@@ -19,9 +19,9 @@ meta: TODO
     <script type="component">{
       "module": "shared/demos/2022/event-loop/EventLoop",
       "props": {
-        "initialState": {},
+        "initialState": { "mode": "speedy-spin" },
         "width": 480,
-        "height": 280
+        "height": 480
       }
     }</script>
   </div>
@@ -29,7 +29,7 @@ meta: TODO
 
 <div class="content">
 
-Hello
+Hello. This is some text here to test out how the line lengths work out. Let's see how it goes.
 
 </div>
 </div>
