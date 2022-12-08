@@ -7,4 +7,41 @@ meta: TODO
 #image: 'asset-url:./img.png'
 ---
 
-TODO
+<script type="component">{
+  "module": "shared/demos/2022/event-loop/EventLoop",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
+<div class="section-with-slide min-viewport-height">
+<div class="slide">
+  <div class="slide-inner default-gradient">
+    <script type="component">{
+      "module": "shared/demos/2022/event-loop/EventLoop",
+      "props": {
+        "initialState": {},
+        "width": 480,
+        "height": 280
+      }
+    }</script>
+  </div>
+</div>
+
+<div class="content">
+
+Hello
+
+</div>
+</div>
+
+<div class="section-with-slide min-viewport-height">
+<div class="slide">
+  <div class="slide-inner ocean-gradient"></div>
+</div>
+
+<div class="content">
+
+Hello
+
+</div>
+</div>

@@ -1,0 +1,36 @@
+.event-loop-container {
+  position: absolute;
+  inset: 0;
+  container: event-loop / size;
+  overflow: hidden;
+}
+
+.event-loop-cropper {
+  position: absolute;
+  inset: 50% 0 auto 0;
+  translate: 0 -50%;
+  overflow: hidden;
+  aspect-ratio: var(--width) / var(--height);
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0 auto;
+}
+
+.event-loop-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1/1;
+  translate: 0 -50%;
+}
+
+.path-tracks {
+  opacity: 0.3;
+
+  path {
+    fill: none;
+    stroke-width: 33px;
+    stroke: #fff;
+  }
+}

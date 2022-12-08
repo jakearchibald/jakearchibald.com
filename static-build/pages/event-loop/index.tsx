@@ -14,7 +14,7 @@ import { h, FunctionalComponent, RenderableProps } from 'preact';
 
 import { inline as inlineStyles } from 'css-bundle:./css/all.css';
 import GenericHead from 'static-build/components/generic-head';
-import { escapeStyleScriptContent } from 'static-build/utils';
+import { escapeStyleScriptContent } from 'shared/utils';
 
 interface Props {
   post: Post;
@@ -34,7 +34,6 @@ const EventLoopPage: FunctionalComponent<Props> = ({
         />
       </head>
       <body>
-        <h1>{post.title}</h1>
         <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
       </body>
     </html>
