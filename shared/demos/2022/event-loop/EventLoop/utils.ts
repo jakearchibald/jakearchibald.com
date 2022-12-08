@@ -13,7 +13,7 @@ interface GenerateCircularArcOpts {
   skipMove?: boolean;
 }
 
-export function generateCircularArc({
+export function circularArcPath({
   midX = 0,
   midY = 0,
   radius = 0,
@@ -41,3 +41,23 @@ export function generateCircularArc({
 
   return path;
 }
+
+export function circlePath(radius: number) {
+  return (
+    circularArcPath({
+      radius: radius,
+      startAngle: 0,
+      endAngle: 180,
+    }) +
+    circularArcPath({
+      skipMove: true,
+      radius: radius,
+      startAngle: 180,
+      endAngle: 0,
+    }) +
+    'z'
+  );
+}
+
+export const rectSize = 18;
+export const arcRadius = 100;
