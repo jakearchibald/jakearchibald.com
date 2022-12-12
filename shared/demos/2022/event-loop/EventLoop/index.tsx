@@ -37,12 +37,15 @@ const EventLoop: FunctionalComponent<Props> = ({
   const showRenderPath = useSignal(initialState?.showRenderPath ?? false);
   const mode = useSignal(initialState?.mode ?? 'default');
 
-  const taskPathOpacity = computed(() => (showTaskPath.value ? '1' : '0'));
-  const renderPathOpacity = computed(() => (showRenderPath.value ? '1' : '0'));
+  const taskPathStyle = computed(
+    () => `opacity: ${showTaskPath.value ? '1' : '0'}`,
+  );
+  const renderPathStyle = computed(
+    () => `opacity: ${showRenderPath.value ? '1' : '0'}`,
+  );
 
   return (
     <div class="event-loop-container">
-      {renderPathOpacity}
       <div
         class="event-loop-cropper"
         style={{ '--width': width, '--height': height }}
@@ -55,7 +58,7 @@ const EventLoop: FunctionalComponent<Props> = ({
             <g class="path-tracks">
               <path d={circlePath(arcRadius)} />
               <path
-                style={{ opacity: taskPathOpacity.value }}
+                style={taskPathStyle}
                 d={`M 0 ${arcRadius} l ${-detourOffset} 0 ${circularArcPath({
                   midX: -detourOffset,
                   radius: arcRadius,
@@ -69,7 +72,7 @@ const EventLoop: FunctionalComponent<Props> = ({
                 })} M ${-detourOffset} ${-arcRadius} l ${detourOffset} 0`}
               />
               <path
-                style={{ opacity: renderPathOpacity.value }}
+                style={renderPathStyle}
                 d={`M 0 ${-arcRadius} l ${detourOffset} 0 ${circularArcPath({
                   midX: detourOffset,
                   radius: arcRadius,

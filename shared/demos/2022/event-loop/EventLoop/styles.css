@@ -69,6 +69,7 @@ $mobile-cutoff: 830px;
 
 .speedy-spin-group {
   isolation: isolate;
+  will-change: transform;
 
   & > rect {
     mix-blend-mode: plus-lighter;

@@ -1,55 +1,83 @@
 import { FunctionalComponent, h } from 'preact';
 import { useLayoutEffect, useRef } from 'preact/hooks';
+import { useSignal, useComputed } from '@preact/signals';
 
-import { circlePath, rectSize, arcRadius } from '../utils';
+import { circlePath, rectSize, arcRadius, svgNS } from '../utils';
 
 const speedyBlurParts = 40;
+const fastDuration = 191;
+const circleLength = 2 * Math.PI * arcRadius;
+const fastDistancePerMs = circleLength / fastDuration;
+const slowDistancePerMs = 0.18;
+const speedChangeDuration = 3000;
+
+// cubic-bezier(0.45, 0, 0.55, 1)
+
+function easeInOutQuad(x: number): number {
+  return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
+}
 
 interface Props {}
 
 const SpeedyLoop: FunctionalComponent<Props> = ({}) => {
-  const speedyRectRefs = Array.from({ length: speedyBlurParts }, () =>
-    useRef<SVGRectElement>(null),
-  );
+  const speedMode = useSignal<'fast' | 'slow'>('fast');
+  const speed = useSignal(fastDistancePerMs);
+  const playbackRate = useComputed(() => speed.value / fastDistancePerMs);
+  const maxBlurOffset = useComputed(() => -speed.value * (1000 / 60));
+
+  const spinnerRef = useRef<SVGGElement>(null);
+  const animRef = useRef<Animation | null>(null);
 
   useLayoutEffect(() => {
-    const duration = 191;
-
-    const anims = speedyRectRefs.map((rectRef, i) => {
-      rectRef.current!.style.offsetPath = `path("${circlePath(arcRadius)}")`;
-      const delay = (i / speedyBlurParts) * (1000 / 60);
-
-      // Avoid a flash of the rects in the initial position (due to the delay)
-      rectRef.current!.animate(
-        {
-          opacity: 0,
-          offset: 0,
-        },
-        {
-          duration: 100,
-          fill: 'backwards',
-          delay,
-        },
-      );
-
-      return rectRef.current!.animate(
-        { offsetDistance: ['0%', '100%'] },
-        {
-          easing: 'linear',
-          iterations: Infinity,
-          duration,
-          delay,
-        },
-      );
-    });
+    animRef.current = spinnerRef.current!.animate(
+      {
+        rotate: ['0turn', '1turn'],
+      },
+      {
+        easing: 'linear',
+        iterations: Infinity,
+        duration: fastDuration,
+      },
+    );
   }, []);
 
+  useLayoutEffect(() => {
+    const currentSpeed = speed.value;
+    const targetSpeed =
+      speedMode.value === 'fast' ? fastDistancePerMs : slowDistancePerMs;
+    const startTime = performance.now();
+    let frameId: number;
+
+    function updateSpeed() {
+      const time = performance.now() - startTime;
+      const progress = Math.min(time / speedChangeDuration, 1);
+      const easedProgress = easeInOutQuad(progress);
+      speed.value = currentSpeed + (targetSpeed - currentSpeed) * easedProgress;
+      if (progress !== 1) frameId = requestAnimationFrame(updateSpeed);
+    }
+
+    frameId = requestAnimationFrame(updateSpeed);
+    return () => cancelAnimationFrame(frameId);
+  }, [speedMode.value]);
+
+  useLayoutEffect(() => {
+    const anim = animRef.current;
+    if (!anim) return;
+    anim.updatePlaybackRate(playbackRate.value);
+  }, [playbackRate.value]);
+
   return (
-    <g class="speedy-spin-group" style={{ '--num-children': speedyBlurParts }}>
-      {speedyRectRefs.map((rectRef, i) => (
+    <g
+      class="speedy-spin-group"
+      style={{ '--num-children': speedyBlurParts }}
+      ref={spinnerRef}
+    >
+      {Array.from({ length: speedyBlurParts }, (_, i) => (
         <rect
-          ref={rectRef}
-          style={{ offsetPath: `path("M 0 ${-arcRadius}")` }}
+          style={{
+            offsetPath: `path("${circlePath(arcRadius)}")`,
+            offsetDistance: `${maxBlurOffset.value * (i / speedyBlurParts)}px`,
+          }}
           class="processor"
           x={rectSize / -2}
           y={rectSize / -2}
