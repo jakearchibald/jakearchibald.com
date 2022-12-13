@@ -1,0 +1,15 @@
+.worry-code {
+  .worry-code-line-1,
+  .worry-code-line-2 {
+    transition: transform 0.3s var(--ease-in-out-cubic);
+  }
+}
+
+.worry-code-swap {
+  .worry-code-line-1 {
+    transform: translateY(100%);
+  }
+  .worry-code-line-2 {
+    transform: translateY(-100%);
+  }
+}

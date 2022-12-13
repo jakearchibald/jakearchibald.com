@@ -1,8 +1,9 @@
 import { useSignal } from '@preact/signals';
 import { FunctionalComponent, h } from 'preact';
-import { useEffect } from 'preact/hooks';
+import { useEffect, useRef } from 'preact/hooks';
 import CodeLines from '../CodeLines';
 import { simpleHighlightLines } from '../utils/simple-highlight';
+import { usePrevious } from '../utils/use-previous';
 
 // prettier-ignore
 const code = simpleHighlightLines('js', `
@@ -23,10 +24,18 @@ const WorryCode: FunctionalComponent = () => {
 
   return (
     <div class="code-example">
-      <div class="code-container">
+      <div
+        class={['code-container', 'worry-code', swap.value && 'worry-code-swap']
+          .filter(Boolean)
+          .join(' ')}
+      >
         <div style={{ fontSize: '7.3cqw' }}>
-          <CodeLines lines={code} slice={swap.value ? [1, 2] : [0, 1]} />
-          <CodeLines lines={code} slice={swap.value ? [0, 1] : [1, 2]} />
+          <div class="worry-code-line-1">
+            <CodeLines lines={code} slice={[0, 1]} />
+          </div>
+          <div class="worry-code-line-2">
+            <CodeLines lines={code} slice={[1, 2]} />
+          </div>
         </div>
       </div>
     </div>

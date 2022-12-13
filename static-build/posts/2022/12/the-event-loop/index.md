@@ -55,10 +55,9 @@ TODO: table of contents
 
 <div class="section-with-slide min-viewport-height">
 <div class="slide">
-  <div class="slide-inner ocean-gradient">
+  <div class="slide-inner sunny-gradient">
     <script type="component">{
-      "module": "shared/demos/2022/event-loop/WorryCode",
-      "props": {}
+      "module": "shared/demos/2022/event-loop/WorryCode"
     }</script>
   </div>
 </div>
