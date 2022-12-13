@@ -7,6 +7,11 @@ $mobile-cutoff: 830px;
   max-height: 50vh;
   max-height: 50svh;
   margin: 0 auto;
+
+  .intersector {
+    position: absolute;
+    inset: 0;
+  }
 }
 
 .event-loop-svg {

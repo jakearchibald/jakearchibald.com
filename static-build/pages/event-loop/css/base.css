@@ -1,0 +1,158 @@
+$mobile-cutoff: 830px;
+
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../../components/base/css/fonts/inconsolata.woff') format('woff');
+}
+
+html {
+  font-size: 16px;
+  font-family: 'noto serif', serif;
+  line-height: 1.9;
+  color: #333;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+@media (min-width: $mobile-cutoff) {
+  .section-with-slide {
+    display: grid;
+    --section-columns-def: minmax(400px, 1.5fr) minmax(430px, 1fr);
+    grid-template-columns: var(--section-columns-def);
+    --gradient-overlap: 200px;
+  }
+
+  .min-viewport-height {
+    min-height: calc(100vh + var(--gradient-overlap));
+    min-height: calc(100lvh + var(--gradient-overlap));
+  }
+
+  .slide {
+    margin: calc(var(--gradient-overlap) * -1) 0;
+    position: relative;
+    overflow: hidden;
+    clip-path: inset(0);
+
+    --eased-gradient: linear-gradient(
+      to bottom,
+      hsla(0, 0%, 100%, 0) 0%,
+      hsla(0, 0%, 100%, 0.013) 8.1%,
+      hsla(0, 0%, 100%, 0.049) 15.5%,
+      hsla(0, 0%, 100%, 0.104) 22.5%,
+      hsla(0, 0%, 100%, 0.175) 29%,
+      hsla(0, 0%, 100%, 0.259) 35.3%,
+      hsla(0, 0%, 100%, 0.352) 41.2%,
+      hsla(0, 0%, 100%, 0.45) 47.1%,
+      hsla(0, 0%, 100%, 0.55) 52.9%,
+      hsla(0, 0%, 100%, 0.648) 58.8%,
+      hsla(0, 0%, 100%, 0.741) 64.7%,
+      hsla(0, 0%, 100%, 0.825) 71%,
+      hsla(0, 0%, 100%, 0.896) 77.5%,
+      hsla(0, 0%, 100%, 0.951) 84.5%,
+      hsla(0, 0%, 100%, 0.987) 91.9%,
+      hsl(0, 0%, 100%) 100%
+    );
+
+    -webkit-mask-image: var(--eased-gradient),
+      linear-gradient(to bottom, #fff, #fff);
+    -webkit-mask-size: 100% var(--gradient-overlap), 100% 100%;
+    -webkit-mask-position: 0 0, 0 var(--gradient-overlap);
+    -webkit-mask-repeat: no-repeat;
+
+    mask-image: var(--eased-gradient), linear-gradient(to bottom, #fff, #fff);
+    mask-size: 100% var(--gradient-overlap), 100% 100%;
+    mask-position: 0 0, 0 var(--gradient-overlap);
+    mask-repeat: no-repeat;
+  }
+
+  .slide-inner {
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 100vh;
+    height: 100lvh;
+    display: grid;
+    grid-template-columns: var(--section-columns-def);
+
+    & > :first-child {
+      position: relative;
+    }
+  }
+}
+
+.content {
+  padding: 0 1.8rem;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+
+  p {
+    margin: 2.7em 0;
+  }
+}
+
+.default-gradient {
+  background: linear-gradient(to bottom, #c33764, #1d2671);
+}
+
+.ocean-gradient {
+  background: linear-gradient(to bottom, #000046, #1cb5e0);
+}
+
+.book-title {
+  position: relative;
+}
+
+.book-title-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  text {
+    font-family: Copse, serif;
+    fill: #fff;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 18px;
+    font-weight: normal;
+  }
+}
+
+.book-subtitle {
+  text-align: center;
+  font-family: Copse, serif;
+  font-size: 2.1rem;
+  line-height: 1.3;
+  margin: 4rem 0 3rem;
+
+  p {
+    margin: 0.2rem 0;
+  }
+
+  .author {
+    font-size: 1.4rem;
+    color: #666;
+  }
+}
+
+h2 {
+  font-family: Copse, serif;
+  text-align: center;
+  margin: 1em 0.5em;
+  font-size: 1.9rem;
+  line-height: 1.3;
+  font-weight: normal;
+
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
+}

@@ -13,6 +13,7 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.1",
     "@types/date-and-time": "^0.13.0",
+    "@types/dedent": "^0.7.0",
     "@types/node": "^18.11.10",
     "@types/prismjs": "^1.26.0",
     "@types/punycode": "^2.1.0",
@@ -43,11 +44,10 @@
     "rollup": "^3.6.0",
     "serve": "^14.1.2",
     "two-up-element": "^1.0.1",
-    "typescript": "^4.9.3"
-  },
-  "dependencies": {
+    "typescript": "^4.9.3",
     "@preact/signals": "^1.1.2",
-    "@rollup/plugin-terser": "^0.1.0"
+    "@rollup/plugin-terser": "^0.1.0",
+    "dedent": "^0.7.0"
   },
   "lint-staged": {
     "*.{js,css,json,md,ts,tsx}": "prettier --write"

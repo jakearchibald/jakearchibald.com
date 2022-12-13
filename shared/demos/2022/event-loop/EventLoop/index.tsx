@@ -5,6 +5,8 @@ import { escapeStyleScriptContent } from 'shared/utils';
 import { inline as styles } from 'css-bundle:./styles.css';
 import { arcRadius, circlePath, circularArcPath } from './utils';
 import SpeedyLoop from './SpeedyLoop';
+import WhenIntersecting from '../WhenIntersecting';
+import { useRef } from 'preact/hooks';
 
 export const Styles: FunctionalComponent = () => (
   <style
@@ -24,7 +26,7 @@ interface Props {
 interface State {
   showTaskPath: boolean;
   showRenderPath: boolean;
-  mode: 'default' | 'speedy-spin';
+  mode: 'default' | 'speedy-spin' | 'speedy-spin-slowdown';
 }
 
 const EventLoop: FunctionalComponent<Props> = ({
@@ -50,40 +52,50 @@ const EventLoop: FunctionalComponent<Props> = ({
         class="event-loop-cropper"
         style={{ '--width': width, '--height': height }}
       >
-        <svg
-          class="event-loop-svg"
-          viewBox={`${size / -2} ${size / -2} ${size} ${size}`}
-        >
-          <g class="event-loop-canvas">
-            <g class="path-tracks">
-              <path d={circlePath(arcRadius)} />
-              <path
-                style={taskPathStyle}
-                d={`M 0 ${arcRadius} l ${-detourOffset} 0 ${circularArcPath({
-                  midX: -detourOffset,
-                  radius: arcRadius,
-                  startAngle: 180,
-                  endAngle: 270 - taskSize / 2,
-                })} ${circularArcPath({
-                  midX: -detourOffset,
-                  radius: arcRadius,
-                  startAngle: 270 + taskSize / 2,
-                  endAngle: 0,
-                })} M ${-detourOffset} ${-arcRadius} l ${detourOffset} 0`}
-              />
-              <path
-                style={renderPathStyle}
-                d={`M 0 ${-arcRadius} l ${detourOffset} 0 ${circularArcPath({
-                  midX: detourOffset,
-                  radius: arcRadius,
-                  startAngle: 0,
-                  endAngle: 180,
-                })} M ${detourOffset} ${arcRadius} l ${-detourOffset} 0`}
-              />
+        <WhenIntersecting>
+          <svg
+            class="event-loop-svg"
+            viewBox={`${size / -2} ${size / -2} ${size} ${size}`}
+          >
+            <g class="event-loop-canvas">
+              <g class="path-tracks">
+                <path d={circlePath(arcRadius)} />
+                <path
+                  style={taskPathStyle}
+                  d={`M 0 ${arcRadius} l ${-detourOffset} 0 ${circularArcPath({
+                    midX: -detourOffset,
+                    radius: arcRadius,
+                    startAngle: 180,
+                    endAngle: 270 - taskSize / 2,
+                  })} ${circularArcPath({
+                    midX: -detourOffset,
+                    radius: arcRadius,
+                    startAngle: 270 + taskSize / 2,
+                    endAngle: 0,
+                  })} M ${-detourOffset} ${-arcRadius} l ${detourOffset} 0`}
+                />
+                <path
+                  style={renderPathStyle}
+                  d={`M 0 ${-arcRadius} l ${detourOffset} 0 ${circularArcPath({
+                    midX: detourOffset,
+                    radius: arcRadius,
+                    startAngle: 0,
+                    endAngle: 180,
+                  })} M ${detourOffset} ${arcRadius} l ${-detourOffset} 0`}
+                />
+              </g>
+              {(mode.value === 'speedy-spin' ||
+                mode.value === 'speedy-spin-slowdown') &&
+                !__PRERENDER__ && (
+                  <SpeedyLoop
+                    speedMode={
+                      mode.value === 'speedy-spin-slowdown' ? 'slow' : 'fast'
+                    }
+                  />
+                )}
             </g>
-            {mode.value === 'speedy-spin' && !__PRERENDER__ && <SpeedyLoop />}
-          </g>
-        </svg>
+          </svg>
+        </WhenIntersecting>
       </div>
     </div>
   );

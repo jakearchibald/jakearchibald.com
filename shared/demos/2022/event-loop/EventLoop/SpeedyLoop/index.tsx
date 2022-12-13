@@ -11,16 +11,15 @@ const fastDistancePerMs = circleLength / fastDuration;
 const slowDistancePerMs = 0.18;
 const speedChangeDuration = 3000;
 
-// cubic-bezier(0.45, 0, 0.55, 1)
-
 function easeInOutQuad(x: number): number {
   return x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2;
 }
 
-interface Props {}
+interface Props {
+  speedMode: 'fast' | 'slow';
+}
 
-const SpeedyLoop: FunctionalComponent<Props> = ({}) => {
-  const speedMode = useSignal<'fast' | 'slow'>('fast');
+const SpeedyLoop: FunctionalComponent<Props> = ({ speedMode }) => {
   const speed = useSignal(fastDistancePerMs);
   const playbackRate = useComputed(() => speed.value / fastDistancePerMs);
   const maxBlurOffset = useComputed(() => -speed.value * (1000 / 60));
@@ -44,7 +43,7 @@ const SpeedyLoop: FunctionalComponent<Props> = ({}) => {
   useLayoutEffect(() => {
     const currentSpeed = speed.value;
     const targetSpeed =
-      speedMode.value === 'fast' ? fastDistancePerMs : slowDistancePerMs;
+      speedMode === 'fast' ? fastDistancePerMs : slowDistancePerMs;
     const startTime = performance.now();
     let frameId: number;
 
@@ -58,7 +57,7 @@ const SpeedyLoop: FunctionalComponent<Props> = ({}) => {
 
     frameId = requestAnimationFrame(updateSpeed);
     return () => cancelAnimationFrame(frameId);
-  }, [speedMode.value]);
+  }, [speedMode]);
 
   useLayoutEffect(() => {
     const anim = animRef.current;
