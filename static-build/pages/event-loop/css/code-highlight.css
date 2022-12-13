@@ -1,5 +1,6 @@
 .content .code-example {
   background: #2d2d2d;
+  color: #d4d4d4;
   margin: 1em -20px;
   padding: 16px 20px;
   line-height: 1.4;
@@ -13,8 +14,18 @@
   }
 }
 
+.slide .code-example {
+  line-height: 1.4;
+  background: rgba(0, 0, 0, 0.75);
+  padding: 26px 40px;
+}
+
+.code-container {
+  container-type: inline-size;
+}
+
 .code-example {
-  color: #d4d4d4;
+  color: #fff;
 
   & pre {
     font-family: Inconsolata, courier, monospace;

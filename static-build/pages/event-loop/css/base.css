@@ -20,6 +20,10 @@ body {
   padding: 0;
 }
 
+.slide-inner > :first-child {
+  position: relative;
+}
+
 @media (min-width: $mobile-cutoff) {
   .section-with-slide {
     display: grid;
@@ -81,7 +85,7 @@ body {
     grid-template-columns: var(--section-columns-def);
 
     & > :first-child {
-      position: relative;
+      align-self: center;
     }
   }
 }
@@ -106,7 +110,7 @@ body {
 }
 
 .book-title {
-  position: relative;
+  height: 100%;
 }
 
 .book-title-text {
@@ -155,4 +159,15 @@ h2 {
     color: inherit;
     text-decoration: none;
   }
+}
+
+.fill-v-center {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: center;
+}
+
+.html-viewport {
+  display: block;
 }

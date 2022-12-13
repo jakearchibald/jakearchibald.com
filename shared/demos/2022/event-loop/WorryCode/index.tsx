@@ -1,5 +1,4 @@
 import { FunctionalComponent, h } from 'preact';
-import HTMLViewBox from '../HTMLViewBox';
 import simpleHighlight from '../utils/simple-highlight';
 
 // prettier-ignore
@@ -10,11 +9,13 @@ const code = simpleHighlight('js', `
 
 const WorryCode: FunctionalComponent = () => {
   return (
-    <HTMLViewBox width={300} height={200}>
-      <div class="code-example">
-        <pre dangerouslySetInnerHTML={{ __html: code }}></pre>
+    <div class="code-example">
+      <div class="code-container">
+        <div style={{ fontSize: '7.3cqw' }}>
+          <pre dangerouslySetInnerHTML={{ __html: code }}></pre>
+        </div>
       </div>
-    </HTMLViewBox>
+    </div>
   );
 };
 

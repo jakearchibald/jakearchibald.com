@@ -6,7 +6,6 @@ import { inline as styles } from 'css-bundle:./styles.css';
 import { arcRadius, circlePath, circularArcPath } from './utils';
 import SpeedyLoop from './SpeedyLoop';
 import WhenIntersecting from '../WhenIntersecting';
-import { useRef } from 'preact/hooks';
 
 export const Styles: FunctionalComponent = () => (
   <style
