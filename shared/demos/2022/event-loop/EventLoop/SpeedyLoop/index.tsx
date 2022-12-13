@@ -30,7 +30,7 @@ const SpeedyLoop: FunctionalComponent<Props> = ({ speedMode }) => {
   useLayoutEffect(() => {
     animRef.current = spinnerRef.current!.animate(
       {
-        rotate: ['0turn', '1turn'],
+        transform: ['rotate(0turn)', 'rotate(1turn)'],
       },
       {
         easing: 'linear',
