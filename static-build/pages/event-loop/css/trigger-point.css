@@ -1,0 +1,9 @@
+trigger-point {
+  display: block;
+  opacity: 0.3;
+  transition: opacity 0.3s ease-in-out;
+
+  &.active {
+    opacity: 1;
+  }
+}

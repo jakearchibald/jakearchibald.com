@@ -13,6 +13,11 @@ meta: TODO
   "staticOnly": true
 }</script>
 
+<script type="component">{
+  "module": "./InlineScript",
+  "staticOnly": true
+}</script>
+
 <div class="section-with-slide min-viewport-height">
 <div class="slide">
   <div class="slide-inner default-gradient">
@@ -62,22 +67,24 @@ TODO: table of contents
 
 # Worrying about code
 
+<trigger-point>
+
 Before I understood the event loop, I'd worry about seemingly simple code like this. It's adding an element to the page, then hiding it.
 
 Was this causing the browser to lay the document out with the new element, only to throw away all that work by hiding the element?
 
 Might the user see a flash of the element, if the code ran slowly for some reason?
 
-I didn't know the answer, so, for safety, I'd swap those lines around.
+I didn't know the answer, so, for safety…
 
-Disaster averted.
+</trigger-point>
+<trigger-point ontrigger="console.log('hi')">
 
-```js
-document.body.append(el);
-el.style.display = 'none';
-```
+I'd swap those lines around. Disaster averted.
 
 But, now I understand the event loop, I know that the order of those lines doesn't matter, and the user will never see a flash of content between the two. Hopefully by the end of this animated book-type-thing, hopefully you'll understand the event loop too.
+
+</trigger-point>
 
 </div>
 </div>
