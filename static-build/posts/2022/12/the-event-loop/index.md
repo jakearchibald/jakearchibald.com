@@ -67,7 +67,7 @@ TODO: table of contents
 
 # Worrying about code
 
-<trigger-point>
+<trigger-point ontrigger="getAPI(`worry-code`).then(a => a.setSwap(false))">
 
 Before I understood the event loop, I'd worry about seemingly simple code like this. It's adding an element to the page, then hiding it.
 
@@ -78,7 +78,7 @@ Might the user see a flash of the element, if the code ran slowly for some reaso
 I didn't know the answer, so, for safety…
 
 </trigger-point>
-<trigger-point ontrigger="console.log('hi')">
+<trigger-point ontrigger="getAPI(`worry-code`).then(a => a.setSwap(true))">
 
 I'd swap those lines around. Disaster averted.
 

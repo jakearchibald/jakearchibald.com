@@ -5,30 +5,29 @@ import { usePrevious } from '../utils/use-previous';
 
 interface Props {
   lines: string[];
-  initialSlice: [number, number];
+  slice: [number, number];
 }
 
-const CodeLines: FunctionalComponent<Props> = ({ lines, initialSlice }) => {
+const CodeLines: FunctionalComponent<Props> = ({ lines, slice }) => {
   const baseEl = useRef<HTMLDivElement>(null);
   const offsetEl = useRef<HTMLDivElement>(null);
-  const range = useSignal(initialSlice);
-  const previousRange = usePrevious(range.value);
+  const previousRange = usePrevious(slice);
 
   // For prerender, don't do any fancy repositioning
-  const linesToRender = __PRERENDER__ ? lines.slice(...range.value) : lines;
+  const linesToRender = __PRERENDER__ ? lines.slice(...slice) : lines;
 
   const updatePositions = useCallback(
     (animate: boolean = false) => {
       offsetEl.current!.style.transform = '';
       const pres = baseEl.current!.querySelectorAll('pre');
-      const start = pres[range.value[0]];
+      const start = pres[slice[0]];
       const elRect = baseEl.current!.getBoundingClientRect();
       const startRect = start.getBoundingClientRect();
       const top = startRect.top - elRect.top;
 
       const height = (() => {
-        if (range.value[0] === range.value[1]) return 0;
-        const end = pres[range.value[1] - 1];
+        if (slice[0] === slice[1]) return 0;
+        const end = pres[slice[1] - 1];
         const endRect = end.getBoundingClientRect();
         return endRect.bottom - startRect.top;
       })();
@@ -40,7 +39,7 @@ const CodeLines: FunctionalComponent<Props> = ({ lines, initialSlice }) => {
       baseEl.current!.style.height = `${height}px`;
       offsetEl.current!.style.transform = `translateY(${-top}px)`;
     },
-    [range.value, baseEl, offsetEl],
+    [slice, baseEl, offsetEl],
   );
 
   useLayoutEffect(() => {
