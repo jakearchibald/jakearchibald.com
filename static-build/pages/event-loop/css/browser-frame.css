@@ -1,0 +1,22 @@
+.browser-demo {
+  margin: 20px;
+  max-width: 538px;
+  margin: 0 auto;
+}
+
+.browser-frame {
+  &::before {
+    content: '';
+    display: block;
+    border-style: solid;
+    border-width: 79px 103px 0 366px;
+    border-image: url('./images/browser-top.png') 100% 206 0 732;
+  }
+
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border-radius: 0 0 12px 12px;
+  }
+}

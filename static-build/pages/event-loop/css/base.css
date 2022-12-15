@@ -165,13 +165,6 @@ h2 {
   }
 }
 
-.fill-v-center {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  align-items: center;
-}
-
 .html-viewport {
   display: block;
 }

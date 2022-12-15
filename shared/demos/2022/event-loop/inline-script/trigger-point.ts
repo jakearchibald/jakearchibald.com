@@ -1,14 +1,6 @@
 class TriggerPoint extends HTMLElement {
   static #intersecting: Set<TriggerPoint> = new Set();
-
-  static #activate(triggerPoint: TriggerPoint) {
-    for (const triggerPoint of TriggerPoint.#intersecting) {
-      triggerPoint.classList.remove('active');
-    }
-    triggerPoint.classList.add('active');
-    let triggerScript = triggerPoint.getAttribute('ontrigger');
-    if (triggerScript) eval(triggerScript);
-  }
+  static #active: TriggerPoint | null = null;
 
   static #observer: IntersectionObserver = new IntersectionObserver(
     (entries) => {
@@ -17,18 +9,17 @@ class TriggerPoint extends HTMLElement {
 
         if (entry.isIntersecting) {
           TriggerPoint.#intersecting.add(target);
-          TriggerPoint.#activate(target);
+          target.#activate();
         } else {
-          target.classList.remove('active');
           TriggerPoint.#intersecting.delete(target);
+          if (TriggerPoint.#active === target) target.#deactivate();
         }
       }
 
       // Cater for the case where a trigger point deactivates, but it should hand back to the last active trigger point.
+      if (TriggerPoint.#active || TriggerPoint.#intersecting.size === 0) return;
       const last = [...TriggerPoint.#intersecting].pop();
-      if (last && !last.classList.contains('active')) {
-        TriggerPoint.#activate(last);
-      }
+      last!.#activate();
     },
     { rootMargin: '-45% 0%' },
   );
@@ -36,6 +27,21 @@ class TriggerPoint extends HTMLElement {
   constructor() {
     super();
     TriggerPoint.#observer.observe(this);
+    this.addEventListener('click', () => this.#activate());
+  }
+
+  #activate() {
+    if (TriggerPoint.#active) TriggerPoint.#active.#deactivate();
+    this.classList.add('active');
+    TriggerPoint.#active = this;
+    let triggerScript = this.getAttribute('ontrigger');
+    if (triggerScript) eval(triggerScript);
+  }
+
+  #deactivate() {
+    if (TriggerPoint.#active !== this) return;
+    this.classList.remove('active');
+    TriggerPoint.#active = null;
   }
 }
 
