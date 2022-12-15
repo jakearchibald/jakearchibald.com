@@ -33,12 +33,14 @@ const Video: FunctionalComponent<Props> = ({
       ref={video}
       playsInline
       muted
-      src={src}
       width={width}
       height={height}
       preload="auto"
     >
-      {av1Src && <source type="video/webm; codecs=av01" src={av1Src} />}
+      {av1Src && (
+        <source type="video/webm; codecs=av01.0.05M.08" src={av1Src} />
+      )}
+      <source type="video/mp4" src={src} />
     </video>
   );
 };

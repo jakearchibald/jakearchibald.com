@@ -1,7 +1,6 @@
 .browser-demo {
   margin: 20px;
-  max-width: 538px;
-  margin: 0 auto;
+  max-width: 756px;
 }
 
 .browser-frame {
@@ -9,8 +8,15 @@
     content: '';
     display: block;
     border-style: solid;
-    border-width: 79px 103px 0 366px;
+    --border-multiplier: 0.7;
+    border-width: calc(79px * var(--border-multiplier))
+      calc(103px * var(--border-multiplier)) 0
+      calc(366px * var(--border-multiplier));
     border-image: url('./images/browser-top.png') 100% 206 0 732;
+
+    @media (min-width: 509px) {
+      --border-multiplier: 1;
+    }
   }
 
   video {
