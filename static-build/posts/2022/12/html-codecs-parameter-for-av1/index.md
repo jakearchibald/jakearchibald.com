@@ -1,8 +1,8 @@
 ---
 title: Getting the correct HTML codecs parameter for an AV1 video
 date: 2022-12-19 01:00:00
-summary: It should be easier, but here's how to figure it out
-meta: It should be easier, but here's how to figure it out
+summary: It should be easier, but here's how to figure it out.
+meta: It should be easier, but here's how to figure it out.
 ---
 
 This post is mostly for my own reference, but I couldn't find a good guide elsewhere, so here we go!
@@ -26,7 +26,7 @@ The WebM version on the other hand, uses the newer AV1 codec, which is [less sup
 Here's it is:
 
 <figure class="full-figure max-figure">
-  <video controls playsinline style="width:100%; aspect-ratio: auto 1512/614; height: auto">
+  <video controls playsinline style="width:100%; aspect-ratio: 1512/614; height: auto; object-fit: fill">
     <source src="asset-url:./video.webm" type="video/webm; codecs=av01.1.08M.08.0.000.01.01.01.1" />
     <source src="asset-url:./video.mp4" type="video/mp4" />
   </video>
@@ -37,7 +37,7 @@ But, this post is about the `av01.1.08M.08.0.000.01.01.01.1` bit.
 
 # Why the codecs parameter is useful
 
-WebM and MP4 are just containers for audio, video, and other bits of data such as subtitles. It's kinda meaningless to say something "supports MP4" since MP4 can be used to contain all different kinds of codecs.
+WebM and MP4 are just containers for audio, video, and other bits of data such as subtitles. It's kinda meaningless to say something "supports MP4" since MP4 can be used to contain all different kinds of media formats.
 
 In fact, it's similarly risky to say something "supports H.264", because there are a lot of different levels of support within a single codec.
 
@@ -45,9 +45,9 @@ For example, with the WebM version of the video, as well as using AV1, I used a 
 
 - I used full-resolution colour. Typically video uses half-resolution colour channels, but I like to avoid that for screencast content, as I want to retain sharp edges.
 - I used the full 8-bit range for color and luma data. Although an 8-bit value usually gives you a range of 0-255, due to legacy TV standards, the data is often compressed to 16-235 (luma) and 16-240 (chroma), resulting in lower quality. I avoided that for the AV1 version.
-- I skipped frames that were identical to the previous frame. This is useful for screencasts where there are moments where nothing changes. For instance, the MP4 video has 336 frames, whereas the WebM version only has 160, just by skipping duplicates. This doesn't change the result at all, it just means the file contains less data.
+- I skipped frames that were identical to the previous frame. This is useful for screencasts where there are moments where nothing changes. For instance, the MP4 video has 336 frames, whereas the WebM version only has 160, just by skipping duplicates. This doesn't change what the user sees at all, it just means the file contains less data.
 
-Now, I can actually do all the same tricks with H.264 and MP4, but Safari fails to play the video if it uses full resolution colour or the full 8-bit range.
+I can actually do all the same tricks with H.264 and MP4, but Safari fails to play the video if it uses full resolution colour or the full 8-bit range.
 
 Safari on desktop is fine with frame-skipping, but Safari on iOS isn't. Not only is the level of support different between Safari and Chrome, it's also different between Safari on desktop and Safari on iOS.
 
@@ -72,7 +72,7 @@ The _full_ codecs parameter for AV1 is in the format `av01.P.LL.T.DD` or `av01.P
 
 Here's how to figure out all the parts:
 
-First up, you'll need [FFmpeg](https://ffmpeg.org/), which allows us to dump all the metadata from the video file.
+First up, you'll need [FFmpeg](https://ffmpeg.org/), which lets you dump all the metadata from the video file.
 
 Dump all the data using:
 
@@ -80,7 +80,7 @@ Dump all the data using:
 ffmpeg -i video.webm -c:v copy -bsf:v trace_headers -f null /dev/null 2>dump.txt
 ```
 
-Change `video.webm` to the location of the video file, and `dump.txt` to the location of the output file.
+Change `video.webm` to the location of the video file, and change `dump.txt` if you want to save the data somewhere else.
 
 Now we can query `dump.txt` for the various parts of the codec parameter string!
 
@@ -212,10 +212,10 @@ Because I'm using the full 0-255 range, I used the full AV1 codec string so I co
 
 # And that's it!
 
-That's how I ended up at the value `av01.1.08M.08.0.000.01.01.01.1`.
+That's how I ended up at the value `av01.1.08M.08.0.000.01.01.01.1`. This doesn't capture the variable framerate bit, so I guess I'm still hoping Safari supports that properly when they ship AV1 support.
 
-I think it's kinda silly that it's so hard to get this information, and even then the information in this post only covered AV1. I've [filed a bug](https://bugs.chromium.org/p/chromium/issues/detail?id=1402220) asking that Chrome's Media DevTools should just provide the ideal codec parameter for a given video.
+I think it's kinda stupid that it's so hard to get this information, yet as authors we're expected to include it. And even then, the information in this post only covers AV1. I've [filed a bug](https://bugs.chromium.org/p/chromium/issues/detail?id=1402220) asking that Chrome's Media DevTools should just provide the ideal codec parameter for a given video, and warn if the wrong details are used.
 
-In terms of references, I found the [MDN documentation](https://developer.mozilla.org/docs/Web/Media/Formats/codecs_parameter) really handy, and it covers codec parameters for other formats too.
+In terms of references, I found the [MDN documentation](https://developer.mozilla.org/docs/Web/Media/Formats/codecs_parameter) really handy. It also covers codec parameters for other formats.
 
 However, to figure out how to extract the values for a particular video, I had to dive into [this part of the AV1 spec](https://aomediacodec.github.io/av1-spec/#sequence-header-obu-syntax).
