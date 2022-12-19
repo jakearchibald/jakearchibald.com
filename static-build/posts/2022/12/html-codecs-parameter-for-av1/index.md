@@ -46,7 +46,7 @@ For example, with the WebM version of the video, as well as using AV1, I used a 
 - I used the full 8-bit range for colour and luma data. Although an 8-bit value usually gives you a range of 0-255, due to legacy TV standards, the data is often compressed to 16-235 (luma) and 16-240 (chroma), resulting in lower quality. I avoided that for the AV1 version.
 - I skipped frames that were identical to the previous frame. This is useful for screencasts where there are moments where nothing changes. For instance, the MP4 video has 336 frames, whereas the WebM version only has 160, just by skipping duplicates. This doesn't change what the user sees at all, it just means the file contains less data.
 
-I can actually do all the same tricks with H.264 and MP4, but Safari fails to play the video if it uses full resolution colour or the full 8-bit range.
+I can actually do all the same tricks with H.264 and MP4, but Safari fails to play the video if it uses the full 8-bit range.
 
 Safari on desktop is fine with frame-skipping, but Safari on iOS isn't. Not only is the level of support different between Safari and Chrome, it's also different between Safari on desktop and Safari on iOS.
 
