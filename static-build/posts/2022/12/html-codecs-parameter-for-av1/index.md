@@ -13,7 +13,7 @@ I wanted to embed a screencast in a web page, and I wanted it to be as efficient
 <video controls playsinline>
   <source
     src="video.webm"
-    type="video/webm; codecs=av01.1.08M.08.0.000.01.01.01.1"
+    type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1"
   />
   <source src="video.mp4" type="video/mp4" />
 </video>
@@ -21,19 +21,19 @@ I wanted to embed a screencast in a web page, and I wanted it to be as efficient
 
 The MP4 version uses the H.264 codec, which is as-good-as [universally supported](https://caniuse.com/mpeg4). I avoided using any fancy codec features to ensure maximum compatibility. In this case the video was asset-pretty-size:./video.mp4. Not bad.
 
-The WebM version on the other hand, uses the newer AV1 codec, which is [less supported](https://caniuse.com/av1), but works in Chrome and Firefox at the time of writing. This codec is much more efficient, and I was able to get the video down to asset-pretty-size:./video.webm with the same visual quality (well, technically higher quality as there's no reduction in colour resolution).
+The WebM version on the other hand, uses the newer AV1 codec, which is [less supported](https://caniuse.com/av1), but works in Chrome and Firefox at the time of writing. This codec is much more efficient, and I was able to get the video down to asset-pretty-size:./video.webm with the same visual quality.
 
 Here's it is:
 
 <figure class="full-figure max-figure">
   <video controls playsinline style="width:100%; aspect-ratio: 1512/614; height: auto; object-fit: fill">
-    <source src="asset-url:./video.webm" type="video/webm; codecs=av01.1.08M.08.0.000.01.01.01.1" />
+    <source src="asset-url:./video.webm" type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" />
     <source src="asset-url:./video.mp4" type="video/mp4" />
   </video>
   <figcaption>Live demo</figcaption>
 </figure>
 
-But, this post is about the `av01.1.08M.08.0.000.01.01.01.1` bit.
+But, this post is about the `av01.0.08M.08.0.110.01.01.01.1` bit.
 
 # Why the codecs parameter is useful
 
@@ -43,7 +43,6 @@ In fact, it's similarly risky to say something "supports H.264", because there a
 
 For example, with the WebM version of the video, as well as using AV1, I used a few tricks to improve the quality and reduce the size:
 
-- I used full-resolution colour. Typically video uses half-resolution colour channels, but I like to avoid that for screencast content, as I want to retain sharp edges.
 - I used the full 8-bit range for colour and luma data. Although an 8-bit value usually gives you a range of 0-255, due to legacy TV standards, the data is often compressed to 16-235 (luma) and 16-240 (chroma), resulting in lower quality. I avoided that for the AV1 version.
 - I skipped frames that were identical to the previous frame. This is useful for screencasts where there are moments where nothing changes. For instance, the MP4 video has 336 frames, whereas the WebM version only has 160, just by skipping duplicates. This doesn't change what the user sees at all, it just means the file contains less data.
 
@@ -64,11 +63,11 @@ This works great today! Firefox and Chrome use the smaller AV1 WebM, whereas Saf
 
 That's where the `codecs=` bit comes in. It not only tells the browser the codec being used, but also the particular features of the codec.
 
-But, wtf does `av01.1.08M.08.0.000.01.01.01.1` even mean?
+But, wtf does `av01.0.08M.08.0.110.01.01.01.1` even mean?
 
 # How to figure out a codecs parameter value
 
-The _full_ codecs parameter for AV1 is in the format `av01.P.LL.T.DD` or `av01.P.LL.T.DD.M.CCC.cp.tc.mc.F`. I'm using the longer format for safety.
+The _full_ codecs parameter for AV1 is in the format `av01.P.LLT.DD` or `av01.P.LLT.DD.M.CCC.cp.tc.mc.F`. I'm using the longer format for safety.
 
 Here's how to figure out all the parts:
 
@@ -95,11 +94,11 @@ grep seq_profile dump.txt
 You'll get an output like this:
 
 ```
-[trace_headers @ 0x6000011f4460] 40    seq_profile        001 = 1
-[trace_headers @ 0x6000011f4460] 40    seq_profile        001 = 1
+[trace_headers @ 0x6000011f4460] 40    seq_profile        001 = 0
+[trace_headers @ 0x6000011f4460] 40    seq_profile        001 = 0
 ```
 
-As with all of these steps, the value we're interested in is right at the end, `1`. Don't worry if you get a different value. For instance, if the video uses half-resolution colour data, this will probably be `0`.
+As with all of these steps, the value we're interested in is right at the end, `0`. Don't worry if you get a different value. For instance, if the video uses half-resolution colour data, this will probably be `0`.
 
 If you get more than one value, pick the largest.
 
@@ -121,7 +120,9 @@ This is the 'tier'.
 grep seq_tier dump.txt
 ```
 
-If you don't get a value for this, use `0`.
+If you don't get a value for this, or the value is `0`, then the value for `T` is `M`.
+
+Otherwise, the value for `T` is `H`.
 
 ## DD
 
@@ -212,7 +213,7 @@ Because I'm using the full 0-255 range, I used the full AV1 codec string so I co
 
 # And that's it!
 
-That's how I ended up at the value `av01.1.08M.08.0.000.01.01.01.1`. This doesn't capture the variable framerate bit, so I guess I'm still hoping Safari supports that properly when they ship AV1 support.
+That's how I ended up at the value `av01.0.08M.08.0.110.01.01.01.1`. This doesn't capture the variable framerate bit, so I guess I'm still hoping Safari supports that properly when they ship AV1 support.
 
 I think it's kinda stupid that it's so hard to get this information, yet as authors we're expected to include it. And even then, the information in this post only covers AV1. I've [filed a bug](https://bugs.chromium.org/p/chromium/issues/detail?id=1402220) asking that Chrome's Media DevTools should just provide the ideal codec parameter for a given video, and warn if the wrong details are used.
 
