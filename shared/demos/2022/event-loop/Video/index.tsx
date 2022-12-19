@@ -38,7 +38,7 @@ const Video: FunctionalComponent<Props> = ({
       preload="auto"
     >
       {av1Src && (
-        <source type="video/webm; codecs=av01.0.05M.08" src={av1Src} />
+        <source type="video/webm; codecs=av01.1.08M.08" src={av1Src} />
       )}
       <source type="video/mp4" src={src} />
     </video>
