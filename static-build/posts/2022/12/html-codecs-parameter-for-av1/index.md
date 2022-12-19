@@ -44,7 +44,7 @@ In fact, it's similarly risky to say something "supports H.264", because there a
 For example, with the WebM version of the video, as well as using AV1, I used a few tricks to improve the quality and reduce the size:
 
 - I used full-resolution colour. Typically video uses half-resolution colour channels, but I like to avoid that for screencast content, as I want to retain sharp edges.
-- I used the full 8-bit range for color and luma data. Although an 8-bit value usually gives you a range of 0-255, due to legacy TV standards, the data is often compressed to 16-235 (luma) and 16-240 (chroma), resulting in lower quality. I avoided that for the AV1 version.
+- I used the full 8-bit range for colour and luma data. Although an 8-bit value usually gives you a range of 0-255, due to legacy TV standards, the data is often compressed to 16-235 (luma) and 16-240 (chroma), resulting in lower quality. I avoided that for the AV1 version.
 - I skipped frames that were identical to the previous frame. This is useful for screencasts where there are moments where nothing changes. For instance, the MP4 video has 336 frames, whereas the WebM version only has 160, just by skipping duplicates. This doesn't change what the user sees at all, it just means the file contains less data.
 
 I can actually do all the same tricks with H.264 and MP4, but Safari fails to play the video if it uses full resolution colour or the full 8-bit range.
@@ -175,7 +175,7 @@ Phew!
 
 ## cp, tc, mc
 
-These are the 'color primaries', 'transfer characteristics', and 'matrix coefficients'. If you managed to get through the whole `CCC` mess, I think we can do these three _all at once_.
+These are the 'colour primaries', 'transfer characteristics', and 'matrix coefficients'. If you managed to get through the whole `CCC` mess, I think we can do these three _all at once_.
 
 ```sh
 grep -e color_primaries -e transfer_characteristics -e matrix_coefficients dump.txt
