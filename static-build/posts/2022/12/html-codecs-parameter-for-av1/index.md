@@ -98,7 +98,9 @@ You'll get an output like this:
 [trace_headers @ 0x6000011f4460] 40    seq_profile        001 = 0
 ```
 
-As with all of these steps, the value we're interested in is right at the end, `0`. Don't worry if you get a different value. For instance, if the video uses half-resolution colour data, this will probably be `0`.
+As with all of these steps, the value we're interested in is right at the end, `0`. Don't worry if you get a different value. For instance, if the video uses full-resolution colour data, this will probably be `1`.
+
+**Update:** For web content, you should avoid high profile AV1 for now (as in, yuv444). This is due to [a bug in Android Chrome](https://bugs.chromium.org/p/chromium/issues/detail?id=1402561) where it sends the video to the hardware decoder, which doesn't actually support high profile AV1. This results in garbage output.
 
 If you get more than one value, pick the largest.
 
