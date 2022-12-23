@@ -20,7 +20,7 @@ const Video: FunctionalComponent<Props> = ({
 
   useEffect(() => {
     setAPI(apiName, {
-      reset: () => {
+      reset() {
         video.current!.currentTime = 0;
         video.current!.pause();
       },

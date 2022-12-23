@@ -1,0 +1,34 @@
+.event-ordering-svg {
+  margin: 20px;
+}
+
+.event-ordering-task {
+  fill: #ffc019;
+}
+
+.event-ordering-render {
+  fill: #67a74e;
+}
+
+.event-ordering-label {
+  font-family: sans-serif;
+  dominant-baseline: middle;
+  font-size: 18px;
+  fill: #fff;
+  filter: drop-shadow(0px 2px 1px rgb(0 0 0 / 47%));
+}
+
+.event-ordering-item-hider {
+  transition: transform 0.3s var(--ease-out-cubic);
+  transition-property: transform, opacity;
+
+  transform: scale(1);
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+
+  &.hidden {
+    transition-timing-function: step-end, var(--ease-out-cubic);
+    transform: scale(0.4);
+    opacity: 0;
+  }
+}

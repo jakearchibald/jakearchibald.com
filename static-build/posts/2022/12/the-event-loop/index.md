@@ -77,8 +77,6 @@ TODO: table of contents
 
 I suppose, before we dive into how it all works, we should look at why it exists in the first place.
 
-## The browser does a lot of stuff at the same time
-
 <trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.reset())">
 
 Take a simple example like this…
@@ -94,12 +92,12 @@ Ok, that might not sound technically impressive, but let's think about everythin
 - Decoding the image from whatever format it is, into RGBA data.
 - Listening for updates to mouse buttons and pointer position.
 - Performing hit-testing to figure out exactly what text the user wants to select.
-- Rendering updates to the image as it's ready.
+- Rendering updates to the image as it's decoded.
 - Rendering updates to the selected text.
 
 Pretty impressive!
 
-But, although everything _feels_ like it's happening at the same time, it's actually a series of specifically scheduled tasks.
+But, although everything _feels_ like it's happening at the same time, it's actually a series of specifically scheduled tasks. Otherwise, the platform would be impossible to use.
 
 </trigger-point>
 
@@ -108,12 +106,53 @@ But, although everything _feels_ like it's happening at the same time, it's actu
 
 <div class="section-with-slide min-viewport-height">
 <div class="slide">
-  <div class="slide-inner ocean-gradient"></div>
+  <div class="slide-inner ocean-gradient">
+    <script type="component">{
+      "module": "shared/demos/2022/event-loop/EventOrdering"
+    }</script>
+  </div>
 </div>
 
 <div class="content">
 
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(0))">
+
 Let's imagine a world where everything happens at the same time.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(1))">
+
+The user presses 'A' on the keyboard.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(2))">
+
+They click something.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(3))">
+
+They press 'B'.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(4))">
+
+And the browser renders the current state of the document.
+
+Running this in parallel creates a bunch of problems. Although the code handling these events has landed in the right order (and that isn't even guaranteed in a fully parallel system), the code handling the 'A' key press took longer, so it completes _after_ the 'B' key press and the click.
+
+Even at a simple level, this could result in the effects of pressing 'A' appearing after the effects of pressing 'B', but it's more likely that the effects of each will interleave somehow, creating a weird mixed-up state that you never intended.
+
+In this model, rendering happens somewhere in the middle. That means the user could end up seeing something that wasn't fully constructed – it wasn't ready to be seen.
+
+Thankfully, this isn't how it works.
+
+</trigger-point>
+<trigger-point ontrigger="">
+
+The event loop ensures that these things happen in the order they were queued, and their actions don't overlap.
+
+</trigger-point>
 
 </div>
 </div>
@@ -162,6 +201,7 @@ But, now I understand the event loop, I know that the order of those lines doesn
 
 # Video encoding notes
 
+<details>
 - 150% cursor size.
 - Invert click
 
@@ -172,6 +212,8 @@ ffmpeg -i ~/Desktop/ScreenFlow.png -filter:v "crop=1512:614:45:194, colorspace=i
 ```
 ffmpeg -i ~/Desktop/ScreenFlow.png -filter:v "crop=1512:614:45:194, mpdecimate=hi=1:lo=1:frac=1:max=0, colorspace=iall=bt709:all=bt709:range=pc:format=yuv444p" -an -c:v libaom-av1 -crf 50 -cpu-used 3 -pass 1 -f null /dev/null && ffmpeg -i ~/Desktop/ScreenFlow.png -filter:v "crop=1512:614:45:194, mpdecimate=hi=1:lo=1:frac=1:max=0, colorspace=iall=bt709:all=bt709:range=pc:format=yuv444p" -an -c:v libaom-av1 -crf 50 -cpu-used 3 -pass 2 out.webm
 ```
+
+</details>
 
 </div>
 </div>
