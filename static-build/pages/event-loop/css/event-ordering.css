@@ -2,12 +2,15 @@
   margin: 20px;
 }
 
-.event-ordering-task {
-  fill: #ffc019;
-}
+.event-ordering-item {
+  will-change: transform;
 
-.event-ordering-render {
-  fill: #67a74e;
+  rect {
+    fill: #ffc019;
+  }
+  &.render rect {
+    fill: #67a74e;
+  }
 }
 
 .event-ordering-label {

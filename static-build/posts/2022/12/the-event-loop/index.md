@@ -148,9 +148,30 @@ In this model, rendering happens somewhere in the middle. That means the user co
 Thankfully, this isn't how it works.
 
 </trigger-point>
-<trigger-point ontrigger="">
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.sequencePhase())">
 
 The event loop ensures that these things happen in the order they were queued, and their actions don't overlap.
+
+Test
+
+test
+
+test
+
+test
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.finalPhase())">
+
+TODO
+
+Test
+
+test
+
+test
+
+test
 
 </trigger-point>
 
