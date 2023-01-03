@@ -1,15 +1,14 @@
-import { Fragment, FunctionalComponent, h } from 'preact';
-import { useLayoutEffect, useRef } from 'preact/hooks';
-import { useSignal } from '@preact/signals';
+import { FunctionalComponent, h } from 'preact';
+import { useLayoutEffect, useRef, useState } from 'preact/hooks';
 
 const WhenIntersecting: FunctionalComponent = ({ children }) => {
-  const isIntersecting = useSignal(false);
+  const [isIntersecting, setIsIntersecting] = useState(true);
   const el = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
     if (!el.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => (isIntersecting.value = entry.isIntersecting),
+    const observer = new IntersectionObserver(([entry]) =>
+      setIsIntersecting(entry.isIntersecting),
     );
     observer.observe(el.current);
     return () => observer.disconnect();
@@ -17,7 +16,7 @@ const WhenIntersecting: FunctionalComponent = ({ children }) => {
 
   return (
     <div ref={el} class="intersector">
-      {(isIntersecting.value || __PRERENDER__) && children}
+      {isIntersecting && children}
     </div>
   );
 };

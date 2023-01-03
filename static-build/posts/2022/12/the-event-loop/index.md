@@ -75,9 +75,9 @@ TODO: table of contents
 
 # Why do we need an event loop?
 
-I suppose, before we dive into how it all works, we should look at why it exists in the first place.
-
 <trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.reset())">
+
+I suppose, before we dive into how it all works, we should look at why it exists in the first place.
 
 Take a simple example like this…
 
@@ -145,33 +145,36 @@ Even at a simple level, this could result in the effects of pressing 'A' appeari
 
 In this model, rendering happens somewhere in the middle. That means the user could end up seeing something that wasn't fully constructed – it wasn't ready to be seen.
 
-Thankfully, this isn't how it works.
+Before I understood the event loop, I'd worry about seemingly simple code like this:
+
+```js
+document.body.append(el);
+el.style.display = 'none';
+```
+
+Could the user see a flash of `el`, because the browser rendered the result between those two lines? In a fully parallel system, yes, but that isn't how it works, and that's all thanks to the event loop.
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.sequencePhase())">
 
-The event loop ensures that these things happen in the order they were queued, and their actions don't overlap.
+On the web platform, unless something is explicitly 'asynchronous', the event loop makes sure things 'run to completion'. As in, one task cannot happen in the middle of another task, unless it deliberately yields to other tasks.
 
-Test
+The event loop ensures that things happen in the order they were queued, and their actions don't overlap.
 
-test
+This means the code for handling the second key press, 'B', doesn't start until the code for handling the first key press has completed. It also means rendering cannot happen in the middle of another task.
 
-test
-
-test
+However, the event loop is more than a simple queue.
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.finalPhase())">
 
-TODO
+The event loop will allow particular things to jump the queue, or be deferred, if it creates a better user experience.
 
-Test
+In this example, the browser lets _rendering_ happen sooner, so the user sees the result of the key press in a timely manner. In other cases it may defer rendering, to avoid rendering more than the display can handle.
 
-test
+This will only happen when it's safe for things to happen in a different order. The code handling the key-presses and mouse click will never be reordered.
 
-test
-
-test
+Ok, that's the high-level. Let's dive into how it actually works:
 
 </trigger-point>
 
