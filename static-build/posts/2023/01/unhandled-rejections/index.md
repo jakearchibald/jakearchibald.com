@@ -251,4 +251,6 @@ I wish there was a less 'blunt' way of handling this in JavaScript, but I'm not 
 
 In the meantime, `markHandled` does the trick!
 
-<small>For completeness, here's an [abortable implementation of `showChapters`](https://gist.github.com/jakearchibald/8bc2360a6d3f6240d1bad2de375fa92a).</small>
+<small>For completeness, here's an [abortable implementation of `showChapters`](https://gist.github.com/jakearchibald/8bc2360a6d3f6240d1bad2de375fa92a), that also handles bad responses.</small>
+
+<small>Thanks to [Surma](https://twitter.com/DasSurma) and [Thomas Steiner](https://twitter.com/tomayac) for proof-reading.</small>
