@@ -217,11 +217,11 @@ Promise.allSettled(chapterPromises);
 
 This works because `allSettled` handles all the promises you give it, similar to `Promise.all`, but unlike `Promise.all` it never returns a rejected promise itself (unless something is fundamentally wrong with the input iterator).
 
-Both of these look pretty hacky, and likely to confuse others that read the code later. Because of this, I'd probably create a helper function like `markHandled`:
+Both of these look pretty hacky, and likely to confuse others that read the code later. Because of this, I'd probably create a helper function like `preventUnhandledRejections`:
 
 ```js
 // In promise-utils.js:
-export function markHandled(...promises) {
+export function preventUnhandledRejections(...promises) {
   for (const promise of promises) promise.catch(() => {});
 }
 ```
@@ -229,7 +229,7 @@ export function markHandled(...promises) {
 And comment its usage:
 
 ```js
-import { markHandled } from './promise-utils.js';
+import { preventUnhandledRejections } from './promise-utils.js';
 
 async function showChapters(chapterURLs) {
   const chapterPromises = chapterURLs.map(async (url) => {
@@ -239,7 +239,7 @@ async function showChapters(chapterURLs) {
 
   // Avoid unhandled rejections leaking out of this function.
   // The subsequent `for await` handles all the relevant promises.
-  markHandled(...chapterPromises);
+  preventUnhandledRejections(...chapterPromises);
 
   for await (const chapterData of chapterPromises) {
     appendChapter(chapterData);
@@ -249,7 +249,7 @@ async function showChapters(chapterURLs) {
 
 I wish there was a less 'blunt' way of handling this in JavaScript, but I'm not sure what that would look like. The design of the "unhandled rejections" feature directly clashes with starting work early and handling the result later, or not handling the result if a prerequisite fails.
 
-In the meantime, `markHandled` does the trick!
+In the meantime, `preventUnhandledRejections` does the trick!
 
 <small>For completeness, here's an [abortable implementation of `showChapters`](https://gist.github.com/jakearchibald/8bc2360a6d3f6240d1bad2de375fa92a), that also handles bad responses.</small>
 
