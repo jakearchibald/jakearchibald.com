@@ -246,4 +246,6 @@ async function showChapters(chapterURLs) {
 
 I wish there was a less 'blunt' way of handling this in JavaScript, but I'm not sure what that would look like. The design of the "unhandled rejections" feature directly clashes with starting work early and handling the result later, or not handling the result if a prerequisite fails.
 
+In the meantime, `markHandled` does the trick!
+
 <small>For completeness, here's an [abortable implementation of `showChapters`](https://gist.github.com/jakearchibald/8bc2360a6d3f6240d1bad2de375fa92a).</small>
