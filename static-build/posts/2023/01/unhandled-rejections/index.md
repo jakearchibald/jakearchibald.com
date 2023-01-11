@@ -220,7 +220,8 @@ This works because `allSettled` handles all the promises you give it, similar to
 Both of these look pretty hacky, and likely to confuse others that read the code later. Because of this, I'd probably create a helper function like `markHandled`:
 
 ```js
-function markHandled(...promises) {
+// In promise-utils.js:
+export function markHandled(...promises) {
   for (const promise of promises) promise.catch(() => {});
 }
 ```
@@ -228,6 +229,8 @@ function markHandled(...promises) {
 And comment its usage:
 
 ```js
+import { markHandled } from './promise-utils.js';
+
 async function showChapters(chapterURLs) {
   const chapterPromises = chapterURLs.map(async (url) => {
     const response = await fetch(url);
