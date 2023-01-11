@@ -209,7 +209,9 @@ One way to do this is to add a dummy `catch` handler to each promise:
 for (const promise of chapterPromises) promise.catch(() => {});
 ```
 
-Or, a shorter way to achieve the same thing is [`Promise.allSettled`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled):
+This doesn't change the promises other than marking them as 'handled'. They're still rejected promises. It doesn't cause errors to be missed/swallowed elsewhere.
+
+A shorter way to achieve the same thing is [`Promise.allSettled`](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise/allSettled):
 
 ```js
 Promise.allSettled(chapterPromises);
