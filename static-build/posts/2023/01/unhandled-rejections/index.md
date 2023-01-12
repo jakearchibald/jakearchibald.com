@@ -86,15 +86,16 @@ await promise;
 // In this case the promise is handled,
 // but a rejection will be turned into a throw.
 
-// But not this:
+// Including this:
 promise.then(() => {
   // …
 });
-// …because it doesn't handle the rejected case,
-// it only handles the success case.
+// …although, since this doesn't handle the rejected case,
+// it returns a new promise that's also rejected,
+// and that new promise will be unhandled (all new promises are unhandled).
 ```
 
-A promise is handled when something is done in reaction to promise rejection, even if it's creating another rejected promise, or turning a rejected promise into a throw.
+A promise is handled when something is done in reaction to that promise, even if it's creating another rejected promise, or turning a rejected promise into a throw.
 
 Once a promise is rejected, you have until just-after the next processing of microtasks to handle that rejection, else it may count as an unhandled rejection ('may', because there's a little bit of wiggle room with task queuing).
 
