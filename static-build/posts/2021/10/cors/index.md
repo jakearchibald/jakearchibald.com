@@ -222,8 +222,6 @@ If someone says they understand the security implications of URLs without UI hin
   "props": {}
 }</script>
 
-The above uses a live version of the public suffix list, but I had to proxy it because the actual list doesn't use CORS. The irony.
-
 So `https://app.jakearchibald.com` and `https://other-app.jakearchibald.com` are part of the same site, but `https://app.glitch.me` and `https://other-app.glitch.me` are different sites. These cases are different because `glitch.me` is on the public suffix list whereas `jakearchibald.com` is not. This is 'correct', because different people 'own' the subdomains of `glitch.me`, whereas I own all the subdomains of `jakearchibald.com`.
 
 # Opening things up again

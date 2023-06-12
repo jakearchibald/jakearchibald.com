@@ -1,8 +1,7 @@
 import { toASCII } from 'punycode';
 
-// Hopefully I can replace this with the real resource eventually.
-// https://github.com/publicsuffix/list/issues/1433
-const publicSuffixListUrl = 'https://cors-playground.deno.dev/psl';
+const publicSuffixListUrl =
+  'https://publicsuffix.org/list/public_suffix_list.dat';
 
 interface PSLRule {
   rule: string;
