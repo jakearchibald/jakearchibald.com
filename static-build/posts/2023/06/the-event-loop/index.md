@@ -8,7 +8,7 @@ meta: TODO
 ---
 
 <script type="component">{
-  "module": "shared/demos/2022/event-loop/EventLoop",
+  "module": "shared/demos/2023/event-loop/EventLoop",
   "exportName": "Styles",
   "staticOnly": true
 }</script>
@@ -23,7 +23,7 @@ meta: TODO
   <div class="slide-inner default-gradient">
     <div class="book-title">
       <script type="component">{
-        "module": "shared/demos/2022/event-loop/EventLoop",
+        "module": "shared/demos/2023/event-loop/EventLoop",
         "props": {
           "initialState": { "mode": "speedy-spin" },
           "width": 480,
@@ -55,19 +55,10 @@ TODO: table of contents
 
 <div class="section-with-slide min-viewport-height">
 <div class="slide">
-  <div class="slide-inner sunny-gradient">
-    <div class="browser-demo browser-frame h-center">
-      <script type="component">{
-        "module": "shared/demos/2022/event-loop/Video",
-        "props": {
-          "src": "asset-url:./videos/img-and-select.mp4",
-          "av1Src": "asset-url:./videos/img-and-select.webm",
-          "width": 1512,
-          "height": 614,
-          "apiName": "img-and-select"
-        }
-      }</script>
-    </div>
+  <div class="slide-inner ocean-gradient">
+    <script type="component">{
+      "module": "shared/demos/2023/event-loop/EventOrdering"
+    }</script>
   </div>
 </div>
 
@@ -75,54 +66,16 @@ TODO: table of contents
 
 # Why do we need an event loop?
 
-<trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.reset())">
-
-I suppose, before we dive into how it all works, we should look at why it exists in the first place.
-
-Take a simple example like this…
-
-</trigger-point>
-<trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.play())">
-
-You can select text, even while an image is downloading!!
-
-Ok, that might not sound technically impressive, but let's think about everything that happened at "the same time" to make that 'demo' work:
-
-- Fetching the image over the network.
-- Decoding the image from whatever format it is, into RGBA data.
-- Listening for updates to mouse buttons and pointer position.
-- Performing hit-testing to figure out exactly what text the user wants to select.
-- Rendering updates to the image as it's decoded.
-- Rendering updates to the selected text.
-
-Pretty impressive!
-
-But, although everything _feels_ like it's happening at the same time, it's actually a series of specifically scheduled tasks. Otherwise, the platform would be impossible to use.
-
-</trigger-point>
-
-</div>
-</div>
-
-<div class="section-with-slide min-viewport-height">
-<div class="slide">
-  <div class="slide-inner ocean-gradient">
-    <script type="component">{
-      "module": "shared/demos/2022/event-loop/EventOrdering"
-    }</script>
-  </div>
-</div>
-
-<div class="content">
-
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(0))">
 
-Let's imagine a world where everything happens at the same time.
+I think previous articles and talks on the topic (including my own) have given a false impression that the event loop is a JavaScript thing. It isn't. Event loops are the main schedulers for the web platform. Not just JavaScript, but everything on the platform that needs to work together with reliable queuing and timing: CSS, rendering, default interactions, JavaScript too, but that's only part of the story.
+
+I suppose, a good way to show why we need an event loop, is to think about a world without one. Let's imagine a browser with where everything happens at the same time.
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(1))">
 
-The user presses 'A' on the keyboard.
+Let's say the user presses 'A' on the keyboard.
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(2))">
@@ -139,7 +92,7 @@ They press 'B'.
 
 And the browser renders the current state of the document.
 
-Running this in parallel creates a bunch of problems. Although the code handling these events has landed in the right order (and that isn't even guaranteed in a fully parallel system), the code handling the 'A' key press took longer, so it completes _after_ the 'B' key press and the click.
+Running this all in parallel creates a bunch of problems. Although the code handling these events has started in the right order (and that isn't even guaranteed in a fully parallel system), the code handling the 'A' key press took longer, so it completes _after_ the 'B' key press and the click.
 
 Even at a simple level, this could result in the effects of pressing 'A' appearing after the effects of pressing 'B', but it's more likely that the effects of each will interleave somehow, creating a weird mixed-up state that you never intended.
 
@@ -157,24 +110,65 @@ Could the user see a flash of `el`, because the browser rendered the result betw
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.sequencePhase())">
 
-On the web platform, unless something is explicitly 'asynchronous', the event loop makes sure things 'run to completion'. As in, one task cannot happen in the middle of another task, unless it deliberately yields to other tasks.
+On the web platform, unless something is explicitly 'asynchronous', the event loop makes sure things 'run to completion'. As in, one task cannot happen in the middle of another task.
 
-The event loop ensures that things happen in the order they were queued, and their actions don't overlap.
+The event loop ensures that things happen in a reliable order, and their actions don't overlap.
 
 This means the code for handling the second key press, 'B', doesn't start until the code for handling the first key press has completed. It also means rendering cannot happen in the middle of another task.
 
-However, the event loop is more than a simple queue.
+However, the event loop is more than a simple queue. It ensures that related things happen in the order they were queued, but it also allows particular things to jump the queue, or be deferred, if it creates a better user experience.
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.finalPhase())">
 
-The event loop will allow particular things to jump the queue, or be deferred, if it creates a better user experience.
-
-In this example, the browser lets _rendering_ happen sooner, so the user sees the result of the key press in a timely manner. In other cases it may defer rendering, to avoid rendering more than the display can handle.
+In this example, the browser lets _rendering_ happen sooner, so the user sees the result of the key press in a timely manner. In other cases it may defer rendering, to avoid rendering more often than the display can handle.
 
 This will only happen when it's safe for things to happen in a different order. The code handling the key-presses and mouse click will never be reordered.
 
-Ok, that's the high-level. Let's dive into how it actually works:
+</trigger-point>
+
+</div>
+</div>
+
+<div class="section-with-slide min-viewport-height">
+<div class="slide">
+  <div class="slide-inner sunny-gradient">
+    <div class="browser-demo browser-frame h-center">
+      <script type="component">{
+        "module": "shared/demos/2023/event-loop/Video",
+        "props": {
+          "src": "asset-url:./videos/img-and-select.mp4",
+          "av1Src": "asset-url:./videos/img-and-select.webm",
+          "width": 1512,
+          "height": 614,
+          "apiName": "img-and-select"
+        }
+      }</script>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.reset())">
+
+Take a simple example like this…
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`img-and-select`).then(a => a.play())">
+
+It _feels like_ a bunch of stuff is happening at the same time:
+
+- Fetching the image over the network.
+- Decoding the image from whatever format it is, into RGBA data.
+- Listening for updates to mouse buttons and pointer position.
+- Performing hit-testing to figure out exactly what text the user wants to select.
+- Rendering updates to the image as it's decoded.
+- Rendering updates to the selected text.
+
+But, it's actually a series of specifically scheduled tasks. Even though no JavaScript was executed in this demo, everything you see was managed by the event loop.
+
+Ok, that's the high level. Let's dive into the details.
 
 </trigger-point>
 
@@ -185,7 +179,7 @@ Ok, that's the high-level. Let's dive into how it actually works:
 <div class="slide">
   <div class="slide-inner sunny-gradient">
     <script type="component">{
-      "module": "shared/demos/2022/event-loop/WorryCode"
+      "module": "shared/demos/2023/event-loop/WorryCode"
     }</script>
   </div>
 </div>

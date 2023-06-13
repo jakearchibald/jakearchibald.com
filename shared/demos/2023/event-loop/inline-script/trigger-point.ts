@@ -34,8 +34,11 @@ class TriggerPoint extends HTMLElement {
     if (TriggerPoint.#active) TriggerPoint.#active.#deactivate();
     this.classList.add('active');
     TriggerPoint.#active = this;
-    let triggerScript = this.getAttribute('ontrigger');
-    if (triggerScript) eval(triggerScript);
+    const triggerScript = this.getAttribute('ontrigger');
+
+    // Using self.eval so it's processed in the global scope.
+    // http://perfectionkills.com/global-eval-what-are-the-options/
+    if (triggerScript) self.eval(triggerScript);
   }
 
   #deactivate() {

@@ -9,9 +9,12 @@ $mobile-cutoff: 830px;
 
 html {
   font-size: 16px;
-  font-family: 'noto serif', serif;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052,
+    serif;
   line-height: 1.9;
   color: #333;
+  --heading-font-list: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif',
+    'Sitka Small', serif;
 }
 
 html,
@@ -50,6 +53,11 @@ body {
   .min-viewport-height {
     min-height: calc(100vh + var(--gradient-overlap));
     min-height: calc(100lvh + var(--gradient-overlap));
+  }
+
+  trigger-point:last-child {
+    min-height: 100vh;
+    min-height: 100lvh;
   }
 
   .slide {
@@ -123,7 +131,7 @@ body {
   }
 
   :is(h2, h3, h4, h5) {
-    font-family: Copse, serif;
+    font-family: var(--heading-font-list);
     text-align: center;
     line-height: 1.3;
     font-weight: normal;
@@ -168,7 +176,7 @@ body {
   height: 100%;
 
   text {
-    font-family: Copse, serif;
+    font-family: var(--heading-font-list);
     fill: #fff;
     text-anchor: middle;
     dominant-baseline: middle;
@@ -179,7 +187,7 @@ body {
 
 .book-subtitle {
   text-align: center;
-  font-family: Copse, serif;
+  font-family: var(--heading-font-list);
   font-size: 2.1rem;
   line-height: 1.3;
   margin: 4rem 0 3rem;

@@ -27,10 +27,6 @@ const EventLoopPage: FunctionalComponent<Props> = ({
     <html lang="en">
       <head>
         <GenericHead title={post.title} />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Copse&family=Noto+Serif:ital,wght@0,400;0,700;1,400"
-          rel="stylesheet"
-        />
         <style
           dangerouslySetInnerHTML={{
             __html: escapeStyleScriptContent(inlineStyles),
