@@ -56,6 +56,9 @@ TODO: table of contents
 <div class="section-with-slide min-viewport-height">
 <div class="slide">
   <div class="slide-inner ocean-gradient">
+    <script type="component">{
+      "module": "shared/demos/2023/event-loop/Threading"
+    }</script>
   </div>
 </div>
 
@@ -271,6 +274,10 @@ This waits 1s in parallel for each call, then each queue a task to run their cal
 queue-two-tasks
 
 inline-diagram: parallel waiting, then two main thread tasks
+
+Note: The real spec for `setTimeout` is more complicated than our sketch. One reason is to ensure that 'hello' always happens before 'world' in the example above, avoiding races when two calls are made at the same time with the same timeout.
+
+NEXT: multiple task queues - model network task source and interaction task source
 
 </div>
 </div>
