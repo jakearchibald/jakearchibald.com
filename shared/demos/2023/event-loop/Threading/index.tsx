@@ -19,18 +19,15 @@ const Threading: FunctionalComponent<Props> = () => {
               <span class="main-thread-title">Main thread</span>
             </div>
             <div class="row">
-              <div class="timeline-item" style={{ width: '27.1cqw' }}>
+              <div class="timeline-item" style={{ width: '40.7cqw' }}>
                 Operation A
               </div>
-              <div class="timeline-item" style={{ width: '21.7cqw' }}>
+              <div class="timeline-item" style={{ width: '24.3cqw' }}>
                 Operation B
-              </div>
-              <div class="timeline-item" style={{ width: '18cqw' }}>
-                Join A+B
               </div>
               <div
                 class="timeline-item render-item"
-                style={{ width: '23.4cqw' }}
+                style={{ width: '26.4cqw' }}
               >
                 Render result
               </div>
@@ -39,14 +36,14 @@ const Threading: FunctionalComponent<Props> = () => {
         </div>
         <div class="other-thread">
           <div class="row">
-            <div class="timeline-item" style={{ width: '27.1cqw' }}>
+            <div class="timeline-item" style={{ width: '40.7cqw' }}>
               Operation A
             </div>
           </div>
         </div>
         <div class="other-thread">
           <div class="row">
-            <div class="timeline-item" style={{ width: '21.7cqw' }}>
+            <div class="timeline-item" style={{ width: '24.3cqw' }}>
               Operation B
             </div>
           </div>
