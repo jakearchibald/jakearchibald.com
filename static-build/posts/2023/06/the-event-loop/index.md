@@ -18,7 +18,7 @@ meta: TODO
   "staticOnly": true
 }</script>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner default-gradient">
     <div class="book-title">
@@ -53,7 +53,7 @@ TODO: table of contents
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner ocean-gradient">
     <script type="component">{
@@ -137,7 +137,7 @@ But, this is also bad, as we're invoking a JavaScript callback outside of the ma
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner ocean-gradient">
     <script type="component">{
@@ -210,7 +210,7 @@ This will only happen when it's safe for things to happen in a different order. 
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner ocean-gradient">
   </div>
@@ -231,7 +231,7 @@ Let's dive into tasks:
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner ocean-gradient">
   </div>
@@ -282,7 +282,7 @@ NEXT: multiple task queues - model network task source and interaction task sour
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner sunny-gradient">
     <div class="browser-demo browser-frame h-center">
@@ -331,7 +331,7 @@ TODO: next up, setTimeout spec
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner sunny-gradient">
     <script type="component">{
@@ -366,7 +366,7 @@ But, now I understand the event loop, I know that the order of those lines doesn
 </div>
 </div>
 
-<div class="section-with-slide min-viewport-height">
+<div class="section-with-slide">
 <div class="slide">
   <div class="slide-inner ocean-gradient"></div>
 </div>

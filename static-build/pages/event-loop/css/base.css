@@ -45,14 +45,10 @@ body {
 @media (min-width: $mobile-cutoff) {
   .section-with-slide {
     display: grid;
-    --section-columns-def: minmax(400px, 1.5fr) minmax(430px, 1fr);
+    --section-columns-def: [content] minmax(430px, 1fr) [slide]
+      minmax(400px, 1.5fr);
     grid-template-columns: var(--section-columns-def);
     --gradient-overlap: 200px;
-  }
-
-  .min-viewport-height {
-    min-height: calc(100vh + var(--gradient-overlap));
-    min-height: calc(100lvh + var(--gradient-overlap));
   }
 
   trigger-point:last-child {
@@ -64,6 +60,8 @@ body {
     margin: calc(var(--gradient-overlap) * -1) 0;
     position: relative;
     clip-path: inset(0);
+    grid-area: slide;
+    grid-row: 1;
 
     --eased-gradient: linear-gradient(
       to bottom,
@@ -97,6 +95,11 @@ body {
     mask-repeat: no-repeat;
   }
 
+  .content {
+    grid-area: content;
+    grid-row: 1;
+  }
+
   .slide-inner {
     box-sizing: border-box;
     position: fixed;
@@ -108,6 +111,8 @@ body {
 
     & > :first-child {
       align-self: center;
+      grid-area: slide;
+      grid-row: 1;
     }
   }
 }
