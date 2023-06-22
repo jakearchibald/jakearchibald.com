@@ -66,25 +66,27 @@ TODO: table of contents
 
 # The 'main thread'
 
+<trigger-point ontrigger="getAPI(`threading`).then(a => a.setPhase(`initial`))">
+
 The best way to understand the event loop is to understand why it's needed, and to do that we need to talk about the 'main thread'.
 
-The simplest coding model is single threaded. One thing happens after the other.
+</trigger-point>
 
-diagram: Operation A, Operation B, Join A+B, display result (operation A is longer than B)
+<trigger-point ontrigger="getAPI(`threading`).then(a => a.setPhase(`single`))">
+
+The simplest coding model is single-threaded. One thing happens after the other.
 
 In this case, the 'main' thread is the only thread.
 
 But, modern computers have processors capable of doing multiple things at the same time, so single-threaded patterns can end up using a fraction of the computing power available.
 
-If we switch to a multi-threaded model, the operation can be completed faster, since certain bits of work can be performed in parallel.
+</trigger-point>
 
-diagram: Operations split into threads, and main thread is idle during that time.
+<trigger-point ontrigger="getAPI(`threading`).then(a => a.setPhase(`threaded`))">
 
-Not everything can be run in parallel, only things that can be done in isolation.
+If we switch to a multi-threaded model, the operation can be completed faster, since certain bits of work can be performed in parallel. But that isn't the only benefit.
 
-In this example, the two operations are run in parallel, but combining the results can't be done until the two operations are complete. The 'main' thread started the parallel operations, waits for both to complete, then handles the result, ensuing that A+B are combined, even if the operations finish in a different order.
-
-By moving this work into other threads, it's created an idle period for the main thread. This is great if the main thread handles a user interface, as it frees it up to handle clicks, scrolling, update rendering etc etc.
+By moving this work into other threads, it's created an 'idle' period for the main thread. This is great if the main thread handles a user interface, as it frees it up to handle interactions like clicks and update the rendering to respond to the user.
 
 That's ideal, because humans are used to doing multiple things at once. Walking while looking while listening while talking - we do it all in parallel without really thinking.
 
@@ -92,13 +94,15 @@ The only time we as humans operate in a single threaded manner is when we sneeze
 
 Sneezes are great. I'm a big fan. But, it isn't the right model to build user interfaces.
 
-When web developers talk about the 'main thread' they usually mean the thread that handles the web page's display and interaction. That means it's the thread that owns the DOM, the thread that handles clicks, and therefore it's the thread that runs JavaScript.
+When web developers talk about the 'main thread' they usually mean the thread that handles the web page's display and interaction. That means it's the thread that owns the DOM, applies styles, handles clicks, and therefore it's also the thread that runs JavaScript.
 
-In reality it's a little more complicated than that. Modern browsers will try to run different pages in different processes, meaning there are many 'main thread's. Sometimes, two pages can have synchronous access to each other, so two pages will share a 'main thread'. You could also say that each web worker has its own 'main thread'.
+In reality it's a little more complicated than that. Modern browsers will try to run different pages in different processes, meaning there are many 'main thread's. Sometimes, two pages can have synchronous access to each other, so two pages will share a main thread. You could also say that each web worker has its own main thread.
 
-Since a page's 'main thread' handles interaction and rendering, while managing things that are happening in parallel in other threads, it needs a scheduler to ensure everything happens as fast and as predictably as possible.
+Since a page's main thread handles interaction and rendering, while managing things that are happening in parallel in other threads, it needs a scheduler to ensure everything happens as fast and as predictably as possible.
 
 That scheduler is called the event loop. Each 'main thread' is governed by a single event loop.
+
+</trigger-point>
 
 # Why do we need an event loop?
 

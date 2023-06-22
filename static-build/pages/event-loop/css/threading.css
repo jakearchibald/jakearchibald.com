@@ -5,15 +5,33 @@
   font-family: sans-serif;
   line-height: 1;
 
-  .rows {
+  --padding: 0.9em;
+  --border: 0.15em;
+
+  .inner {
     font-size: 3.4cqw;
+    position: relative;
+    aspect-ratio: 603 / 222;
+    display: grid;
+    align-items: center;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+
+    & > * {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .rows {
     display: grid;
     grid-auto-flow: row;
     grid-auto-rows: max-content;
     gap: 0.2em;
-
-    --padding: 0.9em;
-    --border: 0.15em;
   }
 
   .row {
@@ -34,7 +52,8 @@
     background: #67a74e;
   }
 
-  .main-thread-content {
+  .main-thread {
+    box-sizing: border-box;
     padding: var(--padding);
     padding-top: 0;
     border: var(--border) solid #fff;
