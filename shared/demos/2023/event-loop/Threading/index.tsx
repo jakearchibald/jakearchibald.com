@@ -2,6 +2,7 @@ import { FunctionalComponent, h, Fragment } from 'preact';
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import useOnResize from '../utils/use-on-resize';
 import { useChangeEffect } from '../utils/use-change-effect';
+import usePhases from '../utils/use-phases';
 
 interface Props {}
 
@@ -28,10 +29,8 @@ function getStyles(el: HTMLElement): {
 
 const Threading: FunctionalComponent<Props> = () => {
   const root = useRef<HTMLDivElement>(null);
-  const [phase, setPhase] = useState<Phase>(phases[0]);
-  const renderedPhase = useRef<Phase>(phases[0]);
-  const targetPhase = useRef<Phase>(phases[0]);
-  const advancing = useRef<boolean>(false);
+  const [phase, lastPhase, setTargetPhase, phaseChangeHandled] =
+    usePhases(phases);
 
   const mainThread = [
     useRef<HTMLDivElement>(null),
@@ -56,38 +55,14 @@ const Threading: FunctionalComponent<Props> = () => {
   );
 
   useEffect(() => {
-    renderedPhase.current = phase;
-  }, [phase]);
-
-  useEffect(() => {
     setAPI('threading', {
       setPhase(phase: Phase) {
-        targetPhase.current = phase;
-        if (advancing.current) return;
-        advance();
+        setTargetPhase(phase);
       },
     });
   }, []);
 
-  const advance = () => {
-    if (targetPhase.current === renderedPhase.current) {
-      advancing.current = false;
-      return;
-    }
-
-    advancing.current = true;
-    const currentIndex = phaseIndexes[renderedPhase.current];
-    const targetIndex = phaseIndexes[targetPhase.current];
-    const nextPhase =
-      phases[targetIndex > currentIndex ? currentIndex + 1 : currentIndex - 1];
-
-    setPhase(nextPhase);
-  };
-
   useChangeEffect(() => {
-    const lastPhase = renderedPhase.current;
-    renderedPhase.current = phase;
-
     const animations: Animation[] = [];
 
     const styles = els.map(([_, elRef]) => {
@@ -147,7 +122,9 @@ const Threading: FunctionalComponent<Props> = () => {
       }
     }
 
-    Promise.all(animations.map((anim) => anim.finished)).then(() => advance());
+    Promise.all(animations.map((anim) => anim.finished)).then(() =>
+      phaseChangeHandled(),
+    );
   }, [phase]);
 
   const updateStyles = () => {
