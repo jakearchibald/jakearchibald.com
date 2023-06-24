@@ -7,21 +7,46 @@ import getStyles, { StyleInfo } from '../utils/get-styles';
 
 interface Props {
   apiName: string;
+  initialPhase?: Phase;
 }
 
-const phases = ['initial', 'naive', 'pre-parallel', 'parallel'] as const;
+const phases = [
+  'initial',
+  'naive',
+  'pre-parallel',
+  'parallel',
+  'pre-queued',
+  'queued',
+] as const;
 type Phase = typeof phases[number];
 const phaseIndexes = Object.fromEntries(phases.map((val, i) => [val, i]));
 
-const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
-  const [phase, lastPhase, setTargetPhase, phaseChangeHandled] =
-    usePhases(phases);
+const TimeoutSpec: FunctionalComponent<Props> = ({
+  apiName,
+  initialPhase = phases[0],
+}) => {
+  const [phase, lastPhase, setTargetPhase, phaseChangeHandled] = usePhases(
+    phases,
+    initialPhase,
+  );
 
   const introRef = useRef<HTMLDivElement>(null);
   const waitRef = useRef<HTMLDivElement>(null);
   const invokeRef = useRef<HTMLDivElement>(null);
   const parallelRef = useRef<HTMLDivElement>(null);
-  const els = [introRef, waitRef, invokeRef, parallelRef];
+  const queueRef = useRef<HTMLDivElement>(null);
+  const invokeOneRef = useRef<HTMLDivElement>(null);
+  const invokeTwoRef = useRef<HTMLDivElement>(null);
+  const els = [
+    introRef,
+    waitRef,
+    invokeRef,
+    parallelRef,
+    queueRef,
+    invokeOneRef,
+    invokeTwoRef,
+  ];
+
   const lastStylesRef = useRef<(StyleInfo | null)[] | null>(null);
 
   useEffect(() => {
@@ -32,10 +57,7 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
     });
   }, []);
 
-  useEffect(() => console.log(waitRef.current));
-
   useLayoutEffect(() => {
-    console.log(waitRef.current);
     const lastStyles = lastStylesRef.current;
     const currentStyles = els.map((elRef) => {
       if (!elRef.current) return null;
@@ -58,7 +80,12 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
 
       const currentStyle = currentStyles[i]!;
 
-      if (lastStyle.opacity === '0' && currentStyle.opacity === '1') {
+      if (
+        lastStyle.opacity === '0' &&
+        currentStyle.opacity === '1' &&
+        elRef !== invokeOneRef &&
+        elRef !== invokeTwoRef
+      ) {
         if (phase === 'naive') {
           animations.push(
             el.animate(
@@ -102,8 +129,10 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
       }
 
       if (
-        lastStyle.rect.left !== currentStyle.rect.left ||
-        lastStyle.rect.top !== currentStyle.rect.top
+        (lastStyle.rect.left !== currentStyle.rect.left ||
+          lastStyle.rect.top !== currentStyle.rect.top) &&
+        elRef !== invokeOneRef &&
+        elRef !== invokeTwoRef
       ) {
         animations.push(
           el.animate(
@@ -199,7 +228,7 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
                     phaseIndexes[phase] >= phaseIndexes['parallel'] ? '1' : '0',
                 }}
               >
-                <span class="num">1.</span>{' '}
+                <span class="num">1.</span>
                 <span class="fake-link">In parallel</span>:
               </div>
             )}
@@ -213,18 +242,31 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
                     phaseIndexes[phase] >= phaseIndexes['naive'] ? '1' : '0',
                 }}
               >
-                <span class="num">1.</span> Wait <var>ms</var> milliseconds.
+                <span class="num">1.</span>Wait <var>ms</var> milliseconds.
               </div>
 
-              {false && (
-                <div class="step">
-                  <span class="num">2.</span>{' '}
+              {phaseIndexes[phase] >= phaseIndexes['pre-queued'] && (
+                <div
+                  ref={queueRef}
+                  class="step"
+                  style={{
+                    opacity:
+                      phaseIndexes[phase] >= phaseIndexes['queued'] ? '1' : '0',
+                  }}
+                >
+                  <span class="num">2.</span>
                   <span class="fake-link">Queue a task</span> to run the
                   following steps:
                 </div>
               )}
 
-              <div class={false ? 'step-level' : ''}>
+              <div
+                class={
+                  phaseIndexes[phase] >= phaseIndexes['pre-queued']
+                    ? 'step-level'
+                    : ''
+                }
+              >
                 <div
                   ref={invokeRef}
                   class="step"
@@ -233,7 +275,30 @@ const TimeoutSpec: FunctionalComponent<Props> = ({ apiName }) => {
                       phaseIndexes[phase] >= phaseIndexes['naive'] ? '1' : '0',
                   }}
                 >
-                  <span class="num">1.</span>{' '}
+                  <span class="num">
+                    <span
+                      ref={invokeOneRef}
+                      style={{
+                        opacity:
+                          phaseIndexes[phase] >= phaseIndexes['pre-queued']
+                            ? '1'
+                            : '0',
+                      }}
+                    >
+                      1.
+                    </span>
+                    <span
+                      ref={invokeTwoRef}
+                      style={{
+                        opacity:
+                          phaseIndexes[phase] >= phaseIndexes['pre-queued']
+                            ? '0'
+                            : '1',
+                      }}
+                    >
+                      2.
+                    </span>
+                  </span>
                   <span class="fake-link">Invoke</span> <var>callback</var>.
                 </div>
               </div>

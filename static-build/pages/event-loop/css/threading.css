@@ -1,7 +1,6 @@
 .threading-diagram {
   margin: 20px;
   container-type: inline-size;
-  color: #fff;
   font-family: sans-serif;
   line-height: 1;
 
@@ -11,7 +10,6 @@
   .inner {
     font-size: 3.4cqw;
     position: relative;
-    aspect-ratio: 603 / 222;
     display: grid;
     align-items: center;
   }
@@ -46,22 +44,26 @@
     text-shadow: 0 0.08em 0.08em rgb(0 0 0 / 47%);
     padding: 0.6em 0.6em;
     box-sizing: border-box;
+    color: #fff;
   }
 
   .render-item {
     background: #67a74e;
   }
 
-  .main-thread {
+  .labelled-thread {
+    --color: #fff;
+
+    color: var(--color);
     box-sizing: border-box;
     padding: var(--padding);
     padding-top: 0;
-    border: var(--border) solid #fff;
+    border: var(--border) solid var(--color);
     border-top: none;
     border-radius: var(--border);
   }
 
-  .main-thread-top {
+  .labelled-thread-top {
     display: grid;
     grid-template-columns: 1.2em max-content 1fr;
     gap: 0.3em;
@@ -72,11 +74,11 @@
       content: '';
       display: block;
       height: var(--border);
-      background: #fff;
+      background: var(--color);
     }
   }
 
-  .main-thread-title {
+  .labelled-thread-title {
     transform: translateY(calc(-50% + var(--border) / 2));
     height: calc(var(--padding) + var(--border));
     display: grid;
@@ -87,7 +89,26 @@
     padding: 0 calc(var(--padding) + var(--border));
   }
 
-  .main-thread + .other-thread {
+  .labelled-thread + .other-thread {
     margin-top: 1em;
+  }
+}
+
+.inline-threading-diagram {
+  margin: 0 -11px;
+  --one-sec: 31.7cqw;
+  --append: 14.4cqw;
+
+  .labelled-thread {
+    --color: #666;
+    padding: 0 0.6em var(--padding);
+
+    & + .labelled-thread {
+      margin-top: 1em;
+    }
+  }
+
+  .labelled-thread-top {
+    margin: 0 -0.6em;
   }
 }

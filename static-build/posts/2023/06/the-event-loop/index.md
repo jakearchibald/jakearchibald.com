@@ -142,9 +142,25 @@ Let's try to define how this works.
 
 Cool, so, we wait the specified amount of time, then run the callback. But, this operation was started by JavaScript. JavaScript runs on the main thread. That means our 'wait' step is also running on the main thread.
 
-inline diagram: main, wait 1s, append 'hello', wait 1s, append 'world'. Use summary-style to highlight the main thread.
+<div class="threading-diagram inline-threading-diagram">
+  <div class="inner">
+    <div class="rows">
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Main thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+          <div class="timeline-item" style="width: var(--append)">'hello'</div>
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+          <div class="timeline-item" style="width: var(--append)">'world'</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-That means, during that 'wait', nothing else can happen. No interaction, no rendering, no other script. This design is sneezey.
+That means, during the 'wait' steps, nothing else can happen. No interaction, no rendering, no other script. It also means the second 'wait' is queued after the first. This design is sneezey.
 
 Let's fix it!
 
@@ -153,7 +169,38 @@ Let's fix it!
 
 Now we've told the browser to run the steps 'in parallel'. In web specs, 'in parallel' means: run the steps in another thread. That gets us off the main thread.
 
-inline diagram: idle main, wait 1s and append 'hello' and 'world' in other threads.
+<div class="threading-diagram inline-threading-diagram">
+  <div class="inner">
+    <div class="rows">
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Main thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="visibility: hidden">.</div>
+        </div>
+      </div>
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Other thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+          <div class="timeline-item" style="width: var(--append)">'hello'</div>
+        </div>
+      </div>
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Other thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+          <div class="timeline-item" style="width: var(--append)">'world'</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 But, this is also bad, as we're invoking a JavaScript callback outside of the main thread.
 
@@ -237,21 +284,73 @@ This will only happen when it's safe for things to happen in a different order. 
 
 <div class="section-with-slide">
 <div class="slide">
-  <div class="slide-inner ocean-gradient">
+  <div class="slide-inner sunny-gradient">
+    <script type="component">{
+      "module": "shared/demos/2023/event-loop/TimeoutSpec",
+      "props": { "apiName": "timeout-spec-2", "initialPhase": "parallel" }
+    }</script>
   </div>
 </div>
 
 <div class="content">
 
-diagram: spec again.
+<trigger-point ontrigger="getAPI(`timeout-spec-2`).then(a => a.setPhase(`parallel`))">
 
-Ok, so we can't just run everything in parallel. 'Waiting' in parallel is correct, but once the wait is over, we need to get back onto the main thread in some reliable and managed way.
+Let's get back to our `setTimeout` spec.
 
-diagram: update spec to queue a task.
+```js
+setTimeout(() => {
+  document.body.append('hello');
+}, 1000);
+
+setTimeout(() => {
+  document.body.append('world');
+}, 1000);
+```
+
+We can't just run everything in parallel like we are now. 'Waiting' in parallel is correct, but once the wait is over, we need to get back onto the main thread in some reliable and managed way.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`timeout-spec-2`).then(a => a.setPhase(`queued`))">
 
 And we do that by 'queuing a task' on the event loop.
 
+<div class="threading-diagram inline-threading-diagram">
+  <div class="inner">
+    <div class="rows">
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Main thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec); visibility: hidden">.</div>
+          <div class="timeline-item" style="width: var(--append)">'hello'</div>
+          <div class="timeline-item" style="width: var(--append)">'world'</div>
+        </div>
+      </div>
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Other thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+        </div>
+      </div>
+      <div class="labelled-thread">
+        <div class="labelled-thread-top">
+          <span class="labelled-thread-title">Other thread</span>
+        </div>
+        <div class="row">
+          <div class="timeline-item" style="width: var(--one-sec)">Wait 1s</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 Let's dive into tasks:
+
+</trigger-point>
 
 </div>
 </div>

@@ -136,11 +136,11 @@ const Threading: FunctionalComponent<Props> = () => {
 
   return (
     <div ref={root} class="threading-diagram">
-      <div class="inner">
+      <div class="inner" style="aspect-ratio: 603 / 222">
         <div class="rows" style={{ visibility: __PRERENDER__ ? '' : 'hidden' }}>
-          <div ref={mainThread[0]} class="main-thread">
-            <div class="main-thread-top">
-              <span class="main-thread-title">Main thread</span>
+          <div ref={mainThread[0]} class="labelled-thread">
+            <div class="labelled-thread-top">
+              <span class="labelled-thread-title">Main thread</span>
             </div>
             <div class="row">
               <div
@@ -220,9 +220,9 @@ const Threading: FunctionalComponent<Props> = () => {
         </div>
         {!__PRERENDER__ && (
           <div class="stage">
-            <div ref={mainThread[1]} class="main-thread">
-              <div class="main-thread-top">
-                <span class="main-thread-title">Main thread</span>
+            <div ref={mainThread[1]} class="labelled-thread">
+              <div class="labelled-thread-top">
+                <span class="labelled-thread-title">Main thread</span>
               </div>
             </div>
             <div ref={opA[1]} class="timeline-item">

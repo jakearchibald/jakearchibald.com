@@ -53,4 +53,15 @@
     text-decoration: underline;
     text-decoration-color: rgba(0, 0, 0, 0.3);
   }
+
+  .num {
+    width: 1.2em;
+    display: inline-grid;
+    isolation: isolate;
+
+    & > * {
+      mix-blend-mode: plus-lighter;
+      grid-area: 1/1;
+    }
+  }
 }

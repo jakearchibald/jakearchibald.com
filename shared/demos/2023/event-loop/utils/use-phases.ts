@@ -15,15 +15,16 @@ type UsePhasesReturn<Phases extends readonly string[]> = [
 
 export default function usePhases<Phases extends readonly string[]>(
   phases: Phases,
+  initialPhase: Phases[number] = phases[0],
 ): UsePhasesReturn<Phases> {
-  const [phase, setPhase] = useState<Phases[number]>(phases[0]);
+  const [phase, setPhase] = useState<Phases[number]>(initialPhase);
   const phaseIndexes = useMemo(
     () => Object.fromEntries(phases.map((val, i) => [val, i])),
     [],
   );
 
-  const renderedPhase = useRef<Phases[number]>(phases[0]);
-  const targetPhase = useRef<Phases[number]>(phases[0]);
+  const renderedPhase = useRef<Phases[number]>(initialPhase);
+  const targetPhase = useRef<Phases[number]>(initialPhase);
   const handlingPhaseChange = useRef<boolean>(false);
 
   useLayoutEffect(() => {
