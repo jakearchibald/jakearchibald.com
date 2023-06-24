@@ -1,4 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 
 type UsePhasesReturn<Phases extends readonly string[]> = [
   phase: Phases[number],
@@ -20,7 +26,7 @@ export default function usePhases<Phases extends readonly string[]>(
   const targetPhase = useRef<Phases[number]>(phases[0]);
   const handlingPhaseChange = useRef<boolean>(false);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     renderedPhase.current = phase;
   }, [phase]);
 

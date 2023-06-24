@@ -3,29 +3,13 @@ import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
 import useOnResize from '../utils/use-on-resize';
 import { useChangeEffect } from '../utils/use-change-effect';
 import usePhases from '../utils/use-phases';
+import getStyles from '../utils/get-styles';
 
 interface Props {}
 
 const phases = ['initial', 'single', 'split-into-threads', 'threaded'] as const;
 type Phase = typeof phases[number];
 const phaseIndexes = Object.fromEntries(phases.map((val, i) => [val, i]));
-
-function getStyles(el: HTMLElement): {
-  rect: DOMRect;
-  width: string;
-  height: string;
-  opacity: string;
-  transform: string;
-} {
-  const { width, height, opacity, transform } = getComputedStyle(el);
-  return {
-    rect: el.getBoundingClientRect(),
-    width,
-    height,
-    opacity,
-    transform,
-  };
-}
 
 const Threading: FunctionalComponent<Props> = () => {
   const root = useRef<HTMLDivElement>(null);

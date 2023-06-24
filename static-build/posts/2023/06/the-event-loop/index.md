@@ -104,7 +104,24 @@ That scheduler is called the event loop. Each 'main thread' is governed by a sin
 
 </trigger-point>
 
+</div>
+</div>
+
+<div class="section-with-slide">
+<div class="slide">
+  <div class="slide-inner sunny-gradient">
+    <script type="component">{
+      "module": "shared/demos/2023/event-loop/TimeoutSpec",
+      "props": { "apiName": "timeout-spec-1" }
+    }</script>
+  </div>
+</div>
+
+<div class="content">
+
 # Why do we need an event loop?
+
+<trigger-point ontrigger="getAPI(`timeout-spec-1`).then(a => a.setPhase(`initial`))">
 
 Let's look at a real feature that makes use of the event loop:
 
@@ -120,7 +137,8 @@ setTimeout(() => {
 
 Let's try to define how this works.
 
-diagram: spec text, wait ms, invoke callback.
+</trigger-point>
+<trigger-point ontrigger="getAPI(`timeout-spec-1`).then(a => a.setPhase(`naive`))">
 
 Cool, so, we wait the specified amount of time, then run the callback. But, this operation was started by JavaScript. JavaScript runs on the main thread. That means our 'wait' step is also running on the main thread.
 
@@ -130,13 +148,16 @@ That means, during that 'wait', nothing else can happen. No interaction, no rend
 
 Let's fix it!
 
-diagram: add 'in parallel' step.
+</trigger-point>
+<trigger-point ontrigger="getAPI(`timeout-spec-1`).then(a => a.setPhase(`parallel`))">
 
 Now we've told the browser to run the steps 'in parallel'. In web specs, 'in parallel' means: run the steps in another thread. That gets us off the main thread.
 
 inline diagram: idle main, wait 1s and append 'hello' and 'world' in other threads.
 
 But, this is also bad, as we're invoking a JavaScript callback outside of the main thread.
+
+</trigger-point>
 
 </div>
 </div>
