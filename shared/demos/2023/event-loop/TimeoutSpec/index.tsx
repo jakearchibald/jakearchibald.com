@@ -49,6 +49,11 @@ const TimeoutSpec: FunctionalComponent<Props> = ({
 
   const lastStylesRef = useRef<(StyleInfo | null)[] | null>(null);
 
+  lastStylesRef.current = els.map((elRef) => {
+    if (!elRef.current) return null;
+    return getStyles(elRef.current);
+  });
+
   useEffect(() => {
     setAPI(apiName, {
       setPhase(phase: Phase) {
@@ -57,17 +62,12 @@ const TimeoutSpec: FunctionalComponent<Props> = ({
     });
   }, []);
 
-  useLayoutEffect(() => {
-    const lastStyles = lastStylesRef.current;
+  useChangeEffect(() => {
+    const lastStyles = lastStylesRef.current!;
     const currentStyles = els.map((elRef) => {
       if (!elRef.current) return null;
       return getStyles(elRef.current);
     });
-
-    lastStylesRef.current = currentStyles;
-
-    // If this is the first render, don't animate
-    if (!lastStyles) return;
 
     const animations: Animation[] = [];
     let fadedIn = 0;

@@ -110,5 +110,6 @@
 
   .labelled-thread-top {
     margin: 0 -0.6em;
+    grid-template-columns: 0.8em max-content 1fr;
   }
 }

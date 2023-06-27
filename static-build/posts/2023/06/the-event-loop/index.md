@@ -222,7 +222,7 @@ But, this is also bad, as we're invoking a JavaScript callback outside of the ma
 
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(0))">
 
-Lets look at a world where everything just runs in parallel:
+Let's look at a world where everything just runs in parallel:
 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(1))">
