@@ -70,6 +70,7 @@ const EventOrdering: FunctionalComponent<Props> = () => {
     });
 
     const animations: Animation[] = [];
+    let fadedIn = 0;
 
     for (const [i, elRef] of els.entries()) {
       const el = elRef.current;
@@ -89,11 +90,14 @@ const EventOrdering: FunctionalComponent<Props> = () => {
             },
             {
               duration: 300,
+              delay: fadedIn * 200,
               easing: 'cubic-bezier(0.33, 1, 0.68, 1)', // easeOutCubic
               fill: 'backwards',
             },
           ),
         );
+
+        fadedIn++;
       } else {
         animations.push(
           el.animate(

@@ -230,9 +230,10 @@ Let's look at a world where everything just runs in parallel:
 Let's say the user:
 
 1. Presses 'A' on the keyboard.
-1. They click something.
-1. They press 'B'.
-1. The browser renders the current state of the document.
+1. Clicks something.
+1. Presses 'B' on the keyboard.
+
+Then the browser renders the current state of the document.
 
 Running this all in parallel creates a bunch of problems. Although the code handling these events has started in the right order (and that isn't even guaranteed in a fully parallel system), the code handling the 'A' key press took longer, so it completes _after_ the 'B' key press and the click.
 
