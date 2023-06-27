@@ -30,14 +30,8 @@ const TimeoutSpec: FunctionalComponent<Props> = ({
     initialPhase,
   );
 
-  const introRef = useRef<HTMLDivElement>(null);
-  const waitRef = useRef<HTMLDivElement>(null);
-  const invokeRef = useRef<HTMLDivElement>(null);
-  const parallelRef = useRef<HTMLDivElement>(null);
-  const queueRef = useRef<HTMLDivElement>(null);
-  const invokeOneRef = useRef<HTMLDivElement>(null);
-  const invokeTwoRef = useRef<HTMLDivElement>(null);
-  const els = [
+  const els = Array.from({ length: 7 }, () => useRef<HTMLDivElement>(null));
+  const [
     introRef,
     waitRef,
     invokeRef,
@@ -45,7 +39,7 @@ const TimeoutSpec: FunctionalComponent<Props> = ({
     queueRef,
     invokeOneRef,
     invokeTwoRef,
-  ];
+  ] = els;
 
   const lastStylesRef = useRef<(StyleInfo | null)[] | null>(null);
 

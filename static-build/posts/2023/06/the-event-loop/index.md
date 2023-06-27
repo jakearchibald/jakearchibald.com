@@ -220,29 +220,19 @@ But, this is also bad, as we're invoking a JavaScript callback outside of the ma
 
 <div class="content">
 
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(0))">
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.setPhase('initial'))">
 
 Let's look at a world where everything just runs in parallel:
 
 </trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(1))">
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.setPhase('parallel'))">
 
-Let's say the user presses 'A' on the keyboard.
+Let's say the user:
 
-</trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(2))">
-
-They click something.
-
-</trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(3))">
-
-They press 'B'.
-
-</trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.showBoxesPhase(4))">
-
-And the browser renders the current state of the document.
+1. Presses 'A' on the keyboard.
+1. They click something.
+1. They press 'B'.
+1. The browser renders the current state of the document.
 
 Running this all in parallel creates a bunch of problems. Although the code handling these events has started in the right order (and that isn't even guaranteed in a fully parallel system), the code handling the 'A' key press took longer, so it completes _after_ the 'B' key press and the click.
 
@@ -260,7 +250,7 @@ el.style.display = 'none';
 Could the user see a flash of `el`, because the browser rendered the result between those two lines? In a fully parallel system, yes, but that isn't how it works, and that's all thanks to the event loop.
 
 </trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.sequencePhase())">
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.setPhase('ordered'))">
 
 On the web platform, unless something is explicitly 'asynchronous', the event loop makes sure things 'run to completion'. As in, one task cannot happen in the middle of another task.
 

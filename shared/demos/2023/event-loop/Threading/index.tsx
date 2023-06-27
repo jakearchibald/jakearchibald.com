@@ -16,27 +16,12 @@ const Threading: FunctionalComponent<Props> = () => {
   const [phase, lastPhase, setTargetPhase, phaseChangeHandled] =
     usePhases(phases);
 
-  const mainThread = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ] as const;
-  const opA = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ] as const;
-  const opB = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ] as const;
-  const render = [
-    useRef<HTMLDivElement>(null),
-    useRef<HTMLDivElement>(null),
-  ] as const;
-
-  const els = useMemo(
-    () => [mainThread, opA, opB, render],
-    [mainThread, opA, opB, render],
+  const els = Array.from(
+    { length: 4 },
+    () => [useRef<HTMLDivElement>(null), useRef<HTMLDivElement>(null)] as const,
   );
+
+  const [mainThread, opA, opB, render] = els;
 
   useEffect(() => {
     setAPI('threading', {

@@ -1,416 +1,334 @@
-import { FunctionalComponent, h } from 'preact';
-import { useEffect, useLayoutEffect, useRef, useState } from 'preact/hooks';
+import { FunctionalComponent, h, Fragment } from 'preact';
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import useOnResize from '../utils/use-on-resize';
 import { useChangeEffect } from '../utils/use-change-effect';
-import { usePrevious } from '../utils/use-previous';
+import usePhases from '../utils/use-phases';
+import getStyles, { StyleInfo } from '../utils/get-styles';
 
 interface Props {}
 
-const width = 500;
-const boxHeight = 50;
-const gap = 3;
-
-interface Box {
-  label: string;
-  share: number;
-  initialX: number;
-  class: string;
-}
-
-const boxKeyA: Box = {
-  label: 'Key: A',
-  class: 'key-a',
-  share: 2.5,
-  initialX: 151,
-};
-
-const boxRender: Box = {
-  label: 'Render',
-  class: 'render',
-  share: 1,
-  initialX: 272,
-};
-
-const boxClick: Box = {
-  label: 'Click',
-  class: 'click',
-  share: 1.5,
-  initialX: 189,
-};
-
-const boxKeyB: Box = {
-  label: 'Key: B',
-  class: 'key-b',
-  share: 1,
-  initialX: 254,
-};
-
-const boxesFinalOrder = [boxKeyA, boxRender, boxClick, boxKeyB];
-const boxesDOMOrder = [boxKeyA, boxClick, boxKeyB, boxRender];
-
-const boxSizeShareTotal = boxesFinalOrder.reduce(
-  (total, box) => total + box.share,
-  0,
-);
-
-const availableWidth = width - gap * (boxesFinalOrder.length - 1);
-
-const boxWidthsMap = new Map<Box, number>(
-  boxesDOMOrder.map((box) => [
-    box,
-    (box.share / boxSizeShareTotal) * availableWidth,
-  ]),
-);
-const boxWidths = [...boxWidthsMap.values()];
-
-const [finalOrderXs, sequenceOrderXs] = [boxesFinalOrder, boxesDOMOrder].map(
-  (boxes) => {
-    let latestX = 0;
-
-    const map = new Map<Box, number>(
-      boxes.map((box) => {
-        const x = latestX;
-        latestX += boxWidthsMap.get(box)! + gap;
-        return [box, x];
-      }),
-    );
-
-    if (boxes === boxesDOMOrder) return [...map.values()];
-    return boxesDOMOrder.map((box) => map.get(box)!);
-  },
-);
-
-const parallelXs = boxesDOMOrder.map((box) => box.initialX);
-
-const height =
-  boxHeight * boxesFinalOrder.length + gap * (boxesFinalOrder.length - 1);
-
-const boxParallelYs = boxesDOMOrder.map(
-  (box, i) => i * (boxHeight + gap) - height / 2,
-);
-const boxSequenceYs = boxesDOMOrder.map(() => boxHeight / -2);
-
-const enum Phase {
-  Parallel,
-  Sequence,
-  EarlyRender,
-}
+const phases = [
+  'initial',
+  'parallel',
+  'ordering',
+  'ordered',
+  'reordering-1',
+  'reordering-2',
+  'reordered',
+] as const;
+type Phase = typeof phases[number];
+const phaseIndexes = Object.fromEntries(phases.map((val, i) => [val, i]));
 
 const EventOrdering: FunctionalComponent<Props> = () => {
-  const boxRefs = Array.from({ length: boxesDOMOrder.length }, () =>
-    useRef<SVGGElement>(null),
-  );
-  /*const boxCapturedTransforms = Array.from(
-    { length: boxesDOMOrder.length },
-    () => useRef<string>(),
-  );*/
-  const animQueue = useRef(Promise.resolve());
-  const boxHiddenStates = Array.from({ length: boxesDOMOrder.length }, () =>
-    useState<boolean>(true),
-  );
-  const [phase, setPhase] = useState<Phase>(Phase.Parallel);
-  const previousPhase = usePrevious(phase);
+  const root = useRef<HTMLDivElement>(null);
+  const [phase, lastPhase, setTargetPhase, phaseChangeHandled] =
+    usePhases(phases);
 
-  const [boxXs, boxYs] =
-    phase === Phase.EarlyRender
-      ? [finalOrderXs, boxSequenceYs]
-      : phase === Phase.Sequence
-      ? [sequenceOrderXs, boxSequenceYs]
-      : [parallelXs, boxParallelYs];
+  const els = Array.from({ length: 4 }, () => useRef<HTMLDivElement>(null));
+  const [keyA, click, keyB, render] = els;
+  const lastStylesRef = useRef<(StyleInfo | null)[] | null>(null);
 
-  /*const captureBoxTransforms = () => {
-    for (const [i, boxRef] of boxRefs.entries()) {
-      boxCapturedTransforms[i].current = getComputedStyle(
-        boxRef.current!,
-      ).transform;
-    }
-  };*/
-
-  useChangeEffect(() => {
-    // Forward steps
-    if (phase >= Phase.Sequence && previousPhase! < Phase.Sequence) {
-      animQueue.current = animQueue.current
-        .then(async () => {
-          const animPromises = boxRefs.map(async (boxRef, i) => {
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${parallelXs[i]}px, ${boxParallelYs[i]}px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${boxParallelYs[i]}px)`,
-                ],
-              },
-              {
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${boxParallelYs[i]}px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                ],
-              },
-              {
-                delay: 50,
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-          });
-
-          await Promise.all(animPromises);
-        })
-        .catch(() => {});
-    }
-    if (phase >= Phase.EarlyRender && previousPhase! < Phase.EarlyRender) {
-      animQueue.current = animQueue.current
-        .then(async () => {
-          const animPromises = boxRefs.map(async (boxRef, i) => {
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                ],
-              },
-              {
-                duration: 300,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                  `translate(${finalOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                ],
-              },
-              {
-                delay: 50,
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${finalOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                  `translate(${finalOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                ],
-              },
-              {
-                delay: 50,
-                duration: 300,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-          });
-
-          await Promise.all(animPromises);
-        })
-        .catch(() => {});
-    }
-
-    // Backwards steps
-    if (phase < Phase.EarlyRender && previousPhase! >= Phase.EarlyRender) {
-      animQueue.current = animQueue.current
-        .then(async () => {
-          const animPromises = boxRefs.map(async (boxRef, i) => {
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${finalOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                  `translate(${finalOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                ],
-              },
-              {
-                duration: 300,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${finalOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                ],
-              },
-              {
-                delay: 50,
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${
-                    i === 0
-                      ? boxSequenceYs[i]
-                      : i === 3
-                      ? -boxHeight - gap / 2
-                      : gap / 2
-                  }px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                ],
-              },
-              {
-                delay: 50,
-                duration: 300,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-          });
-
-          await Promise.all(animPromises);
-        })
-        .catch(() => {});
-    }
-    if (phase < Phase.Sequence && previousPhase! >= Phase.Sequence) {
-      animQueue.current = animQueue.current
-        .then(async () => {
-          const animPromises = boxRefs.map(async (boxRef, i) => {
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${boxSequenceYs[i]}px)`,
-                  `translate(${sequenceOrderXs[i]}px, ${boxParallelYs[i]}px)`,
-                ],
-              },
-              {
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-
-            await boxRef.current!.animate(
-              {
-                transform: [
-                  `translate(${sequenceOrderXs[i]}px, ${boxParallelYs[i]}px)`,
-                  `translate(${parallelXs[i]}px, ${boxParallelYs[i]}px)`,
-                ],
-              },
-
-              {
-                delay: 50,
-                duration: 400,
-                easing: 'cubic-bezier(0.65, 0, 0.35, 1)',
-                fill: 'backwards',
-              },
-            ).finished;
-          });
-
-          await Promise.all(animPromises);
-        })
-        .catch(() => {});
-    }
-  }, [phase]);
+  lastStylesRef.current = els.map((elRef) => {
+    if (!elRef.current) return null;
+    return getStyles(elRef.current);
+  });
 
   useEffect(() => {
     setAPI('event-ordering', {
-      showBoxesPhase(num: number) {
-        for (const [i, [_, setBoxHidden]] of boxHiddenStates.entries()) {
-          setBoxHidden(i >= num);
-        }
-        setPhase(Phase.Parallel);
-      },
-      sequencePhase() {
-        for (const [_, setBoxHidden] of boxHiddenStates) {
-          setBoxHidden(false);
-        }
-        setPhase(Phase.Sequence);
-      },
-      finalPhase() {
-        for (const [_, setBoxHidden] of boxHiddenStates) {
-          setBoxHidden(false);
-        }
-        setPhase(Phase.EarlyRender);
+      setPhase(phase: Phase) {
+        setTargetPhase(phase);
       },
     });
   }, []);
 
+  useChangeEffect(() => {
+    const lastStyles = lastStylesRef.current!;
+    const currentStyles = els.map((elRef) => {
+      if (!elRef.current) return null;
+      return getStyles(elRef.current);
+    });
+
+    const animations: Animation[] = [];
+
+    for (const [i, elRef] of els.entries()) {
+      const el = elRef.current;
+      const lastStyle = lastStyles[i];
+
+      if (!lastStyle || !el) continue;
+
+      const currentStyle = currentStyles[i]!;
+
+      if (lastStyle.opacity === '0' && currentStyle.opacity === '1') {
+        animations.push(
+          el.animate(
+            {
+              offset: 0,
+              opacity: lastStyle.opacity,
+              transform: 'scale(0.4)',
+            },
+            {
+              duration: 300,
+              easing: 'cubic-bezier(0.33, 1, 0.68, 1)', // easeOutCubic
+              fill: 'backwards',
+            },
+          ),
+        );
+      } else {
+        animations.push(
+          el.animate(
+            { offset: 0, opacity: lastStyle.opacity },
+            {
+              duration: 300,
+              easing: 'cubic-bezier(0.33, 1, 0.68, 1)', // easeOutCubic
+              fill: 'backwards',
+            },
+          ),
+        );
+      }
+
+      if (
+        lastStyle.rect.left !== currentStyle.rect.left ||
+        lastStyle.rect.top !== currentStyle.rect.top
+      ) {
+        animations.push(
+          el.animate(
+            {
+              offset: 0,
+              transform: `translate(${
+                lastStyle.rect.left - currentStyle.rect.left
+              }px, ${lastStyle.rect.top - currentStyle.rect.top}px)`,
+            },
+            {
+              duration: 400,
+              easing: 'cubic-bezier(0.65, 0, 0.35, 1)', // easeInOutCubic
+              fill: 'backwards',
+            },
+          ),
+        );
+      }
+    }
+
+    Promise.all(animations.map((anim) => anim.finished)).then(() =>
+      phaseChangeHandled(),
+    );
+  }, [phase]);
+
   return (
-    <svg
-      class="event-ordering-svg"
-      viewBox={`0 ${height / -2} ${width} ${height}`}
-    >
-      {boxesDOMOrder.map((box, i) => (
-        <g
-          ref={boxRefs[i]}
-          class={['event-ordering-item', box.class].join(' ')}
-          transform={`translate(${boxXs[i]} ${boxYs[i]})`}
-        >
-          <g
-            class={[
-              'event-ordering-item-hider',
-              boxHiddenStates[i][0] && 'hidden',
-            ]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            <rect width={boxWidths[i]} height={boxHeight} />
-            <text class="event-ordering-label" x="10" y={boxHeight / 2}>
-              {box.label}
-            </text>
-          </g>
-        </g>
-      ))}
-    </svg>
+    <div ref={root} class="threading-diagram">
+      <div class="inner" style="aspect-ratio: 603 / 228; font-size: 3.9cqw">
+        <div class="rows">
+          {phaseIndexes[phase] <= phaseIndexes['parallel'] ? (
+            <>
+              <div class="row">
+                <div
+                  ref={keyA}
+                  style={{
+                    width: '37cqw',
+                    marginLeft: '33cqw',
+                    opacity: phase === 'parallel' ? '1' : '0',
+                  }}
+                  class="timeline-item"
+                >
+                  Key: A
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  ref={click}
+                  style={{
+                    width: '23cqw',
+                    marginLeft: '39cqw',
+                    opacity: phase === 'parallel' ? '1' : '0',
+                  }}
+                  class="timeline-item"
+                >
+                  Click
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  ref={keyB}
+                  style={{
+                    width: '18cqw',
+                    marginLeft: '48cqw',
+                    opacity: phase === 'parallel' ? '1' : '0',
+                  }}
+                  class="timeline-item"
+                >
+                  Key: B
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  ref={render}
+                  style={{
+                    width: '19cqw',
+                    marginLeft: '52cqw',
+                    opacity: phase === 'parallel' ? '1' : '0',
+                  }}
+                  class="timeline-item render-item"
+                >
+                  Render
+                </div>
+              </div>
+            </>
+          ) : phase === 'ordering' ? (
+            <>
+              <div class="row">
+                <div
+                  ref={keyA}
+                  style={{ width: '37cqw' }}
+                  class="timeline-item"
+                >
+                  Key: A
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  style={{ width: '37cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Key: A
+                </div>
+                <div
+                  ref={click}
+                  style={{ width: '23cqw' }}
+                  class="timeline-item"
+                >
+                  Click
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  style={{ width: '37cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Key: A
+                </div>
+                <div
+                  style={{ width: '23cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Click
+                </div>
+                <div
+                  ref={keyB}
+                  style={{ width: '18cqw' }}
+                  class="timeline-item"
+                >
+                  Key: B
+                </div>
+              </div>
+              <div class="row">
+                <div
+                  style={{ width: '37cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Key: A
+                </div>
+                <div
+                  style={{ width: '23cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Click
+                </div>
+                <div
+                  style={{ width: '18cqw', visibility: 'hidden' }}
+                  class="timeline-item"
+                >
+                  Key: B
+                </div>
+                <div
+                  ref={render}
+                  style={{ width: '19cqw' }}
+                  class="timeline-item render-item"
+                >
+                  Render
+                </div>
+              </div>
+            </>
+          ) : phase === 'ordered' ? (
+            <div class="row">
+              <div
+                ref={keyA}
+                style={{
+                  width: '37cqw',
+                }}
+                class="timeline-item"
+              >
+                Key: A
+              </div>
+              <div
+                ref={click}
+                style={{
+                  width: '23cqw',
+                }}
+                class="timeline-item"
+              >
+                Click
+              </div>
+              <div
+                ref={keyB}
+                style={{
+                  width: '18cqw',
+                }}
+                class="timeline-item"
+              >
+                Key: B
+              </div>
+              <div
+                ref={render}
+                style={{
+                  width: '19cqw',
+                }}
+                class="timeline-item render-item"
+              >
+                Render
+              </div>
+            </div>
+          ) : phase === 'reordered' ? (
+            <div class="row">
+              <div
+                ref={keyA}
+                style={{
+                  width: '37cqw',
+                }}
+                class="timeline-item"
+              >
+                Key: A
+              </div>
+              <div
+                ref={render}
+                style={{
+                  width: '19cqw',
+                }}
+                class="timeline-item render-item"
+              >
+                Render
+              </div>
+              <div
+                ref={click}
+                style={{
+                  width: '23cqw',
+                }}
+                class="timeline-item"
+              >
+                Click
+              </div>
+              <div
+                ref={keyB}
+                style={{
+                  width: '18cqw',
+                }}
+                class="timeline-item"
+              >
+                Key: B
+              </div>
+            </div>
+          ) : null}
+        </div>
+      </div>
+    </div>
   );
 };
 
