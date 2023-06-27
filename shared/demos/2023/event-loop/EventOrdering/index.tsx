@@ -1,5 +1,11 @@
 import { FunctionalComponent, h, Fragment } from 'preact';
-import { useEffect, useMemo, useRef, useState } from 'preact/hooks';
+import {
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'preact/hooks';
 import useOnResize from '../utils/use-on-resize';
 import { useChangeEffect } from '../utils/use-change-effect';
 import usePhases from '../utils/use-phases';
@@ -24,8 +30,23 @@ const EventOrdering: FunctionalComponent<Props> = () => {
   const [phase, lastPhase, setTargetPhase, phaseChangeHandled] =
     usePhases(phases);
 
-  const els = Array.from({ length: 4 }, () => useRef<HTMLDivElement>(null));
-  const [keyA, click, keyB, render] = els;
+  const els = Array.from({ length: 4 }, () =>
+    useRef<HTMLDivElement | null>(null),
+  );
+
+  // Having to reimplement refs due to bugs in Preact's ref system
+  useLayoutEffect(() => {
+    for (const [i, className] of [
+      'ref-keyA',
+      'ref-click',
+      'ref-keyB',
+      'ref-render',
+    ].entries()) {
+      const el = root.current?.querySelector<HTMLDivElement>(`.${className}`);
+      els[i].current = el || null;
+    }
+  });
+
   const lastStylesRef = useRef<(StyleInfo | null)[] | null>(null);
 
   lastStylesRef.current = els.map((elRef) => {
@@ -121,52 +142,48 @@ const EventOrdering: FunctionalComponent<Props> = () => {
             <>
               <div class="row">
                 <div
-                  ref={keyA}
                   style={{
                     width: '37cqw',
                     marginLeft: '33cqw',
                     opacity: phase === 'parallel' ? '1' : '0',
                   }}
-                  class="timeline-item"
+                  class="timeline-item ref-keyA"
                 >
                   Key: A
                 </div>
               </div>
               <div class="row">
                 <div
-                  ref={click}
                   style={{
                     width: '23cqw',
                     marginLeft: '39cqw',
                     opacity: phase === 'parallel' ? '1' : '0',
                   }}
-                  class="timeline-item"
+                  class="timeline-item ref-click"
                 >
                   Click
                 </div>
               </div>
               <div class="row">
                 <div
-                  ref={keyB}
                   style={{
                     width: '18cqw',
                     marginLeft: '48cqw',
                     opacity: phase === 'parallel' ? '1' : '0',
                   }}
-                  class="timeline-item"
+                  class="timeline-item ref-keyB"
                 >
                   Key: B
                 </div>
               </div>
               <div class="row">
                 <div
-                  ref={render}
                   style={{
                     width: '19cqw',
                     marginLeft: '52cqw',
                     opacity: phase === 'parallel' ? '1' : '0',
                   }}
-                  class="timeline-item render-item"
+                  class="timeline-item render-item ref-render"
                 >
                   Render
                 </div>
@@ -175,11 +192,7 @@ const EventOrdering: FunctionalComponent<Props> = () => {
           ) : phase === 'ordering' ? (
             <>
               <div class="row">
-                <div
-                  ref={keyA}
-                  style={{ width: '37cqw' }}
-                  class="timeline-item"
-                >
+                <div style={{ width: '37cqw' }} class="timeline-item ref-keyA">
                   Key: A
                 </div>
               </div>
@@ -190,11 +203,7 @@ const EventOrdering: FunctionalComponent<Props> = () => {
                 >
                   Key: A
                 </div>
-                <div
-                  ref={click}
-                  style={{ width: '23cqw' }}
-                  class="timeline-item"
-                >
+                <div style={{ width: '23cqw' }} class="timeline-item ref-click">
                   Click
                 </div>
               </div>
@@ -211,11 +220,7 @@ const EventOrdering: FunctionalComponent<Props> = () => {
                 >
                   Click
                 </div>
-                <div
-                  ref={keyB}
-                  style={{ width: '18cqw' }}
-                  class="timeline-item"
-                >
+                <div style={{ width: '18cqw' }} class="timeline-item ref-keyB">
                   Key: B
                 </div>
               </div>
@@ -239,90 +244,94 @@ const EventOrdering: FunctionalComponent<Props> = () => {
                   Key: B
                 </div>
                 <div
-                  ref={render}
                   style={{ width: '19cqw' }}
-                  class="timeline-item render-item"
+                  class="timeline-item render-item ref-render"
                 >
                   Render
                 </div>
               </div>
             </>
-          ) : phase === 'ordered' ? (
+          ) : phaseIndexes[phase] <= phaseIndexes['reordering-1'] ? (
             <div class="row">
               <div
-                ref={keyA}
                 style={{
                   width: '37cqw',
                 }}
-                class="timeline-item"
+                class="timeline-item ref-keyA"
               >
                 Key: A
               </div>
-              <div
-                ref={click}
-                style={{
-                  width: '23cqw',
-                }}
-                class="timeline-item"
-              >
-                Click
-              </div>
-              <div
-                ref={keyB}
-                style={{
-                  width: '18cqw',
-                }}
-                class="timeline-item"
-              >
-                Key: B
-              </div>
-              <div
-                ref={render}
-                style={{
-                  width: '19cqw',
-                }}
-                class="timeline-item render-item"
-              >
-                Render
+              <div class="row">
+                <div
+                  style={{
+                    width: '23cqw',
+                    gridRow: phase === 'reordering-1' ? '2' : '1',
+                  }}
+                  class="timeline-item ref-click"
+                >
+                  Click
+                </div>
+                <div
+                  style={{
+                    width: '18cqw',
+                    gridRow: phase === 'reordering-1' ? '2' : '1',
+                  }}
+                  class="timeline-item ref-keyB"
+                >
+                  Key: B
+                </div>
+                <div
+                  style={{
+                    width: '19cqw',
+                    gridRow: '1',
+                  }}
+                  class="timeline-item render-item ref-render"
+                >
+                  Render
+                </div>
               </div>
             </div>
-          ) : phase === 'reordered' ? (
+          ) : phaseIndexes[phase] <= phaseIndexes['reordered'] ? (
             <div class="row">
               <div
-                ref={keyA}
                 style={{
                   width: '37cqw',
                 }}
-                class="timeline-item"
+                class="timeline-item ref-keyA"
               >
                 Key: A
               </div>
-              <div
-                ref={render}
-                style={{
-                  width: '19cqw',
-                }}
-                class="timeline-item render-item"
-              >
-                Render
-              </div>
-              <div
-                ref={click}
-                style={{
-                  width: '23cqw',
-                }}
-                class="timeline-item"
-              >
-                Click
-              </div>
-              <div
-                ref={keyB}
-                style={{
-                  width: '18cqw',
-                }}
-                class="timeline-item"
-              >
-                Key: B
+              <div class="row">
+                <div
+                  style={{
+                    width: '19cqw',
+                    gridRow: '1',
+                    gridColumn: '1',
+                  }}
+                  class="timeline-item render-item ref-render"
+                >
+                  Render
+                </div>
+                <div
+                  style={{
+                    width: '23cqw',
+                    gridRow: phase === 'reordering-2' ? '2' : '1',
+                    gridColumn: '2',
+                  }}
+                  class="timeline-item ref-click"
+                >
+                  Click
+                </div>
+                <div
+                  style={{
+                    width: '18cqw',
+                    gridRow: phase === 'reordering-2' ? '2' : '1',
+                    gridColumn: '3',
+                  }}
+                  class="timeline-item ref-keyB"
+                >
+                  Key: B
+                </div>
               </div>
             </div>
           ) : null}

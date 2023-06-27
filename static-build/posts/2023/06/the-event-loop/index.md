@@ -261,7 +261,7 @@ This means the code for handling the second key press, 'B', doesn't start until 
 However, the event loop is more than a simple queue. It ensures that related things happen in the order they were queued, but it also allows particular things to jump the queue, or be deferred, if it creates a better user experience.
 
 </trigger-point>
-<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.finalPhase())">
+<trigger-point ontrigger="getAPI(`event-ordering`).then(a => a.setPhase('reordered'))">
 
 In this example, the browser lets _rendering_ happen sooner, so the user sees the result of the key press in a timely manner. In other cases it may defer rendering, to avoid rendering more often than the display can handle.
 

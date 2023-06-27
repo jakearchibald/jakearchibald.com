@@ -37,6 +37,7 @@
     grid-auto-flow: column;
     grid-auto-columns: max-content;
     gap: 0.2em;
+    align-items: center;
   }
 
   .timeline-item {
