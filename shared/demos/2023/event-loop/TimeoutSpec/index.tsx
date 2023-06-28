@@ -1,6 +1,5 @@
-import { FunctionalComponent, h, Fragment } from 'preact';
-import { useEffect, useLayoutEffect, useRef } from 'preact/hooks';
-import useOnResize from '../utils/use-on-resize';
+import { FunctionalComponent, h } from 'preact';
+import { useEffect, useRef } from 'preact/hooks';
 import { useChangeEffect } from '../utils/use-change-effect';
 import usePhases from '../utils/use-phases';
 import getStyles, { StyleInfo } from '../utils/get-styles';

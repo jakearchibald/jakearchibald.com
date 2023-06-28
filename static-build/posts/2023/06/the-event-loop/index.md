@@ -348,7 +348,17 @@ Let's dive into tasks:
 
 <div class="section-with-slide">
 <div class="slide">
-  <div class="slide-inner ocean-gradient">
+  <div class="slide-inner default-gradient">
+    <div class="book-title">
+      <script type="component">{
+        "module": "shared/demos/2023/event-loop/EventLoop",
+        "props": {
+          "initialState": { "mode": "speedy-spin", "showTaskPath": true, "showRenderPath": true },
+          "width": 480,
+          "height": 480
+        }
+      }</script>
+    </div>
   </div>
 </div>
 
