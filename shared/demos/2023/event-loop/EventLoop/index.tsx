@@ -1,5 +1,6 @@
 import { FunctionalComponent, h } from 'preact';
 import { computed, useSignal } from '@preact/signals';
+import { useEffect, useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
 import { escapeStyleScriptContent } from 'shared/utils';
 import { inline as styles } from 'css-bundle:./styles.css';
@@ -13,7 +14,7 @@ import {
 import SpeedyLoop from './SpeedyLoop';
 import WhenIntersecting from '../WhenIntersecting';
 import usePhases from '../utils/use-phases';
-import { useEffect, useLayoutEffect, useMemo, useRef } from 'preact/hooks';
+import Door from './Door';
 
 export const Styles: FunctionalComponent = () => (
   <style
@@ -115,12 +116,14 @@ const EventLoop: FunctionalComponent<Props> = ({
   const advanceProcessor = () => {
     if (!processorRef.current) return;
 
+    // Figure out the next position
     if (position.current === 'bypass-task' || position.current === 'speeding') {
       position.current = 'bypass-render';
     } else if (position.current === 'bypass-render') {
       position.current = 'bypass-task';
     }
 
+    // Set up the next animation
     const animData = animPaths[position.current];
     processorRef.current.style.offsetPath = `path("${animData.path}")`;
 
@@ -197,6 +200,9 @@ const EventLoop: FunctionalComponent<Props> = ({
                   height={rectSize}
                 />
               ) : null}
+              <g class="task-door" style={taskPathStyle}>
+                <Door open={false} />
+              </g>
             </g>
           </svg>
         </WhenIntersecting>

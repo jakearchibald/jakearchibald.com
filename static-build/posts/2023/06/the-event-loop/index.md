@@ -305,7 +305,69 @@ We can't just run everything in parallel like we are now. 'Waiting' in parallel 
 </trigger-point>
 <trigger-point ontrigger="getAPI(`timeout-spec-2`).then(a => a.setPhase(`queued`))">
 
-And we do that by 'queuing a task' on the event loop.
+And we do that by 'queuing a task' on the event loop. Let's dive into tasks:
+
+</trigger-point>
+
+</div>
+</div>
+
+<div class="section-with-slide">
+<div class="slide">
+  <div class="slide-inner default-gradient">
+    <div class="book-title">
+      <script type="component">{
+        "module": "shared/demos/2023/event-loop/EventLoop",
+        "props": {
+          "initialState": { "speedPhase": "speedy" },
+          "width": 480,
+          "height": 234,
+          "apiName": "task-loop-1"
+        }
+      }</script>
+    </div>
+  </div>
+</div>
+
+<div class="content">
+
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`speedy`); a.showTaskPath(false); })">
+
+# Tasks
+
+Here's the event loop. Look at it go!
+
+It's actually spec'd as a `while` loop that spins round and round until it has something to do. Although, in browsers, it's more efficient than a `while` loop, but it behaves the same.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(false); })">
+
+Let's slow things right down.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(true); })">
+
+One of the things the event loop manages is 'tasks'. Tasks are just a bit of work that's queued to run on the main thread.
+
+queue-task-button
+
+Each time around the event loop, if there's a task available, it's run.
+
+So back to our example:
+
+```js
+setTimeout(() => {
+  document.body.append('hello');
+}, 1000);
+
+setTimeout(() => {
+  document.body.append('world');
+}, 1000);
+```
+
+This waits 1s in parallel for each call, then each queue a task to run their callback.
+
+queue-two-tasks
 
 <div class="threading-diagram inline-threading-diagram">
   <div class="inner">
@@ -339,76 +401,6 @@ And we do that by 'queuing a task' on the event loop.
     </div>
   </div>
 </div>
-
-Let's dive into tasks:
-
-</trigger-point>
-
-</div>
-</div>
-
-<div class="section-with-slide">
-<div class="slide">
-  <div class="slide-inner default-gradient">
-    <div class="book-title">
-      <script type="component">{
-        "module": "shared/demos/2023/event-loop/EventLoop",
-        "props": {
-          "initialState": { "speedPhase": "speedy" },
-          "width": 480,
-          "height": 234,
-          "apiName": "task-loop-1"
-        }
-      }</script>
-    </div>
-  </div>
-</div>
-
-<div class="content">
-
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`speedy`); a.showTaskPath(false); })">
-
-# Tasks
-
-diagram: fast loop
-
-Here's the event loop. Look at it go!
-
-It's actually spec'd as a `while` loop that spins round and round until it has something to do. Although, in browsers, it's more efficient than a `while` loop, but it behaves the same.
-
-</trigger-point>
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(false); })">
-
-Let's slow things right down.
-
-</trigger-point>
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(true); })">
-
-diagram: detour for tasks
-
-One of the things the event loop manages is 'tasks'. Tasks are just a bit of work that's queued to run on the main thread.
-
-queue-task-button
-
-Each time around the event loop, if there's a task available, it's run.
-
-So back to our example:
-
-```js
-setTimeout(() => {
-  document.body.append('hello');
-}, 1000);
-
-setTimeout(() => {
-  document.body.append('world');
-}, 1000);
-```
-
-This waits 1s in parallel for each call, then each queue a task to run their callback.
-
-queue-two-tasks
-
-inline-diagram: parallel waiting, then two main thread tasks
 
 Note: The real spec for `setTimeout` is more complicated than our sketch. One reason is to ensure that 'hello' always happens before 'world' in the example above, avoiding races when two calls are made at the same time with the same timeout.
 

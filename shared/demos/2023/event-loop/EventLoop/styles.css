@@ -65,7 +65,7 @@ $mobile-cutoff: 830px;
     fill: none;
     stroke-width: 33px;
     stroke: #fff;
-    transition: opacity 300ms ease;
+    transition: opacity 400ms ease;
   }
 }
 
@@ -81,4 +81,27 @@ $mobile-cutoff: 830px;
     mix-blend-mode: plus-lighter;
     opacity: calc(1 / var(--num-children));
   }
+}
+
+.door {
+  transition: transform 300ms ease;
+}
+
+.door-open {
+  transform: rotate(-46deg);
+}
+
+.door-hinge {
+  fill: #fff;
+}
+
+.door-path {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.task-door {
+  transform: translate(-81.8px, 83.2px) rotate(-49deg);
+  transition: opacity 400ms ease;
 }
