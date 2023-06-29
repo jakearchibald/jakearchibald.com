@@ -1,0 +1,107 @@
+$mobile-cutoff: 830px;
+
+.event-loop-cropper {
+  position: relative;
+  aspect-ratio: var(--width) / var(--height);
+  overflow: hidden;
+  max-height: 50vh;
+  max-height: 50svh;
+  margin: 0 auto;
+
+  .intersector {
+    position: absolute;
+    inset: 0;
+  }
+}
+
+.event-loop-svg {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1/1;
+  translate: 0 -50%;
+}
+
+@media (min-width: $mobile-cutoff) {
+  .event-loop-container {
+    position: absolute;
+    inset: 0;
+    container: event-loop / size;
+    overflow: hidden;
+  }
+
+  .event-loop-cropper {
+    position: absolute;
+    inset: 50% 0 auto 0;
+    translate: 0 -50%;
+    max-width: 100%;
+    max-height: 100%;
+  }
+
+  @container (orientation: portrait) {
+    .event-loop-cropper {
+      aspect-ratio: var(--height) / var(--width);
+    }
+
+    .event-loop-canvas {
+      rotate: 90deg;
+    }
+
+    .event-loop-svg {
+      top: 0;
+      left: 50%;
+      translate: -50% 0;
+      width: auto;
+      height: 100%;
+    }
+  }
+}
+
+.path-tracks {
+  opacity: 0.3;
+
+  path {
+    fill: none;
+    stroke-width: 33px;
+    stroke: #fff;
+    transition: opacity 400ms ease;
+  }
+}
+
+.processor {
+  fill: #fff;
+}
+
+.speedy-spin-group {
+  isolation: isolate;
+  will-change: transform;
+
+  & > rect {
+    mix-blend-mode: plus-lighter;
+    opacity: calc(1 / var(--num-children));
+  }
+}
+
+.door {
+  transition: transform 300ms ease;
+}
+
+.door-open {
+  transform: rotate(-46deg);
+}
+
+.door-hinge {
+  fill: #fff;
+}
+
+.door-path {
+  stroke: #fff;
+  stroke-width: 1.5px;
+  fill: none;
+}
+
+.task-door {
+  transform: translate(-81.8px, 83.2px) rotate(-49deg);
+  transition: opacity 400ms ease;
+}

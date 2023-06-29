@@ -1,0 +1,116 @@
+.threading-diagram {
+  margin: 20px;
+  container-type: inline-size;
+  font-family: sans-serif;
+  line-height: 1;
+
+  --padding: 0.9em;
+  --border: 0.15em;
+
+  .inner {
+    font-size: 3.4cqw;
+    position: relative;
+    display: grid;
+    align-items: center;
+  }
+
+  .stage {
+    position: absolute;
+    inset: 0;
+
+    & > * {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .rows {
+    display: grid;
+    grid-auto-flow: row;
+    grid-auto-rows: max-content;
+    gap: 0.2em;
+  }
+
+  .row {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    gap: 0.2em;
+    align-items: center;
+  }
+
+  .timeline-item {
+    background: #ffc019;
+    text-shadow: 0 0.08em 0.08em rgb(0 0 0 / 47%);
+    padding: 0.6em 0.6em;
+    box-sizing: border-box;
+    color: #fff;
+  }
+
+  .render-item {
+    background: #67a74e;
+  }
+
+  .labelled-thread {
+    --color: #fff;
+
+    color: var(--color);
+    box-sizing: border-box;
+    padding: var(--padding);
+    padding-top: 0;
+    border: var(--border) solid var(--color);
+    border-top: none;
+    border-radius: var(--border);
+  }
+
+  .labelled-thread-top {
+    display: grid;
+    grid-template-columns: 1.2em max-content 1fr;
+    gap: 0.3em;
+    margin: 0 calc(var(--padding) * -1);
+
+    &::after,
+    &::before {
+      content: '';
+      display: block;
+      height: var(--border);
+      background: var(--color);
+    }
+  }
+
+  .labelled-thread-title {
+    transform: translateY(calc(-50% + var(--border) / 2));
+    height: calc(var(--padding) + var(--border));
+    display: grid;
+    align-items: center;
+  }
+
+  .other-thread {
+    padding: 0 calc(var(--padding) + var(--border));
+  }
+
+  .labelled-thread + .other-thread {
+    margin-top: 1em;
+  }
+}
+
+.inline-threading-diagram {
+  margin: 0 -11px;
+  --one-sec: 31.7cqw;
+  --append: 14.4cqw;
+
+  .labelled-thread {
+    --color: #666;
+    padding: 0 0.6em var(--padding);
+
+    & + .labelled-thread {
+      margin-top: 1em;
+    }
+  }
+
+  .labelled-thread-top {
+    margin: 0 -0.6em;
+    grid-template-columns: 0.8em max-content 1fr;
+  }
+}

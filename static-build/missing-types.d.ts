@@ -16,6 +16,7 @@ declare module 'client-bundle:*' {
   const url: string;
   export default url;
   export const imports: string[];
+  export const src: string;
 }
 
 interface Script {
@@ -26,6 +27,7 @@ interface Script {
 }
 
 interface Post {
+  template?: 'event-loop' | 'generic';
   content: string;
   slug: string;
   title: string;

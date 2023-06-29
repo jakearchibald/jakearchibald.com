@@ -1,0 +1,212 @@
+$mobile-cutoff: 830px;
+
+@font-face {
+  font-family: 'Inconsolata';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../../../components/base/css/fonts/inconsolata.woff') format('woff');
+}
+
+html {
+  font-size: 16px;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', 'URW Palladio L', P052,
+    serif;
+  line-height: 1.9;
+  color: #333;
+  --heading-font-list: Rockwell, 'Rockwell Nova', 'Roboto Slab', 'DejaVu Serif',
+    'Sitka Small', serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.section-with-slide {
+  display: flow-root;
+}
+
+.slide {
+  overflow: hidden;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.slide-inner {
+  display: grid;
+
+  & > :first-child {
+    position: relative;
+  }
+}
+
+@media (min-width: $mobile-cutoff) {
+  .section-with-slide {
+    display: grid;
+    --section-columns-def: [content] minmax(430px, 1fr) [slide]
+      minmax(400px, 1.5fr);
+    grid-template-columns: var(--section-columns-def);
+    --gradient-overlap: 200px;
+  }
+
+  trigger-point:last-child {
+    min-height: 100vh;
+    min-height: 100lvh;
+  }
+
+  .slide {
+    margin: calc(var(--gradient-overlap) * -1) 0;
+    position: relative;
+    clip-path: inset(0);
+    grid-area: slide;
+    grid-row: 1;
+
+    --eased-gradient: linear-gradient(
+      to bottom,
+      hsla(0, 0%, 100%, 0) 0%,
+      hsla(0, 0%, 100%, 0.013) 8.1%,
+      hsla(0, 0%, 100%, 0.049) 15.5%,
+      hsla(0, 0%, 100%, 0.104) 22.5%,
+      hsla(0, 0%, 100%, 0.175) 29%,
+      hsla(0, 0%, 100%, 0.259) 35.3%,
+      hsla(0, 0%, 100%, 0.352) 41.2%,
+      hsla(0, 0%, 100%, 0.45) 47.1%,
+      hsla(0, 0%, 100%, 0.55) 52.9%,
+      hsla(0, 0%, 100%, 0.648) 58.8%,
+      hsla(0, 0%, 100%, 0.741) 64.7%,
+      hsla(0, 0%, 100%, 0.825) 71%,
+      hsla(0, 0%, 100%, 0.896) 77.5%,
+      hsla(0, 0%, 100%, 0.951) 84.5%,
+      hsla(0, 0%, 100%, 0.987) 91.9%,
+      hsl(0, 0%, 100%) 100%
+    );
+
+    -webkit-mask-image: var(--eased-gradient),
+      linear-gradient(to bottom, #fff, #fff);
+    -webkit-mask-size: 100% var(--gradient-overlap), 100% 100%;
+    -webkit-mask-position: 0 0, 0 var(--gradient-overlap);
+    -webkit-mask-repeat: no-repeat;
+
+    mask-image: var(--eased-gradient), linear-gradient(to bottom, #fff, #fff);
+    mask-size: 100% var(--gradient-overlap), 100% 100%;
+    mask-position: 0 0, 0 var(--gradient-overlap);
+    mask-repeat: no-repeat;
+  }
+
+  .content {
+    grid-area: content;
+    grid-row: 1;
+  }
+
+  .slide-inner {
+    box-sizing: border-box;
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 100vh;
+    height: 100lvh;
+    display: grid;
+    grid-template-columns: var(--section-columns-def);
+
+    & > :first-child {
+      align-self: center;
+      grid-area: slide;
+      grid-row: 1;
+    }
+  }
+}
+
+.content {
+  padding: 0 1.8rem;
+  max-width: 600px;
+  margin: 0 auto;
+  font-size: 1.1rem;
+
+  p {
+    margin: 2.7em 0;
+  }
+
+  li {
+    margin: 0.8em 0;
+  }
+
+  ul > li {
+    list-style: '◆  ';
+  }
+
+  :is(h2, h3, h4, h5) {
+    font-family: var(--heading-font-list);
+    text-align: center;
+    line-height: 1.3;
+    font-weight: normal;
+    margin: 2em 0.5em 1em;
+
+    & a {
+      color: inherit;
+      text-decoration: none;
+    }
+  }
+
+  h2 {
+    font-size: 1.9rem;
+  }
+
+  h3 {
+    font-size: 1.5rem;
+  }
+}
+
+.default-gradient {
+  background: linear-gradient(to bottom, #c33764, #1d2671);
+}
+
+.ocean-gradient {
+  background: linear-gradient(to bottom, #000046, #1cb5e0);
+}
+
+.sunny-gradient {
+  background: linear-gradient(to bottom, #22c1c3, #fdbb2d);
+}
+
+.book-title {
+  height: 100%;
+}
+
+.book-title-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+
+  text {
+    font-family: var(--heading-font-list);
+    fill: #fff;
+    text-anchor: middle;
+    dominant-baseline: middle;
+    font-size: 18px;
+    font-weight: normal;
+  }
+}
+
+.book-subtitle {
+  text-align: center;
+  font-family: var(--heading-font-list);
+  font-size: 2.1rem;
+  line-height: 1.3;
+  margin: 4rem 0 3rem;
+
+  p {
+    margin: 0.2rem 0;
+  }
+
+  .author {
+    font-size: 1.4rem;
+    color: #666;
+  }
+}
+
+.h-center {
+  justify-self: center;
+}

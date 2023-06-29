@@ -14,9 +14,8 @@ import { h, FunctionalComponent, RenderableProps, VNode } from 'preact';
 import styles from 'css-bundle:./css/all.css';
 
 //import bundleURL, { imports } from 'client-bundle:client/all/index.tsx';
-import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
-import faviconURL from 'asset-url:static-build/imgs/favicon.png';
 import ptSerifURL from 'asset-url:./css/fonts/pt-serif.woff2';
+import GenericHead from '../generic-head';
 
 interface Props {
   title: string;
@@ -39,20 +38,8 @@ const BasePage: FunctionalComponent<Props> = ({
   return (
     <html lang="en" class={pageClass ? pageClass : ''}>
       <head>
-        <title>{title} - JakeArchibald.com</title>
-        <meta
-          name="viewport"
-          content="width=device-width, minimum-scale=1.0"
-        ></meta>
-        <link rel="icon" type="image/png" href={faviconURL} />
+        <GenericHead title={title} />
         <link rel="stylesheet" href={styles} />
-        <script type="module" async src={analyticsBundleURL}></script>
-        <link
-          rel="alternate"
-          type="application/rss+xml"
-          title="Jake Archibald's Blog"
-          href="/posts.rss"
-        />
         {/*}<script type="module" src={bundleURL} />
         {imports.map((v) => (
           <link rel="preload" as="script" href={v} crossOrigin="" />

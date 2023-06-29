@@ -1,0 +1,67 @@
+.timeout-spec {
+  margin: 20px;
+  container-type: inline-size;
+
+  .frame {
+    font-family: Helvetica Neue, sans-serif, Droid Sans Fallback;
+    background: #fff;
+    color: #000;
+    font-size: 3.3cqw;
+    line-height: 1.45;
+    padding: 0.1em 1.2em 0.9em;
+    display: grid;
+
+    & > * {
+      grid-area: 1/1;
+    }
+  }
+
+  .reserve-space {
+    visibility: hidden;
+  }
+
+  .intro {
+    margin: 1.25em 0;
+  }
+
+  .step {
+    margin: 1em 0;
+    width: fit-content;
+  }
+
+  .step-level {
+    padding-left: 2em;
+  }
+
+  dfn {
+    font-weight: bolder;
+    font-style: normal;
+
+    code {
+      color: orangered;
+    }
+  }
+
+  code {
+    font-size: inherit;
+    font-family: monospace, Droid Sans Fallback, Helvetica Neue, sans-serif;
+    font-variant: normal;
+  }
+
+  .fake-link {
+    color: #00c;
+    text-decoration: underline;
+    text-decoration-color: rgba(0, 0, 0, 0.3);
+  }
+
+  .num {
+    width: 1.2em;
+    display: inline-grid;
+    isolation: isolate;
+
+    & > * {
+      mix-blend-mode: plus-lighter;
+      grid-area: 1/1;
+    }
+  }
+}
