@@ -65,6 +65,7 @@ $mobile-cutoff: 830px;
     fill: none;
     stroke-width: 33px;
     stroke: #fff;
+    transition: opacity 300ms ease;
   }
 }
 

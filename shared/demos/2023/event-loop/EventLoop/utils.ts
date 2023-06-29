@@ -62,3 +62,4 @@ export function circlePath(radius: number) {
 export const rectSize = 18;
 export const arcRadius = 100;
 export const svgNS = 'http://www.w3.org/2000/svg';
+export const slowDistancePerMs = 0.18;

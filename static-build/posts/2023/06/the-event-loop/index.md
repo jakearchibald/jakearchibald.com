@@ -25,7 +25,8 @@ meta: TODO
       <script type="component">{
         "module": "shared/demos/2023/event-loop/EventLoop",
         "props": {
-          "initialState": { "mode": "speedy-spin" },
+          "initialState": { "speedPhase": "speedy" },
+          "apiName": "intro",
           "width": 480,
           "height": 480
         }
@@ -353,9 +354,10 @@ Let's dive into tasks:
       <script type="component">{
         "module": "shared/demos/2023/event-loop/EventLoop",
         "props": {
-          "initialState": { "mode": "speedy-spin", "showTaskPath": true, "showRenderPath": true },
+          "initialState": { "speedPhase": "speedy" },
           "width": 480,
-          "height": 480
+          "height": 234,
+          "apiName": "task-loop-1"
         }
       }</script>
     </div>
@@ -363,6 +365,8 @@ Let's dive into tasks:
 </div>
 
 <div class="content">
+
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`speedy`); a.showTaskPath(false); })">
 
 # Tasks
 
@@ -372,7 +376,13 @@ Here's the event loop. Look at it go!
 
 It's actually spec'd as a `while` loop that spins round and round until it has something to do. Although, in browsers, it's more efficient than a `while` loop, but it behaves the same.
 
+</trigger-point>
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(false); })">
+
 Let's slow things right down.
+
+</trigger-point>
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(true); })">
 
 diagram: detour for tasks
 
@@ -403,6 +413,8 @@ inline-diagram: parallel waiting, then two main thread tasks
 Note: The real spec for `setTimeout` is more complicated than our sketch. One reason is to ensure that 'hello' always happens before 'world' in the example above, avoiding races when two calls are made at the same time with the same timeout.
 
 NEXT: multiple task queues - model network task source and interaction task source
+
+</trigger-point>
 
 </div>
 </div>
