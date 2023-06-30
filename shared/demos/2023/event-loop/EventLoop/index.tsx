@@ -12,7 +12,7 @@ import {
   slowDistancePerMs,
 } from './utils';
 import SpeedyLoop from './SpeedyLoop';
-import WhenIntersecting from '../WhenIntersecting';
+import PauseOutOfViewAnims from '../PauseOutOfViewAnims';
 import usePhases from '../utils/use-phases';
 import Door from './Door';
 
@@ -172,7 +172,7 @@ const EventLoop: FunctionalComponent<Props> = ({
         class="event-loop-cropper"
         style={{ '--width': width, '--height': height }}
       >
-        <WhenIntersecting>
+        <PauseOutOfViewAnims>
           <svg
             class="event-loop-svg"
             viewBox={`${size / -2} ${size / -2} ${size} ${size}`}
@@ -205,7 +205,7 @@ const EventLoop: FunctionalComponent<Props> = ({
               </g>
             </g>
           </svg>
-        </WhenIntersecting>
+        </PauseOutOfViewAnims>
       </div>
     </div>
   );
