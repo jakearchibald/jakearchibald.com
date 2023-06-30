@@ -1,5 +1,5 @@
 import { FunctionalComponent, h } from 'preact';
-import { computed, useSignal } from '@preact/signals';
+import { useComputed, useSignal } from '@preact/signals';
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'preact/hooks';
 
 import { escapeStyleScriptContent } from 'shared/utils';
@@ -83,6 +83,7 @@ const speedPhaseIndexes = Object.fromEntries(
 );
 
 type Position = 'speeding' | 'bypass-render' | 'bypass-task';
+type Pan = 'normal' | 'task-focus';
 
 const EventLoop: FunctionalComponent<Props> = ({
   width,
@@ -96,6 +97,8 @@ const EventLoop: FunctionalComponent<Props> = ({
   const position = useRef<Position>(
     initialState?.speedPhase === 'slow' ? 'bypass-task' : 'speeding',
   );
+  const pan = useSignal<Pan>('normal');
+  const pannerClass = useComputed(() => `panner ${pan.value}`);
 
   const processorRef = useRef<SVGRectElement>(null);
 
@@ -106,10 +109,10 @@ const EventLoop: FunctionalComponent<Props> = ({
     speedPhaseChangeHandled,
   ] = usePhases(speedPhases, initialState?.speedPhase ?? 'slow');
 
-  const taskPathStyle = computed(
+  const taskPathStyle = useComputed(
     () => `opacity: ${showTaskPath.value ? '1' : '0'}`,
   );
-  const renderPathStyle = computed(
+  const renderPathStyle = useComputed(
     () => `opacity: ${showRenderPath.value ? '1' : '0'}`,
   );
 
@@ -163,6 +166,9 @@ const EventLoop: FunctionalComponent<Props> = ({
       showRenderPath(show: boolean) {
         showTaskPath.value = show;
       },
+      pan(val: Pan) {
+        pan.value = val;
+      },
     });
   }, []);
 
@@ -178,30 +184,32 @@ const EventLoop: FunctionalComponent<Props> = ({
             viewBox={`${size / -2} ${size / -2} ${size} ${size}`}
           >
             <g class="event-loop-canvas">
-              <g class="path-tracks">
-                <path d={circlePath(arcRadius)} />
-                <path style={taskPathStyle} d={taskPath} />
-                <path style={renderPathStyle} d={renderPath} />
-              </g>
-              {speedPhaseIndexes[speedPhase] < speedPhaseIndexes['slow'] ? (
-                !__PRERENDER__ && (
-                  <SpeedyLoop
-                    speedMode={speedPhase === 'speedy' ? 'fast' : 'slow'}
-                    onSlowIteration={() => speedPhaseChangeHandled()}
+              <g class={pannerClass}>
+                <g class="path-tracks">
+                  <path d={circlePath(arcRadius)} />
+                  <path style={taskPathStyle} d={taskPath} />
+                  <path style={renderPathStyle} d={renderPath} />
+                </g>
+                {speedPhaseIndexes[speedPhase] < speedPhaseIndexes['slow'] ? (
+                  !__PRERENDER__ && (
+                    <SpeedyLoop
+                      speedMode={speedPhase === 'speedy' ? 'fast' : 'slow'}
+                      onSlowIteration={() => speedPhaseChangeHandled()}
+                    />
+                  )
+                ) : speedPhase === 'slow' ? (
+                  <rect
+                    ref={processorRef}
+                    class="processor"
+                    x={rectSize / -2}
+                    y={rectSize / -2}
+                    width={rectSize}
+                    height={rectSize}
                   />
-                )
-              ) : speedPhase === 'slow' ? (
-                <rect
-                  ref={processorRef}
-                  class="processor"
-                  x={rectSize / -2}
-                  y={rectSize / -2}
-                  width={rectSize}
-                  height={rectSize}
-                />
-              ) : null}
-              <g class="task-door" style={taskPathStyle}>
-                <Door open={false} />
+                ) : null}
+                <g class="task-door" style={taskPathStyle}>
+                  <Door open={false} />
+                </g>
               </g>
             </g>
           </svg>

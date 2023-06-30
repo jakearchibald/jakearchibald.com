@@ -28,6 +28,10 @@ Other data:
 - Time to render
 - Block on raf
 
+Other state:
+
+- Task in place (1 or 2)
+
 Task:
 
 - Tasks can be blocking or non-blocking

@@ -105,3 +105,29 @@ $mobile-cutoff: 830px;
   transform: translate(-81.8px, 83.2px) rotate(-49deg);
   transition: opacity 400ms ease;
 }
+
+.panner {
+  transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1);
+
+  &.normal {
+    transform: none;
+  }
+
+  &.task-focus {
+    transform: translateX(70px);
+  }
+}
+
+.task {
+  path {
+    stroke: #ffc019;
+    fill: none;
+  }
+  text {
+    fill: #9c6619;
+    text-anchor: middle;
+    dominant-baseline: central;
+    font: normal 36px sans-serif;
+    opacity: 0.7;
+  }
+}

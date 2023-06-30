@@ -331,7 +331,7 @@ And we do that by 'queuing a task' on the event loop. Let's dive into tasks:
 
 <div class="content">
 
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`speedy`); a.showTaskPath(false); })">
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`speedy`); a.showTaskPath(false); a.pan(`normal`); })">
 
 # Tasks
 
@@ -340,12 +340,12 @@ Here's the event loop. Look at it go!
 It's actually spec'd as a `while` loop that spins round and round until it has something to do. Although, in browsers, it's more efficient than a `while` loop, but it behaves the same.
 
 </trigger-point>
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(false); })">
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(false); a.pan(`normal`); })">
 
 Let's slow things right down.
 
 </trigger-point>
-<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(true); })">
+<trigger-point ontrigger="getAPI(`task-loop-1`).then(a => { a.setSpeedPhase(`slow`); a.showTaskPath(true); a.pan(`task-focus`); })">
 
 One of the things the event loop manages is 'tasks'. Tasks are just a bit of work that's queued to run on the main thread.
 
