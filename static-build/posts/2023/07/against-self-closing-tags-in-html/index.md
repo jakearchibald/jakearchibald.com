@@ -34,6 +34,7 @@ That meant:
 ```html
 <!-- Instead of: -->
 <HTML LANG="en">
+
 <!-- You'd write: -->
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
@@ -46,6 +47,7 @@ Because we've got to scare away newcomers right?
 ```html
 <!-- Instead of: -->
 <option value=foo selected>…</option>
+
 <!-- You'd write: -->
 <option value="foo" selected="selected">…</option>
 ```
@@ -58,6 +60,7 @@ And also:
 ```html
 <!-- Instead of: -->
 <img src="…">
+
 <!-- You'd write: -->
 <img src="…" />
 ```
