@@ -43,6 +43,12 @@ const renderPath = `M 0 ${-arcRadius} l ${detourOffset} 0 ${circularArcPath({
   startAngle: 0,
   endAngle: 180,
 })} M ${detourOffset} ${arcRadius} l ${-detourOffset} 0`;
+const taskItemPath = circularArcPath({
+  midX: -detourOffset,
+  radius: arcRadius,
+  startAngle: 270 - taskSize / 2,
+  endAngle: 270 + taskSize / 2,
+});
 
 const animPaths = {
   'bypass-task': {
@@ -207,6 +213,10 @@ const EventLoop: FunctionalComponent<Props> = ({
                     height={rectSize}
                   />
                 ) : null}
+                <g class="task">
+                  <path d={taskItemPath} />
+                  <text x={-detourOffset - arcRadius}>T</text>
+                </g>
                 <g class="task-door" style={taskPathStyle}>
                   <Door open={false} />
                 </g>

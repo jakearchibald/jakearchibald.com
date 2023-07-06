@@ -55,6 +55,12 @@ $mobile-cutoff: 830px;
       width: auto;
       height: 100%;
     }
+
+    text {
+      rotate: -90deg;
+      transform-box: fill-box;
+      transform-origin: 50% 50%;
+    }
   }
 }
 
@@ -122,12 +128,13 @@ $mobile-cutoff: 830px;
   path {
     stroke: #ffc019;
     fill: none;
+    stroke-width: 33px;
   }
   text {
     fill: #9c6619;
     text-anchor: middle;
     dominant-baseline: central;
-    font: normal 36px sans-serif;
+    font: normal 16px sans-serif;
     opacity: 0.7;
   }
 }
