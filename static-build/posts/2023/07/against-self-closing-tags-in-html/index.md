@@ -74,7 +74,7 @@ With `<option selected="selected">`, the value was ignored, so `<option selected
 
 If you forgot to quote an attribute, the browser didn't complain, it just got on with the job of rendering the page.
 
-If you ended a tag with `/>`, the browser saw it as a parsing error and ignored it. And that's where I start to take issue with it.
+If you ended a tag with `/>`, the browser saw it as a parsing error and ignore it. And that's where I start to take issue with it.
 
 <!-- prettier-ignore -->
 ```html
