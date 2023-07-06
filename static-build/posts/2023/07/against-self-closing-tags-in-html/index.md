@@ -145,7 +145,7 @@ Although, as an industry, we generally discarded most of the XHTML requirements,
 
 I think it's a confusing relic from a time past, and I don't think tools like Prettier should be pushing it. To make my case, I'll respond to counter-arguments that came up in [a Twitter thread](https://twitter.com/jaffathecake/status/1676843832284004353).
 
-## "Self-closing tags make it easier to read, and helpful for newcomers! You don't need to remember which tags are self-closing."
+## "Self-closing tags make it easier to read, and are helpful for newcomers! You don't need to remember which tags are self-closing."
 
 Outside of foreign content, elements that self-close will always self-close. All other elements, won't.
 
