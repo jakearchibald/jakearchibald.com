@@ -110,7 +110,7 @@ XHTML was eventually abandoned, because a new thing came along that browsers wer
 
 HTML5 entered the scene in 2008, and one of the major things it introduced was a parsing spec. And, unlike the XML parsing spec, it detailed what browsers should do when they encounter weird and invalid markup.
 
-It did away with all of the XML requirements introduced in XHTML, and leaned into the looseness of HTML parsers that existed at the time. It does handle `/>` specifically, but only to specifically ignored it.
+It did away with all of the XML requirements introduced in XHTML, and leaned into the looseness of HTML parsers that existed at the time. It does handle `/>` specifically, but only to specifically ignore it.
 
 ## Enter SVG-in-HTML
 
