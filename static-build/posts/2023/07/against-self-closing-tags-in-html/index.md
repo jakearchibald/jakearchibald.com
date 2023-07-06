@@ -169,7 +169,7 @@ But, does `/>` have to _work_ to be useful? Code comments don't 'work'. Just lik
 
 I think that's particularly bad for newcomers. Imagine you'd never seen `<img src="…">` before. You'd see, unlike other elements, it doesn't have a closing tag. Debuggers and validators don't complain about it, suggesting there's something particular about this element you need to learn – it doesn't need to close, it self-closes, and it's particular in this behaviour.
 
-Now imagine you'd never seen `<img src="…" />` before. You look up this new syntax you've discovered, and learn that it means a tag is "self-closing". At this point, why wouldn't you assume `<iframe />` is self closing too? Or that `<img src="…"></img>` is valid? Given this, I'm particularly sad that [MDN uses self-closing tags](https://github.com/orgs/mdn/discussions/242) in it's beginner-facing documentation.
+Now imagine you'd never seen `<img src="…" />` before. You look up this new syntax you've discovered, and learn that it means a tag is "self-closing". At this point, why wouldn't you assume `<iframe />` is self closing too? Or that `<img src="…"></img>` is valid? Given this, I'm particularly sad that [MDN uses self-closing tags](https://github.com/orgs/mdn/discussions/242) in its beginner-facing documentation.
 
 ## "It's consistent with JSX"
 
