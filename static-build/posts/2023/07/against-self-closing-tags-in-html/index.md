@@ -141,7 +141,7 @@ And that's where things are today. `/>` is mostly meaningless in HTML documents,
 
 # Opinions
 
-Although, as an industry, we generally discarded most of the XHTML requirements, this self-closing-tag decoration seems to have persisted, despite being a remnant from a spec that was abandoned over 10 years ago. Folks even include the space before the `/`, which was added for compatibility with a browser engine from the last millennium.
+Although, as an industry, we generally discarded most of the XHTML requirements, this self-closing-tag decoration seems to have persisted, despite being a remnant from a spec that was abandoned over 10 years ago. Folks even include the space before the `/`, which was added for compatibility with a browser engine from the previous millennium.
 
 I think it's a confusing relic from a time past, and I don't think tools like Prettier should be pushing it. To make my case, I'll respond to counter-arguments that came up in [a Twitter thread](https://twitter.com/jaffathecake/status/1676843832284004353).
 
