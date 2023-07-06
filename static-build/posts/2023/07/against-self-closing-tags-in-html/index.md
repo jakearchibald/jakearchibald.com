@@ -114,7 +114,7 @@ It did away with all of the XML requirements introduced in XHTML, and leaned int
 
 ## Enter SVG-in-HTML
 
-In the early 2000s, the ability to include `<svg>` in HTML was spec'd and started appearing in browsers.
+In the early 2010s, the ability to include `<svg>` in HTML was spec'd and started appearing in browsers.
 
 ```html
 <div>
