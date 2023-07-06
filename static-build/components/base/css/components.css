@@ -112,17 +112,17 @@
 .h-3,
 .article-content h3 {
   margin: 27px 0 0;
-  line-height: 1;
+  line-height: 1.4;
   font-family: sans-serif;
   font-weight: bold;
   font-size: 1rem;
-  border-left: 14px solid #ff8400;
+  border-left: 20px solid #ff8400;
   padding-left: 8px;
   text-wrap: balance;
 
   @media screen and (min-width: $mobile-boundry) {
     font-size: 1.2rem;
-    border-left: 19px solid #ff8400;
+    border-left: 26px solid #ff8400;
     padding-left: 12px;
   }
 }
