@@ -26,10 +26,8 @@ const Who: FunctionalComponent<{}> = () => (
     </figure>
 
     <p>
-      Hello, I’m Jake and that is my tired face. I’m a developer advocate for
-      Google Chrome.
+      Hello, I’m Jake and that is my tired face. I’m a developer of sorts.
     </p>
-
     <h1>Elsewhere</h1>
     <ul class="icon-list">
       {[
