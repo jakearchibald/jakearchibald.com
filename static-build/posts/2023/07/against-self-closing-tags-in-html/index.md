@@ -236,6 +236,25 @@ Call me some sort of purist, but if I want to parse an HTML document, I'll use a
 
 There are many great HTML parsing libraries out there, for almost every language. And, since the parser is specified, the results are consistent.
 
+## "It makes the markup faster to parse"
+
+I heard this a few times, and I think it comes from the assumption that, the more information you give, the better the processor can optimise, or something. But let's compare the two:
+
+Parsing `<br>`:
+
+1. `<`: Oh, there's a new tag!
+1. `br`: Now I know what element to create.
+1. `>`: End of tag, and `br` doesn't go onto the stack of open elements, because it's one of the self-closing ones.
+
+Parsing: `<br/>`:
+
+1. `<`: Oh, there's a new tag!
+1. `br`: Now I know what element to create.
+1. **`/`: I'll just ignore this.**
+1. `>`: End of tag, and `br` doesn't go onto the stack of open elements, because it's one of the self-closing ones.
+
+So, technically, `<br/>` is slower to parse, as it contains the extra `/` junk. It isn't slower in any meaningful way, but it definitely isn't faster.
+
 ## "It looks pretty"
 
 Sure, that's subjective. I thought `/>` looked ugly the first time I worked on a codebase that required it, but I got used to it. I also got used to missing it out.
