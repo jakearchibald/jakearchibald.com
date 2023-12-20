@@ -27,7 +27,7 @@ async function getResponseSize(url) {
 }
 ```
 
-This code is pretty readable thanks to async functions ([here's a tutorial](https://developers.google.com/web/fundamentals/getting-started/primers/async-functions) if you're unfamiliar with those), but it's still a little clumsy.
+This code is pretty readable thanks to async functions ([here's a tutorial](https://web.dev/articles/async-functions) if you're unfamiliar with those), but it's still a little clumsy.
 
 Thankfully, [async iterators](https://github.com/tc39/proposal-async-iteration) are arriving soon, which makes it much neater:
 
