@@ -968,13 +968,11 @@ Oh go on then, let's throw in some silly easing using the new [`linear()`](https
   --spring-duration: 0.5s;
 }
 
-::view-transition-group(*) {
-  &::view-transition-group(*),
-  &::view-transition-old(*),
-  &::view-transition-new(*) {
-    animation-timing-function: var(--spring-easing);
-    animation-duration: var(--spring-duration);
-  }
+::view-transition-group(*),
+::view-transition-old(*),
+::view-transition-new(*) {
+  animation-timing-function: var(--spring-easing);
+  animation-duration: var(--spring-duration);
 }
 ```
 
