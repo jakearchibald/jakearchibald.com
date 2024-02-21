@@ -25,9 +25,7 @@ const Who: FunctionalComponent<{}> = () => (
       </h1>
     </figure>
 
-    <p>
-      Hello, I’m Jake and that is my tired face. I’m a developer of sorts.
-    </p>
+    <p>Hello, I’m Jake and that is my tired face. I’m a developer of sorts.</p>
     <h1>Elsewhere</h1>
     <ul class="icon-list">
       {[
@@ -42,13 +40,12 @@ const Who: FunctionalComponent<{}> = () => (
           content: 'Github',
         },
         {
-          url:
-            'https://www.youtube.com/playlist?list=PLNYkxOF6rcIAKIQFsNbV0JDws_G_bnNo9',
+          url: 'https://www.youtube.com/playlist?list=PLNYkxOF6rcIAKIQFsNbV0JDws_G_bnNo9',
           img: youtubeUrl,
           content: 'YouTube',
         },
         {
-          url: 'https://http203.libsyn.com/',
+          url: 'https://offthemainthread.tech/',
           img: podcastUrl,
           content: 'Podcast',
         },
