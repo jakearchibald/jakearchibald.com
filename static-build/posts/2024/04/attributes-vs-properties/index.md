@@ -1,8 +1,8 @@
 ---
 title: HTML attributes vs DOM properties
 date: 2024-04-24 01:00:00
-summary: They're completely different, but totally related.
-meta: They're completely different, but totally related.
+summary: They're completely different, but often coupled.
+meta: They're completely different, but often coupled.
 image: 'asset-url:./img.png'
 ---
 
