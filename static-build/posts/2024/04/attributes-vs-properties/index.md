@@ -3,7 +3,7 @@ title: Attributes vs properties
 date: 2024-04-19 01:00:00
 summary: They're completely different, but totally related
 meta: They're completely different, but totally related
-image: 'asset-url:./img.png'
+#image: 'asset-url:./img.png'
 ---
 
 <p foo="bar">This paragraph has a `foo` attribute and a `foo` property set to different values. This works because they're completely different things.</p>
