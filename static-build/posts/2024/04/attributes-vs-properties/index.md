@@ -272,9 +272,6 @@ It also makes sense that validation applies when getting/setting properties, but
 
 I say 'in my opinion', because a couple of recent HTML elements have done it differently.
 
-<details>
-<summary>Tell me more…</summary>
-
 The `<details>` and `<dialog>` elements represent their open state via the `open` attribute, and the browser will self add/remove this attribute in response to user interaction.
 
 I think this was a design mistake. It breaks the idea that attributes are for configuration, but more importantly it means that the system in charge of maintaining the DOM (a framework, or vanilla JS) needs to be prepared for the DOM to change itself.
@@ -286,8 +283,6 @@ I think it should have been:
 ```
 
 And a `details.open` property to get/set the current state, along with a CSS pseudo-class for targeting that state.
-
-</details>
 
 I guess `contenteditable` also breaks that contract, but… well… it's a opt-in to a lot of breakage.
 
