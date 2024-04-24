@@ -222,7 +222,7 @@ class HTMLInputElement extends HTMLElement {
   }
 
   // This happens when the associated form resets
-  #reset() {
+  formResetCallback() {
     this.#value = undefined;
   }
 }
