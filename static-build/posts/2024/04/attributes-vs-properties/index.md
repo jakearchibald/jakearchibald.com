@@ -326,7 +326,7 @@ Lit does things a little differently:
 <input type="…" .value="…" />
 ```
 
-It keeps the extinction between attributes and properties, requiring you to prefix the name with `.` if you want to set the property rather than the attribute.
+It keeps the distinction between attributes and properties, requiring you to prefix the name with `.` if you want to set the property rather than the attribute.
 
 - [Lit's expression docs](https://lit.dev/docs/templates/expressions/).
 
