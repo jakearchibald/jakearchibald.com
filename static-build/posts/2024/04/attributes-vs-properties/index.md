@@ -1,6 +1,6 @@
 ---
-title: Attributes vs properties
-date: 2024-04-19 01:00:00
+title: HTML attributes vs DOM properties
+date: 2024-04-24 01:00:00
 summary: They're completely different, but totally related
 meta: They're completely different, but totally related
 #image: 'asset-url:./img.png'
