@@ -1,8 +1,8 @@
 import { h, FunctionalComponent } from 'preact';
 
-import meWalkJpeg from 'asset-url:./me-walk.jpg';
-import meWalkWebp from 'asset-url:./me-walk.webp';
-import meWalkAvif from 'asset-url:./me-walk.avif';
+import meJpeg from 'asset-url:./me-cat.jpg';
+import meWebp from 'asset-url:./me-cat.webp';
+import meAvif from 'asset-url:./me-cat.avif';
 import twitterUrl from 'asset-url:./twitter.svg';
 import githubUrl from 'asset-url:./github.svg';
 import youtubeUrl from 'asset-url:./youtube.svg';
@@ -13,19 +13,22 @@ const Who: FunctionalComponent<{}> = () => (
     <figure class="my-big-face">
       <h1>
         <picture>
-          <source srcset={meWalkAvif} type="image/avif" />
-          <source srcset={meWalkWebp} type="image/webp" />
+          <source srcset={meAvif} type="image/avif" />
+          <source srcset={meWebp} type="image/webp" />
           <img
             width="800"
-            height="858"
-            src={meWalkJpeg}
-            alt="Jake Archibald next to a 90km sign"
+            height="844"
+            src={meJpeg}
+            alt="Jake Archibald in a garden with a black cat"
           />
         </picture>
       </h1>
     </figure>
 
-    <p>Hello, I’m Jake and that is my tired face. I’m a developer of sorts.</p>
+    <p>
+      Hello, I'm Jake and that's me there. The one that isn't a cat. I'm a
+      developer of sorts.
+    </p>
     <h1>Elsewhere</h1>
     <ul class="icon-list">
       {[
