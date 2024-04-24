@@ -6,18 +6,20 @@ meta: They're completely different, but totally related.
 image: 'asset-url:./img.png'
 ---
 
-<p foo="bar">This paragraph has a `foo` attribute and a `foo` property set to different values. This works because they're completely different things.</p>
-
-<script>document.querySelector('p[foo=bar]').foo = 'hello world';</script>
+Attributes and properties are _fundamentally_ different things. You can have an attribute and property of the same name set to different values. For example:
 
 ```html
-<p foo="bar">This paragraph has a `foo` attribute…</p>
+<div foo="bar">…</div>
 <script>
-  const p = document.querySelector('p[foo=bar]');
-  p.foo = 'hello world';
+  const div = document.querySelector('div[foo=bar]');
 
-  console.log(p.getAttribute('foo')); // 'bar'
-  console.log(p.foo); // 'hello world'
+  console.log(div.getAttribute('foo')); // 'bar'
+  console.log(div.foo); // undefined
+
+  div.foo = 'hello world';
+
+  console.log(div.getAttribute('foo')); // 'bar'
+  console.log(div.foo); // 'hello world'
 </script>
 ```
 
@@ -27,9 +29,9 @@ It seems like fewer and fewer developers know this, partially thanks to framewor
 <input className="…" type="…" aria-label="…" value="…" />
 ```
 
-If you do the above in a framework's templating language, you're using attribute-like syntax, but under the hood it'll sometimes be setting the property instead, and it differs from framework to framework. In some cases, it'll set a property _and_ an attribute as a side-effect, but that isn't the framework's fault.
+If you do the above in a framework's templating language, you're using attribute-like syntax, but under the hood it'll sometimes be setting the property instead, and when it does that differs from framework to framework. In some cases, it'll set a property _and_ an attribute as a side-effect, but that isn't the framework's fault.
 
-Most of the time, these distinctions don't matter. I think it's good that developers can have a long and happy career without caring about properties vs attributes. But, if you need to dig down into the DOM at a lower level, it helps to know. Even if you feel you know the difference, I hope I touch on a couple of details you hadn't considered. So let's dig in…
+Most of the time, these distinctions don't matter. I think it's good that developers can have a long and happy career without caring about the differences between properties and attributes. But, if you need to dig down into the DOM at a lower level, it helps to know. Even if you feel you know the difference, maybe I'll touch on a couple of details you hadn't considered. So let's dig in…
 
 # The key differences
 
@@ -48,7 +50,7 @@ div.hello = 'world';
 console.log(div.outerHTML); // '<div foo="bar"></div>'
 ```
 
-So when you're looking at the elements panel in DevTools, you're only seeing attributes on elements, not properties.
+So when you're looking at the elements panel in browser developer tools, you're only seeing attributes on elements, not properties.
 
 ## Value types
 
@@ -64,7 +66,7 @@ console.log(div.getAttribute('foo')); // '[object Object]'
 
 div.hello = obj;
 console.log(typeof div.hello); // 'object'
-console.log(div.hello); // {foo: 'bar'}
+console.log(div.hello); // { foo: 'bar' }
 ```
 
 ## Case sensitivity
@@ -89,7 +91,7 @@ Attribute names are case-insensitive, whereas property names are case-sensitive.
 
 However, attribute _values_ are case-sensitive.
 
-Here's where things start to get blurry:
+Ok, here's where things start to get blurry:
 
 # Reflection
 
@@ -110,15 +112,19 @@ Take a look at this:
 </script>
 ```
 
-That seems to contradict the first example in this post, but the above only works because `Element` has an `id` getter & setter that 'reflects' the `id` attribute.
+This seems to contradict the first example in the post, but the above only works because `Element` has an `id` getter & setter that 'reflects' the `id` attribute.
 
-When a property reflects an attribute, the attribute is the source of the data. When you set the property, it's updating the attribute. When you read from the property, it's reading the attribute.
+When a property reflects an attribute, the _attribute_ is the source of the data. When you set the property, it's updating the attribute. When you read from the property, it's reading the attribute.
 
-For convenience, most specs will create a property equivalent for every defined attribute. It didn't work in the example at the start of the article, because `foo` isn't a spec-defined attribute, so there isn't an equivalent spec-defined property that reflects it.
+For convenience, most specs will create a property equivalent for every defined attribute. It didn't work in the example at the start of the article, because `foo` isn't a spec-defined attribute, so there isn't a spec-defined `foo` property that reflects it.
 
 [Here's the spec for `<ol>`](https://html.spec.whatwg.org/multipage/grouping-content.html#the-ol-element). The "Content attributes" section defines the attributes, and the "DOM interface" defines the properties. If you click on `reversed` in the DOM interface, it takes you to this:
 
-> The `reversed` and `type` IDL attributes must [reflect](https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#reflect) the respective content attributes of the same name.
+<blockquote class="quote">
+
+The `reversed` and `type` IDL attributes must [reflect](https://html.spec.whatwg.org/multipage/common-dom-interfaces.html#reflect) the respective content attributes of the same name.
+
+</blockquote>
 
 But not all of these reflectors are as simple as these.
 
@@ -129,12 +135,12 @@ Ok, this is relatively minor, but sometimes the property has a different name to
 In some cases it's just to add the kind of casing you'd expect from a property:
 
 - On `<img>`, `el.crossOrigin` reflects the `crossorigin` attribute.
-- On all elements, `el.ariaLabel` reflects the `aria-label` attribute (the aria reflectors didn't become cross browser until late 2023. Before that you could only use the attributes).
+- On all elements, `el.ariaLabel` reflects the `aria-label` attribute (the aria reflectors became cross browser in late 2023. Before that you could only use the attributes).
 
 In some cases, names had to be changed due to old JavaScript reserved words:
 
 - On all elements, `el.className` reflects the `class` attribute.
-- On `<label>`, `el.htmlFor` reflects the `label` attribute.
+- On `<label>`, `el.htmlFor` reflects the `for` attribute.
 
 ## Validation, type coercion, and defaults
 
@@ -187,16 +193,18 @@ Properties like `img.height` coerce the attribute value to a number. The setter 
 
 ## `value` on input fields
 
-`value` is a fun one. `value` is a property that doesn't have an equivalent attribute. That isn't unusual, there's loads of these (`offsetWidth`, `parentNode`, `isConnected`, `indeterminate` on checkboxes for some reason, and many more). It gets weird in this case because there _is_ a `value` attribute, but it's reflected by the `defaultValue` property.
+`value` is a fun one. There's a `value` property and a `value` attribute. However, the `value` property does not reflect the `value` attribute. Instead, the `defaultValue` property reflects the `value` attribute.
 
 I know, I know.
 
-Initially, the `value` property reads from the `defaultValue` property. Then, once the `value` property is set, or the value is changed by the user, it switches to reading from an internal value. It's as if it's implemented _roughly_ like this:
+In fact, the `value` property doesn't reflect _any_ attribute. That isn't unusual, there's loads of these (`offsetWidth`, `parentNode`, `indeterminate` on checkboxes for some reason, and many more).
+
+Initially, the `value` property defers to the `defaultValue` property. Then, once the `value` property is set, either via JavaScript or through user interaction, it switches to an internal value. It's as if it's implemented _roughly_ like this:
 
 ```js
 class HTMLInputElement extends HTMLElement {
   get defaultValue() {
-    return this.getAttribute('value') || '';
+    return this.getAttribute('value') ?? '';
   }
 
   set defaultValue(newValue) {
@@ -211,6 +219,11 @@ class HTMLInputElement extends HTMLElement {
 
   set value(newValue) {
     this.#value = String(newValue);
+  }
+
+  // This happens when the associated form resets
+  #reset() {
+    this.#value = undefined;
   }
 }
 ```
@@ -255,6 +268,8 @@ In my opinion, attributes should be for configuration, whereas properties can co
 
 In that sense, I think `<input value>` gets it right (aside from the naming). The `value` attribute configures the default value, whereas the `value` property gives you the current state.
 
+It also makes sense that validation applies when getting/setting properties, but never when getting/setting attributes.
+
 I say 'in my opinion', because a couple of recent HTML elements have done it differently.
 
 <details>
@@ -288,7 +303,7 @@ How do frameworks handle this?
 
 ## Preact and VueJS
 
-Aside from a predefined set of cases where they favour attributes, they'll set the prop as a property if `propName in element`, otherwise they'll set an attribute. Basically, they prefer properties over attributes. Their render-to-string methods do the opposite.
+Aside from a predefined set of cases where they favour attributes, they'll set the prop as a property if `propName in element`, otherwise they'll set an attribute. Basically, they prefer properties over attributes. Their render-to-string methods do the opposite, and ignore things that are property-only.
 
 - [`setProperty` in Preact](https://github.com/preactjs/preact/blob/aa95aa924dd5fe28798f2712acdabdc2e9fa38c9/src/diff/props.js#L37).
 - [`shouldSetAsProp` in VueJS](https://github.com/vuejs/core/blob/958286e3f050dc707ad1af293e91bfb190bdb191/packages/runtime-dom/src/patchProp.ts#L69).
@@ -297,7 +312,7 @@ Aside from a predefined set of cases where they favour attributes, they'll set t
 
 React does things the other way around. Aside from a predefined set of cases where they favour properties, they'll set an attribute. This makes their render-to-string method similar in logic.
 
-This explains why custom elements don't seem to work in React. Since they're custom, their properties aren't in React's 'predefined list', they don't work, and it'll only ever set attributes. This will be fixed in React 19, where they switch to the Preact/VueJS model for custom elements.
+This explains why custom elements don't seem to work in React. Since they're custom, their properties aren't in React's 'predefined list', so they're set as attributes instead. Anything that's property-only on the custom element simply won't work. This will be fixed in React 19, where they'll switch to the Preact/VueJS model for custom elements.
 
 The funny thing is, React popularised using `className` instead of `class` in what _looks like_ an attribute. But, even though you're using the property name rather than the attribute name, [React will set the `class` attribute under the hood](https://github.com/facebook/react/blob/699d03ce1a175442fe3443e1d1bed14f14e9c197/packages/react-dom-bindings/src/client/ReactDOMComponent.js#L388-L389).
 
@@ -308,7 +323,7 @@ The funny thing is, React popularised using `className` instead of `class` in wh
 Lit does things a little differently:
 
 ```html
-<input type="text" .value="…" />
+<input type="…" .value="…" />
 ```
 
 It keeps the extinction between attributes and properties, requiring you to prefix the name with `.` if you want to set the property rather than the attribute.
@@ -318,3 +333,5 @@ It keeps the extinction between attributes and properties, requiring you to pref
 # And that's yer lot
 
 That's pretty much everything I know about the difference between properties and attributes. If there's something I've missed, or you have a question, let me know in the comments below!
+
+Thanks to my [podcast husband](https://offthemainthread.tech/) [Surma](https://surma.dev/) for his usual reviewing skills.
