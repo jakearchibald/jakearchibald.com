@@ -144,7 +144,7 @@ In some cases, names had to be changed due to old JavaScript reserved words:
 
 ## Validation, type coercion, and defaults
 
-Properties come with validation and defaults, whereas attribute don't:
+Properties come with validation and defaults, whereas attributes don't:
 
 ```js
 const input = document.createElement('input');
