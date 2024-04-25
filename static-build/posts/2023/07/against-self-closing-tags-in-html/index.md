@@ -171,6 +171,8 @@ I think that's particularly bad for newcomers. Imagine you'd never seen `<img sr
 
 Now imagine you'd never seen `<img src="…" />` before. You look up this new syntax you've discovered, and learn that it means a tag is "self-closing". At this point, why wouldn't you assume `<iframe />` is self closing too? Or that `<img src="…"></img>` is valid? Given this, I'm particularly sad that [MDN uses self-closing tags](https://github.com/orgs/mdn/discussions/242) in its beginner-facing documentation.
 
+Edit: [Here is the result of that confusion in the wild](https://www.reddit.com/r/webdev/comments/1cceb03/i_thought_i_knew_html_until_i_saw_this/).
+
 ## "It's consistent with JSX"
 
 JSX and HTML are different formats. They aren't consistent with each other. Pretending they're consistent is misleading.
