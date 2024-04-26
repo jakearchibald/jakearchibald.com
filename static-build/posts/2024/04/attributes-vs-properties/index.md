@@ -126,7 +126,7 @@ The `reversed` and `type` IDL attributes must [reflect](https://html.spec.whatwg
 
 </blockquote>
 
-But not all of these reflectors are as simple as these.
+But some reflectors are more complex…
 
 ## Naming differences
 
