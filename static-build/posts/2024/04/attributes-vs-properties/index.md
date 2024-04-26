@@ -284,6 +284,8 @@ I think it should have been:
 
 And a `details.open` property to get/set the current state, along with a CSS pseudo-class for targeting that state.
 
+Update: [Simon Peters](https://twitter.com/zcorpan) unearthed some of the [early design discussion around this](https://lists.whatwg.org/pipermail/whatwg-whatwg.org/2007-August/054532.html).
+
 I guess `contenteditable` also breaks that contract, but… well… it's a opt-in to a lot of breakage.
 
 # How frameworks handle the difference
