@@ -3,7 +3,7 @@ title: A padlock problem
 date: 2020-08-07 01:00:00
 summary: There's a difference between what 🔒 means to users vs browsers.
 meta: There's a difference between what 🔒 means to users vs browsers.
-image: asset-url:./cert.png
+image: ./cert.png
 ---
 
 There's a difference between what the browser 🔒 means to users, vs what it means to browsers. To users, it means "the page is secure", but to the browser:

@@ -5,10 +5,9 @@ summary: I love the font [Just Another
   Hand](https://fonts.google.com/specimen/Just+Another+Hand), but I don't like
   the positioning of the hyphen & equals glyphs. Thankfully I can use CSS fonts
   to fix it!
-mindframe: ""
-image: ""
+mindframe: ''
+image: null
 meta: Using @font-face to replace glyphs of one font with another.
-
 ---
 
 <style>
@@ -82,8 +81,8 @@ The `@font-face` is defined as usual:
   font-style: normal;
   font-weight: 400;
   src: local('Just Another Hand'), local('JustAnotherHand-Regular'),
-       url('https://fonts.gstatic.com/…woff2') format('woff2'),
-       url('https://fonts.gstatic.com/…woff') format('woff');
+    url('https://fonts.gstatic.com/…woff2') format('woff2'), url('https://fonts.gstatic.com/…woff')
+      format('woff');
 }
 ```
 
@@ -93,8 +92,8 @@ But I added another `@font-face` of the same name for the hyphen & equals glyphs
 @font-face {
   font-family: 'Just Another Hand Fixed';
   src: local('Architects Daughter'), local('ArchitectsDaughter'),
-       url('https://fonts.gstatic.com/l/…') format('woff2'),
-       url('https://fonts.gstatic.com/l/…') format('woff');
+    url('https://fonts.gstatic.com/l/…') format('woff2'), url('https://fonts.gstatic.com/l/…')
+      format('woff');
   unicode-range: U+2d, U+3d;
 }
 ```

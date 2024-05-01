@@ -3,7 +3,7 @@ title: '`export default thing` is different to `export { thing as default }`'
 date: 2021-07-03 01:00:00
 summary: Here's how they differ, and when it matters…
 meta: Here's how they differ, and when it matters…
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 [Dominic Elm](https://twitter.com/elmd_) DM'd me on Twitter to ask me questions about circular dependencies, and, well, I didn't know the answer. After some testing, discussion, and _\*ahem\*_ chatting to the V8 team, we figured it out, but I learned something new about JavaScript along the way.

@@ -1,11 +1,13 @@
 ---
 title: SVG & media queries
 date: 2016-10-10 14:50:06
-summary: One of the great things about SVG is you can use media queries to add
+summary:
+  One of the great things about SVG is you can use media queries to add
   responsiveness to images, but which viewport triggers those media queries?
 mindframe: ''
-image: ''
-meta: You can use media queries to add responsiveness to SVG, but which viewport
+image: null
+meta:
+  You can use media queries to add responsiveness to SVG, but which viewport
   triggers those media queries?
 ---
 
@@ -35,9 +37,7 @@ One of the great things about SVG is you can use media queries to add responsive
 <img src="circle.svg" width="50" height="50" />
 <img src="circle.svg" width="100" height="100" />
 <iframe src="circle.svg" width="50" height="50"></iframe>
-<svg width="50" height="50">
-  …as above…
-</svg>
+<svg width="50" height="50">…as above…</svg>
 ```
 
 Which of the above would draw a (potentially clipped) _blue_ circle in an HTML document? As in, which viewport should be used? Should it be:

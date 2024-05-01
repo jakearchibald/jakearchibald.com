@@ -2,10 +2,9 @@
 title: Probably?
 date: 2019-06-11 08:16:31
 summary: Figuring out probabilities with JavaScript and (ugh) maths
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 Remy Sharp [asked a question on Twitter](https://twitter.com/rem/status/1137690933376557057) that got me thinking about probability for the first time in a while.
@@ -31,7 +30,11 @@ Maths can give us an exact answer for questions like this, but maths is hard. In
 Rather than picking a random URL, I'll simplify it to picking a random number:
 
 ```js
-function isRandomPickUnique(totalPossibleChoices, amountToPick, allowSecondChance) {
+function isRandomPickUnique(
+  totalPossibleChoices,
+  amountToPick,
+  allowSecondChance,
+) {
   // A set to hold all of our picks.
   const set = new Set();
   // Loop for the number of items to pick.
@@ -142,20 +145,20 @@ Logically, if something has a less-than-certain chance of happening, the chance 
 If all outcomes have an equal chance of happening (like the flip of a coin, or the roll of a dice), the probability is:
 
 ```js
-winningOutcomes / possibleOutcomes
+winningOutcomes / possibleOutcomes;
 ```
 
 …so the chance of rolling a 3 on a 6-sided dice is 1/6. The chance of rolling an even number is 3/6 (since there are three winning outcomes), which [simplifies](https://www.bbc.com/bitesize/articles/zcdgxfr) to 1/2.
 
-## Calculating probability of one event *and* another
+## Calculating probability of one event _and_ another
 
 To calculate the chance of two things happening, it's:
 
 ```js
-firstProbability * secondProbability
+firstProbability * secondProbability;
 ```
 
-So the chance of rolling a 3 on a 6-sided dice (1/6), then flipping a coin to heads (1/2), is 1/6 * 1/2, [which is](https://www.bbc.com/bitesize/guides/zgqpv9q/revision/5) 1/12. This makes sense, there are twelve possible outcomes, one for each number on the dice + tails, and again for each number on the dice + heads, and only one outcome is a win.
+So the chance of rolling a 3 on a 6-sided dice (1/6), then flipping a coin to heads (1/2), is 1/6 \* 1/2, [which is](https://www.bbc.com/bitesize/guides/zgqpv9q/revision/5) 1/12. This makes sense, there are twelve possible outcomes, one for each number on the dice + tails, and again for each number on the dice + heads, and only one outcome is a win.
 
 ## Calculating the probability of getting five unique image URLs
 
@@ -164,34 +167,38 @@ Ignoring the "second chance" rule for now, we now have everything we need to fig
 Let's say `totalImages` is the number of image URLs the API can pick from. With the first pick, any image is a win, so the number of winning outcomes is the same as the number of possible outcomes:
 
 ```js
-totalImages / totalImages
+totalImages / totalImages;
 ```
 
 But the second pick is different, as there's one image URL we must avoid:
 
 ```js
-(totalImages - 1) / totalImages
+(totalImages - 1) / totalImages;
 ```
 
 For the third pick, there's now two to avoid:
 
 ```js
-(totalImages - 2) / totalImages
+(totalImages - 2) / totalImages;
 ```
 
 And so on. We multiply the probabilities together, and get:
 
 ```js
 // First pick.
-totalImages / totalImages
-// Second pick.
-* (totalImages - 1) / totalImages
-// Third pick.
-* (totalImages - 2) / totalImages
-// Fourth pick.
-* (totalImages - 3) / totalImages
-// Fifth pick.
-* (totalImages - 4) / totalImages
+((((((((totalImages / totalImages) *
+  // Second pick.
+  (totalImages - 1)) /
+  totalImages) *
+  // Third pick.
+  (totalImages - 2)) /
+  totalImages) *
+  // Fourth pick.
+  (totalImages - 3)) /
+  totalImages) *
+  // Fifth pick.
+  (totalImages - 4)) /
+  totalImages;
 ```
 
 Or using JavaScript:
@@ -208,25 +215,25 @@ console.log(probability);
 
 But how do we cater for "second chance"?
 
-## Calculating probability of one event *or* another
+## Calculating probability of one event _or_ another
 
 If you want to calculate the odds of either thing happening, it's:
 
 ```js
-firstProbability + secondProbability
+firstProbability + secondProbability;
 ```
 
 However, there's a gotcha here. If the two events are dependant, that needs to be factored into the probability of the second event.
 
-If we calculate the chance of rolling a 3 on a 6-sided dice (1/6), *or* flipping a coin to heads (1/2), we wouldn't bother flipping the coin if we rolled a 3. If we roll a 3, the result of the coin has no impact on the result. We already won.
+If we calculate the chance of rolling a 3 on a 6-sided dice (1/6), _or_ flipping a coin to heads (1/2), we wouldn't bother flipping the coin if we rolled a 3. If we roll a 3, the result of the coin has no impact on the result. We already won.
 
 The coin gives us our "second chance", but we only use it if our first chance failed. 1/6th of the time we'd win just using the dice, but 5/6th of the time we'd also use the coin, giving us a 1/2 second chance.
 
 ```js
-firstProbability + (1 - firstProbability) * secondProbability
+firstProbability + (1 - firstProbability) * secondProbability;
 ```
 
-Or in this case 1/6 + 5/6 * 1/2, which [multiplies](https://www.bbc.com/bitesize/guides/zgqpv9q/revision/5) to 1/6 + 5/12, which [adds](https://www.bbc.com/bitesize/articles/z9n4k7h) to 7/12. This makes sense as there are twelve possible outcomes, one for each number on the dice + tails, one of which is a winning outcome, and again for each number on the dice + heads, all six of which are winning outcomes, making seven winning outcomes in total.
+Or in this case 1/6 + 5/6 \* 1/2, which [multiplies](https://www.bbc.com/bitesize/guides/zgqpv9q/revision/5) to 1/6 + 5/12, which [adds](https://www.bbc.com/bitesize/articles/z9n4k7h) to 7/12. This makes sense as there are twelve possible outcomes, one for each number on the dice + tails, one of which is a winning outcome, and again for each number on the dice + heads, all six of which are winning outcomes, making seven winning outcomes in total.
 
 ## Calculating the probability of getting five unique image URLs, including second chances
 
@@ -235,16 +242,16 @@ We can now figure out the chance of picking five unique URLs randomly from a set
 Again, with the first pick, any image is a win, so the number of winning outcomes is the same as the number of possible outcomes:
 
 ```js
-totalImages / totalImages
+totalImages / totalImages;
 ```
 
 With the second pick, there's one image to avoid. But if we do pick it, we get to try again.
 
 ```js
 // First try.
-(totalImages - 1) / totalImages
-// But add the probability of another try, if the first try fails:
-+ 1 / totalImages * (totalImages - 1) / totalImages
+(totalImages - 1) / totalImages +
+  // But add the probability of another try, if the first try fails:
+  ((1 / totalImages) * (totalImages - 1)) / totalImages;
 ```
 
 Here, `1 / totalImages` is the chance we picked a duplicate, which we multiply by `(totalImages - 1) / totalImages`, the chance of avoiding a duplicate a second time.
@@ -253,36 +260,28 @@ For the third pick, there's now two to avoid:
 
 ```js
 // First try.
-(totalImages - 2) / totalImages
-// But add the probability of another try, if the first try fails:
-+ 2 / totalImages * (totalImages - 2) / totalImages
+(totalImages - 2) / totalImages +
+  // But add the probability of another try, if the first try fails:
+  ((2 / totalImages) * (totalImages - 2)) / totalImages;
 ```
 
 And so on. We multiply the probabilities together, and get:
 
 ```js
 // First pick.
-totalImages / totalImages
-// Second pick.
-* (
-  (totalImages - 1) / totalImages
-  + 1 / totalImages * (totalImages - 1) / totalImages
-)
-// Third pick.
-* (
-  (totalImages - 2) / totalImages
-  + 2 / totalImages * (totalImages - 2) / totalImages
-)
-// Fourth pick.
-* (
-  (totalImages - 3) / totalImages
-  + 3 / totalImages * (totalImages - 3) / totalImages
-)
-// Fifth pick.
-* (
-  (totalImages - 4) / totalImages
-  + 4 / totalImages * (totalImages - 4) / totalImages
-)
+(totalImages / totalImages) *
+  // Second pick.
+  ((totalImages - 1) / totalImages +
+    ((1 / totalImages) * (totalImages - 1)) / totalImages) *
+  // Third pick.
+  ((totalImages - 2) / totalImages +
+    ((2 / totalImages) * (totalImages - 2)) / totalImages) *
+  // Fourth pick.
+  ((totalImages - 3) / totalImages +
+    ((3 / totalImages) * (totalImages - 3)) / totalImages) *
+  // Fifth pick.
+  ((totalImages - 4) / totalImages +
+    ((4 / totalImages) * (totalImages - 4)) / totalImages);
 ```
 
 Or using JavaScript:
@@ -293,9 +292,9 @@ let probability = 1;
 for (let i = 0; i < numberToPick; i++) {
   probability *=
     // First try.
-    (totalImages - i) / totalImages
+    (totalImages - i) / totalImages +
     // Possible second try.
-    + i / totalImages * (totalImages - i) / totalImages;
+    ((i / totalImages) * (totalImages - i)) / totalImages;
 }
 
 console.log(probability);

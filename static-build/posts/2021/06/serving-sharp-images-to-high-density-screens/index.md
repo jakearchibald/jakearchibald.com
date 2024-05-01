@@ -3,7 +3,7 @@ title: Halve the size of images by optimising for high density displays
 date: 2021-06-11 01:00:00
 summary: Why compressing images for dense screens is different, and how to serve them
 meta: Why compressing images for dense screens is different, and how to serve them
-image: 'asset-url:./img.jpg'
+image: './img.jpg'
 ---
 
 A long time ago we had monitors of varying resolutions, but once we started to go beyond 1024x768, screens started to get bigger as resolution got bigger.
@@ -226,7 +226,11 @@ We want to serve a different set of images for high-density screens than 1x scre
 
 ```html
 <picture>
-  <source media="(-webkit-min-device-pixel-ratio: 1.5)" srcset="…" sizes="…" />
+  <source
+    media="(-webkit-min-device-pixel-ratio: 1.5)"
+    srcset="…"
+    sizes="…"
+  />
   <img srcset="…" sizes="…" width="1598" height="1026" alt="A red panda" />
 </picture>
 ```

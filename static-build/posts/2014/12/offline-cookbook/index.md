@@ -6,7 +6,7 @@ summary:
   you control over caching and how requests are handled. It doesn't give you
   patterns, you create them yourself. Let's look at a few!
 mindframe: ''
-image: ''
+image: null
 meta: ''
 ---
 

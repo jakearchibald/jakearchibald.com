@@ -1,14 +1,14 @@
 ---
 title: Control CSS loading with custom properties
 date: 2016-02-16 13:02:50
-summary: The pattern in the previous post covers the 90% case of multi-stage CSS
+summary:
+  The pattern in the previous post covers the 90% case of multi-stage CSS
   loading, and it's really simple to understand. But, would you like to hear
   about a pattern that covers ~100% and is absurdly complicated? Well, take my
   hand, and follow me into the next paragraph…
-mindframe: ""
-image: ""
+mindframe: ''
+image: null
 meta: Full dynamic control over async CSS using custom properties. All the buzzwords.
-
 ---
 
 Last week I wrote about a [simple method to load CSS progressively](/2016/link-in-body/), and on the very same day some scientists taught gravity how to wave. Coincidence? Yes.
@@ -175,19 +175,16 @@ Writing that heading made me feel really smart.
 
 ```html
 <head>
-  <link rel="stylesheet" href="/initial.css">
+  <link rel="stylesheet" href="/initial.css" />
   <script>
-    [
-      '/main.css',
-      '/comments.css',
-      '/about-me.css',
-      '/footer.css'
-    ].map(url => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = url;
-      document.head.appendChild(link);
-    });
+    ['/main.css', '/comments.css', '/about-me.css', '/footer.css'].map(
+      (url) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        document.head.appendChild(link);
+      },
+    );
   </script>
 </head>
 ```

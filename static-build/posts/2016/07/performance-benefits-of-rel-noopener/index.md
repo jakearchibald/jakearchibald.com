@@ -3,21 +3,20 @@ title: The performance benefits of rel=noopener
 date: 2016-07-21 13:55:02
 summary: '`rel="noopener"` prevents opened pages tampering with the original
   page, but it also has a performance benefit.'
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 If you have links to another origin, you should use `rel="noopener"`, especially if they open in a new tab/window.
 
 ```html
 <a href="http://example.com" target="_blank" rel="noopener">
-   Example site
+  Example site
 </a>
 ```
 
-Without this, the new page can access your window object via `window.opener`. Thankfully the origin security model of the web prevents it reading your page, but no-thankfully some legacy APIs mean it *can* navigate your page to a different URL using `window.opener.location = newURL`.
+Without this, the new page can access your window object via `window.opener`. Thankfully the origin security model of the web prevents it reading your page, but no-thankfully some legacy APIs mean it _can_ navigate your page to a different URL using `window.opener.location = newURL`.
 
 Web superhero Mathias Bynens [wrote about this in detail](https://mathiasbynens.github.io/rel-noopener/), but I just discovered there's a performance benefit too.
 
@@ -29,10 +28,10 @@ The random numbers act like a heartbeat for this page. If random numbers aren't 
 
 Now click one of these to open a page that runs some expensive JavaScript:
 
-* <a href="https://cdn.rawgit.com/jakearchibald/787311bb8645ed3f65cc98ea74ebf269/raw/5316ed16abfa4b2bd0125f2d2aa5fec06394befb/index.html" target="_blank">`<a target="_blank">`</a>
-* <a href="https://cdn.rawgit.com/jakearchibald/787311bb8645ed3f65cc98ea74ebf269/raw/5316ed16abfa4b2bd0125f2d2aa5fec06394befb/index.html" target="_blank" rel="noopener">`<a target="_blank" rel="noopener">`</a>
+- <a href="https://cdn.rawgit.com/jakearchibald/787311bb8645ed3f65cc98ea74ebf269/raw/5316ed16abfa4b2bd0125f2d2aa5fec06394befb/index.html" target="_blank">`<a target="_blank">`</a>
+- <a href="https://cdn.rawgit.com/jakearchibald/787311bb8645ed3f65cc98ea74ebf269/raw/5316ed16abfa4b2bd0125f2d2aa5fec06394befb/index.html" target="_blank" rel="noopener">`<a target="_blank" rel="noopener">`</a>
 
-Without `rel="noopener"`, the random numbers are disrupted by the new page's JavaScript. Not only that, all main-thread activity is disrupted - try selecting text on the page. But with `rel="noopener"` the random numbers keep generating at 60fps. Well, in Chrome & Opera anyway. 
+Without `rel="noopener"`, the random numbers are disrupted by the new page's JavaScript. Not only that, all main-thread activity is disrupted - try selecting text on the page. But with `rel="noopener"` the random numbers keep generating at 60fps. Well, in Chrome & Opera anyway.
 
 **Update:** Edge doesn't experience jank for either link because it doesn't support `window.opener` for `_blank` links.
 

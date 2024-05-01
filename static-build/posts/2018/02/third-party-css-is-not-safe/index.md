@@ -1,13 +1,13 @@
 ---
 title: Third party CSS is not safe
 date: 2018-02-27 14:47:46
-summary: A few days ago there was a lot of chatter about a ['keylogger' built in
+summary:
+  A few days ago there was a lot of chatter about a ['keylogger' built in
   CSS](https://github.com/maxchehab/CSS-Keylogging), but the real problem is
   thinking that third party content is 'safe'.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 A few days ago there was a lot of chatter about a ['keylogger' built in CSS](https://github.com/maxchehab/CSS-Keylogging).
@@ -17,7 +17,7 @@ Some folks called for browsers to 'fix' it. Some folks dug a bit deeper and saw 
 # Third party images
 
 ```html
-<img src="https://example.com/kitten.jpg">
+<img src="https://example.com/kitten.jpg" />
 ```
 
 If I include the above, I'm trusting `example.com`. They may betray that trust by deleting the resource, giving me a 404, making my site look broken. Or, they might replace the kitten data with something a lot less pleasant.
@@ -32,12 +32,12 @@ However, the impact of an image is limited to the content box of the element its
 
 Compared to images, third party script has way more control. If I include the above, I'm giving `example.com` full control of my site. They can:
 
-* Read/change page content.
-* Monitor every bit of user interaction.
-* Run computationally heavy code (eg, cryptocoin miner).
-* Make requests to my origin with the user's cookies, and forward the response.
-* Read/change origin storage.
-* …they can do pretty much whatever they want.
+- Read/change page content.
+- Monitor every bit of user interaction.
+- Run computationally heavy code (eg, cryptocoin miner).
+- Make requests to my origin with the user's cookies, and forward the response.
+- Read/change origin storage.
+- …they can do pretty much whatever they want.
 
 The 'origin storage' bit is important. If the script interferes with IndexedDB or the cache storage API, the attack may continue across the whole origin, even after you've removed the script.
 
@@ -48,14 +48,14 @@ If you get hit by a bad script, you should purge all site data using the [Clear-
 # Third party CSS
 
 ```html
-<link rel="stylesheet" href="https://example.com/style.css">
+<link rel="stylesheet" href="https://example.com/style.css" />
 ```
 
 CSS is much closer in power to a script than an image. Like a script, it applies to the whole page. It can:
 
-* Remove/add/modify page content.
-* Make requests based on page content.
-* Respond to many user interactions.
+- Remove/add/modify page content.
+- Make requests based on page content.
+- Respond to many user interactions.
 
 CSS can't modify origin storage, and you can't build a cryptocoin miner in CSS (probably, maybe, I don't know), but malicious CSS can still do a lot of damage.
 
@@ -64,7 +64,7 @@ CSS can't modify origin storage, and you can't build a cryptocoin miner in CSS (
 Let's start with the one that's getting a lot of attention:
 
 ```css
-input[type="password"][value$="p"] {
+input[type='password'][value$='p'] {
   background: url('/password?p');
 }
 ```
@@ -127,10 +127,10 @@ Imagine if browsers did try to mitigate the 'keylogger' trick. Attackers could j
 It isn't just passwords you have to worry about. You probably have other private content in attributes:
 
 ```html
-<input type="hidden" name="csrf" value="1687594325">
-<img src="/avatars/samanthasmith83.jpg">
+<input type="hidden" name="csrf" value="1687594325" />
+<img src="/avatars/samanthasmith83.jpg" />
 <iframe src="//cool-maps-service/show?st-pancras-london"></iframe>
-<img src="/gender-icons/female.png">
+<img src="/gender-icons/female.png" />
 <div class="banner users-birthday-today"></div>
 ```
 

@@ -8,9 +8,8 @@ summary: The [first draft of the service worker
   developed. Anyone interesting in the web competing with native apps should be
   excited by this.
 mindframe: with an unbecoming amount of excitement
-image: ""
-meta: ""
-
+image: null
+meta: ''
 ---
 
 The [first draft of the service worker spec](http://www.w3.org/TR/2014/WD-service-workers-20140508/) was published today! It's been a collaborative effort between Google, Samsung, Mozilla and others, and implementations for Chrome and Firefox are being actively developed. Anyone interesting in the web competing with native apps should be excited by this.
@@ -39,13 +38,16 @@ The [service worker code is pretty simple](https://github.com/jakearchibald/trai
 
 ```js
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/my-blog/sw.js', {
-    scope: '/my-blog/'
-  }).then(function(sw) {
-    // registration worked!
-  }).catch(function() {
-    // registration failed :(
-  });
+  navigator.serviceWorker
+    .register('/my-blog/sw.js', {
+      scope: '/my-blog/',
+    })
+    .then(function (sw) {
+      // registration worked!
+    })
+    .catch(function () {
+      // registration failed :(
+    });
 }
 ```
 
@@ -66,7 +68,7 @@ Thankfully, popular static hosting sites such as github.io, Amazon S3, and Googl
 `/my-blog/sw.js` will run in a worker context. It doesn't have DOM access and will run on a different thread to JavaScript in pages. Within it, you can listen for the "fetch" event:
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   console.log(event.request);
 });
 ```
@@ -78,10 +80,8 @@ It won't fire for the page that registered it, not yet anyway. Pages continue us
 Back to the "fetch" event, like other events you can prevent the default and do something else.
 
 ```js
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    new Response('This came from the service worker!')
-  );
+self.addEventListener('fetch', function (event) {
+  event.respondWith(new Response('This came from the service worker!'));
 });
 ```
 
@@ -100,16 +100,16 @@ The service worker comes with a few toys to make responding without a network co
 You can use the install event to prepare your service worker:
 
 ```js
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open('static-v1').then(function(cache) {
+    caches.open('static-v1').then(function (cache) {
       return cache.addAll([
         '/my-blog/',
         '/my-blog/fallback.html',
         '//mycdn.com/style.css',
-        '//mycdn.com/script.js'
+        '//mycdn.com/script.js',
       ]);
-    })
+    }),
   );
 });
 ```
@@ -123,27 +123,25 @@ Service worker introduces a new storage API, a place to store responses keyed by
 Lets use that cache:
 
 ```js
-self.addEventListener('fetch', function(event) {
-  event.respondWith(
-    caches.match(event.request)
-  );
+self.addEventListener('fetch', function (event) {
+  event.respondWith(caches.match(event.request));
 });
 ```
 
 Here we're hijacking all fetches and responding with whatever matches the incoming request in the caches. You can specify a particular cache if you want, but I'm happy with any match.
 
-`caches.match(requestOrURL)` returns a promise for a `Response`, just what `respondWith` needs. Matching is done in a similar way to HTTP, it matches on url+method and obeys Vary headers. Unlike the browser cache, the service worker cache ignores freshness, things stay in the cache until *you* remove or overwrite them.
+`caches.match(requestOrURL)` returns a promise for a `Response`, just what `respondWith` needs. Matching is done in a similar way to HTTP, it matches on url+method and obeys Vary headers. Unlike the browser cache, the service worker cache ignores freshness, things stay in the cache until _you_ remove or overwrite them.
 
 # Recovering from failure
 
 Unfortunately, the promise returned by `caches.match` will resolve with null if no match is found, meaning you'll get what looks like a network failure. However, **by the power of promises** you can fix this!
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then(function(response) {
+    caches.match(event.request).then(function (response) {
       return response || event.default();
-    })
+    }),
   );
 });
 ```
@@ -153,13 +151,16 @@ Here we've caught the error, and attempted something else. `event.default()` ret
 Of course, if the item isn't in the cache and the user has no network connection, you'll still get a network failure. However, **by the power of promises** etc etc…
 
 ```js
-self.addEventListener('fetch', function(event) {
+self.addEventListener('fetch', function (event) {
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || event.default();
-    }).catch(function() {
-      return caches.match('/my-blog/fallback.html');
-    })
+    caches
+      .match(event.request)
+      .then(function (response) {
+        return response || event.default();
+      })
+      .catch(function () {
+        return caches.match('/my-blog/fallback.html');
+      }),
   );
 });
 ```
@@ -168,7 +169,7 @@ We can rely on `/my-blog/fallback.html` being in the cache, because we depended 
 
 This is a really simple example, but it gives you the tools to handle requests however you want. Maybe you want to try the network before going to a cache, maybe you want to add certain things to the cache as you respond via the network ([which Trained To Thrill example does](https://github.com/jakearchibald/trained-to-thrill/blob/gh-pages/static/js/sw.js#L51)). I dunno, do what you want.
 
-You can even respond to a local URL with a response from another origin. This isn't a security risk, as the only person you can fool is yourself. Response visibility is judged by *it's* origin, rather than the original URL. If you give a local XHR request an opaque response (as in, from another origin with no CORS headers), it'll fail with a security error, as it would if it requested the cross-origin URL directly.
+You can even respond to a local URL with a response from another origin. This isn't a security risk, as the only person you can fool is yourself. Response visibility is judged by _it's_ origin, rather than the original URL. If you give a local XHR request an opaque response (as in, from another origin with no CORS headers), it'll fail with a security error, as it would if it requested the cross-origin URL directly.
 
 This is a low-level API. We don't want to make shortcuts until we know where people want to go. AppCache made this mistake, and we're left with a terse easy-to-make manifest that doesn't do what we want and is near-impossible to debug. Although service workers require more code for similar things, you know what to expect because you're telling it what to do, and if it doesn't do what you expect you can investigate it like you would any other piece of JavaScript.
 
@@ -179,40 +180,40 @@ If you just need to update a cache or two, you can do that as part of background
 Your service worker is checked for updates on each page navigation, although you can use HTTP Cache-Control headers to reduce this frequency (with a maximum of a day to avoid the immortal AppCache problem). If the worker is byte-different, it's considered to be a new version. It'll be loaded and its `install` event is fired:
 
 ```js
-self.addEventListener('install', function(event) {
+self.addEventListener('install', function (event) {
   event.waitUntil(
-    caches.open('static-v2').then(function(cache) {
+    caches.open('static-v2').then(function (cache) {
       return cache.addAll([
         '/my-blog/',
         '/my-blog/fallback.html',
         '//mycdn.com/style-v2.css',
-        '//mycdn.com/script-v2.js'
+        '//mycdn.com/script-v2.js',
       ]);
-    })
+    }),
   );
 });
 ```
 
 While this happens, the previous version is still responsible for fetches. The new version is installing in the background. Note that I'm calling my new cache 'static-v2', so the previous cache isn't disturbed.
 
-Once install completes, this new version will remain in-waiting until all pages using the current version unload. If you only have one tab open, a refresh is enough. If you can't wait that long, you can call `event.replace()` in your install event, but you'll need to be aware you're now in control of pages loaded using *some previous version*.
+Once install completes, this new version will remain in-waiting until all pages using the current version unload. If you only have one tab open, a refresh is enough. If you can't wait that long, you can call `event.replace()` in your install event, but you'll need to be aware you're now in control of pages loaded using _some previous version_.
 
 When no pages are using the current version, the new worker activates and becomes responsible for fetches. You also get an activate event:
 
 ```js
-self.addEventListener('activate', function(event) {
+self.addEventListener('activate', function (event) {
   var cacheWhitelist = ['static-v2'];
 
   event.waitUntil(
-    caches.keys(function(cacheNames) {
+    caches.keys(function (cacheNames) {
       return Promise.all(
-        cacheNames.map(function(cacheName) {
+        cacheNames.map(function (cacheName) {
           if (cacheWhitelist.indexOf(cacheName) == -1) {
             return caches.delete(cacheName);
           }
-        })
-      )
-    })
+        }),
+      );
+    }),
   );
 });
 ```
@@ -234,11 +235,9 @@ That means you can't retain state in the global scope:
 ```js
 var hitCounter = 0;
 
-this.addEventListener('fetch', function(event) {
+this.addEventListener('fetch', function (event) {
   hitCounter++;
-  event.respondWith(
-    new Response('Hit number ' + hitCounter)
-  );
+  event.respondWith(new Response('Hit number ' + hitCounter));
 });
 ```
 
@@ -256,17 +255,17 @@ I expect the API to shift around as bugs are spotted and various browser vendors
 
 Excitingly, the service worker context may be used by other specifications. This is great as many features the web is missing need to run code independent of pages. Things like:
 
-* Background synchronisation ([specification on GitHub](https://github.com/slightlyoff/BackgroundSync))
-* Reacting to a push message ([latest draft uses service workers](https://dvcs.w3.org/hg/push/raw-file/tip/index.html))
-* Reacting to a particular time & date 
-* Entering a geo-fence
+- Background synchronisation ([specification on GitHub](https://github.com/slightlyoff/BackgroundSync))
+- Reacting to a push message ([latest draft uses service workers](https://dvcs.w3.org/hg/push/raw-file/tip/index.html))
+- Reacting to a particular time & date
+- Entering a geo-fence
 
 These will be developed independently to the core service worker spec, but if we can nail this, we get many of the features that make native apps a more attractive option, and that makes me happy.
 
 # Further reading
 
-* [The spec](http://slightlyoff.github.io/ServiceWorker/spec/service_worker/)
-* [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - track the implementation status across the main browsers
-* [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
-* [ES7 async functions](http://jakearchibald.com/2014/es7-async-functions/) - use promises to make async code even easier
-* [The browser cache is vary broken](http://jakearchibald.com/2014/browser-cache-vary-broken/) - some research that went into the ServiceWorker cache
+- [The spec](http://slightlyoff.github.io/ServiceWorker/spec/service_worker/)
+- [Is ServiceWorker ready?](https://jakearchibald.github.io/isserviceworkerready/) - track the implementation status across the main browsers
+- [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
+- [ES7 async functions](http://jakearchibald.com/2014/es7-async-functions/) - use promises to make async code even easier
+- [The browser cache is vary broken](http://jakearchibald.com/2014/browser-cache-vary-broken/) - some research that went into the ServiceWorker cache

@@ -23,6 +23,7 @@ import clientBundlePlugin from './lib/client-bundle-plugin.mjs';
 import nodeExternalPlugin from './lib/node-external-plugin.mjs';
 import cssPlugin from './lib/css-plugin.mjs';
 import assetPlugin from './lib/asset-plugin.mjs';
+import imgAssetPlugin from './lib/image-asset-plugin.mjs';
 import assetStringPlugin from './lib/asset-string-plugin.mjs';
 import resolveDirsPlugin from './lib/resolve-dirs-plugin.mjs';
 import postData from './lib/post-data-plugin.mjs';
@@ -69,6 +70,7 @@ export default async function ({ watch }) {
       'client-worker',
     ]),
     assetPlugin(),
+    imgAssetPlugin(),
     assetPrettySizePlugin(),
     assetStringPlugin(),
     cssPlugin(resolveFileUrl),

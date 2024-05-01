@@ -3,7 +3,7 @@ title: Performance-testing the Google I/O site
 date: 2021-04-30 01:00:00
 summary: Deep-diving on the load performance of the Google I/O website.
 meta: Deep-diving on the load performance of the Google I/O website.
-image: 'asset-url:./img.jpg'
+image: './img.jpg'
 ---
 
 I've been looking at the performance of F1 websites recently, but before I dig into the last couple of teams, I figured I'd look a little closer to home, and dig into the Google I/O website.

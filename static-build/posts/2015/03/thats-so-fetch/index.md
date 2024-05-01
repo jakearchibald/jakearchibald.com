@@ -5,7 +5,7 @@ summary: There's been some confusion around the new [fetch
   API](https://fetch.spec.whatwg.org/#fetch-api) recently. Let's clear things
   up.
 mindframe: "- and I've even included a meme"
-image: ''
+image: null
 meta: ''
 ---
 

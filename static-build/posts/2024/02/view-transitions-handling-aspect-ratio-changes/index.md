@@ -3,7 +3,7 @@ title: 'View transitions: Handling aspect ratio changes'
 date: 2024-02-21 01:00:00
 summary: Tips and tricks to get the transition you want
 meta: Tips and tricks to get the transition you want
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 This post assumes some knowledge of view transitions. If you're looking for a from-scratch intro to the feature, [see this article](https://developer.chrome.com/docs/web-platform/view-transitions/).

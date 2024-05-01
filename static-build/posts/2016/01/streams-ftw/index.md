@@ -1,7 +1,8 @@
 ---
 title: 2016 - the year of web streams
 date: 2016-01-25 15:00:00
-summary: "Yeah, ok, it's a touch bold to talk about something being *the thing
+summary:
+  "Yeah, ok, it's a touch bold to talk about something being *the thing
   of the year* as early as January, but the potential of the web streams API has
   gotten me all excited.\r
 
@@ -11,8 +12,9 @@ summary: "Yeah, ok, it's a touch bold to talk about something being *the thing
   MPEG to GIF, but most importantly, they can be combined with service workers
   to become *the fastest* way to serve content."
 mindframe: ''
-image: asset-url:./post.png
-meta: Using web streams to process network data, transcode MPEG to GIF, & slash
+image: ./post.png
+meta:
+  Using web streams to process network data, transcode MPEG to GIF, & slash
   page render times.
 ---
 

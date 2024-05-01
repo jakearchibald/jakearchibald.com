@@ -4,7 +4,7 @@ date: 2019-03-19 12:00:29
 summary: Can I predict the winners of the 2019 F1 season by looking at the
   performance of their websites? No. But I'm gonna anyway.
 mindframe: ''
-image: ''
+image: null
 meta: ''
 ---
 

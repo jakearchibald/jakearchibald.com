@@ -3,7 +3,7 @@ title: Lazy async SVG rasterisation
 date: 2017-09-08 09:57:21
 summary: Using `createImageBitmap` to make SVG render off the main thread.
 mindframe: ''
-image: ''
+image: null
 meta: Using createImageBitmap for threaded SVG rendering.
 ---
 

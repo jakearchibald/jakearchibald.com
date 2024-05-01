@@ -7,7 +7,7 @@ summary: Chrome is intending to [change the behaviour of `<link
   benefits of this aren't clear from the blink-dev post, so I wanted to go into
   detail here.
 mindframe: '- totally overshadowed by some waving gravity thing. Thanks Einstein.'
-image: ''
+image: null
 meta: Chrome is intending to change the behaviour of <link> in <body>, which
   allows for better ways to load CSS
 ---
@@ -76,7 +76,8 @@ This fixes the redundancy issue, but it means you need to know what the page wil
         return (
           t
             ? (d = t)
-            : ((r = (f.body || f.getElementsByTagName('head')[0]).childNodes),
+            : ((r = (f.body || f.getElementsByTagName('head')[0])
+                .childNodes),
               (d = r[r.length - 1])),
           (a = f.styleSheets),
           (s.rel = 'stylesheet'),
@@ -103,7 +104,9 @@ This fixes the redundancy issue, but it means you need to know what the page wil
           s
         );
       };
-      'undefined' != typeof exports ? (exports.loadCSS = n) : (e.loadCSS = n);
+      'undefined' != typeof exports
+        ? (exports.loadCSS = n)
+        : (e.loadCSS = n);
     })('undefined' != typeof global ? global : this);
   </script>
   <style>

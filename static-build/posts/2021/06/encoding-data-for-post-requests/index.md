@@ -3,7 +3,7 @@ title: Encoding data for POST requests
 date: 2021-06-30 01:00:00
 summary: Don't do it like GitHub Copilot!
 meta: Don't do it like GitHub Copilot!
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Right now, when you go to [copilot.github.com](https://copilot.github.com/) you're greeted with this example:

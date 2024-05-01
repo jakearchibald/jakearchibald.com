@@ -1,12 +1,12 @@
 ---
 title: A declarative router for service workers
 date: 2019-01-07 14:19:11
-summary: We're thinking of adding a declarative router to service workers, and
+summary:
+  We're thinking of adding a declarative router to service workers, and
   we want feedback.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 **I'm looking for feedback on this API. It isn't yet supported in any standard or browser.**
@@ -23,10 +23,10 @@ The idea is you can define routes during the `install` event of the service work
 addEventListener('install', (event) => {
   const router = event.router;
 
-  router.get(
-    new RouterIfURLStarts('/avatars/'),
-    [new RouterSourceCache(), new RouterSourceNetwork()],
-  );
+  router.get(new RouterIfURLStarts('/avatars/'), [
+    new RouterSourceCache(),
+    new RouterSourceNetwork(),
+  ]);
 
   router.get(
     new RouterIfURLEnds('.mp4', { ignoreSearch: true }),
@@ -116,7 +116,7 @@ A condition that checks if the URL of the request ends with `end`. This means `n
 
 ```js
 router.add(
-  new RouterIfDate({ from, to })
+  new RouterIfDate({ from, to }),
   // …
 );
 ```
@@ -132,7 +132,7 @@ router.add(
   [
     new RouterIfURLStarts('/'),
     new RouterIfURLEnds('.jpg', { ignoreSearch: true }),
-  ]
+  ],
   // …
 );
 ```
@@ -143,9 +143,9 @@ The above matches same-origin requests with a path that ends `.jpg`.
 
 It might be intuitive to allow strings to be used as conditions:
 
-* `'/'` means `new RouterIfURL('/', { ignoreSearch: true })`.
-* `'/articles/*'` means `new RouterIfURLStarts('/articles/')`.
-* `'*.jpg'` means `new RouterIfURLEnds('.jpg', { ignoreSearch: true })`.
+- `'/'` means `new RouterIfURL('/', { ignoreSearch: true })`.
+- `'/articles/*'` means `new RouterIfURLStarts('/articles/')`.
+- `'*.jpg'` means `new RouterIfURLEnds('.jpg', { ignoreSearch: true })`.
 
 This means you could do:
 
@@ -176,7 +176,13 @@ A 404 will be treated as a successful response, unless `requireOkStatus` is true
 ```js
 router.add(
   conditions,
-  new RouterSourceCache({ request, cacheName, ignoreSearch, ignoreMethod, ignoreVary }),
+  new RouterSourceCache({
+    request,
+    cacheName,
+    ignoreSearch,
+    ignoreMethod,
+    ignoreVary,
+  }),
 );
 ```
 
@@ -185,10 +191,7 @@ Try to get a response from the cache API. The current request will be used, alth
 ### RouterSourceFetchEvent
 
 ```js
-router.add(
-  conditions,
-  new RouterSourceFetchEvent({ id }),
-);
+router.add(conditions, new RouterSourceFetchEvent({ id }));
 ```
 
 If a router matches, it's used instead of dispatching a `fetch` event. `RouterSourceFetchEvent` allows you to override this and fire a `fetch` event. For example:
@@ -266,7 +269,7 @@ addEventListener('install', (event) => {
 
   event.addPathExclusion({
     method: 'GET',
-    endsWith: '.mp4'
+    endsWith: '.mp4',
   });
 });
 ```

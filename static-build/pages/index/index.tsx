@@ -96,7 +96,12 @@ const IndexPage: FunctionalComponent<Props> = ({
               {post.image && (
                 <div class="preview-image">
                   <a href={getPostUrl(post)}>
-                    <img src={post.image} alt="" />
+                    <img
+                      src={post.image.src}
+                      width={post.image.width}
+                      height={post.image.height}
+                      alt=""
+                    />
                   </a>
                 </div>
               )}

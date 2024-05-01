@@ -33,7 +33,7 @@ interface Post {
   mindframe: string;
   summary: string;
   meta: string;
-  image: string | null;
+  image?: { src: string; width: number; height: number };
   scripts: Script[];
 }
 

@@ -3,7 +3,7 @@ title: The gotcha of unhandled promise rejections
 date: 2023-01-11 01:00:00
 summary: A rough edge with promises that can sneak up on you.
 meta: A rough edge with promises that can sneak up on you.
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Let's say you wanted to display a bunch of chapters on the page, and for whatever reason, the API only gives you a chapter at a time. You could do this:

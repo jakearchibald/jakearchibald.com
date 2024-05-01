@@ -41,11 +41,11 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
               <meta name="twitter:card" content="summary_large_image" />
               <meta
                 property="og:image"
-                content={`${siteOrigin}${post.image}`}
+                content={`${siteOrigin}${post.image.src}`}
               />
               <meta
                 name="twitter:image"
-                content={`${siteOrigin}${post.image}`}
+                content={`${siteOrigin}${post.image.src}`}
               />
             </Fragment>
           ) : (

@@ -3,7 +3,7 @@ title: Who has the fastest F1 website in 2021? Part 3
 date: 2021-03-29 01:00:00
 summary: Deep-diving on the load performance of F1 websites.
 meta: Deep-diving on the load performance of F1 websites.
-image: 'asset-url:./img.jpg'
+image: './img.jpg'
 ---
 
 I once spent an hour creating an [F1 lights-out reaction test](https://f1-start.glitch.me/) which went viral and was even [played by F1 drivers](https://www.youtube.com/watch?v=6fgGJ-M6X2s). That sounds like a brag, and it kinda is, but now whenever I pour days or even weeks of work into something, it just seems so inefficient compared to that time I spent _an hour_ on something that went big. Wait! You're not my therapist! Let's look at another F1 website…

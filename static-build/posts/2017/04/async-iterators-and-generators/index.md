@@ -4,11 +4,11 @@ date: 2017-04-18 15:25:28
 summary: "[Async iterators](https://github.com/tc39/proposal-async-iteration)
   are arriving soon, and they make reading a stream really easy. Here's how they
   work, and how to make streams iterate…"
-mindframe: ""
-image: ""
-meta: Async iterators are arriving soon, and they make reading a stream really
+mindframe: ''
+image: null
+meta:
+  Async iterators are arriving soon, and they make reading a stream really
   easy. Here's how they work, and how to make streams iterate…
-
 ---
 
 Streaming fetches are supported in Chrome, Edge, and Safari, and they look a little like this:
@@ -20,7 +20,7 @@ async function getResponseSize(url) {
   let total = 0;
 
   while (true) {
-    const {done, value} = await reader.read();
+    const { done, value } = await reader.read();
     if (done) return total;
     total += value.length;
   }
@@ -61,7 +61,7 @@ async function example() {
   // Async iterator:
   const asyncIterator = createAsyncNumberIterator();
   const p = asyncIterator.next(); // Promise
-  await p;                    // Object {value: 1, done: false}
+  await p; // Object {value: 1, done: false}
   await asyncIterator.next(); // Object {value: 2, done: false}
   await asyncIterator.next(); // Object {value: 3, done: false}
   await asyncIterator.next(); // Object {value: undefined, done: true}
@@ -99,7 +99,7 @@ async function example() {
   const arrayOfFetchPromises = [
     fetch('1.txt'),
     fetch('2.txt'),
-    fetch('3.txt')
+    fetch('3.txt'),
   ];
 
   // Regular iterator:
@@ -126,7 +126,8 @@ Async generators a mixture of async functions and generators. Let's say we wante
 // Note the * after "function"
 async function* asyncRandomNumbers() {
   // This is a web service that returns a random number
-  const url = 'https://www.random.org/decimal-fractions/?num=1&dec=10&col=1&format=plain&rnd=new';
+  const url =
+    'https://www.random.org/decimal-fractions/?num=1&dec=10&col=1&format=plain&rnd=new';
 
   while (true) {
     const response = await fetch(url);
@@ -167,13 +168,13 @@ async function example() {
     // …
   }
 }
-``` 
+```
 
 …but it hasn't been spec'd yet. So, let's write our own async generator that lets us iterate over a stream! We want to:
 
-* Get a lock on the stream, so nothing else can use it while we're iterating.
-* Yield the values of the stream.
-* Release the lock when we're done.
+- Get a lock on the stream, so nothing else can use it while we're iterating.
+- Yield the values of the stream.
+- Release the lock when we're done.
 
 Releasing the lock is important. If the developer breaks the loop, we want them to be able to continue to use the stream from wherever they left off. So:
 
@@ -185,14 +186,13 @@ async function* streamAsyncIterator(stream) {
   try {
     while (true) {
       // Read from the stream
-      const {done, value} = await reader.read();
+      const { done, value } = await reader.read();
       // Exit if we're done
       if (done) return;
       // Else yield the chunk
       yield value;
     }
-  }
-  finally {
+  } finally {
     reader.releaseLock();
   }
 }
@@ -225,16 +225,16 @@ async function example() {
 
   for await (const chunk of streamAsyncIterator(response.body)) {
     const index = chunk.indexOf(findCode);
-    
+
     if (index != -1) {
       bytes += index;
       console.log(`Found ${find} at byte ${bytes}.`);
       break;
     }
-    
+
     bytes += chunk.length;
   }
-  
+
   response.body.cancel();
 }
 ```
@@ -269,7 +269,7 @@ function streamAsyncIterator(stream) {
     // iterators tend to return themselves.
     [Symbol.asyncIterator]() {
       return this;
-    }
+    },
   };
 }
 ```

@@ -6,7 +6,7 @@ summary: A few days ago [Netflix
   removed client-side React.js from their landing page and they saw a 50%
   performance improvement. It caused a bit of a stir.
 mindframe: ''
-image: ''
+image: null
 meta: Netflix improved performance by deferring react on the client, but this
   doesn't reflect badly on React.
 ---

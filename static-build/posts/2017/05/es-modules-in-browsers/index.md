@@ -4,23 +4,23 @@ date: 2017-05-02 14:29:25
 summary: ES modules are starting to land in browsers! Modules in general are
   [pretty well documented](https://ponyfoo.com/articles/es6-modules-in-depth),
   but here are some browser-specific differences…
-mindframe: ""
-image: ""
-meta: ES modules are landing in browsers! Here are the HTML-specific differences
+mindframe: ''
+image: null
+meta:
+  ES modules are landing in browsers! Here are the HTML-specific differences
   you need to be aware of.
-
 ---
 
 ES modules are now available in browsers! They're in…
 
-* Safari 10.1.
-* Chrome 61.
-* Firefox 60.
-* Edge 16.
+- Safari 10.1.
+- Chrome 61.
+- Firefox 60.
+- Edge 16.
 
 ```html
 <script type="module">
-  import {addTextToBody} from './utils.mjs';
+  import { addTextToBody } from './utils.mjs';
 
   addTextToBody('Modules are pretty cool.');
 </script>
@@ -45,22 +45,22 @@ There are already some [great articles on modules](https://ponyfoo.com/articles/
 
 ```js
 // Supported:
-import {foo} from 'https://jakearchibald.com/utils/bar.mjs';
-import {foo} from '/utils/bar.mjs';
-import {foo} from './bar.mjs';
-import {foo} from '../bar.mjs';
+import { foo } from 'https://jakearchibald.com/utils/bar.mjs';
+import { foo } from '/utils/bar.mjs';
+import { foo } from './bar.mjs';
+import { foo } from '../bar.mjs';
 
 // Not supported:
-import {foo} from 'bar.mjs';
-import {foo} from 'utils/bar.mjs';
+import { foo } from 'bar.mjs';
+import { foo } from 'utils/bar.mjs';
 ```
 
 Valid module specifiers must match one of the following:
 
-* A full non-relative URL. As in, it doesn't throw an error when put through `new URL(moduleSpecifier)`.
-* Starts with `/`.
-* Starts with `./`.
-* Starts with `../`.
+- A full non-relative URL. As in, it doesn't throw an error when put through `new URL(moduleSpecifier)`.
+- Starts with `/`.
+- Starts with `./`.
+- Starts with `../`.
 
 Other specifiers are reserved for future-use, such as importing built-in modules.
 
@@ -77,9 +77,9 @@ Browsers that understand `type=module` should ignore scripts with a `nomodule` a
 
 ## Browser issues
 
-* <del>Firefox doesn't support `nomodule` ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1330900))</del>. Fixed in Firefox nightly!
-* <del>Edge doesn't support `nomodule` ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10525830/))</del>. Fixed in Edge 16!
-* <del>Safari 10.1 doesn't support `nomodule`</del>. Fixed in Safari 11! For 10.1, there's a [pretty smart workaround](https://gist.github.com/samthor/64b114e4a4f539915a95b91ffd340acc).
+- <del>Firefox doesn't support `nomodule` ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1330900))</del>. Fixed in Firefox nightly!
+- <del>Edge doesn't support `nomodule` ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/10525830/))</del>. Fixed in Edge 16!
+- <del>Safari 10.1 doesn't support `nomodule`</del>. Fixed in Safari 11! For 10.1, there's a [pretty smart workaround](https://gist.github.com/samthor/64b114e4a4f539915a95b91ffd340acc).
 
 # Defer by default
 
@@ -105,7 +105,7 @@ Module scripts use the same execution queue as regular scripts using `defer`.
 ```html
 <!-- This script will execute after… -->
 <script type="module">
-  addTextToBody("Inline module executed");
+  addTextToBody('Inline module executed');
 </script>
 
 <!-- …this script… -->
@@ -113,7 +113,7 @@ Module scripts use the same execution queue as regular scripts using `defer`.
 
 <!-- …and this script… -->
 <script defer>
-  addTextToBody("Inline script executed");
+  addTextToBody('Inline script executed');
 </script>
 
 <!-- …but before this script. -->
@@ -129,7 +129,7 @@ Regular inline scripts ignore `defer` whereas inline module scripts are always d
 ```html
 <!-- This executes as soon as its imports have fetched -->
 <script async type="module">
-  import {addTextToBody} from './utils.mjs';
+  import { addTextToBody } from './utils.mjs';
 
   addTextToBody('Inline module executed.');
 </script>
@@ -146,7 +146,7 @@ As always with `async`, scripts may not execute in the order they appear in the 
 
 ## Browser issues
 
-* <del>Firefox doesn't support `async` on inline module scripts ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1361369)).</del> Fixed in Firefox 59!
+- <del>Firefox doesn't support `async` on inline module scripts ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1361369)).</del> Fixed in Firefox 59!
 
 # Modules only execute once
 
@@ -155,7 +155,7 @@ As always with `async`, scripts may not execute in the order they appear in the 
 <script type="module" src="1.mjs"></script>
 <script type="module" src="1.mjs"></script>
 <script type="module">
-  import "./1.mjs";
+  import './1.mjs';
 </script>
 
 <!-- Whereas classic scripts execute multiple times -->
@@ -169,7 +169,7 @@ If you understand ES modules, you'll know you can import them multiple times but
 
 ## Browser issues
 
-* <del>Edge executes modules multiple times ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865922/))</del>. Fixed in Edge 17!
+- <del>Edge executes modules multiple times ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865922/))</del>. Fixed in Edge 17!
 
 # Always CORS
 
@@ -181,7 +181,7 @@ If you understand ES modules, you'll know you can import them multiple times but
 <script type="module">
   import 'https://….now.sh/no-cors';
 
-  addTextToBody("This will not execute.");
+  addTextToBody('This will not execute.');
 </script>
 
 <!-- This will execute as it passes CORS checks -->
@@ -194,8 +194,8 @@ Unlike regular scripts, module scripts (and their imports) are fetched with CORS
 
 ## Browser issues
 
-* <del>Firefox fails to load the demo page ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1361373))</del>. Fixed in Firefox 59!
-* <del>Edge loads module scripts without CORS headers ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865934/))</del>. Fixed in Edge 16!
+- <del>Firefox fails to load the demo page ([issue](https://bugzilla.mozilla.org/show_bug.cgi?id=1361373))</del>. Fixed in Firefox 59!
+- <del>Edge loads module scripts without CORS headers ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865934/))</del>. Fixed in Edge 16!
 
 # Credentials by default
 
@@ -203,11 +203,11 @@ Unlike regular scripts, module scripts (and their imports) are fetched with CORS
 
 Most CORS-based APIs will send credentials (cookies etc) if the request is to the same origin, but for a while `fetch()` and module scripts were exceptions. However, that all changed, and now `fetch()` and module scripts behave the same as other CORS-based APIs.
 
-However, that means you'll encounter *three exciting varieties* of browser support:
+However, that means you'll encounter _three exciting varieties_ of browser support:
 
-* Old versions of browsers that, against the spec at the time, sent credentials by to same-origin URLs by default.
-* Browsers that followed the spec at the time, and did not send credentials to same-origin URLs by default.
-* New browsers that follow the new spec, and send credentials to same-origin URLs by default.
+- Old versions of browsers that, against the spec at the time, sent credentials by to same-origin URLs by default.
+- Browsers that followed the spec at the time, and did not send credentials to same-origin URLs by default.
+- New browsers that follow the new spec, and send credentials to same-origin URLs by default.
 
 If you hit this issue, you can add the `crossorigin` attribute, which will add credentials to same-origin requests, but not cross-origin request, in any browser that follows the old spec. It doesn't do anything if the browser follows the new spec, so it's safe to use.
 
@@ -225,7 +225,11 @@ If you hit this issue, you can add the `crossorigin` attribute, which will add c
 <script type="module" crossorigin src="https://other-origin/1.mjs"></script>
 
 <!-- Fetched with credentials-->
-<script type="module" crossorigin="use-credentials" src="https://other-origin/1.mjs"></script>
+<script
+  type="module"
+  crossorigin="use-credentials"
+  src="https://other-origin/1.mjs"
+></script>
 ```
 
 # Mime-types
@@ -236,7 +240,7 @@ Unlike regular scripts, modules scripts must be served with one of the [valid Ja
 
 ## Browser issues
 
-* Edge executes scripts with invalid MIME types ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865977/)).
+- Edge executes scripts with invalid MIME types ([issue](https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/11865977/)).
 
 And that's what I've learned so far. Needless to say I'm really excited about ES modules landing in browsers!
 

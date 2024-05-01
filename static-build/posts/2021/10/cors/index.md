@@ -3,7 +3,7 @@ title: How to win at CORS
 date: 2021-10-12 01:00:00
 summary: The 'how' and 'why' of CORS, from start to finish.
 meta: The 'how' and 'why' of CORS, from start to finish.
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 CORS (Cross-Origin Resource Sharing) is hard. It's hard because it's part of how browsers fetch stuff, and that's a set of behaviours that started with the very first web browser over thirty years ago. Since then, it's been a constant source of development; adding features, improving defaults, and papering over past mistakes without breaking too much of the web.

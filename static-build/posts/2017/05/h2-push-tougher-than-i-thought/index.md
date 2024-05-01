@@ -1,7 +1,8 @@
 ---
 title: HTTP/2 push is tougher than I thought
 date: 2017-05-30 00:36:05
-summary: "\"HTTP/2 push will solve that\" is something I've heard a lot when it
+summary:
+  "\"HTTP/2 push will solve that\" is something I've heard a lot when it
   comes to page load performance problems, but I didn't know much about it, so I
   decided to dig in.\r
 
@@ -11,7 +12,7 @@ summary: "\"HTTP/2 push will solve that\" is something I've heard a lot when it
   what really caught me off-guard is how inconsistent it is between browsers –
   I'd assumed it was a done deal & totally ready for production."
 mindframe: ''
-image: ''
+image: null
 meta: There are lots of edge cases I hadn't considered, and it's very
   inconsistent between browsers. Here's what I found…
 ---

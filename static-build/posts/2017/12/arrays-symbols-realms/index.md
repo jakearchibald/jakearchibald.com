@@ -1,12 +1,12 @@
 ---
 title: Arrays, symbols, and realms
 date: 2017-12-11 16:50:55
-summary: How `Array.isArray` works, and how we can use symbols to create our own
+summary:
+  How `Array.isArray` works, and how we can use symbols to create our own
   type-matching functions.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 On Twitter, Allen Wirfs-Brock asked folks [if they knew what `Array.isArray(obj)` did](https://twitter.com/awbjs/status/939240121269809152), and the results suggested… no they don't. For what it's worth, I also got the answer wrong.
@@ -47,7 +47,7 @@ But things get more complicated when you introduce multiple realms:
 
 ## Multiple realms
 
-A realm contains the JavaScript global object, which `self` refers to. So, it can be said that code running in a worker is in a different realm to code running in the page. The same is true between iframes, but same-origin iframes also share an ECMAScript 'agent', meaning objects can… (and please read the next bit in a 70s sci-fi voiceover) *travel across realms*.
+A realm contains the JavaScript global object, which `self` refers to. So, it can be said that code running in a worker is in a different realm to code running in the page. The same is true between iframes, but same-origin iframes also share an ECMAScript 'agent', meaning objects can… (and please read the next bit in a 70s sci-fi voiceover) _travel across realms_.
 
 Seriously, look:
 
@@ -188,6 +188,6 @@ The only slight issue, is you need to cross your fingers and hope your symbol na
 
 # Further reading
 
-* [Iterators](/2014/iterators-gonna-iterate/)
-* [Async iterators](/2017/async-iterators-and-generators/)
-* [Keith Cirkel's deep dive into symbols](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)
+- [Iterators](/2014/iterators-gonna-iterate/)
+- [Async iterators](/2017/async-iterators-and-generators/)
+- [Keith Cirkel's deep dive into symbols](https://www.keithcirkel.co.uk/metaprogramming-in-es6-symbols/)

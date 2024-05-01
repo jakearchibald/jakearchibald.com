@@ -3,7 +3,7 @@ title: The case against self-closing tags in HTML
 date: 2023-07-06 01:00:00
 summary: The history, facts, and opinions.
 meta: The history, facts, and opinions.
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Let's talk about `/>`:

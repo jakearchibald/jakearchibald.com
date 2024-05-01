@@ -1,11 +1,12 @@
 ---
 title: Service workers at TPAC
 date: 2019-10-06 14:05:43
-summary: "Last month we had a service worker meeting at the W3C TPAC conference
+summary:
+  "Last month we had a service worker meeting at the W3C TPAC conference
   in Fukuoka. For the first time in a few years, we focused on possible new
   features and behaviours. Here's a summary:"
 mindframe: ''
-image: ''
+image: null
 meta: Last month we had a service worker meeting at TPAC. Here's a summary…
 ---
 

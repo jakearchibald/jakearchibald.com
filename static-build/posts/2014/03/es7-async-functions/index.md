@@ -1,12 +1,12 @@
 ---
 title: ES7 async functions
 date: 2014-03-27 00:00:40
-summary: They're brilliant. They're brilliant and I want laws changed so I can
+summary:
+  They're brilliant. They're brilliant and I want laws changed so I can
   marry them.
 mindframe: "- hey at least it's not another progressive enhancement article"
-image: ""
-meta: ""
-
+image: null
+meta: ''
 ---
 
 They're brilliant. They're brilliant and I want laws changed so I can marry them.
@@ -21,24 +21,31 @@ The code looks like this:
 
 ```js
 function loadStory() {
-  return getJSON('story.json').then(function(story) {
-    addHtmlToPage(story.heading);
-   
-    return story.chapterURLs.map(getJSON)
-      .reduce(function(chain, chapterPromise) {
-        return chain.then(function() {
-          return chapterPromise;
-        }).then(function(chapter) {
-          addHtmlToPage(chapter.html);
-        });
-      }, Promise.resolve());
-  }).then(function() {
-    addTextToPage("All done");
-  }).catch(function(err) {
-    addTextToPage("Argh, broken: " + err.message);
-  }).then(function() {
-    document.querySelector('.spinner').style.display = 'none';
-  });
+  return getJSON('story.json')
+    .then(function (story) {
+      addHtmlToPage(story.heading);
+
+      return story.chapterURLs
+        .map(getJSON)
+        .reduce(function (chain, chapterPromise) {
+          return chain
+            .then(function () {
+              return chapterPromise;
+            })
+            .then(function (chapter) {
+              addHtmlToPage(chapter.html);
+            });
+        }, Promise.resolve());
+    })
+    .then(function () {
+      addTextToPage('All done');
+    })
+    .catch(function (err) {
+      addTextToPage('Argh, broken: ' + err.message);
+    })
+    .then(function () {
+      document.querySelector('.spinner').style.display = 'none';
+    });
 }
 ```
 
@@ -54,9 +61,9 @@ async function loadStory() {
     for (let chapter of story.chapterURLs.map(getJSON)) {
       addHtmlToPage((await chapter).html);
     }
-    addTextToPage("All done");
+    addTextToPage('All done');
   } catch (err) {
-    addTextToPage("Argh, broken: " + err.message);
+    addTextToPage('Argh, broken: ' + err.message);
   }
   document.querySelector('.spinner').style.display = 'none';
 }
@@ -69,10 +76,10 @@ With async functions ([full proposal](https://github.com/lukehoban/ecmascript-as
 `loadStory` returns a promise, so you can use it in other async functions.
 
 ```js
-(async function() {
+(async function () {
   await loadStory();
-  console.log("Yey, story successfully loaded!");
-}());
+  console.log('Yey, story successfully loaded!');
+})();
 ```
 
 # Until ES7 arrives…
@@ -83,16 +90,16 @@ You need a small bit of library code, [a spawn function](https://gist.github.com
 
 ```js
 function loadStory() {
-  return spawn(function *() {
+  return spawn(function* () {
     try {
       let story = yield getJSON('story.json');
       addHtmlToPage(story.heading);
       for (let chapter of story.chapterURLs.map(getJSON)) {
         addHtmlToPage((yield chapter).html);
       }
-      addTextToPage("All done");
+      addTextToPage('All done');
     } catch (err) {
-      addTextToPage("Argh, broken: " + err.message);
+      addTextToPage('Argh, broken: ' + err.message);
     }
     document.querySelector('.spinner').style.display = 'none';
   });
@@ -105,5 +112,5 @@ ES7 brings the spawn function into the spec and makes it even easier to use. Hav
 
 # Further reading
 
-* [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
-* [`Promise.resolve()` is not the opposite of `Promise.reject()`](/2014/resolve-not-opposite-of-reject/) - a common misunderstanding with promises
+- [JavaScript promises, there and back again](http://www.html5rocks.com/en/tutorials/es6/promises/) - guide to promises
+- [`Promise.resolve()` is not the opposite of `Promise.reject()`](/2014/resolve-not-opposite-of-reject/) - a common misunderstanding with promises

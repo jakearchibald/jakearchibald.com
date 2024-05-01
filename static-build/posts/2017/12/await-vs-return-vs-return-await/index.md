@@ -5,7 +5,7 @@ summary:
   When writing async functions, there are differences between `await` vs
   `return` vs `return await`, and picking the right one is important.
 mindframe: ''
-image: ''
+image: null
 meta: ''
 ---
 

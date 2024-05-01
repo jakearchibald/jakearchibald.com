@@ -6,7 +6,7 @@ summary: When I was building this blog I tried to use
   because I wanted to look cool and modern in front of my peers. However, like
   all of my other attempts to look cool and modern, it didn't really work.
 mindframe: only 5 months after the previous post
-image: ''
+image: null
 meta: ''
 ---
 
@@ -108,8 +108,8 @@ Here are some examples that break that:
 .container {
   display: grid;
   grid-template-columns:
-    /* Size defined by content, so will change with content */ (foo) max-content,
-    /* Same again */ (bar) min-content,
+    /* Size defined by content, so will change with content */ (foo)
+      max-content, /* Same again */ (bar) min-content,
     /* Computes to minmax(min-content, max-content), so same again */ (hello)
       auto;
 }

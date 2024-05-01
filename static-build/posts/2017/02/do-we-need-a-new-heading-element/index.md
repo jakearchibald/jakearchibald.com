@@ -4,10 +4,9 @@ date: 2017-02-20 12:15:56
 summary: There's [a proposal for adding a new `<h>` element to the HTML
   spec](https://github.com/w3c/html/issues/774), but can we solve the problem in
   a way that benefits the existing web?
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 There's [a proposal to add a new `<h>` element to the HTML spec](https://github.com/w3c/html/issues/774). It solves a fairly common use-case. Take this HTML snippet:
@@ -36,7 +35,7 @@ The structure of a document should be marked up in a nested manner, and this is 
 
 # This is old news
 
-The `<h>` idea is at least 26 years old. It can be found in [an old www-talk email from 1991](https://lists.w3.org/Archives/Public/www-talk/1991SepOct/0003.html) (thanks to Jeremy Keith for pointing that out). It made it into [the XHTML2 spec](https://www.w3.org/TR/2004/WD-xhtml2-20040722/mod-structural.html#sec_8.5.) in 2004. It was also [rolled into the (then-named) HTML5 spec](https://html.spec.whatwg.org/multipage/semantics.html#headings-and-sections), but applied to existing headings to maintain *some* backwards compatibility.
+The `<h>` idea is at least 26 years old. It can be found in [an old www-talk email from 1991](https://lists.w3.org/Archives/Public/www-talk/1991SepOct/0003.html) (thanks to Jeremy Keith for pointing that out). It made it into [the XHTML2 spec](https://www.w3.org/TR/2004/WD-xhtml2-20040722/mod-structural.html#sec_8.5.) in 2004. It was also [rolled into the (then-named) HTML5 spec](https://html.spec.whatwg.org/multipage/semantics.html#headings-and-sections), but applied to existing headings to maintain _some_ backwards compatibility.
 
 ```html
 <h1>Level 1 heading</h1>
@@ -69,13 +68,13 @@ We need evidence. And the first step is understanding what went wrong with the p
 
 I don't know. I'm trying to find out, as are people at other browsers. But here are a few guesses:
 
-* The accessibility part was given low priority & no one got round to it.
-* The outline algorithm significantly impacts performance.
-* By the time browsers got round to it, developers were using sections incorrectly, and adding the outline would have a negative impact on users.
+- The accessibility part was given low priority & no one got round to it.
+- The outline algorithm significantly impacts performance.
+- By the time browsers got round to it, developers were using sections incorrectly, and adding the outline would have a negative impact on users.
 
 If the reason is apathy or performance, the same applies to `<h>`, meaning `<h>` is likely to fail as hard, and in the same places.
 
-But I stress, *I don't know*.
+But I stress, _I don't know_.
 
 We have a bit of a global problem right now: confident assertion without evidence (or even despite evidence to the contrary) is valued higher than qualified uncertainty. We must rise above this in the web community. The first step is admitting what we don't know, then figuring that out before proceeding.
 
@@ -92,9 +91,9 @@ To make `<h1>` perform the same function, all we need to do is:
 
 1. Implement the outline algorithm.
 
-And that's it - the spec & partial implementation exists already. The work needed to fix the existing web is a subset of creating a new element that does the same thing, but *doesn't* fix the existing web.
+And that's it - the spec & partial implementation exists already. The work needed to fix the existing web is a subset of creating a new element that does the same thing, but _doesn't_ fix the existing web.
 
-It's possible that implementing the outline for existing heading elements will negatively impact accessibility, and [there are anecdotes](https://twitter.com/stevefaulkner/status/833661375356481538) [that point to this](https://github.com/w3c/html/issues/774#issuecomment-278382514). However, it's also possible that, on the whole, it'd improve accessibility, as it'd make correctly-sectioned content work as the author intended. *I just don't know*. We need evidence.
+It's possible that implementing the outline for existing heading elements will negatively impact accessibility, and [there are anecdotes](https://twitter.com/stevefaulkner/status/833661375356481538) [that point to this](https://github.com/w3c/html/issues/774#issuecomment-278382514). However, it's also possible that, on the whole, it'd improve accessibility, as it'd make correctly-sectioned content work as the author intended. _I just don't know_. We need evidence.
 
 If `<h>` becomes a standard, there'll be a period of time where it's used, but it's unsupported in user agents. Unless it's polyfilled, this element is no better than a `<span>` to these users. Given that [most screen reader users use headings to navigate pages](http://webaim.org/projects/screenreadersurvey5/#finding), sticking with existing heading elements is likely to be less disruptive. If possible, fixing the existing web is preferable.
 
@@ -112,7 +111,7 @@ If implementing the outline breaks more sites than it fixes, to the point where 
 </body>
 ```
 
-…where `outline` can appear on any [sectioning root](https://html.spec.whatwg.org/multipage/semantics.html#sectioning-root) or [sectioning content](https://html.spec.whatwg.org/multipage/dom.html#sectioning-content-2) element. This is preferable to a new element, as it has *some* meaning to existing user agents, and plays well with existing content.
+…where `outline` can appear on any [sectioning root](https://html.spec.whatwg.org/multipage/semantics.html#sectioning-root) or [sectioning content](https://html.spec.whatwg.org/multipage/dom.html#sectioning-content-2) element. This is preferable to a new element, as it has _some_ meaning to existing user agents, and plays well with existing content.
 
 If the problem is simply an apathy towards accessibility, we could expose the computed heading level in the DOM, or CSS ([as proposed by Amelia BR](https://github.com/w3c/html/issues/774#issuecomment-278404905)):
 
@@ -127,16 +126,16 @@ If the problem is simply an apathy towards accessibility, we could expose the co
 
 This would be generally useful, and may encourage browsers to implement the outline.
 
-But the important thing to admit is, *we don't know*. This, and most of the assertions in [the Github thread](https://github.com/w3c/html/issues/774), are just guesswork. We need to be better.
+But the important thing to admit is, _we don't know_. This, and most of the assertions in [the Github thread](https://github.com/w3c/html/issues/774), are just guesswork. We need to be better.
 
 # Moving forward
 
 Before we throw a new element at the platform that may solve nothing, we need to answer the following:
 
-* Why haven't browsers implemented the outline for sectioned headings?
-* What proportion of site would get worse / improve / remain unchanged if we implement the HTML outline as-is?
-* Can we fix any breakages with tweaks to the outline algorithm?
-* Are there significant users of sectioned headings that would benefit from an opt-in?
+- Why haven't browsers implemented the outline for sectioned headings?
+- What proportion of site would get worse / improve / remain unchanged if we implement the HTML outline as-is?
+- Can we fix any breakages with tweaks to the outline algorithm?
+- Are there significant users of sectioned headings that would benefit from an opt-in?
 
 And we must measure the above against the likely breakages and potential failures of adding a new element.
 

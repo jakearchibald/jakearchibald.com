@@ -6,7 +6,7 @@ summary: Getting caching right yields huge performance benefits, saves
   creating race conditions resulting in interdependent resources getting out of
   sync.
 mindframe: '- this post was brought to you by: procrastination!'
-image: asset-url:./post.png
+image: ./post.png
 meta: How to get the most out of caching without nasty race conditions
 ---
 

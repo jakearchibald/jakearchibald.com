@@ -3,7 +3,7 @@ title: HTML attributes vs DOM properties
 date: 2024-04-24 01:00:00
 summary: They're completely different, but often coupled.
 meta: They're completely different, but often coupled.
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Attributes and properties are _fundamentally_ different things. You can have an attribute and property of the same name set to different values. For example:

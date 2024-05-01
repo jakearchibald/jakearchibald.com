@@ -1,10 +1,11 @@
 ---
 title: I discovered a browser bug
 date: 2018-06-20 14:17:41
-summary: I accidentally discovered a huge browser security bug. Here's what it
+summary:
+  I accidentally discovered a huge browser security bug. Here's what it
   does, and how I discovered it…
 mindframe: ''
-image: ''
+image: null
 meta: ''
 ---
 

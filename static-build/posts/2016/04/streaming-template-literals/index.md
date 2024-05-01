@@ -18,17 +18,16 @@ summary: "Template literals are pretty cool right?\r
   \r
 
   But what if they could produce a stream?"
-mindframe: ""
-image: ""
+mindframe: ''
+image: null
 meta: Building streams from multiple sources using JavaScript template literals
-
 ---
 
 Template literals are pretty cool right?
 
 ```js
 const areThey = 'Yes';
-console.log(`${areThey}, they are`); 
+console.log(`${areThey}, they are`);
 // Logs: Yes, they are
 ```
 
@@ -78,11 +77,11 @@ const stream = new ReadableStream({
     const encoder = new TextEncoder();
     // Promise for the title
     const titlePromise = fetch('/get-metadata')
-      .then(r => r.json()).then(data => data.title);
+      .then((r) => r.json())
+      .then((data) => data.title);
     // Promise for the content stream
-    const contentPromise = fetch('/get-content')
-      .then(r => r.body);
-    
+    const contentPromise = fetch('/get-content').then((r) => r.body);
+
     // Tie them all together
     pushString('<h1>');
     titlePromise
@@ -91,7 +90,7 @@ const stream = new ReadableStream({
       .then(() => contentPromise)
       .then(pushStream)
       .then(() => controller.close());
-    
+
     // Helper functions
     function pushString(str) {
       controller.enqueue(encoder.encode(str));
@@ -109,7 +108,7 @@ const stream = new ReadableStream({
         return reader.read().then(process);
       });
     }
-  }
+  },
 });
 ```
 
@@ -118,9 +117,10 @@ Ew. Imagine we could just do this:
 ```js
 // Promise for the title
 const title = fetch('/get-metadata')
-  .then(r => r.json()).then(data => data.title);
+  .then((r) => r.json())
+  .then((data) => data.title);
 // Promise for the content stream
-const content = fetch('/get-content').then(r => r.body);
+const content = fetch('/get-content').then((r) => r.body);
 
 const stream = templateStream`
   <h1>${title}</h1>

@@ -1,12 +1,13 @@
 ---
 title: Fun hacks for faster content
 date: 2016-12-06 13:05:11
-summary: 'A few weeks ago I was at Heathrow airport getting a bit of work done
+summary:
+  'A few weeks ago I was at Heathrow airport getting a bit of work done
   before a flight, and I noticed something odd about the performance of GitHub:
   It was quicker to open links in a new window than simply click them. Turns out
   it was a lack of streaming…'
 mindframe: '- Seems I''m finding everything "fun" right now'
-image: asset-url:./diagram.png
+image: ./diagram.png
 meta: Using iframes and document.write to improve performance of content loading.
 ---
 
@@ -146,9 +147,8 @@ iframe.onload = () => {
   iframe.contentDocument.write('<streaming-element>');
 
   // Get a reference to that element:
-  const streamingElement = iframe.contentDocument.querySelector(
-    'streaming-element',
-  );
+  const streamingElement =
+    iframe.contentDocument.querySelector('streaming-element');
 
   // Pull it out of the iframe & into the parent document:
   document.body.appendChild(streamingElement);

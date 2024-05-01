@@ -12,7 +12,7 @@ summary: "Previously when we've run into a contentious service worker design
 
   Well, it's that time again! Help us!"
 mindframe: ''
-image: ''
+image: null
 meta: We've ran into a contentious service worker design issue, help us resolve it!
 ---
 
@@ -99,7 +99,9 @@ If `https://example.com/question2/` is controlled by the following service worke
 ```js
 self.addEventListener('fetch', (event) => {
   if (event.request.url.endsWith('/question2/')) {
-    event.respondWith(fetch('https://static.example.com/foo/page-shell.html'));
+    event.respondWith(
+      fetch('https://static.example.com/foo/page-shell.html'),
+    );
   }
 });
 ```

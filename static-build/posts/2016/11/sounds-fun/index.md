@@ -5,7 +5,7 @@ summary: I played with the [web audio
   API](https://webaudio.github.io/web-audio-api/) for the first time recently,
   so I thought I'd write up what I learned. I think that's my job or something.
 mindframe: ''
-image: ''
+image: null
 meta: Queueing, synchronising, and looping audio using the web audio API.
 ---
 

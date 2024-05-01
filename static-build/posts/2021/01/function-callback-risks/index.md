@@ -3,7 +3,7 @@ title: Don't use functions as callbacks unless they're designed for it
 date: 2021-01-29 01:00:00
 summary: …same goes for option objects.
 meta: …same goes for option objects.
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Here's an old pattern that seems to be making a comeback:

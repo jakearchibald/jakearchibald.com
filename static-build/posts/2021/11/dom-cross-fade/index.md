@@ -3,7 +3,7 @@ title: 'Cross-fading any two DOM elements is currently impossible'
 date: 2021-11-22 01:00:00
 summary: Here's why, and the features we need to enable it…
 meta: Here's why, and the features we need to enable it…
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 **Update:** A [spec change](https://github.com/w3c/fxtf-drafts/pull/444) has landed to make this possible, it'll [ship in Chrome 100](https://groups.google.com/a/chromium.org/g/blink-dev/c/KXAJlJsbBak/m/JisA_CS2AAAJ), it's been [implemented in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1746248), and it already existed as a non-standard feature in Safari. Soon this feature will be supported across all major browsers!

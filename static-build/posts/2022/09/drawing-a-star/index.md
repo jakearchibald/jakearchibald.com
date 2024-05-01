@@ -3,7 +3,7 @@ title: Drawing a star with DOMMatrix
 date: 2022-09-30 01:00:00
 summary: And how I messed up the code on HTTP 203
 meta: And how I messed up the code on HTTP 203
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 I recently recorded an episode of HTTP 203 on `DOMPoint` and `DOMMatrix`. If you'd rather watch the video version, [here it is](https://www.youtube.com/watch?v=VdNzD4lhidw&lc=Ugx4NRGM8QtqD5XwbEN4AaABAg), but come back here for some bonus details on a silly mistake I made, which I almost got away with.

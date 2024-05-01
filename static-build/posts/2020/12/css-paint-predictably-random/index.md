@@ -3,7 +3,7 @@ title: 'CSS paint API: Being predictably random'
 date: 2020-12-11 01:00:00
 summary: Creating random-but-stable effects with the CSS paint API
 meta: Creating random-but-stable effects with the CSS paint API
-image: 'asset-url:./img.png'
+image: './img.png'
 ---
 
 Take a look at this:

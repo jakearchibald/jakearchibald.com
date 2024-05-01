@@ -1,12 +1,12 @@
 ---
 title: What happens when packages go bad?
 date: 2018-12-14 11:41:38
-summary: How much damage can a malicious package do to a static site, and what
+summary:
+  How much damage can a malicious package do to a static site, and what
   can be done about it?
-mindframe: ""
-image: ""
+mindframe: ''
+image: null
 meta: How much damage can a malicious package do to a static site?
-
 ---
 
 I built [spritecow.com](http://spritecow.com) back in 2011, and I no longer actively maintain it. A few months ago, a user berated me for using a crypto currency miner on the site without their informed consent. And sure enough, the site's JS had a small addition that loaded the mining JS, and sent the result somewhere else.
@@ -33,7 +33,7 @@ I think the author of event-stream did the wrong thing when they handed over the
 
 So where does that leave us? A small JS project can easily build up 1000+ npm dependencies. Some of these will be executed in a Node.js context, others will run in the browser.
 
-Perhaps apps that deal with user data, especially passwords and finances *should* audit every package, and every change to those packages. Perhaps we need some kind of chain-of-trust for audited packages. But we don't have that, and for most of us, auditing all packages is a non-starter.
+Perhaps apps that deal with user data, especially passwords and finances _should_ audit every package, and every change to those packages. Perhaps we need some kind of chain-of-trust for audited packages. But we don't have that, and for most of us, auditing all packages is a non-starter.
 
 The remaining option is to **treat all npm packages as potentially hostile**, and that's kinda terrifying.
 
@@ -49,9 +49,9 @@ I got some friends to review a draft of this article, and they pointed out there
 
 When a module from a package is executed in a node context it has the same powers as the user that called `node`. This means it can do whatever you can do from the CLI, including:
 
-* Transferring your SSH keys elsewhere.
-* Deleting stuff, or encoding it and holding it to ransom.
-* Crawling your other projects for secret stuff.
+- Transferring your SSH keys elsewhere.
+- Deleting stuff, or encoding it and holding it to ransom.
+- Crawling your other projects for secret stuff.
 
 Of course, npm will delete packages that are found to do evil stuff, but as we've seen with the event-stream case, it's possible for a malicious package to go unnoticed for months.
 
@@ -92,10 +92,10 @@ Netlify also supports cloud functions, but we don't use them. These can be enabl
 
 So, what could these attacks look like?
 
-* **Coin mining** or a similar abuse of user resources, such as carrying out DDoS attacks. Users tend to notice attacks like this due to excessive CPU usage. Although, that might be harder to spot with Squoosh, since it uses CPU during image compression.
-* **Stealing user data.** Squoosh does all its work on the client, meaning images you open/generate in the app don't leave your machine. However, a malicious script could send your pictures elsewhere. Users may spot these unexpected network requests in devtools.
-* **Content change.** The old school. The l33tasaurus and their hacker crew proudly boast of their attack, along with a picture of an excessively-sized arse. Users are likely to spot the giant arse.
-* **Subtle content change.** Add something like a "donate" link which goes to an account owned by the attacker. Users may think this is intentional, so it might take someone involved in the project to spot it.
+- **Coin mining** or a similar abuse of user resources, such as carrying out DDoS attacks. Users tend to notice attacks like this due to excessive CPU usage. Although, that might be harder to spot with Squoosh, since it uses CPU during image compression.
+- **Stealing user data.** Squoosh does all its work on the client, meaning images you open/generate in the app don't leave your machine. However, a malicious script could send your pictures elsewhere. Users may spot these unexpected network requests in devtools.
+- **Content change.** The old school. The l33tasaurus and their hacker crew proudly boast of their attack, along with a picture of an excessively-sized arse. Users are likely to spot the giant arse.
+- **Subtle content change.** Add something like a "donate" link which goes to an account owned by the attacker. Users may think this is intentional, so it might take someone involved in the project to spot it.
 
 What can we do about it? Let's start from the worst-case scenario:
 
@@ -111,20 +111,24 @@ The new service worker could dump all caches, unregister itself, and navigate al
 
 ```js
 addEventListener('install', (event) => {
-  event.waitUntil(async function() {
-    if (isRunningHackedVersion()) {
-      for (const cacheName of await caches.keys()) {
-        await caches.delete(cacheName);
+  event.waitUntil(
+    (async function () {
+      if (isRunningHackedVersion()) {
+        for (const cacheName of await caches.keys()) {
+          await caches.delete(cacheName);
+        }
+        await registration.unregister();
+        const allClients = await clients.matchAll({
+          includeUncontrolled: true,
+        });
+        for (const client of allClients) {
+          client.navigate('/emergency');
+        }
+        return;
       }
-      await registration.unregister();
-      const allClients = await clients.matchAll({ includeUncontrolled: true });
-      for (const client of allClients) {
-        client.navigate('/emergency');
-      }
-      return;
-    }
-    // …
-  }());
+      // …
+    })(),
+  );
 });
 ```
 
@@ -132,17 +136,19 @@ Unfortunately Safari & Edge don't support `Clear-Site-Data`. This means the HTTP
 
 ```js
 addEventListener('install', (event) => {
-  event.waitUntil(async function() {
-    if (isRunningHackedVersion()) {
-      // As above
-    }
+  event.waitUntil(
+    (async function () {
+      if (isRunningHackedVersion()) {
+        // As above
+      }
 
-    const cache = await caches.open('static-v1');
-    await cache.addAll([
-      new Request('/', { cache: 'reload' }),
-      // + CSS & JS
-    ]);
-  }());
+      const cache = await caches.open('static-v1');
+      await cache.addAll([
+        new Request('/', { cache: 'reload' }),
+        // + CSS & JS
+      ]);
+    })(),
+  );
 });
 ```
 

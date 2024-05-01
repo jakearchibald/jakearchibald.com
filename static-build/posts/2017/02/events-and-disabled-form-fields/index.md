@@ -1,22 +1,22 @@
 ---
 title: Events and disabled form fields
 date: 2017-02-17 12:56:00
-summary: Turns out, mouse events *don't* fire when the pointer is over disabled
+summary:
+  Turns out, mouse events *don't* fire when the pointer is over disabled
   form elements, except in Firefox. This is annoying when implementing things
   like drag & drop.
-mindframe: ""
-image: ""
-meta: ""
-
+mindframe: ''
+image: null
+meta: ''
 ---
 
 I've been working on the web since I was a small child all the way through to the haggard old man I am to day. However, the web still continues to surprise me.
 
-Turns out, mouse events *don't* fire when the pointer is over disabled form elements, except in Firefox.
+Turns out, mouse events _don't_ fire when the pointer is over disabled form elements, except in Firefox.
 
 # Serious?
 
-Serious. Give it a go. Move the mouse from the blue area below into the disabled button: 
+Serious. Give it a go. Move the mouse from the blue area below into the disabled button:
 
 <style>
   .demo-area {
@@ -30,7 +30,7 @@ Serious. Give it a go. Move the mouse from the blue area below into the disabled
     .demo-area {
       margin: 0 -32px 0 -32px;
       padding: 10px 0 10px 32px;
-    }  
+    }
   }
 
   .test-elements {
@@ -56,7 +56,7 @@ Serious. Give it a go. Move the mouse from the blue area below into the disabled
     padding: 22px;
     font: inherit;
   }
-  
+
   .demo-area iframe {
     border: none;
     background: #fff;
@@ -75,7 +75,7 @@ Serious. Give it a go. Move the mouse from the blue area below into the disabled
   @media (min-width: 530px) {
     .results-area {
       margin: 1rem -32px 1rem 0;
-    }  
+    }
   }
 
   .results-table th, .results-table td {
@@ -101,7 +101,7 @@ Serious. Give it a go. Move the mouse from the blue area below into the disabled
   <div class="test-elements">
     <div class="capture-el">This calls setPointerCapture</div>
     <button disabled>Disabled button</button>
-    <iframe srcdoc="Sandboxed iframe" sandbox></iframe>  
+    <iframe srcdoc="Sandboxed iframe" sandbox></iframe>
   </div>
 </div>
 
@@ -132,7 +132,7 @@ const miscEvents = document.querySelector('.misc-events');
 
 function logEvent(event) {
   let col;
-  
+
   if (event.type == 'click') {
     col = miscEvents;
   }
@@ -145,21 +145,21 @@ function logEvent(event) {
   else if (event.type.startsWith('pointer')) {
     col = pointerEvents;
   }
-  
+
   log(col, event.type);
 }
 
 function log(col, val) {
   const lastLog = col.lastElementChild;
-  
+
   if (lastLog && lastLog.querySelector('.name').textContent == val) {
     lastLog.querySelector('.count').textContent = Number(lastLog.querySelector('.count').textContent) + 1;
     return;
   }
-  
+
   const div = document.createElement('div');
   div.innerHTML = `<span class="name">${val}</span> (<span class="count">1</span>)`;
-  
+
   col.appendChild(div);
 }
 
@@ -177,12 +177,12 @@ for (const type of events) {
 for (const type of ['pointerdown', 'mousedown']) {
   captureEl.addEventListener(type, event => {
     const el = event.target;
-    
+
     if (el.setPointerCapture && event.pointerId) {
       log(miscEvents, 'setPointerCapture');
       el.setPointerCapture(event.pointerId);
     }
-    
+
     if (el.setCapture) {
       log(miscEvents, 'setCapture');
       el.setCapture(true);
@@ -193,12 +193,12 @@ for (const type of ['pointerdown', 'mousedown']) {
 for (const type of ['pointerup', 'mouseup']) {
   captureEl.addEventListener(type, event => {
     const el = event.target;
-    
+
     if (el.releasePointerCapture && event.pointerId) {
       log(miscEvents, 'releasePointerCapture');
       el.releasePointerCapture(event.pointerId);
     }
-    
+
     if (el.releaseCapture) {
       log(miscEvents, 'releaseCapture');
       el.releaseCapture(true);
@@ -233,11 +233,11 @@ With touch events, all of the `touchmove` and `touchend` events fire on the same
 However, pointer events allow you to switch to the touch events model:
 
 ```js
-element.addEventListener('pointerdown', event => {
+element.addEventListener('pointerdown', (event) => {
   element.setPointerCapture(event.pointerId);
 });
 
-element.addEventListener('pointerup', event => {
+element.addEventListener('pointerup', (event) => {
   element.releasePointerCapture(event.pointerId);
 });
 ```
