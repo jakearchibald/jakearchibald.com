@@ -16,7 +16,7 @@
     "@types/node": "^18.11.10",
     "@types/prismjs": "^1.26.0",
     "@types/punycode": "^2.1.0",
-    "cssnano": "^5.1.14",
+    "cssnano": "^6.0.0",
     "date-and-time": "^2.4.1",
     "del": "^7.0.0",
     "escape-html": "^1.0.3",
