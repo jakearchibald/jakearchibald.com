@@ -12,7 +12,7 @@ Often a good solution here is to create the animation using web technologies, bu
 
 TODO demo - made for the width of the page, with a play/pause toggle on click (no UI)
 
-I didn't know much about it, so I dug in to try and find the most robust and efficient way to do it. It turns out, the 'native' ways of doing it are inefficient and buggy. If you handle the transparency yourself, you avoid these bugs, and can cut the file size by TODO.
+I didn't know much about it, so I dug in to try and find the most robust and efficient way to do it. It turns out, the 'native' ways of doing it are inefficient and buggy. If you handle the transparency yourself, you avoid these bugs, and serve a file that's half the size, or less.
 
 If you just want the solution, TODO
 
@@ -30,7 +30,7 @@ AV1 is a great video format in terms of the compression ratios, and the encoder 
 
 AVIF is an image format built from AV1. AVIF _does_ support transparency. Also, 'animated AVIF' is a thing. It's stored as two AV1 streams, where the additional stream is a luma-only (black & white) video representing the alpha channel.
 
-Taking the example at the top of this post, I can get the size down to 492 kB with acceptable loss.
+Taking the example at the top of this post, I can get the size down to 504 kB with acceptable loss.
 
 Given that [AVIF is well supported](https://caniuse.com/avif), it sounds like the ideal solution. But…
 
@@ -92,6 +92,10 @@ TODO
 
 This solution isn't ideal, and definitely isn't the most efficient, but it's the best we've got when it comes to native support:
 
+TODO demo
+
+This is 1.1 MB in Chrome & Firefox via VP9, and 3.4 MB in Safari via HEVC. Even then, the VP9 is double the size of the AVIF, which shows the generational gap between the codecs.
+
 ```html
 <video playsinline muted autoplay loop>
   <source type="video/quicktime; codecs=hvc1.1.6.H120.b0" src="video.mov" />
@@ -99,7 +103,7 @@ This solution isn't ideal, and definitely isn't the most efficient, but it's the
 </video>
 ```
 
-This uses a combination of HEVC and VP9. The HEVC must appear first, since Safari thinks it supports VP9, but it doesn't support VP9 with transparency ([bug report](https://bugs.webkit.org/show_bug.cgi?id=275908)).
+The HEVC must appear first, since Safari thinks it supports VP9, but it doesn't support VP9 with transparency ([bug report](https://bugs.webkit.org/show_bug.cgi?id=275908)).
 
 I'm a little worried that a non-Apple device will try to play the HEVC file, but not support transparency (it's an [Apple extension to the format (pdf)](https://developer.apple.com/av-foundation/HEVC-Video-with-Alpha-Interoperability-Profile.pdf) after all), resulting in broken output. However, I haven't seen this happen yet.
 
@@ -107,16 +111,6 @@ Also, there are a couple of bugs to be aware of:
 
 - [Chrome Android gets the alpha channel wrong](https://issues.chromium.org/issues/349610465). Depending on how much transparency you use, it might not matter too much. This has been fixed in Canary, but at time of writing, it hasn't reached stable.
 - [Playback often stalls on Firefox for Android](https://bugzilla.mozilla.org/show_bug.cgi?id=1905878).
-
-### Demo
-
-TODO
-
-TODO - filesize
-
-Both VP9 and HEVC are 10 year old formats, and don't perform as well as AV1, but AV1 doesn't support transparency. TODO compare to AVIF.
-
-TODO compare the two formats.
 
 ### Encoding VP9
 
@@ -135,11 +129,11 @@ This is the format you need for Apple devices, so it might not surprise you to h
 
 In addition, you really need to fork out £50 or equivalent for [Apple's Compressor](https://www.apple.com/uk/final-cut-pro/compressor/).
 
-But even then, results aren't great. I don't think Apple's compressor is designed with this content in mind, so you usually end up with a much larger file size than the equivalent VP9.
+But even then, results aren't great. I don't think Apple's Compressor is designed with this content in mind, so you usually end up with a much larger file size than the equivalent VP9.
 
 [Here's a quick video guide to using the Compressor app to encode video with an alpha channel](https://youtu.be/Js4fNuOh1Ac).
 
-If, after forking out thousands for an Apple device, you really really really don't want to spend £50 on Compressor, you can encode a kinda shitty version using [ffmpeg](https://ffmpeg.org/). Note: this only works on MacOS.
+If, after forking out £££ for an Apple device, you really really really don't want to spend £50 on Compressor, you can encode a kinda shitty version using [ffmpeg](https://ffmpeg.org/). Note: this only works on MacOS.
 
 ```sh
 ffmpeg -i in.mov -c:v hevc_videotoolbox -require_sw 1 -alpha_quality 0.1 -tag:v hvc1 -q:v 35 -vf "premultiply=inplace=1" out.mov
@@ -148,15 +142,15 @@ ffmpeg -i in.mov -c:v hevc_videotoolbox -require_sw 1 -alpha_quality 0.1 -tag:v 
 - `-q:v` (0-100): Quality, where 100 is the highest quality with largest file size.
 - `-alpha_quality` (0-1): Separate control of the alpha channel quality.
 
-The reason this encoding isn't great is that it, for whatever reason, uses the bgra pixel format. This means that red, green, and blue are stored separately. This isn't very efficient. Video formats usually store brightness separate to colour. Human eyes are more sensitive to brightness than colour, so this separation means more bits can be spent on the brightness data. I've [filed a bug to see if this can be fixed](https://trac.ffmpeg.org/ticket/11068).
+The reason this encoding isn't great is that it, for whatever reason, uses the bgra pixel format. This means that red, green, and blue are stored separately. This isn't very efficient. Video formats usually store brightness separate to colour. Human eyes are more sensitive to brightness than colour, so this separation means more bits can be spent on the brightness data. I've [filed a bug to see if this can be fixed](https://trac.ffmpeg.org/ticket/11068). In the meantime, this method will yield around double the file size compared the already-not-great Compressor result.
 
-Also, there's [a feature request for the open source & cross-platform x265 codec to support transparency](https://bitbucket.org/multicoreware/x265_git/issues/577/support-for-alpha-transparency-per-apple), but it doesn't seem to be going anywhere.
+There's [a feature request for the open source & cross-platform x265 codec to support transparency](https://bitbucket.org/multicoreware/x265_git/issues/577/support-for-alpha-transparency-per-apple), but it doesn't seem to be going anywhere.
 
 # Doing it manually
 
 AV1 is the most efficient codec we have in browsers, but it doesn't support transparency. When it's in an AVIF container, it does, but the performance is prohibitively bad.
 
-So, I thought, what if I split the video in two, making it double height, where the top half is the video without the alpha channel, and the bottom half is the alpha channel represented as brightness.
+So, I thought, what if I split the video in two, making it double height, where the top half is the video without the alpha channel, and the bottom half is the alpha channel represented as brightness?
 
 DEMO
 
@@ -194,7 +188,42 @@ TODO commentary of the size vs VP9 and AVIF
 
 ## Encoding the video
 
-Again, ffmpeg is the tool for the job.
+Again, ffmpeg is the tool for the job. Here's the filter:
+
+```
+-filter_complex "[0:v]format=pix_fmts=yuva444p[main]; [main]split[main][alpha]; [alpha]alphaextract[alpha]; [main][alpha]vstack"
+```
+
+Breaking it up step by step:
+
+1. `[0:v]format=pix_fmts=yuva444p[main]` convert to a predictable format.
+2. `[main]split[main][alpha]` fork the output.
+3. `[alpha]alphaextract[alpha]` with the 'alpha' fork, pull the alpha data out to luma data, created a black & white view of the transparency.
+4. `[main][alpha]vstack` stack the 'main' and 'alpha' forks on top of each other.
+
+### Encoding AV1
+
+This is the ideal format:
+
+```sh
+INPUT="in.mov" OUTPUT="out.mp4" CRF=45 CPU=3 bash -c 'ffmpeg -y -i "$INPUT" -filter_complex "[0:v]format=pix_fmts=yuva444p[main]; [main]split[main][alpha]; [alpha]alphaextract[alpha]; [main][alpha]vstack" -pix_fmt yuv420p -an -c:v libaom-av1 -cpu-used "$CPU" -crf "$CRF" -pass 1 -f null /dev/null && ffmpeg -y -i "$INPUT" -filter_complex "[0:v]format=pix_fmts=yuva444p[main]; [main]split[main][alpha]; [alpha]alphaextract[alpha]; [main][alpha]vstack" -pix_fmt yuv420p -an -c:v libaom-av1 -cpu-used "$CPU" -crf "$CRF" -pass 2 -movflags +faststart "$OUTPUT"'
+```
+
+- `CRF` (0-63): Lower values are higher quality, larger filesize.
+- `CPU` (0-8): Weirdly, _lower_ values use more CPU, which improves quality, but encodes much slower. I wouldn't go lower than 3.
+
+### Encoding HEVC
+
+Safari on Apple devices will use the AV1 if they have a hardware decoder (iPhone 15 Pro, M3 MacBook Pro), otherwise they need an HEVC alternative. But, since we don't need native transparency support, we can use the open source x265 codec:
+
+```sh
+INPUT="in.mov" OUTPUT="out.mp4" CRF=30 PRESET="veryslow" bash -c 'ffmpeg -y -i "$INPUT" -filter_complex "[0:v]format=pix_fmts=yuva444p[main]; [main]split[main][alpha]; [alpha]alphaextract[alpha]; [main][alpha]vstack" -pix_fmt yuv420p -an -c:v libx265 -preset "$PRESET" -crf "$CRF" -tag:v hvc1 -movflags +faststart "$OUTPUT"'
+```
+
+- `CRF` (0-63): Lower values are higher quality, larger filesize.
+- `PRESET` (`medium`, `slow`, `slower`, `veryslow`): The slower you go, the better the output.
+
+I find I have to go with a much lower CRF than with the AV1.
 
 # Wrapping it up in a web component
 
