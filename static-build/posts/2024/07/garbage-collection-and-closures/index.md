@@ -103,7 +103,7 @@ This leaks, because:
 
 1. The engine sees `bigArrayBuffer` is referenced by inner functions, so it's kept around. It's associated with the scope that was created when `demo()` was called.
 1. After a second, the function referencing `bigArrayBuffer` is no longer callable.
-1. But, the scope remains, because the cleanup function within is still callable.
+1. But, the scope remains, because the 'cancel' function is still callable.
 1. `bigArrayBuffer` is associated with the scope, so it remains in memory.
 
 I thought engines would be smarter, and GC `bigArrayBuffer` since it's no longer referenceable, but that isn't the case.
