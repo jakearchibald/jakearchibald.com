@@ -79,7 +79,7 @@ function demo() {
 globalThis.cancelDemo = demo();
 ```
 
-In this case, the engine knows it doesn't need to retain `bigArrayBuffer` beyond the initial execution of the function, as none of the future-callables access it.
+In this case, the engine knows it doesn't need to retain `bigArrayBuffer`, as none of the inner-callables access it.
 
 # The problem case
 
