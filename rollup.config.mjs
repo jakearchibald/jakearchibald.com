@@ -41,7 +41,7 @@ function resolveFileUrl({ fileName }) {
 
 const staticPath = 'static/c/[name]-[hash][extname]';
 const jsPath = staticPath.replace('[extname]', '.js');
-const limitPostsDevBuild = 'static-build/posts/2023/07';
+const limitPostsDevBuild = 'static-build/posts/2024/08';
 
 function jsFileName(chunkInfo) {
   if (!chunkInfo.facadeModuleId) return jsPath;

@@ -137,6 +137,16 @@
   line-height: 1;
 }
 
+.article-content h4 {
+  font-weight: bold;
+  font-size: inherit;
+  margin: 1.8em 0 0.5em;
+
+  & + p {
+    margin-top: 0;
+  }
+}
+
 .article-content :is(h1, h2, h3, h4, h5, h6) a {
   color: inherit;
   text-decoration: inherit;
@@ -457,6 +467,10 @@ h2 + .max-figure {
 
   .language-html .token.punctuation {
     color: #808080;
+  }
+
+  .language-bash {
+    white-space: pre-wrap;
   }
 }
 

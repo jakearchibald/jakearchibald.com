@@ -43,6 +43,7 @@
     "punycode": "^2.1.1",
     "rollup": "^3.6.0",
     "serve": "^14.1.2",
+    "stacked-alpha-video": "^1.0.5",
     "two-up-element": "^1.0.1",
     "typescript": "^4.9.3"
   },
