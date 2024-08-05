@@ -290,7 +290,7 @@ For Chrome, Firefox, and Safari on a iPhone 15 Pro or M3 MacBook Pro, this is 46
 
 Other Apple devices don't support AV1, so they need an HEVC version at 1.14 MB, which isn't as good, but still a lot smaller than the 3.4 MB version they'd get for the native version.
 
-The 460 kB AV1 version is even significantly smaller than the 504 kB AVIF. I'm not really sure why. With the AVIF, I encoded with the exact same settings - I even encoded the alpha data lower quality in the AVIF, so in theory it should be at an advantage. I guess the AVIF as overhead by being two separate video streams, whereas the stacked version is one video.
+The 460 kB AV1 version is even significantly smaller than the 504 kB AVIF. I'm not really sure why. With the AVIF, I encoded with the exact same settings - I even encoded the alpha data lower quality in the AVIF, so in theory it should be at an advantage. I guess the AVIF has overhead by being two separate video streams, whereas the stacked version is one video.
 
 ## Wrapping it up in a web component
 
