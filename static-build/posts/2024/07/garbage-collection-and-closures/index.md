@@ -182,7 +182,7 @@ This whole thing is an issue across browsers, and is unlikely to be fixed due to
 
 ## And no, this is not due to `eval()`
 
-Folks on [Hacker News](https://news.ycombinator.com/item?id=5959020) and Twitter were quick to point out that this is all because of `eval()`, but it isn't.
+Folks on [Hacker News](https://news.ycombinator.com/item?id=41111062) and Twitter were quick to point out that this is all because of `eval()`, but it isn't.
 
 Eval is tricky, because it means code can exist within a scope that can't be statically analysed:
 
