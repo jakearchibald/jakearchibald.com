@@ -1,11 +1,11 @@
 ---
 title: Video with alpha transparency on the web
-date: 2024-08-02 01:00:00
+date: 2024-08-05 01:00:00
 summary: It's better to do it yourself.
 meta: It's better to do it yourself.
 scripts:
   - src: 'client/demos/2024/video-with-transparency'
-#image: './img.png'
+image: './img.png'
 ---
 
 I've been helping some teams at Shopify improve page load performance, and the issue of 'videos with an alpha channel' kept coming up, where videos of UI mocks needed to be composited on top of inconsistent backgrounds, such as larger CSS backgrounds.
