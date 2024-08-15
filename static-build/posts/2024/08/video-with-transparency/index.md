@@ -288,6 +288,8 @@ And here it is:
 
 For Chrome, Firefox, and Safari on a iPhone 15 Pro or M3 MacBook Pro, this is 460 kB. A huge reduction compared to 1.1 or 3.4 MB for the native version.
 
+In fact, the alpha data in the bottom half of the video only adds 8 kB to the overall size. I guess this is because the content is a single channel (brightness), mostly flat color, and mostly unchanged from frame to frame. Cases where the alpha data changes more frequently, or includes a lot of semi-transparency, will likely contribute more to the overall file size.
+
 Other Apple devices don't support AV1, so they need an HEVC version at 1.14 MB, which isn't as good, but still a lot smaller than the 3.4 MB version they'd get for the native version.
 
 The 460 kB AV1 version is even significantly smaller than the 504 kB AVIF. I'm not really sure why. With the AVIF, I encoded with the exact same settings - I even encoded the alpha data lower quality in the AVIF, so in theory it should be at an advantage. I guess the AVIF has overhead by being two separate video streams, whereas the stacked version is one video.
