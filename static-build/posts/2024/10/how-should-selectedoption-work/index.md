@@ -204,4 +204,4 @@ For example, inserts will be done using an internal version of `element.insertBe
 
 This is being actively discussed [in the HTML spec](https://github.com/whatwg/html/issues/10520), but I want a wider set of developers to have their opinions heard on this.
 
-What should happen? Which options do you like? Which you do you hate? Let me know what you think in the comments, or wherever else you can get my attention. I'll present this at the next OpenUI meeting.
+What should happen? Which options do you like? Which you do you hate? Let me know what you think in the comments, social networks, [Hacker News](https://news.ycombinator.com/item?id=41878515), or wherever else you can get my attention. I'll present this at the next OpenUI meeting.
