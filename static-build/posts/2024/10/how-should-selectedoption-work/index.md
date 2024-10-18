@@ -151,7 +151,11 @@ If you change 10 styles on an element within the selected `<option>` via `elemen
 
 If you're using an animation library to do something fancy within one of the options, they tend to modify `element.style` per frame. So that means the content of `<selectedoption>` is being entirely rebuilt every frame, or more likely, many times per frame.
 
-There may be cases where you don't want a change in the `<option>` to be reflected in the `<selectedoption>`. Since they're independent elements, you can give each independent `:hover` states via CSS. But, if you want to do something much fancier involving JavaScript, which modifies `element.style` on `mouseenter`, that will appear to be mirrored from the selected `<option>` to the `<selectedoption>`, which may not be your intent, because only the `<option>` is being hovered over. There isn't a way to prevent this, other than avoiding using `<selectedoption>` and doing things manually.
+There may be cases where you don't want a change in the `<option>` to be reflected in the `<selectedoption>`. Since they're independent elements, you can give each independent `:hover` states via CSS. But, if you want to do something much fancier involving JavaScript, which modifies `element.style` on `mouseenter`, that will appear to be mirrored from the selected `<option>` to the `<selectedoption>`, which may not be your intent, because only the `<option>` is being hovered over.
+
+This could actually become more of an issue in future. Right now, when you click on a `<details>` element, it becomes `<details open>` – it modifies its own attributes. If you had one of those in a selected `<option>` and the user clicked on it, the one in the `<selectedoption>` would appear to open too (via cloning since the attribute changed). Now, having a `<details>` in an `<option>` doesn't really make sense, but since this pattern is becoming more popular on the web platform, it may appear on an element that you would use in an `<option>`.
+
+There isn't a way to prevent changes from mirroring to `<selectedoption>`. The only way around it is to avoid using `<selectedoption>` and doing things manually.
 
 Also, this automatic 'mirroring' is one-way. If you manually alter content in the `<selectedoption>`, it won't cause the content in the selected `<option>` to be updated. Your manual changes in the `<selectedoption>` will be overwritten the next time the cloning operation occurs.
 
