@@ -107,6 +107,13 @@
   @media screen and (min-width: $full-width) {
     border-radius: 32px 0 0 32px;
   }
+
+  & code {
+    outline: none;
+    background: none;
+    margin: 0;
+    padding: 0;
+  }
 }
 
 .h-3,
