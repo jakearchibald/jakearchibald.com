@@ -47,7 +47,9 @@ And that's as much background as you need for the rest of this post.
 
 # What about `<selectedoption>`?
 
-`<selectedoption>` automatically displays the currently selected `<option>`. It's entirely optional, so if you wanted to manually update the content of the `<button>` when the selected `<option>` changes, you can, and you get a lot more control that way. But `<selectedoption>` is much easier, and works without JavaScript.
+`<selectedoption>` automatically displays the currently selected `<option>` within the `<button>` that opens the popover menu.
+
+It's entirely optional, so if you wanted to manually update the content of the `<button>` when the selected `<option>` changes, you can, and you get a lot more control that way. But `<selectedoption>` is much easier, and works without JavaScript.
 
 When the selected `<option>` changes, it clears the contents of the `<selectedoption>`, takes a clone of the contents of the newly selected `<option>`, and inserts it into the `<selectedoption>`.
 
