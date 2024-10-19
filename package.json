@@ -13,6 +13,7 @@
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-replace": "^5.0.1",
     "@types/date-and-time": "^0.13.0",
+    "@types/escape-html": "^1.0.4",
     "@types/node": "^18.11.10",
     "@types/prismjs": "^1.26.0",
     "@types/punycode": "^2.1.0",

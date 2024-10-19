@@ -20,6 +20,7 @@ import WhoPage from './pages/who';
 import PostPage from './pages/post';
 import iconUrl from 'asset-url:./pages/post/icon.png';
 import ClientDemo from './components/client-demo';
+import escape from 'escape-html';
 
 interface Output {
   [outputPath: string]: string;
@@ -59,11 +60,11 @@ const feed = new Feed({
 // The feed only holds the first page of posts
 for (const post of paginatedPosts[0]) {
   feed.addItem({
-    title: post.title,
-    id: getPostUrl(post),
+    title: escape(post.title),
+    id: `https://jakearchibald.com${getPostUrl(post)}`,
     link: `https://jakearchibald.com${getPostUrl(post)}`,
     content: post.content,
-    description: post.meta,
+    description: escape(post.meta),
     date: new Date(post.date),
     image: post.image
       ? `https://jakearchibald.com${post.image}`
