@@ -7,6 +7,7 @@ import twitterUrl from 'asset-url:./twitter.svg';
 import githubUrl from 'asset-url:./github.svg';
 import youtubeUrl from 'asset-url:./youtube.svg';
 import podcastUrl from 'asset-url:./podcast.svg';
+import mastodonUrl from 'asset-url:./mastodon.svg';
 
 const Who: FunctionalComponent<{}> = () => (
   <section>
@@ -51,6 +52,11 @@ const Who: FunctionalComponent<{}> = () => (
           url: 'https://offthemainthread.tech/',
           img: podcastUrl,
           content: 'Podcast',
+        },
+        {
+          url: 'https://mastodon.social/@jaffathecake',
+          img: mastodonUrl,
+          content: 'Fediverse',
         },
       ].map((item) => (
         <li>
