@@ -5,9 +5,10 @@ import meWebp from 'asset-url:./me-cat.webp';
 import meAvif from 'asset-url:./me-cat.avif';
 import twitterUrl from 'asset-url:./twitter.svg';
 import githubUrl from 'asset-url:./github.svg';
-import youtubeUrl from 'asset-url:./youtube.svg';
 import podcastUrl from 'asset-url:./podcast.svg';
 import mastodonUrl from 'asset-url:./mastodon.svg';
+import blueskyUrl from 'asset-url:./bluesky.svg';
+import threadsUrl from 'asset-url:./threads.svg';
 
 const Who: FunctionalComponent<{}> = () => (
   <section>
@@ -34,21 +35,6 @@ const Who: FunctionalComponent<{}> = () => (
     <ul class="icon-list">
       {[
         {
-          url: 'https://twitter.com/jaffathecake',
-          img: twitterUrl,
-          content: 'Twitter',
-        },
-        {
-          url: 'https://github.com/jakearchibald/',
-          img: githubUrl,
-          content: 'Github',
-        },
-        {
-          url: 'https://www.youtube.com/playlist?list=PLNYkxOF6rcIAKIQFsNbV0JDws_G_bnNo9',
-          img: youtubeUrl,
-          content: 'YouTube',
-        },
-        {
           url: 'https://offthemainthread.tech/',
           img: podcastUrl,
           content: 'Podcast',
@@ -56,7 +42,27 @@ const Who: FunctionalComponent<{}> = () => (
         {
           url: 'https://mastodon.social/@jaffathecake',
           img: mastodonUrl,
-          content: 'Fediverse',
+          content: 'Mastodon',
+        },
+        {
+          url: 'https://bsky.app/profile/jakearchibald.com',
+          img: blueskyUrl,
+          content: 'Bluesky',
+        },
+        {
+          url: 'https://www.threads.net/@jaffathecake',
+          img: threadsUrl,
+          content: 'Threads',
+        },
+        {
+          url: 'https://twitter.com/jaffathecake',
+          img: twitterUrl,
+          content: 'Muskhole',
+        },
+        {
+          url: 'https://github.com/jakearchibald/',
+          img: githubUrl,
+          content: 'Github',
         },
       ].map((item) => (
         <li>
