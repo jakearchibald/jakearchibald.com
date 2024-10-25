@@ -7,6 +7,8 @@ meta: It's part of the new customisable `<select>`, but there are some tricky de
 
 We're finally getting a way to fully style & customise `<select>` elements! But there's a detail I'd like everyone's opinion on.
 
+**Update:** Your feedback was heard, and folks have agreed to change the behaviour here. See [the update](#update) below.
+
 # A brief intro to customisable `<select>`
 
 If you want to hear about it in depth, [I talked about it on OTMT](https://offthemainthread.tech/episode/stylable-select-element/), and [there's a great post by Una Kravets](https://developer.chrome.com/blog/rfc-customizable-select). But here's a whirlwind tour:
@@ -211,3 +213,9 @@ For example, inserts will be done using an internal version of `element.insertBe
 This is being actively discussed [in the HTML spec](https://github.com/whatwg/html/issues/10520), but I want a wider set of developers to have their opinions heard on this.
 
 What should happen? Which options do you like? Which do you hate? Let me know what you think in the comments, social networks, [Hacker News](https://news.ycombinator.com/item?id=41878515), or wherever else you can get my attention. I'll present this at the next OpenUI meeting.
+
+# Update
+
+This was [discussed in an OpenUI meeting](https://github.com/openui/open-ui/issues/825#issuecomment-2436124668), and the consensus was to go with the first option in this post: nothing by default, but provide a way to trigger an update.
+
+Thank you for all the feedback!
