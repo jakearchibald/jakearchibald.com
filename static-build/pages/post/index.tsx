@@ -22,6 +22,17 @@ interface Props {
   post: Post;
 }
 
+const zeroWidthSpace = '\u200B';
+
+/**
+ * Some sites (eg Twitter) try to parse HTML in meta tags, even when it's escaped.
+ * This is an attempt to STOP THEM.
+ */
+const escapeMeta = (value: string) =>
+  value
+    .replaceAll('<', '<' + zeroWidthSpace)
+    .replaceAll('>', zeroWidthSpace + '>');
+
 const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
   const scriptPreloads = [
     ...new Set<string>([
@@ -63,9 +74,9 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
             property="og:url"
             content={`${siteOrigin}${getPostUrl(post)}`}
           />
-          <meta property="twitter:title" content={post.title} />
-          <meta property="og:title" content={post.title} />
-          <meta property="og:description" content={post.meta} />
+          <meta property="twitter:title" content={escapeMeta(post.title)} />
+          <meta property="og:title" content={escapeMeta(post.title)} />
+          <meta property="og:description" content={escapeMeta(post.meta)} />
           {post.scripts.map(
             (script) =>
               !script.preloadOnly && (
