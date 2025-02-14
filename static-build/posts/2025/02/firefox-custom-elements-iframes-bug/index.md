@@ -43,7 +43,7 @@ const myElement = document.createElement('my-element');
 iframe.contentDocument.body.append(myElement);
 ```
 
-This fails in Firefox with "`this.say` is not a function", within `connectedCallback`. In fact, Firefox has lost all of the instance methods of the custom element. It's reverted to an instance of `HTMLElement` rather than `MyElement`.
+This fails in Firefox with "`this.say` is not a function", within `connectedCallback`. In fact, Firefox has lost all of the instance methods of the custom element. It's 'downgraded' to an instance of `HTMLElement` in the iframe Realm, rather than `MyElement`.
 
 It's kinda funny, because the error happens within `connectedCallback`, which is an instance method, but even _that_ instance method has gone. I assume the calling of `connectedCallback` was queued up before the prototype was lost.
 
