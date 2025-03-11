@@ -17,6 +17,7 @@ import styles from 'css-bundle:./css/all.css';
 import analyticsBundleURL from 'client-bundle:client/analytics/index.js';
 import faviconURL from 'asset-url:static-build/imgs/favicon.png';
 import ptSerifURL from 'asset-url:./css/fonts/pt-serif.woff2';
+import { siteOrigin } from 'static-build/utils';
 
 interface Props {
   title: string;
@@ -51,7 +52,7 @@ const BasePage: FunctionalComponent<Props> = ({
           rel="alternate"
           type="application/rss+xml"
           title="Jake Archibald's Blog"
-          href="/posts.rss"
+          href={`${siteOrigin}/posts.rss`}
         />
         {/*}<script type="module" src={bundleURL} />
         {imports.map((v) => (
