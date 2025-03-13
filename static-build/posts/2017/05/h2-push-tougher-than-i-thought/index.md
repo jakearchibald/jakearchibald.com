@@ -629,7 +629,7 @@ But also different:
 
 **The browser fetches the resource**, meaning it will look for responses from the service worker, HTTP cache, HTTP/2 cache, or destination server – in that order.
 
-**Preloaded resources are stored alongside the page** (or worker). This makes it one of the first caches the browser will check (before the service worker and HTTP cache), and losing a connection doesn't lose you preloaded items. The direct link to the page also means devtools can show a useful warning if preloaded items aren't used.
+**Preloaded resources are stored alongside the page** (or worker). This makes it one of the first caches the browser will check (before the service worker and HTTP cache), and losing a connection doesn't lose your preloaded items. The direct link to the page also means devtools can show a useful warning if preloaded items aren't used.
 
 Each page has its own preload cache, so it's kinda pointless to preload things intended for another page. As in, you can't preload items intended for use after a page load. It's also pointless to preload stuff from a page for use in a service worker install – the service worker won't check the page's preload cache.
 
