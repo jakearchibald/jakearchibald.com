@@ -295,7 +295,7 @@ And that's it!
   }
 </script>
 
-Although the `translate` values are still multiplied, they're multiplied by a constant 3, the end `scale`, rather than a changing `scale` value. The result is a steady move towards the target–each 1px shift in the `translate` value results in a 1px shift on screen.
+Although the `translate` values are still multiplied, they're multiplied by a constant 3, the end `scale`, rather than a changing `scale` value. The result is a steady move towards the target. Each 1px shift in the `translate` value results in a 1px shift on screen.
 
 Unfortunately, this format is harder to tweak in DevTools, but you can fix that with a bit of `calc`!
 
