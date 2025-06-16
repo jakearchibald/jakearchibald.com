@@ -5,7 +5,7 @@ summary: TODO
 meta: TODO
 ---
 
-I was using Discord the other day. I tapped to zoom into an image, and it animated in an odd way that I'd encountered before.
+I was using Discord the other day. I tapped to zoom into an image, and it animated in an odd way that I'd seen before.
 
 <style>
   .full-figure img {
@@ -85,7 +85,7 @@ I was using Discord the other day. I tapped to zoom into an image, and it animat
 
 Notice how it kinda 'swoops' into the wildcat's face, rather than zooming straight in? See how the right-hand side of the cat's head goes out-of-frame, and then back in again?
 
-I recognised it immediately, because I'd made the same mistake myself on another project.
+I recognised it immediately because I'd made the same mistake myself on another project.
 
 The CSS is pretty simple:
 
@@ -98,7 +98,7 @@ The CSS is pretty simple:
 }
 ```
 
-But watch this… if I change the starting transform from the default (`none`), to `rotate(0)`:
+But watch this… If I change the starting transform from the default (`none`), to `rotate(0)`:
 
 ```css
 .demo {
@@ -145,7 +145,7 @@ The animation changes:
   }
 </script>
 
-Weird huh? You wouldn't expect something like `rotate(0)`, which is equivalent to `none`, to completely change how the animation works, but this is happening entirely as designed in the CSS spec.
+Weird, huh? You wouldn't expect something like `rotate(0)`, which is equivalent to `none`, to completely change how the animation works, but this is happening entirely as designed in the CSS spec.
 
 Let's dig into why.
 
@@ -162,13 +162,13 @@ Let's remove the `rotate(0)` for now and go back to the original code:
 }
 ```
 
-When zooming into part of an element, `scale(n) translate(x, y)` feels like the easiest way to do it. You use the translate to get the subject into the centre, then adjust the scale to zoom in. Tweaking the values in devtools is easy, as is calculating the values in code.
+When zooming into part of an element, `scale(n) translate(x, y)` feels like the easiest way to do it. You use the translate to get the subject into the centre, then adjust the scale to zoom in. Tweaking the values in DevTools is easy, as is calculating the values in code.
 
-However, although this order of values is easy to write, it doesn't produce the most natural animation.
+However, while this order of values is easy to write, it doesn't produce the most natural animation.
 
 ## How transforms are animated
 
-The CSS spec following a [somewhat complex algorithm](https://drafts.csswg.org/css-transforms-1/#interpolation-of-transforms) to decide how to animate transforms (although it generally does what you'd expect). For our values, it takes the `from` and `to` values:
+The CSS spec has a [somewhat complex algorithm](https://drafts.csswg.org/css-transforms-1/#interpolation-of-transforms) to decide how to animate transforms. For our values, it takes the `from` and `to` values:
 
 ```css
 @keyframes computed-keyframes {
@@ -246,13 +246,13 @@ The problem is, with `scale` followed by `translate`, the `scale` acts as a mult
   }
 </script>
 
-The translation happens quicker towards the end of the animation, because the `scale` is becoming larger. That's what creates the 'swooping' effect.
+The translation happens more quickly towards the end of the animation, because the `scale` is becoming larger. That's what creates the 'swooping' effect.
 
 # How to fix it
 
 To fix this, we need to avoid the `scale` acting as a multiplier for the `translate`, and the way to do this is to put the `translate` first.
 
-We can't just swap the order, as we were relying on the multiplying effect of the `scale` to make the `translate` do the right thing. To achieve the same effect, we need to manually multiply the `translate` values by the `scale` value:
+We can't just swap the order, since we're relying on the multiplying effect of the `scale` to make the `translate` do the right thing. To achieve the same effect, we need to manually multiply the `translate` values by the `scale` value:
 
 ```css
 .demo.zoom {
@@ -295,7 +295,7 @@ And that's it!
   }
 </script>
 
-Unfortunately, this format is harder to tweak in devtools, but you can fix that with a bit of `calc`!
+Unfortunately, this format is harder to tweak in DevTools, but you can fix that with a bit of `calc`!
 
 ```css
 .demo.zoom {
@@ -318,7 +318,7 @@ Or even, split the `translate` into two separate properties:
 }
 ```
 
-When you use the `scale` and `translate` properties separately, the `translate` is always applied first, which just happens to be the order we want.
+When you use the `scale` and `translate` properties separately, the `translate` is always applied first—which just happens to be the order we want.
 
 Job done!
 
