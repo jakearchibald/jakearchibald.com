@@ -1,11 +1,11 @@
 ---
-title: 'Animating zooming: transform order is important… sometimes'
+title: 'Animating zooming in CSS: transform order is important… sometimes'
 date: 2025-06-17 01:00:00
 summary: TODO
 meta: TODO
 ---
 
-I was using Discord the other day. I tapped to zoom into an image, and it animated in an odd way that I'd seen before.
+I was using Discord the other day. I tapped to zoom into an image, and it animated in an odd way that I'd seen before. Like this:
 
 <style>
   .full-figure img {
@@ -404,21 +404,10 @@ So, instead of using `scale`, let's use the `perspective` property, and a 3D tra
 
 The rather demonic translate-z value was calculated by converting the `scale` to a translate-z value, using the following formula:
 
-<math display="block">
-  <mi>translateZ</mi>
-  <mo>=</mo>
-  <mfrac>
-    <mrow>
-      <mi>perspective</mi>
-      <mo>(</mo>
-      <mi>scale</mi>
-      <mo>-</mo>
-      <mn>1</mn>
-      <mo>)</mo>
-    </mrow>
-    <mi>scale</mi>
-  </mfrac>
-</math>
+```js
+const scaleToTranslateZ = (scale, perspective) =>
+  (perspective * (scale - 1)) / scale;
+```
 
 And here's the result:
 
