@@ -69,7 +69,6 @@
   line-height: 1.1;
   margin-left: -20px;
   padding: 7px 20px 13px 20px;
-  text-wrap: balance;
 
   @media screen and (min-width: $mobile-boundry) {
     font-size: 3.4rem;
@@ -95,7 +94,6 @@
   line-height: 1;
   padding: 7px 20px 10px 20px;
   margin-left: -20px;
-  text-wrap: balance;
 
   @media screen and (min-width: $mobile-boundry) {
     font-size: 1.9rem;
@@ -125,7 +123,6 @@
   font-size: 1rem;
   border-left: 20px solid #ff8400;
   padding-left: 8px;
-  text-wrap: balance;
 
   @media screen and (min-width: $mobile-boundry) {
     font-size: 1.2rem;
@@ -205,7 +202,8 @@
   }
 
   &.blueprint {
-    background: url('imgs/graph-tile.png'),
+    background:
+      url('imgs/graph-tile.png'),
       radial-gradient(circle farthest-corner, #08d, #002b46) center;
     background-size: 12%, cover;
   }

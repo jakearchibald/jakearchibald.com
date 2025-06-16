@@ -38,7 +38,7 @@
     "postcss-url": "^10.1.3",
     "preact": "^10.11.3",
     "preact-render-to-string": "^5.2.6",
-    "prettier": "^2.8.0",
+    "prettier": "^3.5.3",
     "pretty-bytes": "^6.0.0",
     "prismjs": "^1.29.0",
     "punycode": "^2.1.1",
