@@ -162,7 +162,7 @@ Let's remove the `rotate(0)` for now and go back to the original code:
 }
 ```
 
-When zooming into part of an element, `scale(n) translate(x, y)` feels like the easiest way to do it. You use the translate to get the subject into the centre, then adjust the scale to zoom in. Tweaking the values in DevTools is easy, as is calculating the values in code.
+When zooming into part of an element, `scale(n) translate(x, y)` feels like the easiest way to do it. You use the `translate` to get the subject into the centre, then adjust the `scale` to zoom in. Tweaking the values in DevTools is easy, as is calculating the values in code.
 
 However, while this order of values is easy to write, it doesn't produce the most natural animation.
 
@@ -207,9 +207,9 @@ Then, for each `from` and `to` pair of components, it converts them to use a com
 }
 ```
 
-Now that the transforms are in a similar format, it produces an animation that linearly interpolates each component separately. This means that the `scale` is animated from `1` to `3`, and the `translate` is animated from `0, 0` to `-33.1%, 20.2%`.
+Now that the transforms are in a similar format, it produces an animation that linearly interpolates each component separately. This means that the `scale` is animated linearly from `1` to `3`, and the `translate` is animated linearly from `0, 0` to `-33.1%, 20.2%`.
 
-The animation itself isn't linear, as easing is applied, but the linear interpolation is used as a starting point.
+The animation itself isn't linear, as easing is applied, but linear interpolation is used as a starting point.
 
 The problem is, with `scale` followed by `translate`, the `scale` acts as a multiplier for the `translate` values. Therefore, as the `scale` increases, even though the `translate` values are interpolated linearly, the effect is non-linear:
 
@@ -336,7 +336,7 @@ Back at the start of the article (remember that?), I mentioned that the animatio
 }
 ```
 
-Even though the `scale` and `translate` are in the wrong order, we get the animation we want. What gives? Well, I don't actually recommend this as a fix, because it 'works' by hitting an edge case in the CSS spec.
+Even though the `scale` and `translate` are in the wrong order, we get the animation we want. What gives? Well, I don't actually recommend using this 'fix', because it only 'works' by hitting an edge case in the CSS spec.
 
 Let's go through the algorithm again, but this time with the `rotate(0)` transform:
 
@@ -364,7 +364,7 @@ As before, it pads out the values with `none` so they have the same number of co
 }
 ```
 
-Then, as before, it tries to convert each component pair to use a common function that can express both types of value. However, it can't. `rotate` and `scale` are seen as too different to be converted into a common type.
+Then, as before, it tries to convert each component pair to use a common function that can express both types of value. However, it can't. `rotate` and `scale` are considered too different to be converted into a common type.
 
 When this happens, it 'recovers' by converting those values, and all following values, to a single matrix:
 
@@ -490,4 +490,4 @@ Ok, it's subtle. Here's the `scale` version again for comparison:
   }
 </script>
 
-It's mostly noticeable on the zoom-out part of the animation. The 3D version feels like it starts much faster than the `scale` version. Personally, I think the `scale` version feels best, since the effect feels more like it should be a 'zoom' rather than a 'move'. But, it's good to know the differences, so you can choose the right one for your desired effect.
+It's mostly noticeable on the zoom-out part of the animation. The 3D version feels like it starts much faster than the `scale` version. Personally, I think the `scale` version feels better, since the intention is more of a 'zoom' than a 'move'. But, it's good to know the differences, so you can choose the right one for your desired effect.
