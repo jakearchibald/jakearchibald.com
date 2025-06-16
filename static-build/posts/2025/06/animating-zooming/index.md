@@ -246,7 +246,7 @@ The problem is, with `scale` followed by `translate`, the `scale` acts as a mult
   }
 </script>
 
-The translation happens more quickly towards the end of the animation, because the `scale` is becoming larger. That's what creates the 'swooping' effect.
+At the start of the animation, a 1px shift in the `translate` value results in a ~1px shift on screen, as the `scale` is ~1. But, towards the end of the animation, a 1px shift in the `translate` value results in a ~3px shift on screen, as the `scale` is ~3. The position appears to change faster towards the end of the animation, which creates the 'swooping' effect.
 
 # How to fix it
 
@@ -294,6 +294,8 @@ And that's it!
     buttonsContainer.append(button);
   }
 </script>
+
+Although the `translate` values are still multiplied, they're multiplied by a constant 3, the end `scale`, rather than a changing `scale` value. The result is a steady move towards the target–each 1px shift in the `translate` value results in a 1px shift on screen.
 
 Unfortunately, this format is harder to tweak in DevTools, but you can fix that with a bit of `calc`!
 
