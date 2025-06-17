@@ -483,3 +483,9 @@ Ok, it's subtle. Here's the `scale` version again for comparison:
 </script>
 
 It's mostly noticeable on the zoom-out part of the animation. The 3D version feels like it starts much faster than the `scale` version. Personally, I think the `scale` version feels better, since the intention is more of a 'zoom' than a 'move'. But, it's good to know the differences, so you can choose the right one for your desired effect.
+
+<small>
+
+Thanks to [Ana Rodrigues](https://ohhelloana.blog/) for feedback that helped this make a lot more sense.
+
+</small>
