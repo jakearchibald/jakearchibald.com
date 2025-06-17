@@ -1,8 +1,9 @@
 ---
-title: 'Animating zooming in CSS: transform order is important… sometimes'
+title: 'Animating zooming using CSS: transform order is important… sometimes'
 date: 2025-06-17 01:00:00
-summary: TODO
-meta: TODO
+summary: How to get the right transform animation.
+meta: How to get the right transform animation.
+image: './img.png'
 ---
 
 I was using Discord the other day. I tapped to zoom into an image, and it animated in an odd way that I'd seen before. Like this:
