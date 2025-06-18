@@ -303,9 +303,12 @@ Unfortunately, this format is harder to tweak in DevTools, but you can fix that 
 ```css
 .demo.zoom {
   --scale: 3;
+  --x: -33.1%;
+  --y: 20.2%;
+
   transform: translate(
-      calc(-33.1% * var(--scale)),
-      calc(20.2% * var(--scale))
+      calc(var(--x) * var(--scale)),
+      calc(var(--y) * var(--scale))
     )
     scale(var(--scale));
 }
@@ -316,8 +319,11 @@ Or even, split the `translate` into two separate properties:
 ```css
 .demo.zoom {
   --scale: 3;
+  --x: -33.1%;
+  --y: 20.2%;
+
   scale: var(--scale);
-  translate: calc(-33.1% * var(--scale)) calc(20.2% * var(--scale));
+  translate: calc(var(--x) * var(--scale)) calc(var(--y) * var(--scale));
 }
 ```
 
