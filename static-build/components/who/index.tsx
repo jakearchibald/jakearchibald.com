@@ -9,6 +9,7 @@ import podcastUrl from 'asset-url:./podcast.svg';
 import mastodonUrl from 'asset-url:./mastodon.svg';
 import blueskyUrl from 'asset-url:./bluesky.svg';
 import threadsUrl from 'asset-url:./threads.svg';
+import rssUrl from 'asset-url:./rss.svg';
 
 const Who: FunctionalComponent<{}> = () => (
   <section>
@@ -31,7 +32,7 @@ const Who: FunctionalComponent<{}> = () => (
       Hello, I'm Jake and that's me there. The one that isn't a cat. I'm a
       developer of sorts.
     </p>
-    <h1>Elsewhere</h1>
+    <h1>Links</h1>
     <ul class="icon-list">
       {[
         {
@@ -63,6 +64,11 @@ const Who: FunctionalComponent<{}> = () => (
           url: 'https://github.com/jakearchibald/',
           img: githubUrl,
           content: 'Github',
+        },
+        {
+          url: 'https://jakearchibald.com/posts.rss',
+          img: rssUrl,
+          content: 'RSS',
         },
       ].map((item) => (
         <li>
