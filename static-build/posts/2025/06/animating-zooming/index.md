@@ -314,7 +314,7 @@ Unfortunately, this format is harder to tweak in DevTools, but you can fix that 
 }
 ```
 
-Or even, split the `translate` into two separate properties:
+Or even, split the `transform` into two separate properties:
 
 ```css
 .demo.zoom {
