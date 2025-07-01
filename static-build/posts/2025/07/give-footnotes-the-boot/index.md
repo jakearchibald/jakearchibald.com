@@ -50,7 +50,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
       padding-inline-start: 0;
       list-style-position: inside;
       > li {
-        margin-bottom: 0.3em;
+        margin-bottom: 1em;
       }
     }
   }
@@ -184,6 +184,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
     margin: 0 -20px;
     background: #dbf3f7;
     display: flow-root;
+    overflow: clip;
 
     @media (width >= 530px) {
       margin: 0;
@@ -194,7 +195,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
       padding: 0 20px;
 
       @media (width >= 530px) {
-        padding: 0 1.6em;
+        padding: 0 30px;
       }
     }
 
@@ -202,7 +203,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
       padding: 0 20px;
 
       @media (width >= 530px) {
-        padding: 0 1.6em;
+        padding: 0 30px;
       }
 
       > p:first-child {
@@ -212,9 +213,14 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
 
     .code-example {
       margin-bottom: 0;
+      --unmargin: 20px;
+      margin-left: calc(var(--unmargin) * -1);
+      margin-right: calc(var(--unmargin) * -1);
+      padding-left: var(--unmargin);
+      padding-right: var(--unmargin);
 
       @media screen and (min-width: 530px) {
-        margin-right: -32px;
+        --unmargin: 32px;
       }
     }
 
@@ -244,9 +250,9 @@ Maybe if you know me well enough, you can be in tune with the kinds of things th
 
 Whether you go out of your way to read the footnote content is really just a test of your curiosity.
 
-If you did make your way down to the footnotes, I hope you appreciated that I set the text size to be a little smaller than the 'ideal' size that I chose for the main body content, making them harder to read, such is the tradition within the footnotes community.
+If you did make your way down to the footnotes, I hope you appreciated that I set the text size to be a little smaller than the 'ideal' size that I chose for the main body content, making them harder to read, such is the tradition within the footnote community.
 
-And if you enjoyed all of that, then I have _great news for you_: many people bring this experience to the web.
+And if you enjoyed all of that, I have _great news for you_: many people bring this experience to the web.
 
 # Footnotes on the web
 
@@ -271,13 +277,13 @@ We could try to solve that problem by dynamically pulling the content from the f
   }
 </script>
 
-But this is still shit! I see good, smart people, who'd always [avoid using "click here" as link text](https://www.w3.org/QA/Tips/noClickHere), litter their articles with link texts such as <sup>1</sup>, <sup>7</sup>, and _sometimes even <sup>12</sup>_. Not only is this as contextless as "click here", it provides the extra frustration of a tiny-weeny hit target.
+But this is still shit! I see good, smart people, who'd always [avoid using "click here" as link text](https://www.w3.org/QA/Tips/noClickHere), litter their articles with link texts such as <sup>1</sup>, <sup>7</sup>, and _sometimes even <sup>12</sup>_. Not only is this as contextless as "click here", it also provides the extra frustration of a tiny-weeny hit target.
 
 And all this for what? To cargo-cult academia? Stop it! Stop it now! Footnotes are a shitty hack built on the limitations of printed media. It's dumb to build on top of those limitations when they don't exist on the web platform. So I ask you to break free of footnotes and do something better.
 
 # Alternatives to footnotes on the web
 
-Here are our goals:
+Here are the goals:
 
 - Provide easily-read supplementary content.
 - Let the user easily skip over it if they're not interested.
@@ -287,11 +293,11 @@ Given that:
 
 ## Just, like… parentheses?
 
-Honestly, if you've got a quick little aside, just pop it within parentheses. If the reader really wants to skip it, scanning for the next closing parenthesis is pretty easy (unless you're nesting them – don't do that), and it keeps the reader in the flow of the article.
+Honestly, if you've got a quick little aside, just pop it in parentheses. If the reader really wants to skip it, scanning for the next closing parenthesis is pretty easy (unless you're nesting them – don't do that), and it keeps the reader in the flow of the article.
 
 ## A 'note' section
 
-If your content is a little longer, you can use `<section role="note">`, and style it to look self-contained.
+If your content is a little longer, you can use `<section role="note">` and style it to look self-contained.
 
 <section role="note">
 
@@ -312,7 +318,7 @@ If your content is too long for a note, consider using `<details>`.
 
   <div class="details-content">
 
-Thanks to a few newer CSS features, such as [the `::details-content` pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::details-content), [`allow-discrete` transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior#allow-discrete), and [interpolate-size](https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size), we can animate the opening and closing of `<details>` elements.
+Thanks to a few newer CSS features (currently only available in Chromium), such as [the `::details-content` pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::details-content), [`allow-discrete` transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior#allow-discrete), and [interpolate-size](https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size), we can animate the opening and closing of `<details>` elements.
 
 ```css
 :root {
