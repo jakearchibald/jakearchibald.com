@@ -252,7 +252,7 @@ Whether you go out of your way to read the footnote content is really just a tes
 
 If you did make your way down to the footnotes, I hope you appreciated that I set the text size to be a little smaller than the 'ideal' size that I chose for the main body content, making them harder to read, such is the tradition within the footnote community.
 
-And if you enjoyed all of that, I have _great news for you_: many people bring this experience to the web.
+And if you enjoyed all of that, I have _great news for you_: many people bring this experience to the world wide web.
 
 # Footnotes on the web
 
@@ -277,7 +277,7 @@ We could try to solve that problem by dynamically pulling the content from the f
   }
 </script>
 
-But this is still shit! I see good, smart people, who'd always [avoid using "click here" as link text](https://www.w3.org/QA/Tips/noClickHere), litter their articles with link texts such as <sup>1</sup>, <sup>7</sup>, and _sometimes even <sup>12</sup>_. Not only is this as contextless as "click here", it also provides the extra frustration of a tiny-weeny hit target.
+But this is still shit! I see good, smart people, who'd always [avoid using "click here" as link text](https://www.w3.org/QA/Tips/noClickHere), littering their articles with link texts such as <sup>1</sup>, <sup>7</sup>, and _sometimes even <sup>12</sup>_. Not only is this as contextless as "click here", it also provides the extra frustration of a tiny-weeny hit target.
 
 And all this for what? To cargo-cult academia? Stop it! Stop it now! Footnotes are a shitty hack built on the limitations of printed media. It's dumb to build on top of those limitations when they don't exist on the web platform. So I ask you to break free of footnotes and do something better.
 
@@ -311,7 +311,7 @@ The heading makes the topic of the note clear, and since the content is semantic
 
 ## A 'details' section
 
-If your content is too long for a note, consider using `<details>`.
+If your content is too long for a note, consider using [`<details>` and `<summary>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/details).
 
 <details class="details-demo">
   <summary>Animating the height of the <code>&lt;details&gt;</code> element</summary>
@@ -352,7 +352,7 @@ I'm not a UX designer, so maybe you can think of better patterns. But if the alt
 
 # Footnotes (sigh)
 
-1. As always there are exceptions. Footnotes on Wikipedia avoid many of the pitfalls because they're only used for references, and they're a big enough site that visitors are frequent, and get used to that pattern. Although, I've only just noticed they use letter markers for 'notes' and numbers for 'references'.
+1. As always there are exceptions. Footnotes on Wikipedia avoid many of the pitfalls because they're only used for references, and they're a big enough site that visitors are frequent, and get used to that pattern. Although, I've only just noticed they use letter markers for 'notes' and numbers for 'references'. Also, I guess if your content is intended to be printed, then you are indeed tied to the limitations of printed media – although with media queries, you can tailor the experience specifically when printed. I don't have those requirements, so you won't catch me using footnotes again<sup class="ref">3</sup>.
 2. Not all footnotes are numbers, some are symbols, such as †.
 <li style="list-style-type: '†. '">Oh, sorry, that wasn't an actual footnote marker.</li>
 <li value="3">Because, like I said, I hate them<sup class="ref">1</sup>.</li>
@@ -362,3 +362,5 @@ I'm not a UX designer, so maybe you can think of better patterns. But if the alt
 6. <span id="footnote-7" class="footnote-popover" popover><span class="footnote-popover-content" style="position-anchor: --footnote-7">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
 
 </aside>
+
+There. I hope you're happy.
