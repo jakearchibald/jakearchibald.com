@@ -1,8 +1,8 @@
 ---
 title: Give footnotes the boot
 date: 2025-07-01 01:00:00
-summary: TODO
-meta: TODO
+summary: I hate footnotes, and hopefully by the end of this, you will too.
+meta: I hate footnotes, and hopefully by the end of this, you will too.
 #image: './img.png'
 ---
 
@@ -162,6 +162,72 @@ meta: TODO
       }
     }
   }
+  [role=note] {
+    margin: 0 -20px;
+    padding: 0 20px;
+    background: #dbf3f7;
+    display: flow-root;
+
+    @media (width >= 530px) {
+      padding: 0 1.6em;
+      margin: 0;
+    }
+
+    > h4:first-child {
+      margin-top: 1.3em;
+    }
+  }
+  :root {
+    interpolate-size: allow-keywords;
+  }
+  .details-demo {
+    margin: 0 -20px;
+    background: #dbf3f7;
+    display: flow-root;
+
+    @media (width >= 530px) {
+      margin: 0;
+    }
+
+    summary {
+      margin: 1.2em 0;
+      padding: 0 20px;
+
+      @media (width >= 530px) {
+        padding: 0 1.6em;
+      }
+    }
+
+    .details-content {
+      padding: 0 20px;
+
+      @media (width >= 530px) {
+        padding: 0 1.6em;
+      }
+
+      > p:first-child {
+        margin-top: 0;
+      }
+    }
+
+    .code-example {
+      margin-bottom: 0;
+
+      @media screen and (min-width: 530px) {
+        margin-right: -32px;
+      }
+    }
+
+    &::details-content {
+      height: 0;
+      overflow: clip;
+      display: flow-root;
+      transition: height 0.5s ease, content-visibility 0.5s ease allow-discrete;
+    }
+    &[open]::details-content {
+      height: auto;
+    }
+  }
 </style>
 
 I hate footnotes<sup class="ref">1</sup>, and hopefully by the end of this, you will too. Let's get down to it…
@@ -213,25 +279,80 @@ And all this for what? To cargo-cult academia? Stop it! Stop it now! Footnotes a
 
 Here are our goals:
 
--
+- Provide easily-read supplementary content.
+- Let the user easily skip over it if they're not interested.
+- Make it easy for the user to decide if they're interested or not.
+
+Given that:
+
+## Just, like… parentheses?
+
+Honestly, if you've got a quick little aside, just pop it within parentheses. If the reader really wants to skip it, scanning for the next closing parenthesis is pretty easy (unless you're nesting them – don't do that), and it keeps the reader in the flow of the article.
+
+## A 'note' section
+
+If your content is a little longer, you can use `<section role="note">`, and style it to look self-contained.
+
+<section role="note">
+
+### Why not `<aside>`?
+
+I thought [the `<aside>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/aside) would be ideal for this, but that uses [the `complementary` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/complementary_role) which doesn't seem like a good fit for this kind of content. Whereas [the `note` role](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Roles/note_role) is specifically for "parenthetic or ancillary content", which sounds perfect.
+
+</section>
+
+The heading makes the topic of the note clear, and since the content is semantically and visually contained, it's easy to skip over.
+
+## A 'details' section
+
+If your content is too long for a note, consider using `<details>`.
+
+<details class="details-demo">
+  <summary>Animating the height of the <code>&lt;details&gt;</code> element</summary>
+
+  <div class="details-content">
+
+Thanks to a few newer CSS features, such as [the `::details-content` pseudo-element](https://developer.mozilla.org/en-US/docs/Web/CSS/::details-content), [`allow-discrete` transitions](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-behavior#allow-discrete), and [interpolate-size](https://developer.mozilla.org/en-US/docs/Web/CSS/interpolate-size), we can animate the opening and closing of `<details>` elements.
+
+```css
+:root {
+  interpolate-size: allow-keywords;
+}
+
+.details-demo {
+  &::details-content {
+    height: 0;
+    overflow: clip;
+    display: flow-root;
+    transition:
+      height 0.5s ease,
+      content-visibility 0.5s ease allow-discrete;
+  }
+
+  &[open]::details-content {
+    height: auto;
+  }
+}
+```
+
+  </div>
+</details>
+
+Like the note section, the summary makes the topic of the details clear, and since the content is semantically and visually contained, it's easy to skip over. The benefit with `<details>` is the user doesn't have to scroll past lots of content if they're not interested.
+
+I'm not a UX designer, so maybe you can think of better patterns. But if the alternative is footnotes, the bar is lowwwww.
 
 <aside class="footnotes">
 
 # Footnotes (sigh)
 
-1. As always there are exceptions. I'll get to these later in the post.
+1. As always there are exceptions. Footnotes on Wikipedia avoid many of the pitfalls because they're only used for references, and they're a big enough site that visitors are frequent, and get used to that pattern. Although, I've only just noticed they use letter markers for 'notes' and numbers for 'references'.
 2. Not all footnotes are numbers, some are symbols, such as †.
-3. Because, like I said, I hate them<sup class="ref">1</sup>.
-4. <span id="footnote-4"></span>This is done using [the anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a), which is "baseline widely available".
-5. <span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's `:target` pseudo-class</a> can help here by highlighting the linked footnote.</span>
-6. <span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ `:target` styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span>
-7. <span id="footnote-7" class="footnote-popover" popover><span class="footnote-popover-content" style="position-anchor: --footnote-7">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
-<li style="list-style-type: '†. '">Oh, sorry, that wasn't an actual footnote reference.</li>
+<li style="list-style-type: '†. '">Oh, sorry, that wasn't an actual footnote marker.</li>
+<li value="3">Because, like I said, I hate them<sup class="ref">1</sup>.</li>
+3. <span id="footnote-4"></span>This is done using [the anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a), which is "baseline widely available".
+4. <span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's `:target` pseudo-class</a> can help here by highlighting the linked footnote.</span>
+5. <span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ `:target` styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span>
+6. <span id="footnote-7" class="footnote-popover" popover><span class="footnote-popover-content" style="position-anchor: --footnote-7">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
 
 </aside>
-
-## Notes
-
-- Exceptions are cases where you know what the type of thing is, eg references in wikipedia. But people have to learn these patterns. Even in wikipedia if the text was "ref" it'd be better.
-- `<details>` is better for longer stuff. You're back in the flow straight afterwards.
-- Footnotes are a hack for a medium that lacked hyperlinks and other interactivity. Don't copy the limitations. Don't build on top of the limitations.
