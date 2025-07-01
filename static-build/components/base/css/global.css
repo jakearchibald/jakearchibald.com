@@ -43,6 +43,11 @@ p {
   margin: 1.2em 0;
 }
 
+sup {
+  font-size: 0.8em;
+  line-height: 0;
+}
+
 a:link,
 a:visited {
   text-decoration: none;
