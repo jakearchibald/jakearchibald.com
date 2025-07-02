@@ -79,13 +79,6 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
       color: #ff8f00;
     }
   }
-  @position-try --custom-right {
-    position-area: top;
-    right: 64px;
-    left: 64px;
-    max-width: 90vw;
-    margin: 0;
-  }
   @keyframes backdrop-in {
     from {
       opacity: 0;
@@ -117,7 +110,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
         position: fixed;
         background: #fff;
         padding: 0.9em 1.1em;
-        max-width: 476px;
+        max-width: min(476px, calc(100vw - 60px));
         border-radius: var(--border-radius);
         animation: popover-in 0.2s ease;
       }
@@ -144,6 +137,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
           bottom: anchor(top);
           justify-self: anchor-center;
           margin: 0 var(--side-margin) var(--arrow-size);
+          max-width: 476px;
         }
 
         &::after {
@@ -278,6 +272,8 @@ We could try to solve that problem by dynamically pulling the content from the f
 </script>
 
 But this is still shit! I see good, smart people, who'd always [avoid using "click here" as link text](https://www.w3.org/QA/Tips/noClickHere), littering their articles with link texts such as <sup>1</sup>, <sup>7</sup>, and _sometimes even <sup>12</sup>_. Not only is this as contextless as "click here", it also provides the extra frustration of a tiny-weeny hit target.
+
+_Update:_ Adrian Roselli pointed out that there are [numerous bugs with accessibility tooling and superscript](https://adrianroselli.com/2022/09/brief-note-on-super-and-subscript-text.html).
 
 And all this for what? To cargo-cult academia? Stop it! Stop it now! Footnotes are a shitty hack built on the limitations of printed media. It's dumb to build on top of those limitations when they don't exist on the web platform. So I ask you to break free of footnotes and do something better.
 
