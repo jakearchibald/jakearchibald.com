@@ -134,6 +134,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
         --arrow-size: 10px;
 
         .footnote-popover-content {
+          position-anchor: var(--position-anchor);
           bottom: anchor(top);
           justify-self: anchor-center;
           margin: 0 var(--side-margin) var(--arrow-size);
@@ -141,6 +142,7 @@ meta: I hate footnotes, and hopefully by the end of this, you will too.
         }
 
         &::after {
+          position-anchor: var(--position-anchor);
           content: '';
           position: fixed;
           bottom: anchor(top);
@@ -355,7 +357,7 @@ I'm not a UX designer, so maybe you can think of better patterns. But if the alt
 3. <span id="footnote-4"></span>This is done using [the anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a), which is "baseline widely available".
 4. <span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's `:target` pseudo-class</a> can help here by highlighting the linked footnote.</span>
 5. <span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ `:target` styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span>
-6. <span id="footnote-7" class="footnote-popover" popover><span class="footnote-popover-content" style="position-anchor: --footnote-7">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
+6. <span id="footnote-7" class="footnote-popover" popover style="--position-anchor: --footnote-7"><span class="footnote-popover-content">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
 
 </aside>
 
