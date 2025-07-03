@@ -17,6 +17,7 @@ html {
   font-size: 15px;
   font-family: sans-serif;
   line-height: 1.9;
+  -webkit-tap-highlight-color: rgba(255, 255, 255, 0);
 
   @media screen and (min-width: $mobile-boundry) {
     font-size: 16px;
