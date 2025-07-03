@@ -395,7 +395,7 @@ Hopefully it's clear from the above that the simple parentheses solution is less
 
   <div class="details-content">
 
-One of the footnote patterns I didn't explore were [sidenotes](https://scottstuff.net/posts/2024/12/17/more-notes-on-notes/), which only really work on desktop. But the disruption is similar. You see the superscript, and then you have to find the related sidenote (especially annoying in implementations that `Math.random()` the note to either the left or right), then visually find your way back to the main content.
+One of the footnote patterns I didn't explore were [sidenotes](https://scottstuff.net/posts/2024/12/17/more-notes-on-notes/), which only really work on desktop. But the disruption is similar. You see the superscript, and then you have to find the related sidenote (which is especially annoying in implementations that `Math.random()` the note to either the left or right), then visually find your way back to the main content.
 
 </details>
 
