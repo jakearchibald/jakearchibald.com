@@ -377,7 +377,7 @@ Honestly, if you've got a quick little aside, just pop it in parentheses. If the
 
 Where the user experience is:
 
-1. Read "scanning for the next closing parenthesis is pretty easy<sup>8</sup>".
+1. Read "scanning for the next closing parenthesis is pretty easy<sup class="ref">8</sup>".
 2. Decide, given no real clue as to the content of the footnote, to do one of the following:
    - Explore by clicking the <sup>8</sup>:
      1. Read "Unless you're nesting them – don't do that."
