@@ -386,11 +386,18 @@ Where the user experience is:
    - Or, skip over the <sup>8</sup>.
 3. Continue reading.
 
-One of the footnote patterns I didn't explore were [sidenotes](https://scottstuff.net/posts/2024/12/17/more-notes-on-notes/), which only really work on desktop. But the disruption is similar. You see the superscript, and then you have to find the related sidenote (especially annoying in implementations that `Math.random()` the note to either the left or right), then visually find your way back to the main content.
-
 Hopefully it's clear from the above that the simple parentheses solution is less disruptive, except maybe in the case where the reader is by-default disinterested in the extra content. And that's where the argument loses me.
 
 **Why are you optimising the reading experience for people disinterested in your content?** Like, if the content is really that pointless, don't put it in the article – that's even less disruptive! But, if you've got something interesting to say, say it in context. If it's really optional, make it easy for readers to skip it once they realise it's not for them. Skipping over less-relevant content is a normal part of reading. We don't need to over-engineer it.
+
+<details class="details-demo">
+  <summary>What about sidenotes?</summary>
+
+  <div class="details-content">
+
+One of the footnote patterns I didn't explore were [sidenotes](https://scottstuff.net/posts/2024/12/17/more-notes-on-notes/), which only really work on desktop. But the disruption is similar. You see the superscript, and then you have to find the related sidenote (especially annoying in implementations that `Math.random()` the note to either the left or right), then visually find your way back to the main content.
+
+</details>
 
 All that said, I will admit I was really pleased with the no-JS popover footnotes when I got them working (although they're Chromium-only right now). But, I think that might be more down to the excitement of playing with a new CSS feature for the first time. Oh, on the topic of CSS anchors, my advice is to ignore [`position-area`](https://developer.mozilla.org/en-US/docs/Web/CSS/position-area), which included too much magic for me to figure out, and instead use [`anchor()`](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor). Although your mileage may vary.
 
