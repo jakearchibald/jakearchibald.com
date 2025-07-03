@@ -346,6 +346,56 @@ Like the note section, the summary makes the topic of the details clear, and sin
 
 I'm not a UX designer, so maybe you can think of better patterns. But if the alternative is footnotes, the bar is lowwwww.
 
+# Update: are my alternatives too disruptive?
+
+I've really enjoyed the reasoned feedback to this post. Particularly those from [Lea Verou](https://front-end.social/@leaverou/114784950642671149), and [Stuart Langridge](https://www.kryogenix.org/days/2025/07/03/a-limited-defence-of-footnotes/). I recommend reading them in full (and also try a 'chello-bull for yourself), but I want to respond to the general sentiment that the alternatives are _too disruptive_.
+
+Let's take my parenthetical example:
+
+<blockquote class="quote">
+
+Honestly, if you've got a quick little aside, just pop it in parentheses. If the reader really wants to skip it, scanning for the next closing parenthesis is pretty easy (unless you're nesting them – don't do that), and it keeps the reader in the flow of the article.
+
+</blockquote>
+
+Where the user experience is:
+
+1. Read "scanning for the next closing parenthesis is pretty easy".
+2. Read "(unless you're nesting them".
+3. Then one of the following:
+   - Read " – don't do that)".
+   - Or, if you've become disinterested in this supplementary information, scan along to ")".
+4. Continue reading.
+
+And compare it to the popover-footnote experience:
+
+<blockquote class="quote">
+
+Honestly, if you've got a quick little aside, just pop it in parentheses. If the reader really wants to skip it, scanning for the next closing parenthesis is pretty easy<button class="footnote-marker-button" popovertarget="footnote-8" style="anchor-name: --footnote-8"><sup class="ref">8</sup></button>, and it keeps the reader in the flow of the article.
+
+</blockquote>
+
+Where the user experience is:
+
+1. Read "scanning for the next closing parenthesis is pretty easy<sup>8</sup>".
+2. Decide, given no real clue as to the content of the footnote, to do one of the following:
+   - Explore by clicking the <sup>8</sup>:
+     1. Read "Unless you're nesting them – don't do that."
+     2. Click outside the popover.
+     3. Continue reading.
+   - Or, skip over the <sup>8</sup>.
+3. Continue reading.
+
+One of the footnote patterns I didn't explore were [sidenotes](https://scottstuff.net/posts/2024/12/17/more-notes-on-notes/), which only really work on desktop. But the disruption is similar. You see the superscript, and then you have to find the related sidenote (especially annoying in implementations that `Math.random()` the note to either the left or right), then visually find your way back to the main content.
+
+Hopefully it's clear from the above that the simple parentheses solution is less disruptive, except maybe in the case where the reader is by-default disinterested in the extra content. And that's where the argument loses me.
+
+**Why are you optimising the reading experience for people disinterested in your content?** Like, if the content is really that pointless, don't put it in the article – that's even less disruptive! But, if you've got something interesting to say, say it in context. If it's really optional, make it easy for readers to skip it once they realise it's not for them. Skipping over less-relevant content is a normal part of reading. We don't need to over-engineer it.
+
+All that said, I will admit I was really pleased with the no-JS popover footnotes when I got them working (although they're Chromium-only right now). But, I think that might be more down to the excitement of playing with a new CSS feature for the first time. Oh, on the topic of CSS anchors, my advice is to ignore [`position-area`](https://developer.mozilla.org/en-US/docs/Web/CSS/position-area), which included too much magic for me to figure out, and instead use [`anchor()`](https://developer.mozilla.org/en-US/docs/Web/CSS/anchor). Although your mileage may vary.
+
+You'll be glad to hear my new job starts in August, so I won't have as much time to waste on posts like this.
+
 <aside class="footnotes">
 
 # Footnotes (sigh)
@@ -358,6 +408,7 @@ I'm not a UX designer, so maybe you can think of better patterns. But if the alt
 4. <span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's `:target` pseudo-class</a> can help here by highlighting the linked footnote.</span>
 5. <span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ `:target` styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span>
 6. <span id="footnote-7" class="footnote-popover" popover style="--position-anchor: --footnote-7"><span class="footnote-popover-content">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
+7. <span id="footnote-8" class="footnote-popover" popover style="--position-anchor: --footnote-8"><span class="footnote-popover-content">Unless you're nesting them – don't do that.</span></span>
 
 </aside>
 
