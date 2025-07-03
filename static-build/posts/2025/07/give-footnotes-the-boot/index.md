@@ -379,7 +379,7 @@ Where the user experience is:
 
 1. Read "scanning for the next closing parenthesis is pretty easy<sup class="ref">8</sup>".
 2. Decide, given no real clue as to the content of the footnote, to do one of the following:
-   - Explore by clicking the <sup>8</sup>:
+   - Explore, by clicking the <sup>8</sup>:
      1. Read "Unless you're nesting them – don't do that."
      2. Click outside the popover.
      3. Continue reading.
