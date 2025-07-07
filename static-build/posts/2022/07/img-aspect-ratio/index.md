@@ -14,9 +14,9 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
   self.figureSource = () => `
     <figure class="full-figure">
       <picture>
-        <source type="image/avif" srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.avif">
-        <source type="image/webp" srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.webp">
-        <img alt="A black cat, looking into the camera, rolling on his back" decoding="async" src="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.jpg" crossorigin>
+        <source type="image/avif" srcset="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.avif">
+        <source type="image/webp" srcset="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.webp">
+        <img alt="A black cat, looking into the camera, rolling on his back" decoding="async" src="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:./senna.jpg" crossorigin>
       </picture>
       <figcaption>Senna the cat</figcaption>
     </figure>
@@ -26,9 +26,6 @@ By default, an `<img>` takes up zero space until the browser loads enough of the
   self.buttonSource = `
     <p><button class="btn">Demo</button></p>
   `;
-
-  // Wake the server up for the demo
-  fetch('https://random-server-stuff.glitch.me/ping');
 </script>
 
 <script>
@@ -422,15 +419,15 @@ In this case, the two images have different aspect ratios. Chrome and Safari use
           <figure class="full-figure">
             <picture>
               <source media="(min-width: 800px)" width="1000" height="614"
-                  srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-689.jpg"
-                  srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-689.jpg 689w,
-                          https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-1378.jpg 1378w,
-                          https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-500.jpg 500w,
-                          https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-1000.jpg 1000w"
+                  srcset="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-689.jpg"
+                  srcset="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-689.jpg 689w,
+                          https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-1378.jpg 1378w,
+                          https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-500.jpg 500w,
+                          https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-1000.jpg 1000w"
                       sizes="(min-width: 530px) calc(100vw - 96px), 100vw">
               <img style="height:auto" width="800" height="547"
-                      srcset="https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-focused-800.jpg 800w,
-                              https://random-server-stuff.glitch.me/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-focused-1406.jpg 1406w"
+                      srcset="https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-focused-800.jpg 800w,
+                              https://random-worker-stuff.jakearchibald.com/slow-redirect?${Math.random()}&origin=source&to=asset-url:../../../2015/09/anatomy-of-responsive-images/f1-focused-1406.jpg 1406w"
                   alt="F1 car in the gravel"
                   sizes="(min-width: 1066px) 689px, calc(75vw - 137px)" crossorigin>
             </picture>
