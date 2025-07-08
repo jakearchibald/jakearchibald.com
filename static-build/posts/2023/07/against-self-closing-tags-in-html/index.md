@@ -98,7 +98,7 @@ In XML, `<div />` would be a self-closing div, but not in HTML. In HTML, it isn'
 
 The 'transitional' phase of XHTML ended with XHTML 1.1. At this point the spec required the document to be served and parsed as XML. XML parsing rules were well defined, except for when invalid syntax was encountered. The best thing browsers could do there is just show an error page, else we'd be back to browsers just making stuff up, and each behaving differently. And to that, browsers said… no thanks.
 
-Well, they didn't exactly say no, they supported it, and still do today. Here's [a valid XHTML document served as `application/xhtml+xml`](https://random-server-stuff.glitch.me/xhtml/), and [here's an invalid one](https://random-server-stuff.glitch.me/xhtml-broken-drs/). But browsers didn't see it as the future.
+Well, they didn't exactly say no, they supported it, and still do today. Here's [a valid XHTML document served as `application/xhtml+xml`](https://random-static-stuff.jakearchibald.com/valid-xhtml/), and [here's an invalid one](https://random-static-stuff.jakearchibald.com/invalid-xhtml-drs/). But browsers didn't see it as the future.
 
 Ask yourself: If you visit the website of your local doctor's surgery to find out the opening hours, which browser is best: The one that displays the opening hours of the surgery, or the one that displays an XML parsing error message?
 
