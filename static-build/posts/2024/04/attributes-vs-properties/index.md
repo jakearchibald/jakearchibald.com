@@ -39,7 +39,7 @@ Before we get to the interesting stuff, let's get some of the technical differen
 
 ## HTML serialisation
 
-Attributes serialise to HTML, whereas properties don't:
+Attributes exist in HTML _and_ the DOM, whereas properties are DOM-only. This means changes to attributes show up when you serialise the DOM to HTML, whereas properties don't:
 
 ```js
 const div = document.createElement('div');
