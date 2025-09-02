@@ -32,7 +32,6 @@
       <head>
         <title>Some books</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="stylesheet" href="styles.css" />
       </head>
       <body>
         <h1>Some books</h1>

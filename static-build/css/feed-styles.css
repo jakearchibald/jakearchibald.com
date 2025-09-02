@@ -6,7 +6,9 @@
   }
 
   &::before {
-    content: 'Hi there! This is my RSS feed. It isn\'t meant to be human-readable. Instead, it\'s meant to be read by an RSS reader. Pop "RSS reader" into your favourite search engine to learn more.';
+    content: 'Hi there! This is my RSS feed. '
+      "It isn't meant to be human-readable. Instead, it's meant to be read by an RSS reader. "
+      'Pop "RSS reader" into your favourite search engine to learn more. ';
     display: block;
     background: white;
     font-family: sans-serif;
