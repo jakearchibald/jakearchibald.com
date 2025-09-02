@@ -11,5 +11,5 @@
 /
   Cache-Control: max-age=180
 
-*.rss
+/*.rss
   Content-Type: text/xml
