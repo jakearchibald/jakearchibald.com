@@ -22,6 +22,8 @@ import iconUrl from 'asset-url:./pages/post/icon.png';
 import ClientDemo from './components/client-demo';
 import escape from 'escape-html';
 
+import feedStyles from 'css-bundle:./css/feed-styles.css';
+
 interface Output {
   [outputPath: string]: string;
 }
@@ -72,7 +74,12 @@ for (const post of paginatedPosts[0]) {
   });
 }
 
-toOutput['posts.rss'] = feed.atom1();
+const feedSource = feed.atom1();
+
+toOutput['posts.rss'] = feedSource.replace(
+  '?>',
+  `?>\n<?xml-stylesheet type="text/css" href="${escape(feedStyles)}"?>`,
+);
 
 for (const post of posts) {
   toOutput[getPostPath(post) + 'index.html'] = renderPage(

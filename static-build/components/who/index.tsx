@@ -66,7 +66,7 @@ const Who: FunctionalComponent<{}> = () => (
           content: 'Github',
         },
         {
-          url: 'https://jakearchibald.com/posts.rss',
+          url: '/posts.rss',
           img: rssUrl,
           content: 'RSS',
         },

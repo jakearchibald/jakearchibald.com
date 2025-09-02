@@ -1,0 +1,22 @@
+{
+  "headers": [
+    {
+      "source": "**/*.*",
+      "headers": [
+        {
+          "key": "Content-Disposition",
+          "value": null
+        }
+      ]
+    },
+    {
+      "source": "*.rss",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "text/xml"
+        }
+      ]
+    }
+  ]
+}
