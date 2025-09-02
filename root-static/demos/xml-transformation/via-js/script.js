@@ -8,7 +8,11 @@ import('./html.js').then(({ html }) => {
 
   const bookHTML = (bookEl) => html`
     <div class="book">
-      <img class="cover" src="${bookEl.querySelector('cover').textContent}" />
+      <img
+        class="cover"
+        src="${bookEl.querySelector(':scope > cover').textContent}"
+        alt=""
+      />
       <div class="book-info">
         <div>
           <span class="title">

@@ -1,15 +1,6 @@
 {
   "headers": [
     {
-      "source": "**/*.*",
-      "headers": [
-        {
-          "key": "Content-Disposition",
-          "value": null
-        }
-      ]
-    },
-    {
       "source": "*.rss",
       "headers": [
         {
