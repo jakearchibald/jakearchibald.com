@@ -68,12 +68,7 @@ If you [visit that document](/demos/xml-transformation/via-xslt/index.xml), you'
 ```xml
 <xsl:template name="book">
   <div class="book">
-    <img class="cover">
-      <xsl:attribute name="src">
-        <xsl:value-of select="cover" />
-      </xsl:attribute>
-      <xsl:attribute name="alt" />
-    </img>
+    <img class="cover" src="{cover}" alt="" />
     <div class="book-info">
       <div>
         <span class="title"><xsl:value-of select="title" /></span>
@@ -90,7 +85,7 @@ If you [visit that document](/demos/xml-transformation/via-xslt/index.xml), you'
 
 This template maps a `<book>` into a `<div class="book">`, although it reaches up into the parent `<author>` to get the author name.
 
-I used to write XSLT as part of my first job ~20 years ago. Making this demo felt _deeply weird_. I kinda love/hate how you need to add _children_ to the usually-empty `<img>` to set attributes.
+I used to write XSLT as part of my first job ~20 years ago. Making this demo felt _deeply weird_.
 
 Anyway, assuming the above will stop working someday, what are the alternatives?
 
@@ -186,7 +181,7 @@ const htmlEl = document.createElementNS(
 data.replaceWith(htmlEl);
 ```
 
-Now all I had to do was populate that `html` element. I created [a simple templating function](https://github.com/jakearchibald/jakearchibald.com/blob/main/root-static/demos/xml-transformation/via-js/html.js). For example, here's the snippet that renders each book:
+Now all I had to do was populate that `html` element. I created [a simple templating function](https://github.com/jakearchibald/jakearchibald.com/blob/main/root-static/demos/xml-transformation/via-js/html.js) to handle escaping. For example, here's the snippet that renders each book:
 
 ```js
 const bookHTML = (bookEl) => html`

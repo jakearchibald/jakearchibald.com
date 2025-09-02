@@ -4,12 +4,7 @@
 
   <xsl:template name="book">
     <div class="book">
-      <img class="cover">
-        <xsl:attribute name="src">
-          <xsl:value-of select="cover" />
-        </xsl:attribute>
-        <xsl:attribute name="alt" />
-      </img>
+      <img class="cover" src="{cover}" alt="" />
       <div class="book-info">
         <div>
           <span class="title">
