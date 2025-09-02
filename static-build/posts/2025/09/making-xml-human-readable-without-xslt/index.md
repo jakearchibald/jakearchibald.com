@@ -90,7 +90,7 @@ If you [visit that document](/demos/xml-transformation/via-xslt/index.xml), you'
 
 This template maps a `<book>` into a `<div class="book">`, although it reaches up into the parent `<author>` to get the author name.
 
-I used to write XSLT as part of my first job ~20 years ago. Making this demo felt _deeply weird_.
+I used to write XSLT as part of my first job ~20 years ago. Making this demo felt _deeply weird_. I kinda love/hate how you need to add _children_ to the usually-empty `<img>` to set attributes.
 
 Anyway, assuming the above will stop working someday, what are the alternatives?
 
@@ -106,7 +106,7 @@ Now you can style your XML document using regular CSS. Just make sure your docum
 
 What you can do here is pretty limited. In the XSLT example, I take the text content of the `<cover>` element, and make it the `src` of an image. I also repeat the author's `<name>` for each book. Neither of these is possible with CSS alone.
 
-Also, the document will have the semantics of the XML document, which likely means "no semantics", so the result will have poor accessibility. Even if your XML contains `<h1>`, unless you've told it to be an HTML element, the browser won't recognise it as a heading.
+Also, the document will have the semantics of the XML document, which likely means "no semantics", so the result will have poor accessibility. For example, even if your XML contains `<h1>`, unless you've told it to be an HTML element, the browser won't recognise it as a heading.
 
 That said, if you just want to catch users that mistakenly land on some XML, you can get away with something like this:
 
@@ -152,7 +152,7 @@ But if you really need to, here's how to do the transformation on the client, wi
 
 # Transforming XML client-side without XSLT
 
-If you just want to make some existing XSLT work in browsers that don't support it, check out [Mason's XSLT polyfill](https://github.com/mfreed7/xslt_polyfill). But if you don't need to use XSLT, JavaScript is a better option.
+If you just want to make some existing XSLT work in browsers that don't support it, check out [Mason's XSLT polyfill](https://github.com/mfreed7/xslt_polyfill). But if you don't need to use XSLT, JavaScript is, in my opinion, a better option.
 
 [Here's a demo](/demos/xml-transformation/via-js/index.xml) that produces the same result as the XSLT demo, but this time using JS. Here's how it works…
 
@@ -222,9 +222,21 @@ It's very similar to the XSLT equivalent, _and_ it can be debugged using regular
 
 One gotcha when creating HTML in an XML document is it's easy to accidentally create XML elements rather than HTML elements. If you want proper semantics, accessibility, and behaviour, you want real HTML elements.
 
-For example, `document.createElement('h1')` in an XML document will not create an HTML element. Instead you need to use [`document.createElementNS('http://www.w3.org/1999/xhtml', 'h1')`](https://developer.mozilla.org/docs/Web/API/Document/createElementNS). If you're using a framework to create the elements, check that it's creating real HTML elements – `el.namespaceURI` should be `"http://www.w3.org/1999/xhtml"`.
+For example:
 
-The `xmlns` attribute we used earlier only works via the parser, so this doesn't create an HTML element in an XML document:
+```js
+// In an XML document this will not create an HTML element:
+const xmlElement = document.createElement('h1');
+// Instead, you need to use:
+const htmlElement = document.createElementNS(
+  'http://www.w3.org/1999/xhtml',
+  'h1',
+);
+```
+
+If you're using a framework to create the elements, check that it's creating real HTML elements – `el.namespaceURI` should be `"http://www.w3.org/1999/xhtml"`.
+
+The `xmlns` attribute we used earlier only works via the parser, so this _doesn't_ create an HTML element in an XML document:
 
 ```js
 const h1 = document.createElement('h1');
