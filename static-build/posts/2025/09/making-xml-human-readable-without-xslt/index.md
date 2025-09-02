@@ -1,6 +1,6 @@
 ---
 title: Making XML human-readable without XSLT
-date: 2025-09-03 01:00:00
+date: 2025-09-02 01:00:00
 summary: JavaScript is right there.
 meta: JavaScript is right there.
 #image: './img.png'
