@@ -262,4 +262,4 @@ htmlEl.setHTMLUnsafe(html`
 `);
 ```
 
-And that's it! Wow you made it to the end. Huh. I didn't think anyone would.
+Here's [the full working demo](/demos/xml-transformation/via-js/index.xml), and [the source](https://github.com/jakearchibald/jakearchibald.com/tree/main/root-static/demos/xml-transformation/via-js). And that's it! Wow you made it to the end. Huh. I didn't think anyone would.
