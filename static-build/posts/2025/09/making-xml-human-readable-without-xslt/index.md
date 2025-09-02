@@ -1,8 +1,8 @@
 ---
 title: Making XML human-readable without XSLT
-date: 2025-09-02 01:00:00
-summary: TODO
-meta: TODO
+date: 2025-09-03 01:00:00
+summary: JavaScript is right there.
+meta: JavaScript is right there.
 #image: './img.png'
 ---
 
@@ -14,10 +14,10 @@ I want to get to the technical-fun bits quickly, so here's a quick rundown:
 
 - XSLT is an XML language for transforming XML, including transforming it into non-XML formats, such as HTML.
 - Browsers currently support a ~25 year old version of XSLT natively (examples coming up later).
-- The feature is barely used. Usage is lower than features that were subsequently removed from browsers, such as mutation events and Flash.
+- This feature is barely used. Usage is lower than features that were subsequently removed from browsers, such as mutation events and Flash.
 - The feature is often the source of [significant security issues](https://www.neowin.net/news/google-project-zero-exposes-security-flaw-in-libxslt-library-used-in-gnome-applications/).
 
-This leaves browsers with a choice: Take development time away from features that have signifiant usage and developer demand, and instead use those resources to improve (probably rewrite) XSLT processing in browsers. Or, remove XSLT from browser engines.
+This leaves browsers with a choice: Take development time away from features that have significant usage and developer demand, and instead use those resources to improve (probably rewrite) XSLT processing in browsers. Or, remove XSLT from browser engines.
 
 Currently, [Chrome](https://github.com/whatwg/html/issues/11523#issue-3285251497), [Safari](https://github.com/whatwg/html/issues/11523#issuecomment-3149280766), and [Firefox](https://github.com/mozilla/standards-positions/issues/1287#issuecomment-3227145793) support removing XSLT.
 
@@ -31,7 +31,6 @@ Take some XML like this:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="styles.css"?>
 <?xml-stylesheet type="text/xsl" href="books.xsl"?>
 <authors>
   <author>
@@ -105,9 +104,9 @@ In some cases, you might get away with just styling XML, which you can do using:
 
 Now you can style your XML document using regular CSS. Just make sure your document is served with `Content-Type: text/xml` (rather than, e.g. a more specific RSS content type), otherwise the browser won't use the styles.
 
-What you can do here is pretty limited. In the XSLT example, I take a the text content of the `<cover>` element, and make it the `src` of an image. I also repeat the author's `<name>` for each book. Neither of these is possible with CSS alone.
+What you can do here is pretty limited. In the XSLT example, I take the text content of the `<cover>` element, and make it the `src` of an image. I also repeat the author's `<name>` for each book. Neither of these is possible with CSS alone.
 
-Also, the document will have the semantics of the XML document, which likely means "no semantics", so the result will have poor accessibility. Even if your XML contains `<h1>`, unless you've told it to be an HTML element, the browser won't treat it as a heading.
+Also, the document will have the semantics of the XML document, which likely means "no semantics", so the result will have poor accessibility. Even if your XML contains `<h1>`, unless you've told it to be an HTML element, the browser won't recognise it as a heading.
 
 That said, if you just want to catch users that mistakenly land on some XML, you can get away with something like this:
 
@@ -223,7 +222,7 @@ It's very similar to the XSLT equivalent, _and_ it can be debugged using regular
 
 One gotcha when creating HTML in an XML document is it's easy to accidentally create XML elements rather than HTML elements. If you want proper semantics, accessibility, and behaviour, you want real HTML elements.
 
-For example, `document.createElement('h1')` in an XML document will not create an HTML element. Instead you need to use [`document.createElementNS('h1', 'http://www.w3.org/1999/xhtml')`](https://developer.mozilla.org/docs/Web/API/Document/createElementNS). If you're using a framework to create the elements, check that it's creating real HTML elements – `el.namespaceURI` should be `"http://www.w3.org/1999/xhtml"`.
+For example, `document.createElement('h1')` in an XML document will not create an HTML element. Instead you need to use [`document.createElementNS('http://www.w3.org/1999/xhtml', 'h1')`](https://developer.mozilla.org/docs/Web/API/Document/createElementNS). If you're using a framework to create the elements, check that it's creating real HTML elements – `el.namespaceURI` should be `"http://www.w3.org/1999/xhtml"`.
 
 The `xmlns` attribute we used earlier only works via the parser, so this doesn't create an HTML element in an XML document:
 
