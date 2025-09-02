@@ -58,7 +58,12 @@ const BasePage: FunctionalComponent<Props> = ({
         {imports.map((v) => (
           <link rel="preload" as="script" href={v} crossOrigin="" />
         ))}{*/}
-        <link rel="preload" as="font" href={ptSerifURL} crossOrigin="" />
+        <link
+          rel="preload"
+          as="font"
+          href={ptSerifURL}
+          crossOrigin="anonymous"
+        />
         {extraHead}
       </head>
       <body>

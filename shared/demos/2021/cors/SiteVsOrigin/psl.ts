@@ -1,4 +1,4 @@
-import { toASCII } from 'punycode';
+import { toASCII } from 'punycode/';
 
 const publicSuffixListUrl =
   'https://publicsuffix.org/list/public_suffix_list.dat';

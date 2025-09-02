@@ -49,7 +49,7 @@ const ClientDemo: FunctionalComponent<Props> = ({
         {script && <script type="module" src={script} />}
         {scriptPreload &&
           scriptPreload.map((v) => (
-            <link rel="preload" as="script" href={v} crossOrigin="" />
+            <link rel="preload" as="script" href={v} crossOrigin="anonymous" />
           ))}
       </head>
       <body>{initialBody}</body>

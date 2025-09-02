@@ -4,7 +4,7 @@ import fontURL from 'asset-url:./logo-font.woff2';
 
 const Page: FunctionalComponent<{}> = () => (
   <div>
-    <link href={fontURL} rel="preload" crossOrigin="" as="font" />
+    <link href={fontURL} rel="preload" crossOrigin="anonymous" as="font" />
     <header class="site-header">
       <div class="content-margin">
         <div class="header-layout">

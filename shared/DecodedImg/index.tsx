@@ -144,7 +144,9 @@ export default class DecodedImg extends Component<Props, State> {
             output: (
               <canvas
                 style={{ ...imgStyle, width: renderWidth + 'px' }}
-                ref={(node) => node && resolve(node)}
+                ref={(node) => {
+                  node && resolve(node);
+                }}
               />
             ),
           });

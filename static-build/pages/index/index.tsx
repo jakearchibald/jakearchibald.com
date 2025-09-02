@@ -13,7 +13,7 @@
 import { h, FunctionalComponent } from 'preact';
 import BasePage from 'static-build/components/base';
 import { getPostUrl } from 'static-build/utils';
-import date from 'date-and-time';
+import { format as dateFormat } from 'date-and-time';
 import Who from 'static-build/components/who';
 
 interface PaginationProps {
@@ -86,9 +86,9 @@ const IndexPage: FunctionalComponent<Props> = ({
               </h1>
               <time
                 class="article-date"
-                dateTime={date.format(new Date(post.date), 'YYYY-MM-DD')}
+                dateTime={dateFormat(new Date(post.date), 'YYYY-MM-DD')}
               >
-                Posted {date.format(new Date(post.date), 'DD MMMM YYYY')}{' '}
+                Posted {dateFormat(new Date(post.date), 'DD MMMM YYYY')}{' '}
                 {post.mindframe}
               </time>
             </header>

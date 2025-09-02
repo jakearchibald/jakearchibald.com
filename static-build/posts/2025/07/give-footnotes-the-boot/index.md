@@ -407,15 +407,17 @@ You'll be glad to hear my new job starts in August, so I won't have as much time
 
 # Footnotes (sigh)
 
-1. As always there are exceptions. Footnotes on Wikipedia avoid many of the pitfalls because they're only used for references, and they're a big enough site that visitors are frequent, and get used to that pattern. Although, I've only just noticed they use letter markers for 'notes' and numbers for 'references'. Also, I guess if your content is intended to be printed, then you are indeed tied to the limitations of printed media – although with media queries, you can tailor the experience specifically when printed. I don't have those requirements, so you won't catch me using footnotes again<sup class="ref">3</sup>.
-2. Not all footnotes are numbers, some are symbols, such as †.
-<li style="list-style-type: '†. '">Oh, sorry, that wasn't an actual footnote marker.</li>
-<li value="3">Because, like I said, I hate them<sup class="ref">1</sup>.</li>
-3. <span id="footnote-4"></span>This is done using [the anchor element](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a), which is "baseline widely available".
-4. <span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's `:target` pseudo-class</a> can help here by highlighting the linked footnote.</span>
-5. <span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ `:target` styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span>
-6. <span id="footnote-7" class="footnote-popover" popover style="--position-anchor: --footnote-7"><span class="footnote-popover-content">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span>
-7. <span id="footnote-8" class="footnote-popover" popover style="--position-anchor: --footnote-8"><span class="footnote-popover-content">Unless you're nesting them – don't do that.</span></span>
+<ol>
+  <li>As always there are exceptions. Footnotes on Wikipedia avoid many of the pitfalls because they're only used for references, and they're a big enough site that visitors are frequent, and get used to that pattern. Although, I've only just noticed they use letter markers for 'notes' and numbers for 'references'. Also, I guess if your content is intended to be printed, then you are indeed tied to the limitations of printed media – although with media queries, you can tailor the experience specifically when printed. I don't have those requirements, so you won't catch me using footnotes again<sup class="ref">3</sup>.</li>
+  <li>Not all footnotes are numbers, some are symbols, such as †.</li>
+  <li style="list-style-type: '†. '">Oh, sorry, that wasn't an actual footnote marker.</li>
+  <li value="3">Because, like I said, I hate them<sup class="ref">1</sup>.</li>
+  <li><span id="footnote-4"></span>This is done using <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/a">the anchor element</a>, which is "baseline widely available".</li>
+  <li><span id="footnote-5" class="footnote"><a href="https://developer.mozilla.org/en-US/docs/Web/CSS/:target">CSS's <code>:target</code> pseudo-class</a> can help here by highlighting the linked footnote.</span></li>
+  <li><span id="footnote-6" class="footnote">Some footnote authors resolve this by adding a link back to the footnote marker, some also employ <code>:target</code> styles to help the user find their previous place in the document. <a href="#footnote-marker-6">⇐</a></span></li>
+  <li><span id="footnote-7" class="footnote-popover" popover style="--position-anchor: --footnote-7"><span class="footnote-popover-content">This is done using a combination of <a href="https://developer.mozilla.org/en-US/docs/Web/API/Popover_API"><code>popover</code>, <code>popovertarget</code></a>, and <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_anchor_positioning">CSS anchor positioning</a>. Elements with the <code>popover</code> attribute don't usually display until activated, but I've forced it to display using CSS, which is how this content also appears in the footnotes.</span></span></li>
+  <li><span id="footnote-8" class="footnote-popover" popover style="--position-anchor: --footnote-8"><span class="footnote-popover-content">Unless you're nesting them – don't do that.</span></span></li>
+</ol>
 
 </aside>
 

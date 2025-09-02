@@ -13,7 +13,7 @@
 import { h, FunctionalComponent, Fragment } from 'preact';
 import BasePage from 'static-build/components/base';
 import { getPostUrl, siteOrigin } from 'static-build/utils';
-import date from 'date-and-time';
+import { format as dateFormat } from 'date-and-time';
 import Who from 'static-build/components/who';
 
 import iconUrl from 'asset-url:./icon.png';
@@ -95,16 +95,16 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
             <h1>{post.title}</h1>
             <time
               class="article-date"
-              dateTime={date.format(new Date(post.date), 'YYYY-MM-DD')}
+              dateTime={dateFormat(new Date(post.date), 'YYYY-MM-DD')}
             >
-              Posted {date.format(new Date(post.date), 'DD MMMM YYYY')}{' '}
+              Posted {dateFormat(new Date(post.date), 'DD MMMM YYYY')}{' '}
               {post.mindframe}
             </time>
             <div dangerouslySetInnerHTML={{ __html: post.content }}></div>
             <p>
               <small>
                 <a
-                  href={`https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/${date.format(
+                  href={`https://github.com/jakearchibald/jakearchibald.com/blob/main/static-build/posts/${dateFormat(
                     new Date(post.date),
                     'YYYY/MM',
                   )}/${post.slug}/index.md`}

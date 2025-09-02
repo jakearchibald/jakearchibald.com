@@ -67,7 +67,7 @@ for (const post of paginatedPosts[0]) {
     description: escape(post.meta),
     date: new Date(post.date),
     image: post.image
-      ? `https://jakearchibald.com${post.image}`
+      ? `https://jakearchibald.com${post.image.src}`
       : `https://jakearchibald.com${iconUrl}`,
   });
 }
