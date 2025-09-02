@@ -1,0 +1,49 @@
+/* Hide the data while the document is loading */
+root:not(html) {
+  display: none;
+}
+
+body {
+  font-family: sans-serif;
+  margin: 20px;
+  line-height: 1.4;
+}
+h1 {
+  color: #333;
+}
+.book-list {
+  list-style-type: none;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.book {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: clip;
+  display: grid;
+  grid-template-columns: max-content 2fr;
+}
+.cover {
+  width: 70px;
+  object-fit: cover;
+  aspect-ratio: 1 / 1.8;
+}
+.book-info {
+  padding: 10px;
+  display: grid;
+  grid-template-rows: 1fr min-content;
+}
+.title {
+  font-weight: bold;
+  color: #518819;
+}
+.author {
+  font-style: italic;
+  color: #333;
+}
+.genre {
+  color: #666;
+  font-size: 0.9em;
+}

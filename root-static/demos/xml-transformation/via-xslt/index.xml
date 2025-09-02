@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="books.xsl"?>
+<authors>
+  <author>
+    <name>Douglas Adams</name>
+    <book>
+      <title>The Hitchhiker's Guide to the Galaxy</title>
+      <genre>Science Fiction Comedy</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0330258648-L.jpg</cover>
+    </book>
+    <book>
+      <title>The Restaurant at the End of the Universe</title>
+      <genre>Science Fiction Comedy</genre>
+      <cover>https://covers.openlibrary.org/b/oclc/33352356-L.jpg</cover>
+    </book>
+    <book>
+      <title>Dirk Gently's Holistic Detective Agency</title>
+      <genre>Science Fiction Comedy</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0671692674-L.jpg</cover>
+    </book>
+  </author>
+  <author>
+    <name>George Orwell</name>
+    <book>
+      <title>1984</title>
+      <genre>Dystopian Fiction</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0451524934-L.jpg</cover>
+    </book>
+    <book>
+      <title>Animal Farm</title>
+      <genre>Political Satire</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0452284244-L.jpg</cover>
+    </book>
+    <book>
+      <title>Down and Out in Paris and London</title>
+      <genre>Memoir</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/015626224X-L.jpg</cover>
+    </book>
+  </author>
+  <author>
+    <name>Agatha Christie</name>
+    <book>
+      <title>Murder on the Orient Express</title>
+      <genre>Mystery</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0062073508-L.jpg</cover>
+    </book>
+    <book>
+      <title>The Murder of Roger Ackroyd</title>
+      <genre>Mystery</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0-00-725061-4-L.jpg</cover>
+    </book>
+    <book>
+      <title>And Then There Were None</title>
+      <genre>Mystery</genre>
+      <cover>https://covers.openlibrary.org/b/isbn/0062073486-L.jpg</cover>
+    </book>
+  </author>
+</authors>
