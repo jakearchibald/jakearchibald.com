@@ -81,6 +81,9 @@ toOutput['posts.rss'] = feedSource.replace(
   `?>\n<?xml-stylesheet type="text/css" href="${escape(feedStyles)}"?>`,
 );
 
+// Just a test:
+toOutput['posts.xml'] = toOutput['posts.rss'];
+
 for (const post of posts) {
   toOutput[getPostPath(post) + 'index.html'] = renderPage(
     <PostPage post={post} />,
