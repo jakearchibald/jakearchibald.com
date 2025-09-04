@@ -1,5 +1,5 @@
 /* Hide the data while the document is loading */
-root:not(html) {
+:root:not(html) {
   display: none;
 }
 
