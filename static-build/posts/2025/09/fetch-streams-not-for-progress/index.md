@@ -6,7 +6,7 @@ meta: They're inaccurate, and there are better ways.
 image: './img.png'
 ---
 
-Part of my role at Mozilla is making sure we're focusing on the right features, and we got onto the topic of fetch upload streams. It's something Chrome has supported for a while, but it isn't yet supported by either Firefox or Safari.
+Part of my role at Mozilla is making sure we're focusing on the right features, and we got onto the topic of fetch upload streams. It's something Chrome has supported for a while, but it isn't yet supported in either Firefox or Safari.
 
 I asked folks on [various](https://bsky.app/profile/jakearchibald.com/post/3lxws4wvgns27) [social](https://mastodon.social/@jaffathecake/115140724791632506) [platforms](https://x.com/jaffathecake/status/1963240536891895973) what they thought of the feature, and what they'd use it for. The most common answer by far was "to measure upload progress", but… using it for that will give inaccurate results, and may even lead to bad implementations in browsers.
 
@@ -47,9 +47,35 @@ console.log('Done!');
 
 The chunks are `Uint8Array`s, but you can [use `TextDecoder`](https://developer.mozilla.org/docs/Web/API/TextDecoderStream/TextDecoderStream) to get the chunks as text.
 
-# Request streams, and what they're good for
+## But they're not ideal for measuring download progress
 
-Request streams are basically the same, but for uploads rather than downloads. Imagine a video uploading app that did some transcoding/processing of the video before uploading:
+You could try to measure download progress like this:
+
+```js
+// THIS DOESN'T ALWAYS WORK!
+const response = await fetch(url);
+const contentLength = Number(response.headers.get('Content-Length')) || 0;
+let downloaded = 0;
+
+for await (const chunk of response.body) {
+  downloaded += chunk.length;
+  if (contentLength) {
+    console.log(
+      `Downloaded ${((contentLength / downloaded) * 100).toFixed(2)}%`,
+    );
+  }
+}
+```
+
+The good part is that you're measuring the point at which you have the data, which is what matters when it comes to download. Let's say you were receiving three packages via mail – you're measuring the point each package arrives in your possession, which is fine.
+
+However, this all falls down if the response has a `Content-Encoding`, because in that case the `Content-Length` represents the encoded size, but the chunks are _decoded_ chunks. This means your `downloaded` value is likely to exceed the `contentLength` value.
+
+There's [a feature request for a way to get the raw body](https://github.com/whatwg/fetch/issues/1524), without decompressing.
+
+# Request streams
+
+Request streams are basically the same as response streams, but for uploads rather than downloads. Imagine a video uploading app that did some transcoding/processing of the video before uploading:
 
 ```js
 // Get a video from disk, or from the camera
@@ -78,35 +104,7 @@ If you want to have a request and response in parallel, you can perform two fetc
 
 Also, since the `Content-Length` of the request isn't known, the feature is restricted to transports that are already used to handling request data in chunks, which is HTTP/2 onwards.
 
-# Why response streams are sometimes bad for measuring upload progress
-
-_Response_ streams are sometimes kinda ok when it comes to measuring _download_ progress:
-
-```js
-// REMEMBER THIS IS ONLY KINDA OK!
-const response = await fetch(url);
-const contentLength = Number(response.headers.get('Content-Length')) || 0;
-let downloaded = 0;
-
-for await (const chunk of response.body) {
-  downloaded += chunk.length;
-  if (contentLength) {
-    console.log(
-      `Downloaded ${((contentLength / downloaded) * 100).toFixed(2)}%`,
-    );
-  }
-}
-
-console.log('Done!');
-```
-
-The good part is that you're measuring the point at which you have the data, which is what matters when it comes to download. Let's say you were receiving three packages via mail – you're measuring the point each package arrives in your possession, which is great.
-
-However, this all falls down if the response has a `Content-Encoding`, because in that case the `Content-Length` represents the encoded size, but the chunks are _decoded_ chunks. This means your `downloaded` value is likely to exceed the `contentLength` value.
-
-There's [a feature request for a way to get the raw body](https://github.com/whatwg/fetch/issues/1524), without decompressing.
-
-# Why request streams are bad for measuring upload progress
+## But they're bad for measuring upload progress
 
 I'm not even going to show the code for this because it's too unreliable.
 
@@ -114,15 +112,15 @@ With _request_ streams, you end up measuring the point at which the data is take
 
 Fetch is the courier. It will take some chunks off your hands and start handling the network parts. Successfully sending those chunks will happen later, or maybe it will fail.
 
-This is normal behaviour with streams, and it helps everything run as smoothly as possible in cases where parts of the pipe flow quicker than others. Each stream as a "high water mark", which is essentially an ideal amount to buffer.
+This is normal behaviour with streams, and it helps keep everything running as smoothly as possible in cases where parts of the pipe flow quicker than others. Each stream has a "high water mark", which is essentially an ideal amount to buffer.
 
-## So, please don't
+## Using streams to measure upload progress could cause problems in future
 
-If you try to use streams as upload or download progress, the results will be inaccurate, but it may also limit the quality of this feature in future.
+If you try to use streams to measure upload progress, the results will be inaccurate, but it may also limit the quality of this feature in future.
 
-Let's say browsers ship this, and do a fairly small amount of buffering internally in fetch. If folks use this for upload progress, it won't be right, but it might be close enough.
+Let's say browsers ship this, and do a fairly small amount of buffering. If folks use this for upload progress, it won't be right, but it might be close enough.
 
-Then, later, a browser discovers that they can get better performance by buffering more within fetch. If large parts of the web are using this feature for upload progress, that browser faces two choices: Ship the change, which means these websites' upload progress measurements become even less accurate, or avoid shipping the general improvement. I don't want browsers to end up having to make a compromise here.
+Then let's say a browser discovers that they can get better performance by buffering more within fetch. If large parts of the web are using this feature for upload progress, that browser faces two choices: Ship the change, which means these websites' upload progress measurements become even less accurate, or avoid shipping the general improvement. I don't want browsers to end up having to make a compromise here.
 
 # How to measure upload progress
 
