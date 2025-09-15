@@ -61,7 +61,7 @@ for await (const chunk of response.body) {
   downloaded += chunk.length;
   if (contentLength) {
     console.log(
-      `Downloaded ${((contentLength / downloaded) * 100).toFixed(2)}%`,
+      `Downloaded ${((downloaded / contentLength) * 100).toFixed(2)}%`,
     );
   }
 }
@@ -163,7 +163,7 @@ const response = await fetch(url, {
     requestObserver.onprogress = (event) => {
       if (event.lengthComputable) {
         console.log(
-          `Uploaded ${((event.total / event.loaded) * 100).toFixed(2)}%`,
+          `Uploaded ${((event.loaded / event.total) * 100).toFixed(2)}%`,
         );
       }
     };
@@ -171,7 +171,7 @@ const response = await fetch(url, {
     responseObserver.onprogress = (event) => {
       if (event.lengthComputable) {
         console.log(
-          `Downloaded ${((event.total / event.loaded) * 100).toFixed(2)}%`,
+          `Downloaded ${((event.loaded / event.total) * 100).toFixed(2)}%`,
         );
       }
     };
