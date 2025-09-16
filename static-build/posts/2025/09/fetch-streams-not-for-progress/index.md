@@ -1,5 +1,5 @@
 ---
-title: Fetch streams are great, but not for measuring upload/downloading progress
+title: Fetch streams are great, but not for measuring upload/download progress
 date: 2025-09-15 01:00:00
 summary: They're inaccurate, and there are better ways.
 meta: They're inaccurate, and there are better ways.
