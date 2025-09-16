@@ -45,7 +45,12 @@ console.log('Done!');
 
 …but that isn't supported in Safari. I've [proposed it for interop 2026](https://github.com/web-platform-tests/interop/issues/1068).
 
-The chunks are `Uint8Array`s, but you can [use `TextDecoder`](https://developer.mozilla.org/docs/Web/API/TextDecoderStream/TextDecoderStream) to get the chunks as text.
+The chunks are `Uint8Array`s, but you can [use `TextDecoderStream`](https://developer.mozilla.org/docs/Web/API/TextDecoderStream/TextDecoderStream) to get the chunks as text.
+
+```js
+const response = await fetch(url);
+const textStream = response.body.pipeThrough(new TextDecoderStream());
+```
 
 ## But they're not ideal for measuring download progress
 
