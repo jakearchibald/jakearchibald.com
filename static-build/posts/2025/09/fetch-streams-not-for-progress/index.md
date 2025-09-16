@@ -74,7 +74,9 @@ for await (const chunk of response.body) {
 
 The good part is that you're measuring the point at which you have the data, which is what matters when it comes to download. Let's say you were receiving three packages via mail – you're measuring the point each package arrives in your possession, which is fine.
 
-However, this all falls down if the response has a `Content-Encoding`, because in that case the `Content-Length` represents the encoded size, but the chunks are _decoded_ chunks. This means your `downloaded` value is likely to exceed the `contentLength` value.
+However, this all falls down if the response has a `Content-Encoding` (such as brotli or gzip), because in that case the `Content-Length` represents the encoded size, but the chunks are _decoded_ chunks. This means your `downloaded` value is likely to exceed the `contentLength` value.
+
+Although, if you made that mistake, you wouldn't be alone. A few years ago [I investigated how browsers handled download progress of compressed resources](https://x.com/jaffathecake/status/996720153575546880), and the results were… messy.
 
 There's [a feature request for a way to get the raw body](https://github.com/whatwg/fetch/issues/1524), without decompressing.
 
