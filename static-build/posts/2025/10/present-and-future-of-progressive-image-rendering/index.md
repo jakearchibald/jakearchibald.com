@@ -1,5 +1,5 @@
 ---
-title: The present and possible future of progressive image rendering
+title: The present and potential future of progressive image rendering
 date: 2025-10-15 01:00:00
 summary: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 meta: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
@@ -52,15 +52,15 @@ For completion, [here's a demo](https://random-stuff.jakearchibald.com/apps/part
 
 ## WebP
 
-WebP renders from top to bottom, and there's no progressive option. It also takes around 43 kB (28%) before it renders anything.
+In Firefox and Chrome, WebP renders from top to bottom. It also takes around 43 kB (28%) before it renders anything. I guess the start of the file contains the colour data, so it can only render progressively as it starts receiving the final luma channel.
 
-[Here's a demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox.webp&density=2), in case your imagination can't figure it out 😀
+Safari unfortunately doesn't perform any progressive rendering of WebP. It doesn't render anything until it has the whole file.
 
-I guess the start of the file contains the colour data, so it can only render progressively as it starts receiving the final luma channel.
+[Here's a live demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox.webp&density=2).
 
 ## AVIF
 
-Regular AVIF don't support any kind of progressive rendering. You get nothing, then you get the whole image ([demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox.avif&density=2)).
+Regular AVIF doesn't support any kind of progressive rendering. You get nothing, then you get the whole image ([demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox.avif&density=2)).
 
 But, AVIF does have a little-known progressive rendering feature! I couldn't get good results with the `--progressive` flag it offers, but I got something interesting with the lower level `--layered` flag. It's experimental, and I had to compile libavif myself to get it working. Here's the command I used:
 
