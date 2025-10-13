@@ -1,8 +1,8 @@
 ---
 title: The present and possible future of progressive image rendering
 date: 2025-10-15 01:00:00
-summary: TODO
-meta: TODO
+summary: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
+meta: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 #image: './img.png'
 ---
 
@@ -123,7 +123,7 @@ I thought that "fast decoding" was one of the selling points of JPEG XL over AVI
 
 [We have a Rust implementation of JPEG XL underway in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1986393), but performance needs to get a lot better before we can land it.
 
-# Do we actually benefit from progressive decoding?
+# But do we actually benefit from progressive rendering?
 
 <figure class="full-figure max-figure">
   <img src="asset-url:./imgs/f1.avif" loading="lazy" width="1598" height="1478" alt="A old Williams F1 car speeding up a hill" style="height:auto" />
@@ -141,6 +141,8 @@ That means seeing a progressive render requires a particular mix of good and bad
 
 - Bad luck: your connection isn't great, so it's taking a while to fetch the whole image.
 - Good luck: a portion of the image has been received.
+
+Progressive rendering is a good experience when you hit this (not-)sweet spot, but you might not get to see it even on slow connections. It certainly isn't an alternative to taking care over your image sizes.
 
 Because of this, it feels like encoding an image in a way that enables a progressive render should be minimal cost in terms of file size overhead, and minimal/zero cost in decoding overhead in cases where progressive isn't needed.
 
@@ -237,7 +239,7 @@ It's subjective, but I'd say the 5.8 kB AVIF progressive render from earlier is,
 
 So if the browser manages to download 6 kB then stalls, then AVIF can produce a better result. But since the AVIF rendering is only two-pass, if the browser has say 50 kB, then the JPEG XL rendering is much better.
 
-This is all just 'in theory' until becomes fast enough to land in a browser. But [the implementation underway in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1986393) is based on jxl-oxide, so could have the same progressive decoding capabilities.
+This is all just 'in theory' until becomes fast enough to land in a browser. But [the implementation underway in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1986393) is based on jxl-oxide, so could have the same progressive rendering capabilities.
 
 # A better 'progressive' feature for AVIF?
 
