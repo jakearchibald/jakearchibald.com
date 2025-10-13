@@ -177,6 +177,8 @@ It might be workable along with a new browser feature, where the ranges are know
 
 But even if we get this `#range=` feature (and there's some big questions around CORS here that could make it a no-go), the complexity is about the same as responsive images are today, and there you get more control over the available resolutions.
 
+An advantage of the 'range' approach is the browser could 'resume' the image download if it later finds it needs a higher resolution, such as going from thumbnail to full-screen.
+
 # Potential progressive rendering with JPEG XL
 
 Aside from browser decoders, there's some promising work in terms of progressive rendering of JPEG XL. Although, it's unclear how much of it could make it into a browser, and the encoder settings are a little confusing.
