@@ -189,7 +189,7 @@ It doesn't seem like `progressive_dc` has an impact on file size. If it does, it
 
 djxl doesn't support the earlier rendering that `--progressive_dc` offers, but there's also a Rust-based decoder, [jxl-oxide](https://github.com/tirr-c/jxl-oxide), which can handle earlier rendering.
 
-jxl-oxide isn't fast enough for browser usage right now (folks are working on that), but it's an interesting preview of what's possible. There's also a [neat wasm version, that lets you see partial renders](https://jxl-oxide.tirr.dev/demo/index.html). Here's a [progressive version of the fox image](asset-url:./imgs/fox-progressive.jxl), if you want to try it yourself. Otherwise, here's a rough guide:
+jxl-oxide isn't fast enough for browser, but it's an interesting preview of what's possible. There's also a [neat wasm version, that lets you see partial renders](https://jxl-oxide.tirr.dev/demo/index.html). Here's a [progressive version of the fox image](asset-url:./imgs/fox-progressive.jxl), if you want to try it yourself. Otherwise, here's a rough guide:
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -239,7 +239,9 @@ It's subjective, but I'd say the 5.8 kB AVIF progressive render from earlier is,
 
 So if the browser manages to download 6 kB then stalls, then AVIF can produce a better result. But since the AVIF rendering is only two-pass, if the browser has say 50 kB, then the JPEG XL rendering is much better.
 
-This is all just 'in theory' until becomes fast enough to land in a browser. But [the implementation underway in Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1986393) is based on jxl-oxide, so could have the same progressive rendering capabilities.
+This is all just 'in theory' until becomes fast enough to land in a browser.
+
+There's another JPEG XL rust decoder jxl-rs, [being developed for Firefox](https://bugzilla.mozilla.org/show_bug.cgi?id=1986393). That team are also exploring how progressive rendering could work within the browser.
 
 # A better 'progressive' feature for AVIF?
 
