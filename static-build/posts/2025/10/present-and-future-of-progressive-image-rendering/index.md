@@ -1,6 +1,6 @@
 ---
 title: The present and potential future of progressive image rendering
-date: 2025-10-15 01:00:00
+date: 2025-10-16 01:00:00
 summary: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 meta: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 image: './img.jpg'
