@@ -12,8 +12,7 @@
  */
 import { h, FunctionalComponent, Fragment } from 'preact';
 import BasePage from 'static-build/components/base';
-import { getPostUrl, siteOrigin } from 'static-build/utils';
-import { format as dateFormat } from 'date-and-time';
+import { dateFormat, getPostUrl, siteOrigin } from 'static-build/utils';
 import Who from 'static-build/components/who';
 
 import iconUrl from 'asset-url:./icon.png';

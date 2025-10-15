@@ -12,8 +12,7 @@
  */
 import { h, FunctionalComponent } from 'preact';
 import BasePage from 'static-build/components/base';
-import { getPostUrl } from 'static-build/utils';
-import { format as dateFormat } from 'date-and-time';
+import { dateFormat, getPostUrl } from 'static-build/utils';
 import Who from 'static-build/components/who';
 
 interface PaginationProps {

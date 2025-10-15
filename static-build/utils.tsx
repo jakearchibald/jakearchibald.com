@@ -12,6 +12,7 @@
  */
 import { promises as fsp } from 'fs';
 import { join as joinPath } from 'path';
+import { format as dateFormatLib } from 'date-and-time';
 
 import render from 'preact-render-to-string';
 import { VNode } from 'preact';
@@ -66,3 +67,7 @@ export const siteOrigin = (() => {
   );
   return 'https://jakearchibald.com';
 })();
+
+export function dateFormat(date: Date, format: string): string {
+  return dateFormatLib(date, format, { timeZone: 'UTC' });
+}

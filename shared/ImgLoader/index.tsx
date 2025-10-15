@@ -1,6 +1,6 @@
 import { Component, createRef, Fragment, FunctionalComponent, h } from 'preact';
 import AsyncContent, { Styles as AsyncContentStyle } from 'shared/AsyncContent';
-import Tabs, { Styles as TabsStyles } from 'shared/Tabs';
+import { Styles as TabsStyles } from 'shared/Tabs';
 import DecodedImg from 'shared/DecodedImg';
 
 const styles = `

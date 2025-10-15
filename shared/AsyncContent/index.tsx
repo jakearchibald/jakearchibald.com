@@ -37,7 +37,7 @@ interface State {
   showLoading: boolean;
 }
 
-export default class ImageTabs extends Component<Props, State> {
+export default class AsyncContent extends Component<Props, State> {
   state: State = {
     showLoading: false,
   };

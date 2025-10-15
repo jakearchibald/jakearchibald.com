@@ -2,10 +2,13 @@ import { Component, FunctionalComponent, h } from 'preact';
 
 const styles = `
 .tabs-component {
+  display: flex;
+  flex-flow: row wrap;
+}
+.tabs-component-tab {
+  flex: 1;
+  min-width: 70px;
   display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: 1fr;
-  border-top: 7px solid #ffe454;
 }
 .tabs-component input[type=radio] {
   position: absolute;
@@ -13,6 +16,7 @@ const styles = `
   pointer-events: none;
 }
 .tabs-component-label {
+  border-top: 7px solid #ffe454;
   padding: 0.7em 0.7em;
   text-align: center;
   cursor: pointer;
@@ -28,9 +32,6 @@ input[type=radio]:focus-visible + .tabs-component-label {
 input[type=radio]:focus-visible:checked + .tabs-component-label {
   background: #ffc254;
 }
-.tabs-component-tab {
-  display: grid;
-}
 `;
 
 export const Styles: FunctionalComponent = () => (
@@ -43,7 +44,7 @@ interface Props {
   onChange: (index: number) => void;
 }
 
-export default class ImageTabs extends Component<Props> {
+export default class Tabs extends Component<Props> {
   private _onChange = (event: Event) => {
     const num = Number(
       new FormData(event.currentTarget as HTMLFormElement).get('tabs'),
