@@ -1,6 +1,6 @@
 ---
 title: The present and potential future of progressive image rendering
-date: 2025-10-16 01:00:00
+date: 2025-10-15 01:00:00
 summary: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 meta: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 image: './img.jpg'
@@ -143,6 +143,8 @@ That means seeing a progressive render requires a particular mix of good and bad
 Progressive rendering is a good experience when you hit this (not-)sweet spot, but you might not get to see it even on slow connections. It certainly isn't an alternative to taking care over your image sizes.
 
 Because of this, it feels like encoding an image in a way that enables a progressive render should be minimal cost in terms of file size overhead, and minimal/zero cost in decoding overhead in cases where progressive isn't needed.
+
+I know that's a weak 'story'. When I set about writing this article, I intended it to be a strong argument for progressive rendering. But after digging into it, my feelings are less certain.
 
 # What about progressive rendering instead of responsive images?
 
