@@ -3,7 +3,7 @@ title: The present and potential future of progressive image rendering
 date: 2025-10-15 01:00:00
 summary: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
 meta: Exploring progressive image rendering across JPEG, PNG, WebP, AVIF, and JPEG XL.
-#image: './img.png'
+image: './img.jpg'
 ---
 
 Progressive image formats allow the decoder to create a partial rendering when only part of the image resource is available. Sometimes it's a part of the image, and sometimes it's a low quality/resolution version of the image. I've been digging into it recently, and I think there are some common misconceptions, and a more pragmatic solution I'd like to see from AVIF.
