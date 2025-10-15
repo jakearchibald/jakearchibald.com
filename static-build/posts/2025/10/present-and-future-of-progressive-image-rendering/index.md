@@ -42,7 +42,7 @@ After that, the resolution is improved over multiple passes.
 
 With JPEG, progressive rendering seems to be free in terms of quality/size, but it isn't free in terms of decoding time.
 
-[Here's another little web app](https://random-stuff.jakearchibald.com/apps/img-decode-bench/), this time to benchmark image decoding in the browser. Comparing [progressive JPEG](https://random-stuff.jakearchibald.com/apps/img-decode-bench/?demo=fox-progressive.jpg) with [non-progressive JPEG](https://random-stuff.jakearchibald.com/apps/img-decode-bench/?demo=fox-no-progressive.jpg), the progressive JPEG takes around 40% longer to decode, but on my M4 pro that's only about 1.3ms, which seems like a reasonable trade-off.
+[Here's another little web app](https://random-stuff.jakearchibald.com/apps/img-decode-bench/), this time to benchmark image decoding in the browser. Comparing [progressive JPEG](https://random-stuff.jakearchibald.com/apps/img-decode-bench/?demo=fox.jpg) with [non-progressive JPEG](https://random-stuff.jakearchibald.com/apps/img-decode-bench/?demo=fox-no-progressive.jpg), the progressive JPEG takes around 40% longer to decode, but on my M4 pro that's only about 1.3ms, which seems like a reasonable trade-off.
 
 ## PNG
 
