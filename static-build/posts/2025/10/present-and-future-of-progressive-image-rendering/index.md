@@ -12,7 +12,7 @@ Let's dive straight into the kinds of progressive rendering that are currently a
 
 # The current state of progressive image rendering in browsers
 
-Here's the image I'm going to use for comparison:
+Here's the image I'm going to use for comparison, and you'll be sick of seeing it by the end of the article:
 
 <figure class="full-figure max-figure">
   <img src="asset-url:./imgs/fox.avif" loading="lazy" width="1598" height="1753" alt="A winter photo of a fox, standing on grass, with foliage in the background" style="height:auto" />
