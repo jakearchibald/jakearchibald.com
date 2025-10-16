@@ -69,7 +69,7 @@ avifenc -s 0 -y 420 --layered \
   fox-progressive.avif
 ```
 
-This creates two layers, one at 1/8th resolution and 'minimum' quality, and one at full resolution and good quality. These layers work similarly to frames of a video, with the second layer using data from the first to save space
+This creates two layers, one at 1/8th resolution and 'minimum' quality, and one at full resolution and good quality. These layers work similarly to frames of a video, with the second layer using data from the first to save space (a P-frame in video terms).
 
 [Here's a demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox-progressive.avif&density=2). It only progressively renders in Chromium browsers. You get two renders: the full image when all the data has been received, and an earlier render at ~5.8 kB (4% of the data):
 
