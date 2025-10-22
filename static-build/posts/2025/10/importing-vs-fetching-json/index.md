@@ -1,6 +1,6 @@
 ---
 title: Importing vs fetching JSON
-date: 2025-10-21 01:00:00
+date: 2025-10-22 01:00:00
 summary: They behave differently, so make sure you pick the right one.
 meta: They behave differently, so make sure you pick the right one.
 image: './img.png'
