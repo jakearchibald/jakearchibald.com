@@ -95,6 +95,10 @@ If the above used `fetch()`, then the data other than `someSmallPart` could be g
 
 It makes sense to use JSON module imports for local static JSON resources where you need all/most of the data within. Particularly since bundlers can understand JSON imports, and bundle the object with other modules. That isn't possible with `fetch()`, unless you use some pretty hacky plugins.
 
-In server code, I might import `package.json` to get the version number. However, I wouldn't do this with frontend code, as it's wasteful to bundle all of `package.json` just to get a single value – bundlers don't perform tree-shaking of individual object keys. Instead, I'd write a Vite/Rollup plugin to extract just the data I needed at build time (with Vite, [the define option](https://vite.dev/config/shared-options.html#define) is handy).
+In server code, I might import `package.json` to get the version number. However, I wouldn't do this with frontend code, as it's wasteful to bundle all of `package.json` just to get a single value – bundlers don't perform tree-shaking of individual object keys.
+
+**Update:** [Jed points out](https://mastodon.social/@jed/115418637695312552) that [esbuild has an option](https://esbuild.github.io/content-types/#json) at allows you to import JSON as if each top level key is individually exported, and in this case it will tree-shake. You could make a fairly trivial plugin to make the same work for Rollup/Vite. It still requires you to use the right kind of import, though.
+
+Generally, I'd write a Vite/Rollup plugin to extract just the data I needed at build time (with Vite, [the define option](https://vite.dev/config/shared-options.html#define) is handy).
 
 I'm glad this feature exists, but it should be used with care, and not as a blanket replacement for `fetch()`ing JSON.
