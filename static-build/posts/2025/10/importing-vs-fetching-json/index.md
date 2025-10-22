@@ -86,7 +86,7 @@ let { default: largeData } = await import('/large-data.json', {
 });
 
 const someSmallPart = largeData.slice(0, 10);
-let largeData = null;
+largeData = null;
 ```
 
 If the above used `fetch()`, then the data other than `someSmallPart` could be garbage collected. But with `import()`, the whole `largeData` object remains in memory for the life of the page.
