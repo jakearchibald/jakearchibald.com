@@ -18,7 +18,9 @@ const { default: data } = await import('./data.json', {
 });
 ```
 
-I'm glad JavaScript has this feature, but I can't see myself using it in a browser environment, other than small demos. It comes down to the behaviour differences with this:
+I'm glad JavaScript has this feature, but I can't see myself using it in a browser environment, other than small demos. I might still use it in frontend source code, but generally only in cases where it'd be bundled away before reaching the browser.
+
+It comes down to the behaviour differences compared to this:
 
 ```js
 const response = await fetch('./data.json');
@@ -97,8 +99,22 @@ It makes sense to use JSON module imports for local static JSON resources where 
 
 In server code, I might import `package.json` to get the version number. However, I wouldn't do this with frontend code, as it's wasteful to bundle all of `package.json` just to get a single value – bundlers don't perform tree-shaking of individual object keys.
 
-**Update:** [Jed points out](https://mastodon.social/@jed/115418637695312552) that [esbuild has an option](https://esbuild.github.io/content-types/#json) at allows you to import JSON as if each top level key is individually exported, and in this case it will tree-shake. You could make a fairly trivial plugin to make the same work for Rollup/Vite. It still requires you to use the right kind of import, though.
+**Update:** [Jed](https://mastodon.social/@jed/115418637695312552) and [leah](https://bsky.app/profile/uncenter.dev/post/3m3sb5ihaks2g) point out, many bundlers (esbuild, Vite, and Rollup at least) will expose top level keys as individual exports if you use their non-standard JSON import syntax.
 
-Generally, I'd write a Vite/Rollup plugin to extract just the data I needed at build time (with Vite, [the define option](https://vite.dev/config/shared-options.html#define) is handy).
+```js
+// No treeshaking
+import data from './package.json' assert { type: 'json' };
+console.log(data.version);
 
-I'm glad this feature exists, but it should be used with care, and not as a blanket replacement for `fetch()`ing JSON.
+// No treeshaking
+import data from './package.json';
+console.log(data.version);
+
+// Treeshaking works!
+import { version } from './package.json';
+console.log(version);
+```
+
+This only tree-shakes the top-level keys, so if your data is deeply nested, you're still bundling more than you need. Generally, I try to turn any "fetch-and-process" logic into a Vite/Rollup plugin, so it happens at build time rather than runtime.
+
+I'm glad native JSON importing feature exists, but it should be used with care, and not as a blanket replacement for `fetch()`ing JSON.
