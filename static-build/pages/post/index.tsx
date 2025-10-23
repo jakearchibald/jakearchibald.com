@@ -76,6 +76,10 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
           <meta property="twitter:title" content={escapeMeta(post.title)} />
           <meta property="og:title" content={escapeMeta(post.title)} />
           <meta property="og:description" content={escapeMeta(post.meta)} />
+          <meta
+            name="fediverse:creator"
+            content="@jaffathecake@mastodon.social"
+          />
           {post.scripts.map(
             (script) =>
               !script.preloadOnly && (
