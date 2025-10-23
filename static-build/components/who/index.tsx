@@ -30,7 +30,8 @@ const Who: FunctionalComponent<{}> = () => (
 
     <p>
       Hello, I'm Jake and that's me there. The one that isn't a cat. I'm a
-      developer of sorts.
+      developer of sorts, working on{' '}
+      <a href="https://www.firefox.com/">Firefox</a>.
     </p>
     <h1>Links</h1>
     <ul class="icon-list">
