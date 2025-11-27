@@ -191,7 +191,7 @@ It doesn't seem like `progressive_dc` has an impact on file size. If it does, it
 
 djxl doesn't support the earlier rendering that `--progressive_dc` offers, but there's also a Rust-based decoder, [jxl-oxide](https://github.com/tirr-c/jxl-oxide), which can handle earlier rendering.
 
-jxl-oxide isn't fast enough for browser, but it's an interesting preview of what's possible. There's also a [neat wasm version, that lets you see partial renders](https://jxl-oxide.tirr.dev/demo/index.html). Here's a [progressive version of the fox image](asset-url:./imgs/fox-progressive.jxl), if you want to try it yourself. Otherwise, here's a rough guide:
+jxl-oxide isn't fast enough for browsers, but it's an interesting preview of what's possible. There's also a [neat wasm version, that lets you see partial renders](https://jxl-oxide.tirr.dev/demo/index.html). Here's a [progressive version of the fox image](asset-url:./imgs/fox-progressive.jxl), if you want to try it yourself. Otherwise, here's a rough guide:
 
 <figure class="full-figure max-figure">
 <script type="component">{
