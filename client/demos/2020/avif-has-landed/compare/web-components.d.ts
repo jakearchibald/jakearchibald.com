@@ -1,16 +1,17 @@
-import type { JSXInternal } from 'preact/src/jsx';
+import type { HTMLAttributes } from 'preact';
 
-declare module 'preact/src/jsx' {
-  namespace JSXInternal {
+declare global {
+  namespace preact.JSX {
     interface IntrinsicElements {
       'two-up': TwoUpAttributes;
       'pinch-zoom': HTMLAttributes;
     }
-    interface HTMLAttributes { }
   }
 }
 
-interface TwoUpAttributes extends JSXInternal.HTMLAttributes {
+interface TwoUpAttributes extends HTMLAttributes {
   'legacy-clip-compat'?: boolean;
   orientation?: 'horizontal' | 'vertical';
 }
+
+export {};

@@ -2,7 +2,11 @@
   "extends": "../generic-tsconfig.json",
   "compilerOptions": {
     "lib": ["esnext", "dom"],
-    "types": ["node"]
+    "types": ["node"],
+    "paths": {
+      "shared/*": ["../shared/*"],
+      "static-build/*": ["../static-build/*"]
+    }
   },
   "references": [{ "path": "../client" }, { "path": "../shared" }]
 }

@@ -2,7 +2,11 @@
   "extends": "../generic-tsconfig.json",
   "compilerOptions": {
     "lib": ["esnext", "dom", "dom.iterable"],
-    "types": []
+    "types": [],
+    "paths": {
+      "shared/*": ["../shared/*"],
+      "static-build/*": ["../static-build/*"]
+    }
   },
   "references": [{ "path": "../shared" }, { "path": "../client-worker" }],
   "include": ["./**/*"]

@@ -2,7 +2,11 @@
   "extends": "../generic-tsconfig.json",
   "compilerOptions": {
     "lib": ["esnext", "webworker"],
-    "types": []
+    "types": [],
+    "paths": {
+      "shared/*": ["../shared/*"],
+      "static-build/*": ["../static-build/*"]
+    }
   },
   "references": [{ "path": "../shared" }],
   "include": ["./**/*"]

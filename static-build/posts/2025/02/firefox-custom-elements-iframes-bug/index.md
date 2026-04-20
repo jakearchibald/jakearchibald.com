@@ -7,6 +7,8 @@ meta: A tricksy Firefox bug and how to work around it.
 
 Over at Shopify we've been building a bunch of web components to use internally and in third party contexts. All of a sudden, we found some strange errors in our logs, all from Firefox. This is the post I wish existed when we discovered it.
 
+**Update:** This is [now fixed](https://bugzilla.mozilla.org/show_bug.cgi?id=1470017), and should land in Firefox 151.
+
 # The bug
 
 The bug happens when a custom element (or web component) is moved to a document from another JavaScript Realm _[spooky noises]_. A Realm is a separate JavaScript context with its own global, own implementation of `Array` etc etc. An iframe or popup window provides a document in a new JavaScript Realm.

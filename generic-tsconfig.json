@@ -1,16 +1,15 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "target": "ES2019",
-    "downlevelIteration": true,
+    "target": "es2025",
     "module": "esnext",
     "jsx": "react",
     "jsxFactory": "h",
     "strict": true,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": ".tmp/ts",
     "composite": true,
     "declarationMap": true,
-    "baseUrl": "./",
     "rootDir": "./",
     "allowSyntheticDefaultImports": true
   }
