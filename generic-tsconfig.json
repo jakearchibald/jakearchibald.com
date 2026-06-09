@@ -7,6 +7,7 @@
     "jsxFactory": "h",
     "strict": true,
     "moduleResolution": "bundler",
+    "skipLibCheck": true,
     "outDir": ".tmp/ts",
     "composite": true,
     "declarationMap": true,
