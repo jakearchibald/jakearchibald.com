@@ -7,7 +7,7 @@ code: shiki
 #image: './img.png'
 ---
 
-I recently gave a talk on customizable (as in fully-stylable) `<select>`, and as I was building demos I realised there's a sizing 'pattern' that's mostly the-one-you-want, but it took me a long time to figure out how to do it in CSS.
+I recently gave a talk on customizable (as in fully-stylable) `<select>`, and as I was building demos I realised there's a sizing 'pattern' that's almost always the-one-you-want, but it took me a long time to figure out how to do it in CSS.
 
 Well, I say I figured it out. I actually failed, and asked a bunch of people for help, who (thankfully, for my ego) also struggled. Eventually, [Ian Kilpatrick](https://bsky.app/profile/bfgeek.bsky.social) pointed me at the feature I was missing…
 
@@ -180,164 +180,9 @@ Here's a mock-up of a custom select:
       background: #e0e7ea;
     }
   }
-
-  .toggle-button-panner {
-    position: relative;
-    touch-action: none;
-    width: fit-content;
-
-    /* Shared button look */
-    & button {
-      appearance: none;
-      margin: 0;
-      display: flex;
-      align-items: stretch;
-      border-radius: 0.375em;
-      overflow: clip;
-      background: #e9e9ed;
-      border: 0.0625em solid #b0b0b8;
-      box-shadow: 0 0.0625em 0.0625em rgba(0, 0, 0, 0.08);
-      color: #1c1c1e;
-      font: inherit;
-      padding: 0;
-      cursor: pointer;
-
-      &:hover {
-        background: #dededf;
-      }
-      &:active {
-        background: #d4d4d6;
-      }
-
-      & > .label {
-        padding: 0.6em 0.7em;
-        line-height: 1;
-      }
-    }
-
-    & .panner {
-      display: grid;
-      place-items: center;
-      padding: 0 0.3em;
-      cursor: grab;
-      touch-action: none;
-      /* Visually separate from, but joined to, the button */
-      border-right: 0.0625em solid #b0b0b8;
-
-      &:active {
-        cursor: grabbing;
-      }
-
-      & > svg {
-        display: block;
-        pointer-events: none;
-        fill: #5c5c61;
-        width: 20px;
-        aspect-ratio: 1;
-      }
-    }
-
-    &.dragging .panner {
-      cursor: grabbing;
-    }
-
-    /* Reset button only appears once the toggle button has been moved away */
-    & > .reset {
-      display: none;
-    }
-
-    &.moved {
-      & > .toggle {
-        /* Lift out of flow only once moved, positioned at the drop point */
-        position: absolute;
-        top: var(--panner-y, 0px);
-        left: var(--panner-x, 0px);
-        margin: 0;
-      }
-
-      & > .reset {
-        display: flex;
-      }
-    }
-  }
 </style>
 
-<div class="toggle-button-panner">
-  <button class="toggle" command="toggle-popover" commandfor="select-picker">
-    <span class="panner"><svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-80 310-250l57-57 73 73v-206H235l73 72-58 58L80-480l169-169 57 57-72 72h206v-206l-73 73-57-57 170-170 170 170-57 57-73-73v206h205l-73-72 58-58 170 170-170 170-57-57 73-73H520v205l72-73 58 58L480-80Z"/></svg></span>
-    <span class="label">Toggle</span>
-  </button>
-  <button class="reset" type="button">
-    <span class="label">Reset</span>
-  </button>
-</div>
-
-<script>
-  {
-    const group = document.currentScript.previousElementSibling;
-    const toggle = group.querySelector('.toggle');
-    const reset = group.querySelector('.reset');
-    const panner = group.querySelector('.panner');
-
-    let pointerId = null;
-    // Position of the toggle's top-left at grab time, and where the pointer
-    // started, both relative to the group (the offset parent once moved).
-    let baseX = 0;
-    let baseY = 0;
-    let startX = 0;
-    let startY = 0;
-
-    panner.addEventListener('pointerdown', (event) => {
-      if (pointerId !== null) return;
-      pointerId = event.pointerId;
-      panner.setPointerCapture(pointerId);
-      group.classList.add('dragging');
-
-      // Capture the current position relative to the group before going
-      // absolute, so the button doesn't jump on the first move.
-      const groupRect = group.getBoundingClientRect();
-      const toggleRect = toggle.getBoundingClientRect();
-      baseX = toggleRect.left - groupRect.left;
-      baseY = toggleRect.top - groupRect.top;
-      startX = event.clientX;
-      startY = event.clientY;
-    });
-
-    panner.addEventListener('pointermove', (event) => {
-      if (event.pointerId !== pointerId) return;
-      // First movement lifts the button out of flow and reveals Reset.
-      group.classList.add('moved');
-      group.style.setProperty('--panner-x', `${baseX + event.clientX - startX}px`);
-      group.style.setProperty('--panner-y', `${baseY + event.clientY - startY}px`);
-    });
-
-    const end = (event) => {
-      if (event.pointerId !== pointerId) return;
-      panner.releasePointerCapture(pointerId);
-      pointerId = null;
-      group.classList.remove('dragging');
-    };
-
-    panner.addEventListener('pointerup', end);
-    panner.addEventListener('pointercancel', end);
-
-    // The panner lives inside the button, so swallow its activation: a tap or
-    // drag on the panner should never fire the button's toggle command.
-    panner.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-    });
-
-    // Reset drops the toggle button back into its original place in flow.
-    reset.addEventListener('click', () => {
-      group.classList.remove('moved');
-      group.style.removeProperty('--panner-x');
-      group.style.removeProperty('--panner-y');
-    });
-  }
-</script>
-
-<div id="select-picker" class="ua-picker-styles select-picker" popover>
+<div id="select-picker" popover>
   <div class="select-picker-box">
     <div class="select-picker-group">
       <div class="select-picker-legend">Markup Languages</div>
@@ -726,17 +571,211 @@ Here's a mock-up of a custom select:
   </div>
 </div>
 
+<toggle-picker data-picker-classes="ua-picker-styles select-picker"></toggle-picker>
+
 <script>
   document.getElementById('select-picker').addEventListener('click', (event) => {
     event.currentTarget.hidePopover();
   });
+
+  const picker = document.getElementById('select-picker');
+
+  customElements.define(
+    'toggle-picker',
+    class extends HTMLElement {
+      #group;
+      #toggle;
+      #reset;
+      #panner;
+
+      connectedCallback() {
+        if (this.shadowRoot) return;
+
+        const root = this.attachShadow({ mode: 'open' });
+        root.innerHTML = `
+          <style>
+            :host {
+              display: block;
+            }
+            .toggle-button-panner {
+              position: relative;
+              touch-action: none;
+              width: fit-content;
+            }
+
+            /* Shared button look */
+            button {
+              appearance: none;
+              margin: 0;
+              display: flex;
+              align-items: stretch;
+              border-radius: 0.375em;
+              overflow: clip;
+              background: #e9e9ed;
+              border: 0.0625em solid #b0b0b8;
+              box-shadow: 0 0.0625em 0.0625em rgba(0, 0, 0, 0.08);
+              color: #1c1c1e;
+              font: inherit;
+              padding: 0;
+              cursor: pointer;
+
+              &:hover {
+                background: #dededf;
+              }
+              &:active {
+                background: #d4d4d6;
+              }
+
+              & > .label {
+                padding: 0.6em 0.7em;
+                line-height: 1;
+              }
+            }
+
+            .panner {
+              display: grid;
+              place-items: center;
+              padding: 0 0.3em;
+              cursor: grab;
+              touch-action: none;
+              /* Visually separate from, but joined to, the button */
+              border-right: 0.0625em solid #b0b0b8;
+
+              &:active {
+                cursor: grabbing;
+              }
+
+              & > svg {
+                display: block;
+                pointer-events: none;
+                fill: #5c5c61;
+                width: 20px;
+                aspect-ratio: 1;
+              }
+            }
+
+            .toggle-button-panner.dragging .panner {
+              cursor: grabbing;
+            }
+
+            /* Reset button only appears once the toggle button has moved away */
+            .reset {
+              display: none;
+            }
+
+            .toggle-button-panner.moved {
+              & > .toggle {
+                /* Lift out of flow only once moved, positioned at the drop point */
+                position: absolute;
+                top: var(--panner-y, 0px);
+                left: var(--panner-x, 0px);
+                margin: 0;
+              }
+
+              & > .reset {
+                display: flex;
+              }
+            }
+          </style>
+
+          <div class="toggle-button-panner">
+            <button class="toggle" type="button" command="toggle-popover">
+              <span class="panner"><svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-80 310-250l57-57 73 73v-206H235l73 72-58 58L80-480l169-169 57 57-72 72h206v-206l-73 73-57-57 170-170 170 170-57 57-73-73v206h205l-73-72 58-58 170 170-170 170-57-57 73-73H520v205l72-73 58 58L480-80Z"/></svg></span>
+              <span class="label">Toggle</span>
+            </button>
+            <button class="reset" type="button">
+              <span class="label">Reset</span>
+            </button>
+          </div>
+        `;
+
+        this.#group = root.querySelector('.toggle-button-panner');
+        this.#toggle = root.querySelector('.toggle');
+        this.#reset = root.querySelector('.reset');
+        this.#panner = root.querySelector('.panner');
+
+        this.#toggle.addEventListener('click', (event) => {
+          event.preventDefault();
+          picker.className = this.dataset.pickerClasses || '';
+          picker.togglePopover({ source: this.#toggle });
+        });
+
+        this.#toggle.commandForElement = picker;
+
+        this.#wireDrag();
+        this.#reset.addEventListener('click', () => this.#resetPosition());
+      }
+
+      #resetPosition() {
+        this.#group.classList.remove('moved');
+        this.#group.style.removeProperty('--panner-x');
+        this.#group.style.removeProperty('--panner-y');
+      }
+
+      #wireDrag() {
+        const group = this.#group;
+        const toggle = this.#toggle;
+        const panner = this.#panner;
+
+        let pointerId = null;
+        // Position of the toggle's top-left at grab time, and where the
+        // pointer started, both relative to the group (the offset parent).
+        let baseX = 0;
+        let baseY = 0;
+        let startX = 0;
+        let startY = 0;
+
+        panner.addEventListener('pointerdown', (event) => {
+          if (pointerId !== null) return;
+          pointerId = event.pointerId;
+          panner.setPointerCapture(pointerId);
+          group.classList.add('dragging');
+
+          // Capture the current position relative to the group before going
+          // absolute, so the button doesn't jump on the first move.
+          const groupRect = group.getBoundingClientRect();
+          const toggleRect = toggle.getBoundingClientRect();
+          baseX = toggleRect.left - groupRect.left;
+          baseY = toggleRect.top - groupRect.top;
+          startX = event.clientX;
+          startY = event.clientY;
+        });
+
+        panner.addEventListener('pointermove', (event) => {
+          if (event.pointerId !== pointerId) return;
+          // First movement lifts the button out of flow and reveals Reset.
+          group.classList.add('moved');
+          group.style.setProperty('--panner-x', `${baseX + event.clientX - startX}px`);
+          group.style.setProperty('--panner-y', `${baseY + event.clientY - startY}px`);
+        });
+
+        const end = (event) => {
+          if (event.pointerId !== pointerId) return;
+          panner.releasePointerCapture(pointerId);
+          pointerId = null;
+          group.classList.remove('dragging');
+        };
+
+        panner.addEventListener('pointerup', end);
+        panner.addEventListener('pointercancel', end);
+
+        // The panner lives inside the button, so swallow its activation: a tap
+        // or drag on the panner should never fire the button's toggle.
+        panner.addEventListener('click', (event) => {
+          event.preventDefault();
+          event.stopPropagation();
+        });
+      }
+    },
+
+);
 </script>
 
-It isn't actually a custom select. To make the demo work in both Firefox and Safari, and to make it easier for you to inspect with DevTools, I've built it from [invokers commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API), [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), and [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning), which are the same primitives custom select uses under the hood.
+It isn't actually a custom select. Firefox and Safari are actively working on custom select, but haven't released it yet, so to make the demos work everywhere, and to make it easier for you to inspect with DevTools, I've built the demos from [invokers commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API), [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), and [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning), which are the same primitives custom select uses under the hood.
 
 You can drag it around and see how it reacts to being in other parts of the viewport, and how it reacts to scrolling.
 
-Here are the default styles that are impacting the picker's position and height:
+Here are the default UA styles that impact the picker's position and height:
 
 ```css
 ::picker(select) {
@@ -754,7 +793,32 @@ Here are the default styles that are impacting the picker's position and height:
     self-block-end span-self-inline-start,
     self-block-start span-self-inline-start;
 
-  /* Not part of the spec, but something Chrome does, so I've included it */
+  /* Not part of the spec, but it's something Chrome does, so I've included it */
   min-block-size: 1lh;
+}
+```
+
+As a result:
+
+- `min-inline-size` means the picker will always be at least as wide as the `<select>` button (or toggle button in this case).
+- `max-block-size` means the picker will not overflow the viewport. Its `stretch` size is the full anchor positioning cell.
+- `position-area` defines the default anchor positioning cell to use, which is below the `<select>` button, and from its left edge to the right edge of the viewport.
+- `position-try-fallbacks` lets the anchor positioning cell change, so it can appear above the `<select>` button, and/or clamp to the button's right edge.
+- `position-try-order` means the picker will initially appear in the grid cell that offers it the `most-block-size`, which means vertical space in this writing-mode. This doesn't currently work in Firefox ([ticket](https://bugzilla.mozilla.org/show_bug.cgi?id=2050547)) or Safari ([ticket](https://bugs.webkit.org/show_bug.cgi?id=317916)), as it [wasn't clear in the spec](https://github.com/w3c/csswg-drafts/issues/13268#issuecomment-4801719311).
+
+This is a reasonable set of defaults, but I think there are number of things we can do to improve the UX.
+
+# Prevent the picker from hitting the viewport edge
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker"></toggle-picker>
+
+Right now the picker extends to the edge of the viewport, making it hard to tell if it's actually stopping there, or if it's overflowing the viewport. The only visual clue is the small border & rounded corners.
+
+Instead, I'll add a small margin:
+
+```css
+.custom-select::picker(select) {
+  margin-bottom: 10em; // [!code --]
+  margin-bottom: 1em; // [!code ++]
 }
 ```
