@@ -376,11 +376,11 @@ h2 + .max-figure {
       /* The +/- glyph sits in the reserved gutter, out of the grid flow. */
       &::before {
         position: absolute;
-        inset-inline-start: 20px;
+        inset-inline-start: 5px;
         opacity: 0.8;
 
         @media screen and (min-width: $mobile-boundry) {
-          inset-inline-start: 32px;
+          inset-inline-start: 8px;
         }
       }
 

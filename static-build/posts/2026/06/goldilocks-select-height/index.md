@@ -28,7 +28,6 @@ Here's a mock-up of a custom select:
     inset: auto;
     min-inline-size: anchor-size(self-inline);
     max-block-size: 100%;
-    max-block-size: -webkit-fill-available;
     max-block-size: stretch;
     position-area: self-block-end span-self-inline-end;
     position-try-order: most-block-size;
@@ -178,6 +177,50 @@ Here's a mock-up of a custom select:
 
     &:hover {
       background: #e0e7ea;
+    }
+  }
+
+  .margin-block-end {
+    margin-block-end: 1em;
+  }
+  .margin-firefox-fix {
+    --margin: 1em;
+    max-block-size: calc(100% - var(--margin));
+
+    @supports (max-block-size: stretch) {
+      max-block-size: stretch;
+      margin-block-end: var(--margin);
+    }
+  }
+  .margin-full-fix {
+    --margin: 1em;
+    max-block-size: calc(100% - var(--margin));
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+
+    @supports (max-block-size: stretch) {
+      max-block-size: stretch;
+      margin-block-end: var(--margin);
+    }
+  }
+  .min-size {
+    min-block-size: 12em;
+  }
+  .min-size-fix {
+    --min-size: 12em;
+    min-block-size: var(--min-size);
+
+    @supports (min-block-size: calc-size(fit-content, min(size, 10px))) {
+      min-block-size: calc-size(fit-content, min(size, var(--min-size)));
+    }
+
+    @supports not (min-block-size: calc-size(fit-content, min(size, 10px))) {
+      &:not(:has(:where(.select-picker-option:nth-child(5)))) {
+        min-block-size: 0;
+        max-block-size: fit-content;
+      }
     }
   }
 </style>
@@ -571,14 +614,121 @@ Here's a mock-up of a custom select:
   </div>
 </div>
 
+<div id="select-picker-small" popover>
+  <div class="select-picker-box">
+    <div class="select-picker-group">
+      <div class="select-picker-legend">The best Languages</div>
+      <div class="select-picker-option">
+        <span class="select-picker-lang-icon lang-blue" data-char=""></span>
+        HTML
+      </div>
+      <div class="select-picker-option">
+        <span class="select-picker-lang-icon lang-blue" data-char=""></span>
+        CSS
+      </div>
+      <div class="select-picker-option">
+        <span class="select-picker-lang-icon lang-purple" data-char=""></span>
+        SVG
+      </div>
+    </div>
+  </div>
+</div>
+
 <toggle-picker data-picker-classes="ua-picker-styles select-picker"></toggle-picker>
 
 <script>
-  document.getElementById('select-picker').addEventListener('click', (event) => {
-    event.currentTarget.hidePopover();
-  });
+  for (const picker of document.querySelectorAll('[id^="select-picker"]')) {
+    picker.addEventListener('click', (event) => {
+      event.currentTarget.hidePopover();
+    });
+  }
 
-  const picker = document.getElementById('select-picker');
+  const togglePickerStyles = new CSSStyleSheet();
+  togglePickerStyles.replaceSync(`
+    :host {
+      display: block;
+    }
+    .toggle-button-panner {
+      position: relative;
+      touch-action: none;
+      width: fit-content;
+    }
+
+    /* Shared button look */
+    button {
+      appearance: none;
+      margin: 0;
+      display: flex;
+      align-items: stretch;
+      border-radius: 0.375em;
+      overflow: clip;
+      background: #e9e9ed;
+      border: 0.0625em solid #b0b0b8;
+      box-shadow: 0 0.0625em 0.0625em rgba(0, 0, 0, 0.08);
+      color: #1c1c1e;
+      font: inherit;
+      padding: 0;
+      cursor: pointer;
+      white-space: nowrap;
+
+      &:hover {
+        background: #dededf;
+      }
+      &:active {
+        background: #d4d4d6;
+      }
+
+      & > .label {
+        padding: 0.6em 0.7em;
+        line-height: 1;
+      }
+    }
+
+    .panner {
+      display: grid;
+      place-items: center;
+      padding: 0 0.3em;
+      cursor: grab;
+      touch-action: none;
+      /* Visually separate from, but joined to, the button */
+      border-right: 0.0625em solid #b0b0b8;
+
+      &:active {
+        cursor: grabbing;
+      }
+
+      & > svg {
+        display: block;
+        pointer-events: none;
+        fill: #5c5c61;
+        width: 20px;
+        aspect-ratio: 1;
+      }
+    }
+
+    .toggle-button-panner.dragging .panner {
+      cursor: grabbing;
+    }
+
+    /* Reset button only appears once the toggle button has moved away */
+    .reset {
+      display: none;
+    }
+
+    .toggle-button-panner.moved {
+      & > .toggle {
+        /* Lift out of flow only once moved, positioned at the drop point */
+        position: absolute;
+        top: var(--panner-y, 0px);
+        left: var(--panner-x, 0px);
+        margin: 0;
+      }
+
+      & > .reset {
+        display: flex;
+      }
+    }
+  `);
 
   customElements.define(
     'toggle-picker',
@@ -587,101 +737,22 @@ Here's a mock-up of a custom select:
       #toggle;
       #reset;
       #panner;
+      #picker;
 
       connectedCallback() {
         if (this.shadowRoot) return;
 
+        this.#picker = document.getElementById(
+          this.dataset.picker || 'select-picker',
+        );
+
         const root = this.attachShadow({ mode: 'open' });
+        root.adoptedStyleSheets = [togglePickerStyles];
         root.innerHTML = `
-          <style>
-            :host {
-              display: block;
-            }
-            .toggle-button-panner {
-              position: relative;
-              touch-action: none;
-              width: fit-content;
-            }
-
-            /* Shared button look */
-            button {
-              appearance: none;
-              margin: 0;
-              display: flex;
-              align-items: stretch;
-              border-radius: 0.375em;
-              overflow: clip;
-              background: #e9e9ed;
-              border: 0.0625em solid #b0b0b8;
-              box-shadow: 0 0.0625em 0.0625em rgba(0, 0, 0, 0.08);
-              color: #1c1c1e;
-              font: inherit;
-              padding: 0;
-              cursor: pointer;
-
-              &:hover {
-                background: #dededf;
-              }
-              &:active {
-                background: #d4d4d6;
-              }
-
-              & > .label {
-                padding: 0.6em 0.7em;
-                line-height: 1;
-              }
-            }
-
-            .panner {
-              display: grid;
-              place-items: center;
-              padding: 0 0.3em;
-              cursor: grab;
-              touch-action: none;
-              /* Visually separate from, but joined to, the button */
-              border-right: 0.0625em solid #b0b0b8;
-
-              &:active {
-                cursor: grabbing;
-              }
-
-              & > svg {
-                display: block;
-                pointer-events: none;
-                fill: #5c5c61;
-                width: 20px;
-                aspect-ratio: 1;
-              }
-            }
-
-            .toggle-button-panner.dragging .panner {
-              cursor: grabbing;
-            }
-
-            /* Reset button only appears once the toggle button has moved away */
-            .reset {
-              display: none;
-            }
-
-            .toggle-button-panner.moved {
-              & > .toggle {
-                /* Lift out of flow only once moved, positioned at the drop point */
-                position: absolute;
-                top: var(--panner-y, 0px);
-                left: var(--panner-x, 0px);
-                margin: 0;
-              }
-
-              & > .reset {
-                display: flex;
-              }
-            }
-          </style>
-
           <div class="toggle-button-panner">
             <button class="toggle" type="button" command="toggle-popover">
               <span class="panner"><svg height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M480-80 310-250l57-57 73 73v-206H235l73 72-58 58L80-480l169-169 57 57-72 72h206v-206l-73 73-57-57 170-170 170 170-57 57-73-73v206h205l-73-72 58-58 170 170-170 170-57-57 73-73H520v205l72-73 58 58L480-80Z"/></svg></span>
-              <span class="label">Toggle</span>
+              <span class="label"><slot>Toggle picker</slot></span>
             </button>
             <button class="reset" type="button">
               <span class="label">Reset</span>
@@ -696,11 +767,11 @@ Here's a mock-up of a custom select:
 
         this.#toggle.addEventListener('click', (event) => {
           event.preventDefault();
-          picker.className = this.dataset.pickerClasses || '';
-          picker.togglePopover({ source: this.#toggle });
+          this.#picker.className = this.dataset.pickerClasses || '';
+          this.#picker.togglePopover({ source: this.#toggle });
         });
 
-        this.#toggle.commandForElement = picker;
+        this.#toggle.commandForElement = this.#picker;
 
         this.#wireDrag();
         this.#reset.addEventListener('click', () => this.#resetPosition());
@@ -773,6 +844,8 @@ Here's a mock-up of a custom select:
 
 It isn't actually a custom select. Firefox and Safari are actively working on custom select, but haven't released it yet, so to make the demos work everywhere, and to make it easier for you to inspect with DevTools, I've built the demos from [invokers commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API), [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), and [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning), which are the same primitives custom select uses under the hood.
 
+Unfortunately, the currently released versions of Safari have too many anchor positioning bugs to make these demos work, but they do work in Safari Technology Preview.
+
 You can drag it around and see how it reacts to being in other parts of the viewport, and how it reacts to scrolling.
 
 Here are the default UA styles that impact the picker's position and height:
@@ -818,7 +891,140 @@ Instead, I'll add a small margin:
 
 ```css
 .custom-select::picker(select) {
-  margin-bottom: 10em; // [!code --]
-  margin-bottom: 1em; // [!code ++]
+  margin-block-end: 1em;
 }
 ```
+
+Try it out:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-block-end"></toggle-picker>
+
+This isn't quite right, because:
+
+- In Firefox, it simply isn't working.
+- In Chrome & Safari, the margin is on the bottom, which looks bad when the picker flips above the button.
+
+## Fixing Firefox
+
+Remember when I said pickers have `max-block-size: stretch`? Well, Firefox doesn't support that, so I threw in `max-block-size: 100%` as a fallback. However, with percent heights, margins don't take away from the height, so the picker still hits the viewport edge, and the margin is outside it.
+
+We can work around it:
+
+```css
+.custom-select::picker(select) {
+  --margin: 1em;
+  max-block-size: calc(100% - var(--margin));
+
+  @supports (max-block-size: stretch) {
+    max-block-size: stretch;
+    margin-block-end: var(--margin);
+  }
+}
+```
+
+Now, for Firefox, we're deducting the margin from the max-block-size. For browsers that support `stretch`, we stick with the previous solution.
+
+And here's the result:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-firefox-fix"></toggle-picker>
+
+It even does the right thing when the picker flips above the button! So… why am I not using this solution for the other browsers? Well, there's a slight imperfection with how the percent solution behaves. See if you can spot it - I'll come back to it later.
+
+## Fixing Chrome & Safari
+
+We need to fix the margin when the picker flips above the button. Now, there's a feature called [anchored container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning/Anchored_container_queries) which lets us apply different styles when the anchored item flips position, but it isn't supported in Safari. However, we don't need it. Watch this…
+
+```css
+.custom-select::picker(select) {
+  --margin: 1em;
+  max-block-size: calc(100% - var(--margin));
+  /* prettier-ignore */
+  position-try-fallbacks: /* [!code ++] */
+    /* [!code ++] */
+    flip-block,
+    /* [!code ++] */
+    flip-inline,
+    /* [!code ++] */
+    flip-block flip-inline;
+
+  @supports (max-block-size: stretch) {
+    max-block-size: stretch;
+    margin-block-end: var(--margin);
+  }
+}
+```
+
+This replaces the UA default `position-try-fallbacks`, which were specific about the positioning, with these `flip` values that achieve the same thing. However, the `flip` values come with _dark magic_.
+
+When the flips take effect, it tries to flip other styles too. This works with some properties, but not others. [Here's the spec](https://drafts.csswg.org/css-anchor-position-1/#execute-a-try-tactic), good luck!
+
+Margin is one of the things it does work for, so when the picker flips above the button, our `margin-block-end` is treated as a `margin-block-start`. Spooky, yet convenient.
+
+Here's the result:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix"></toggle-picker>
+
+That's that problem sorted, but we still have work to do.
+
+# Prevent the picker from getting too small
+
+If you open the picker and drag it to the viewport edge, it gets really really small - unusably small, before it flips position. Chrome sets a default `min-block-size` of `1lh`, so let's just make that bigger!
+
+```css
+.custom-select::picker(select) {
+  min-block-size: 12em;
+}
+```
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size"></toggle-picker>
+
+Perfect, right onto the next… no, wait, this doesn't work…
+
+<toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size">Toggle small picker</toggle-picker>
+
+When the picker has only a few options, its full size is smaller than our minimum, so it looks kinda bad.
+
+What we want is for our minimum size to be like `min(auto, 12em)`, but `min()` doesn't allow intrinsic sizes. Enter [`calc-size()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/calc-size) - this was the bit Ian Kilpatrick unlocked for me:
+
+```css
+.custom-select::picker(select) {
+  min-block-size: calc-size(auto, min(size, 12em));
+}
+```
+
+`calc-size()` lets us state an intrinsic size in the first argument, then perform a calculation with it in the second argument, where the `size` keyword represents the intrinsic size. Yeah, it's a little weird, but it works! Well, it works in Chrome. It isn't yet supported in Firefox or Safari, so we can use a bit of a hack in the meantime:
+
+```css
+.custom-select::picker(select) {
+  --min-size: 12em;
+  min-block-size: var(--min-size);
+
+  @supports (min-block-size: calc-size(fit-content, min(size, 10px))) {
+    min-block-size: calc-size(fit-content, min(size, var(--min-size)));
+  }
+
+  @supports not (min-block-size: calc-size(fit-content, min(size, 10px))) {
+    &:not(
+      :has(:where(option:nth-of-type(4))),
+      :has(:where(optgroup:nth-of-type(2)))
+    ) {
+      min-block-size: 0;
+      max-block-size: fit-content;
+    }
+  }
+}
+```
+
+Ok, that's a lot. Here's what it's doing:
+
+1. Set a minimum block size of 12em from `--min-size`.
+2. If `calc-size()` is supported, use it as before.
+3. Otherwise, if the picker has fewer than 4 options or 2 optgroups, remove the minimum block size, and prevent it from shrinking when it hits the edge of the viewport.
+
+And here's the result:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix"></toggle-picker>
+
+<toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix">Toggle small picker</toggle-picker>
+
+TODO: have a bigger Safari warning
