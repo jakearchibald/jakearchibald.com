@@ -319,6 +319,49 @@ h2 + .max-figure {
     padding-right: 16px;
   }
 
+  &.code-example--shiki {
+    /* Lines wrap instead of scrolling, so restore the right padding the
+       scrolling layout drops on wider screens. */
+    @media screen and (min-width: $mobile-boundry) {
+      padding-right: 32px;
+    }
+
+    & pre.shiki {
+      background: none !important;
+      /* Let lines wrap rather than scroll horizontally. */
+      display: block;
+      white-space: normal;
+    }
+
+    /* Each line is a two-column grid: the leading indent in an auto-sized
+       column, the rest of the line in the second. When a long line wraps, its
+       continuation stays within the second column, so it lines up under the
+       start of the line's content instead of the gutter. */
+    & .line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      /* Preserve height for blank lines (which have no content). */
+      min-height: 1lh;
+    }
+
+    & .indent {
+      white-space: pre;
+    }
+
+    & .content {
+      white-space: pre-wrap;
+      /* Break long unbroken tokens (e.g. URLs) instead of overflowing. */
+      overflow-wrap: break-word;
+    }
+
+    /* The "\n" between lines is kept (so copied code keeps its line breaks) but
+       taken out of flow so it doesn't add blank lines on top of the block
+       layout. */
+    & .newline {
+      position: absolute;
+    }
+  }
+
   & code {
     font-family: inherit;
     background: none;
