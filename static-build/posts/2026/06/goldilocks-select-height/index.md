@@ -11,6 +11,8 @@ I recently gave a talk on customizable (as in fully-stylable) `<select>`, and as
 
 Well, I say I figured it out. I actually failed, and asked a bunch of people for help, who (thankfully, for my ego) also struggled. Eventually, [Ian Kilpatrick](https://bsky.app/profile/bfgeek.bsky.social) pointed me at the feature I was missing…
 
+TL;DR: If you just want the solution, [skip to the end](#putting-it-all-together).
+
 # Default sizing
 
 Here's a mock-up of a custom select:
