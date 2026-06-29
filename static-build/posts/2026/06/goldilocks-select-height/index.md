@@ -1,10 +1,10 @@
 ---
-title: Goldilocks <select> height
-date: 2026-06-25 01:00:00
+title: The Goldilocks customizable select height
+date: 2026-06-29 01:00:00
 summary: The 'ideal' sizing is more complicated than you think…
 meta: The 'ideal' sizing is more complicated than you think…
 code: shiki
-#image: './img.png'
+image: './img.png'
 ---
 
 I recently gave a talk on customizable (as in fully-stylable) `<select>`, and as I was building demos I realised there's a sizing 'pattern' that's almost always the-one-you-want, but it took me a long time to figure out how to do it in CSS.
@@ -65,7 +65,7 @@ Here's a mock-up of a custom select:
         @starting-style {
           translate: 0 -6.25em;
           /* flip-block, but explicit so all above-anchor fallbacks match */
-          @container anchored(fallback: self-block-start span-self-inline-end) or anchored(fallback: self-block-start span-self-inline-start) {
+          @container anchored(fallback: self-block-start span-self-inline-end) or anchored(fallback: self-block-start span-self-inline-start) or anchored(fallback: flip-block) or anchored(fallback: flip-block flip-inline) {
             translate: 0 6.25em;
           }
         }
@@ -84,7 +84,7 @@ Here's a mock-up of a custom select:
     translate: 0 -6.25em;
 
     /* flip-block, but explicit so all above-anchor fallbacks match */
-    @container anchored(fallback: self-block-start span-self-inline-end) or anchored(fallback: self-block-start span-self-inline-start) {
+    @container anchored(fallback: self-block-start span-self-inline-end) or anchored(fallback: self-block-start span-self-inline-start) or anchored(fallback: flip-block) or anchored(fallback: flip-block flip-inline) {
       translate: 0 6.25em;
     }
   }
@@ -263,6 +263,13 @@ Here's a mock-up of a custom select:
       }
     }
   }
+
+  /* body > * {
+    visibility: hidden;
+  }
+  toggle-picker, [popover] {
+    visibility: visible;
+  } */
 </style>
 
 <div id="select-picker" popover>
@@ -910,7 +917,12 @@ It isn't actually a custom select. Firefox and Safari are actively working on cu
 
 You can drag it around and see how it reacts to being in other parts of the viewport, and how it reacts to scrolling. If you can't be bothered with all that, here's a video:
 
-TODO VIDEO
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/1-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/1-avc.mp4" />
+  </video>
+</figure>
 
 Here are the default UA styles that impact the picker's position and height:
 
@@ -948,6 +960,13 @@ This is a reasonable set of defaults, but I think there are a number of things w
 
 Right now the picker extends to the edge of the viewport, making it hard to tell if it's actually stopping there, or if it's overflowing the viewport. The only visual clue is the small border & rounded corners.
 
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/1-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/1-avc.mp4" />
+  </video>
+</figure>
+
 Instead, I'll add a small margin:
 
 ```css
@@ -965,7 +984,12 @@ This isn't quite right, because:
 - In Firefox, it simply isn't working.
 - In Chrome & Safari, the margin is on the bottom, which looks bad when the picker flips above the button.
 
-TODO Chrome video
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/872">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/2-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/2-avc.mp4" />
+  </video>
+</figure>
 
 ## Fixing Firefox
 
@@ -991,13 +1015,18 @@ And here's the result:
 
 <toggle-picker data-picker-classes="ua-picker-styles select-picker margin-firefox-fix"></toggle-picker>
 
-TODO video.
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/3-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/3-avc.mp4" />
+  </video>
+</figure>
 
-It even does the right thing when the picker flips above the button! So… why am I not using this solution for the other browsers? Well, there's a slight imperfection with how the percent solution behaves. See if you can spot it - I'll come back to it later.
+It even does the right thing when the picker flips above the button! So… why am I not using this solution for the other browsers? Well, there's a slight imperfection with how the percent-based solution behaves. See if you can spot it - I'll come back to it later.
 
 ## Fixing Chrome & Safari
 
-We need to fix the margin when the picker flips above the button. Now, there's a feature called [anchored container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning/Anchored_container_queries) which lets us apply different styles when the anchored item flips position, but it isn't supported in Safari. Thankfully, there's an even better solution that Safari does support. Watch this…
+We need to fix the margin when the picker flips above the button. Now, there's a feature called [anchored container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning/Anchored_container_queries) which lets us apply different styles when the anchored item flips position, but it isn't supported in Safari. Thankfully, there's an even better solution that Safari _does_ support. Watch this…
 
 ```css
 .custom-select::picker(select) {
@@ -1029,7 +1058,12 @@ Here's the result:
 
 <toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix"></toggle-picker>
 
-TODO Chrome video.
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/872">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/4-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/4-avc.mp4" />
+  </video>
+</figure>
 
 That's that problem sorted, but we still have work to do.
 
@@ -1051,9 +1085,14 @@ But no, that creates another issue:
 
 When the picker has only a few options, its full size is smaller than our minimum, so it looks kinda bad.
 
-TODO: video.
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/5-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/5-avc.mp4" />
+  </video>
+</figure>
 
-What we want is for our minimum size to be like `min(fit-content, 12em)`, but `min()` doesn't allow intrinsic sizes like `fit-content`. Enter [`calc-size()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/calc-size) - this was the bit Ian Kilpatrick unlocked for me:
+What we want is for our minimum size to be like `min(fit-content, 12em)`, but `min()` doesn't allow intrinsic sizes like `fit-content`. Enter [`calc-size()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/calc-size) - this was the bit [Ian Kilpatrick unlocked for me](https://github.com/w3c/csswg-drafts/issues/13617#issuecomment-4025033386):
 
 ```css
 .custom-select::picker(select) {
@@ -1098,7 +1137,12 @@ And here's the result:
 
 <toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix">Toggle small picker</toggle-picker>
 
-TODO video Firefox
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/6-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/6-avc.mp4" />
+  </video>
+</figure>
 
 # Prevent the picker from getting too big
 
@@ -1128,13 +1172,27 @@ However, we already used `max-block-size` to stop the picker hitting the edge of
 
 And here's the final result:
 
-<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix max-size-fix"></toggle-picker>
+<toggle-picker data-picker-classes="ua-picker-styles select-picker full-solution"></toggle-picker>
 
-TODO: video Firefox.
+<toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker full-solution">Toggle small picker</toggle-picker>
+
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/940">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/7-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/7-avc.mp4" />
+  </video>
+</figure>
 
 Because we're using `calc-size()` for the fix, which isn't supported in Safari, Safari is now using the `100%` fallback as well as Firefox, which is _almost perfect_, but not quite. Have you spotted the imperfection? Here's the issue:
 
-TODO: video Firefox.
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/874">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/8-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/8-avc.mp4" />
+  </video>
+</figure>
+
+ONce we get to the minimum height, the picker will move towards the edge of the viewport before flipping, whereas in Chrome which uses `calc-size()` + `stretch`, it flips as soon as it hits the minimum height. It's a minor thing, but it'll be nicer when all browsers support `calc-size()`.
 
 # Putting it all together
 
@@ -1177,4 +1235,9 @@ And one last time:
 
 <toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker full-solution">Toggle small picker</toggle-picker>
 
-TODO video Firefox.
+<figure>
+  <video controls muted style="width: 100%; display: block; aspect-ratio: 1358/940">
+    <source type="video/webm; codecs=av01.0.08M.08.0.110.01.01.01.1" src="asset-url:./videos/7-av1.mp4" />
+    <source type="video/mp4" src="asset-url:./videos/7-avc.mp4" />
+  </video>
+</figure>
