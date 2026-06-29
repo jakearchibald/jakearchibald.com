@@ -1194,7 +1194,7 @@ Because we're using `calc-size()` for the fix, which isn't supported in Safari, 
   </video>
 </figure>
 
-ONce we get to the minimum height, the picker will move towards the edge of the viewport before flipping, whereas in Chrome which uses `calc-size()` + `stretch`, it flips as soon as it hits the minimum height. It's a minor thing, but it'll be nicer when all browsers support `calc-size()`.
+Once we get to the minimum height, the picker will move towards the edge of the viewport before flipping, whereas in Chrome which uses `calc-size()` + `stretch`, it flips as soon as it hits the minimum height. It's a minor thing, but it'll be nicer when all browsers support `calc-size()`.
 
 # Putting it all together
 
