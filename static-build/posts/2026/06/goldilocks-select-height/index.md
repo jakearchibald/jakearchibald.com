@@ -1,5 +1,5 @@
 ---
-title: Golilocks <select> height
+title: Goldilocks <select> height
 date: 2026-06-25 01:00:00
 summary: The 'ideal' sizing is more complicated than you think…
 meta: The 'ideal' sizing is more complicated than you think…
@@ -937,10 +937,10 @@ As a result:
 - `min-inline-size` means the picker will always be at least as wide as the `<select>` button (or toggle button in this case).
 - `max-block-size` means the picker will not overflow the viewport. Its `stretch` size is the full anchor positioning cell (the area from the edge of the `<select>` button to the edge of the viewport).
 - `position-area` defines the default anchor positioning cell to use, which is below the `<select>` button, and from its left edge to the right edge of the viewport.
-- `position-try-fallbacks` defines falbacks for the the anchor positioning cell, so it can appear above the `<select>` button, and/or clamp to the button's right edge.
+- `position-try-fallbacks` defines fallbacks for the anchor positioning cell, so it can appear above the `<select>` button, and/or clamp to the button's right edge.
 - `position-try-order` means the picker will initially appear in the anchor positioning cell that offers it the `most-block-size`, which means vertical space in this writing-mode. This doesn't currently work in Firefox ([ticket](https://bugzilla.mozilla.org/show_bug.cgi?id=2050547)) or Safari ([ticket](https://bugs.webkit.org/show_bug.cgi?id=317916)), as it [wasn't clear in the spec](https://github.com/w3c/csswg-drafts/issues/13268#issuecomment-4801719311).
 
-This is a reasonable set of defaults, but I think there are number of things we can do to improve the UX.
+This is a reasonable set of defaults, but I think there are a number of things we can do to improve the UX.
 
 # Prevent the picker from hitting the viewport edge
 
@@ -1090,7 +1090,7 @@ Ok, that's a lot. Here's what it's doing:
 
 1. Set a minimum block size of `12em` from `--min-size`.
 2. If `calc-size()` is supported, use it as before.
-3. Otherwise, if the picker has fewer than 4 options or 2 optgroups, remove the minimum block size, and prevent it from shrinking when it hits the edge of the viewport.
+3. Otherwise, if the picker has fewer than 4 options and fewer than 2 optgroups, remove the minimum block size, and prevent it from shrinking when it hits the edge of the viewport.
 
 And here's the result:
 
@@ -1104,7 +1104,7 @@ TODO video Firefox
 
 The last issue to tackle is preventing the picker from getting too _big_. Right now, it will always grow to fill the anchor positioning cell, which can end up feeling too tall. To solve this, we set a maximum.
 
-However, we already used `max-block-size` to stop the picker hitting the edge of the viewport, so we need to use `min()` to allow for two max-sizes. One of the max sizes is `max-block-size: stretch`, so we need to use `calc-size()` again, so the intrinsic `stretch` size can be used in the `min()` calculation.
+However, we already used `max-block-size` to stop the picker hitting the edge of the viewport, so we need to use `min()` to allow for two max-sizes. One of the max sizes is `max-block-size: stretch`, so we need to use `calc-size()` again, letting the intrinsic `stretch` size be used in the `min()` calculation.
 
 ```css
 .custom-select::picker(select) {
@@ -1132,7 +1132,7 @@ And here's the final result:
 
 TODO: video Firefox.
 
-Because we're using `calc-size()` for the fix, which isn't supported in Safari, Safari is now using the `100%` fallback, which is _almost perfect_, but not quite. Have you spotted the imperfection? Here's a video that shows the issue:
+Because we're using `calc-size()` for the fix, which isn't supported in Safari, Safari is now using the `100%` fallback as well as Firefox, which is _almost perfect_, but not quite. Have you spotted the imperfection? Here's the issue:
 
 TODO: video Firefox.
 
