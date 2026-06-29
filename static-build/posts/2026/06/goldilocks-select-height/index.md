@@ -13,6 +13,8 @@ Well, I say I figured it out. I actually failed, and asked a bunch of people for
 
 TL;DR: If you just want the solution, [skip to the end](#putting-it-all-together).
 
+Also, if you want a general introduction to customizable `<select>`, [MDN has you covered](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Forms/Customizable_select).
+
 # Default sizing
 
 Here's a mock-up of a custom select:
