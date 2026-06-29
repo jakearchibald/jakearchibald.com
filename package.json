@@ -12,6 +12,7 @@
     "@rollup/plugin-commonjs": "^29.0.3",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-replace": "^6.0.3",
+    "@shikijs/transformers": "^4.3.0",
     "@types/escape-html": "^1.0.4",
     "@types/node": "^26.0.0",
     "@types/prismjs": "^1.26.6",
@@ -44,6 +45,7 @@
     "punycode": "^2.3.1",
     "rollup": "^4.62.2",
     "serve": "^14.2.6",
+    "shiki": "^4.3.0",
     "stacked-alpha-video": "^1.0.10",
     "two-up-element": "^1.0.1",
     "typescript": "^6.0.3"
@@ -54,5 +56,5 @@
   "lint-staged": {
     "*.{js,css,json,md,ts,tsx}": "prettier --write"
   },
-  "packageManager": "pnpm@10.14.0"
+  "packageManager": "pnpm@11.9.0"
 }
