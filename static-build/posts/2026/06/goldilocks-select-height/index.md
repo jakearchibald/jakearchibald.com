@@ -1150,7 +1150,7 @@ And here's the result:
 
 The last issue to tackle is preventing the picker from getting too _big_. Right now, it will always grow to fill the anchor positioning cell, which can end up feeling too tall. To solve this, we set a maximum.
 
-However, we already used `max-block-size` to stop the picker hitting the edge of the viewport, so we need to use `min()` to allow for two max-sizes. One of the max sizes is `max-block-size: stretch`, so we need to use `calc-size()` again, letting the intrinsic `stretch` size be used in the `min()` calculation.
+However, we already used `max-block-size` to stop the picker hitting the edge of the viewport, so we need to use `min()` to allow for two max-sizes. One of the max sizes is `max-block-size: stretch`, so we need to use `calc-size()` again, which allows the intrinsic `stretch` size to be used in the `min()` calculation.
 
 ```css
 .custom-select::picker(select) {
