@@ -184,17 +184,17 @@ Here's a mock-up of a custom select:
     margin-block-end: 1em;
   }
   .margin-firefox-fix {
-    --margin: 1em;
-    max-block-size: calc(100% - var(--margin));
+    --viewport-margin: 1em;
+    max-block-size: calc(100% - var(--viewport-margin));
 
     @supports (max-block-size: stretch) {
       max-block-size: stretch;
-      margin-block-end: var(--margin);
+      margin-block-end: var(--viewport-margin);
     }
   }
   .margin-full-fix {
-    --margin: 1em;
-    max-block-size: calc(100% - var(--margin));
+    --viewport-margin: 1em;
+    max-block-size: calc(100% - var(--viewport-margin));
     position-try-fallbacks:
       flip-block,
       flip-inline,
@@ -202,21 +202,61 @@ Here's a mock-up of a custom select:
 
     @supports (max-block-size: stretch) {
       max-block-size: stretch;
-      margin-block-end: var(--margin);
+      margin-block-end: var(--viewport-margin);
     }
   }
   .min-size {
     min-block-size: 12em;
   }
+  .max-size-fix {
+    --max-size: 30em;
+    --viewport-margin: 1em;
+    max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size));
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+
+    @supports (max-block-size: calc-size(stretch, min(size, 1px))) {
+      max-block-size: calc-size(stretch, min(size, var(--max-size)));
+      margin-block-end: var(--viewport-margin);
+    }
+  }
   .min-size-fix {
     --min-size: 12em;
     min-block-size: var(--min-size);
 
-    @supports (min-block-size: calc-size(fit-content, min(size, 10px))) {
+    @supports (min-block-size: calc-size(fit-content, min(size, 1px))) {
       min-block-size: calc-size(fit-content, min(size, var(--min-size)));
     }
 
-    @supports not (min-block-size: calc-size(fit-content, min(size, 10px))) {
+    @supports not (min-block-size: calc-size(fit-content, min(size, 1px))) {
+      &:not(:has(:where(.select-picker-option:nth-child(5)))) {
+        min-block-size: 0;
+        max-block-size: fit-content;
+      }
+    }
+  }
+
+  .full-solution {
+    --viewport-margin: 1em;
+    --min-size: 12em;
+    --max-size: 30em;
+
+    min-block-size: var(--min-size);
+    max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size));
+    position-try-fallbacks:
+      flip-block,
+      flip-inline,
+      flip-block flip-inline;
+
+    @supports (min-block-size: calc-size(fit-content, min(size, 1px))) {
+      min-block-size: calc-size(fit-content, min(size, var(--min-size)));
+      max-block-size: calc-size(stretch, min(size, var(--max-size)));
+      margin-block-end: var(--viewport-margin);
+    }
+
+    @supports not (min-block-size: calc-size(fit-content, min(size, 1px))) {
       &:not(:has(:where(.select-picker-option:nth-child(5)))) {
         min-block-size: 0;
         max-block-size: fit-content;
@@ -722,6 +762,7 @@ Here's a mock-up of a custom select:
         top: var(--panner-y, 0px);
         left: var(--panner-x, 0px);
         margin: 0;
+        z-index: 1;
       }
 
       & > .reset {
@@ -842,23 +883,43 @@ Here's a mock-up of a custom select:
 );
 </script>
 
-It isn't actually a custom select. Firefox and Safari are actively working on custom select, but haven't released it yet, so to make the demos work everywhere, and to make it easier for you to inspect with DevTools, I've built the demos from [invokers commands](https://developer.mozilla.org/en-US/docs/Web/API/Invoker_Commands_API), [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), and [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning), which are the same primitives custom select uses under the hood.
+<p class="old-safari-warning" hidden><span style="font-weight: bold; color: red;">Unfortunately you're using Safari 26.5 or lower</span>, which has a buggy implementation of anchor positioning, so <span style="font-weight: bold; color: red;">these demos won't work for you</span>. They work in Safari Technology Preview, so the techniques in this article should work by the time Safari ships custom select.</p>
 
-Unfortunately, the currently released versions of Safari have too many anchor positioning bugs to make these demos work, but they do work in Safari Technology Preview.
+<script>
+  {
+    const ua = navigator.userAgent;
+    const isSafari =
+      /Safari/.test(ua) && !/Chrome|Chromium|CriOS|Android/.test(ua);
+    const versionMatch = ua.match(/Version\/(\d+)(?:\.(\d+))?/);
 
-You can drag it around and see how it reacts to being in other parts of the viewport, and how it reacts to scrolling.
+    // Technology Preview has the same UA string, but it supports base-select, so don't show the warning for it.
+    const supportsBaseSelect = CSS.supports('appearance', 'base-select');
+
+    if (isSafari && versionMatch && !supportsBaseSelect) {
+      const major = Number(versionMatch[1]);
+      const minor = Number(versionMatch[2] || 0);
+      // 26.5 or lower
+      if (major < 26 || (major === 26 && minor <= 5)) {
+        document.querySelector('.old-safari-warning').hidden = false;
+      }
+    }
+  }
+</script>
+
+It isn't actually a custom select. Firefox and Safari are actively working on custom select, but haven't released it yet, so to make the demos work in more browsers, and to make it easier for you to inspect with DevTools, I've built the demos from [popovers](https://developer.mozilla.org/en-US/docs/Web/API/Popover_API), and [CSS anchor positioning](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning), which are the same primitives custom select uses under the hood.
+
+You can drag it around and see how it reacts to being in other parts of the viewport, and how it reacts to scrolling. If you can't be bothered with all that, here's a video:
+
+TODO VIDEO
 
 Here are the default UA styles that impact the picker's position and height:
 
 ```css
 ::picker(select) {
-  box-sizing: border-box;
-  padding: 0;
   margin: 0;
   inset: auto;
   min-inline-size: anchor-size(self-inline);
   max-block-size: stretch;
-  overflow: auto;
   position-area: self-block-end span-self-inline-end;
   position-try-order: most-block-size;
   position-try-fallbacks:
@@ -874,10 +935,10 @@ Here are the default UA styles that impact the picker's position and height:
 As a result:
 
 - `min-inline-size` means the picker will always be at least as wide as the `<select>` button (or toggle button in this case).
-- `max-block-size` means the picker will not overflow the viewport. Its `stretch` size is the full anchor positioning cell.
+- `max-block-size` means the picker will not overflow the viewport. Its `stretch` size is the full anchor positioning cell (the area from the edge of the `<select>` button to the edge of the viewport).
 - `position-area` defines the default anchor positioning cell to use, which is below the `<select>` button, and from its left edge to the right edge of the viewport.
-- `position-try-fallbacks` lets the anchor positioning cell change, so it can appear above the `<select>` button, and/or clamp to the button's right edge.
-- `position-try-order` means the picker will initially appear in the grid cell that offers it the `most-block-size`, which means vertical space in this writing-mode. This doesn't currently work in Firefox ([ticket](https://bugzilla.mozilla.org/show_bug.cgi?id=2050547)) or Safari ([ticket](https://bugs.webkit.org/show_bug.cgi?id=317916)), as it [wasn't clear in the spec](https://github.com/w3c/csswg-drafts/issues/13268#issuecomment-4801719311).
+- `position-try-fallbacks` defines falbacks for the the anchor positioning cell, so it can appear above the `<select>` button, and/or clamp to the button's right edge.
+- `position-try-order` means the picker will initially appear in the anchor positioning cell that offers it the `most-block-size`, which means vertical space in this writing-mode. This doesn't currently work in Firefox ([ticket](https://bugzilla.mozilla.org/show_bug.cgi?id=2050547)) or Safari ([ticket](https://bugs.webkit.org/show_bug.cgi?id=317916)), as it [wasn't clear in the spec](https://github.com/w3c/csswg-drafts/issues/13268#issuecomment-4801719311).
 
 This is a reasonable set of defaults, but I think there are number of things we can do to improve the UX.
 
@@ -904,6 +965,8 @@ This isn't quite right, because:
 - In Firefox, it simply isn't working.
 - In Chrome & Safari, the margin is on the bottom, which looks bad when the picker flips above the button.
 
+TODO Chrome video
+
 ## Fixing Firefox
 
 Remember when I said pickers have `max-block-size: stretch`? Well, Firefox doesn't support that, so I threw in `max-block-size: 100%` as a fallback. However, with percent heights, margins don't take away from the height, so the picker still hits the viewport edge, and the margin is outside it.
@@ -912,32 +975,34 @@ We can work around it:
 
 ```css
 .custom-select::picker(select) {
-  --margin: 1em;
-  max-block-size: calc(100% - var(--margin));
+  --viewport-margin: 1em;
+  max-block-size: calc(100% - var(--viewport-margin));
 
   @supports (max-block-size: stretch) {
     max-block-size: stretch;
-    margin-block-end: var(--margin);
+    margin-block-end: var(--viewport-margin);
   }
 }
 ```
 
-Now, for Firefox, we're deducting the margin from the max-block-size. For browsers that support `stretch`, we stick with the previous solution.
+Now, for Firefox, we're deducting the margin from the 100% `max-block-size`. For browsers that support `stretch`, we stick with the previous solution.
 
 And here's the result:
 
 <toggle-picker data-picker-classes="ua-picker-styles select-picker margin-firefox-fix"></toggle-picker>
 
+TODO video.
+
 It even does the right thing when the picker flips above the button! So… why am I not using this solution for the other browsers? Well, there's a slight imperfection with how the percent solution behaves. See if you can spot it - I'll come back to it later.
 
 ## Fixing Chrome & Safari
 
-We need to fix the margin when the picker flips above the button. Now, there's a feature called [anchored container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning/Anchored_container_queries) which lets us apply different styles when the anchored item flips position, but it isn't supported in Safari. However, we don't need it. Watch this…
+We need to fix the margin when the picker flips above the button. Now, there's a feature called [anchored container queries](https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Anchor_positioning/Anchored_container_queries) which lets us apply different styles when the anchored item flips position, but it isn't supported in Safari. Thankfully, there's an even better solution that Safari does support. Watch this…
 
 ```css
 .custom-select::picker(select) {
-  --margin: 1em;
-  max-block-size: calc(100% - var(--margin));
+  --viewport-margin: 1em;
+  max-block-size: calc(100% - var(--viewport-margin));
   /* prettier-ignore */
   position-try-fallbacks: /* [!code ++] */
     /* [!code ++] */
@@ -949,20 +1014,22 @@ We need to fix the margin when the picker flips above the button. Now, there's a
 
   @supports (max-block-size: stretch) {
     max-block-size: stretch;
-    margin-block-end: var(--margin);
+    margin-block-end: var(--viewport-margin);
   }
 }
 ```
 
-This replaces the UA default `position-try-fallbacks`, which were specific about the positioning, with these `flip` values that achieve the same thing. However, the `flip` values come with _dark magic_.
+This replaces the UA default `position-try-fallbacks`, which were specific about the positioning, with these `flip-*` values that achieve the same thing. However, the `flip-*` values come with _dark magic_.
 
 When the flips take effect, it tries to flip other styles too. This works with some properties, but not others. [Here's the spec](https://drafts.csswg.org/css-anchor-position-1/#execute-a-try-tactic), good luck!
 
-Margin is one of the things it does work for, so when the picker flips above the button, our `margin-block-end` is treated as a `margin-block-start`. Spooky, yet convenient.
+Margins are among the things it does work for, so when the picker flips above the button, our `margin-block-end` is treated as a `margin-block-start`. Spooky, yet convenient!
 
 Here's the result:
 
 <toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix"></toggle-picker>
+
+TODO Chrome video.
 
 That's that problem sorted, but we still have work to do.
 
@@ -978,32 +1045,36 @@ If you open the picker and drag it to the viewport edge, it gets really really s
 
 <toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size"></toggle-picker>
 
-Perfect, right onto the next… no, wait, this doesn't work…
+But no, that creates another issue:
 
 <toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size">Toggle small picker</toggle-picker>
 
 When the picker has only a few options, its full size is smaller than our minimum, so it looks kinda bad.
 
-What we want is for our minimum size to be like `min(auto, 12em)`, but `min()` doesn't allow intrinsic sizes. Enter [`calc-size()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/calc-size) - this was the bit Ian Kilpatrick unlocked for me:
+TODO: video.
+
+What we want is for our minimum size to be like `min(fit-content, 12em)`, but `min()` doesn't allow intrinsic sizes like `fit-content`. Enter [`calc-size()`](https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Values/calc-size) - this was the bit Ian Kilpatrick unlocked for me:
 
 ```css
 .custom-select::picker(select) {
-  min-block-size: calc-size(auto, min(size, 12em));
+  min-block-size: calc-size(fit-content, min(size, 12em));
 }
 ```
 
-`calc-size()` lets us state an intrinsic size in the first argument, then perform a calculation with it in the second argument, where the `size` keyword represents the intrinsic size. Yeah, it's a little weird, but it works! Well, it works in Chrome. It isn't yet supported in Firefox or Safari, so we can use a bit of a hack in the meantime:
+`calc-size()` lets us state an intrinsic size in the first argument, then perform a calculation with it in the second argument, where the `size` keyword represents the intrinsic size. Yeah, it's a little weird, but it works! Well, it works in Chrome. It isn't yet supported in Firefox ([ticket](https://bugzilla.mozilla.org/show_bug.cgi?id=calc-size)) or Safari ([ticket](https://bugs.webkit.org/show_bug.cgi?id=274177)), so we can use a bit of a hack in the meantime:
 
 ```css
 .custom-select::picker(select) {
   --min-size: 12em;
   min-block-size: var(--min-size);
 
-  @supports (min-block-size: calc-size(fit-content, min(size, 10px))) {
+  /* The calc-size way… */
+  @supports (min-block-size: calc-size(fit-content, min(size, 1px))) {
     min-block-size: calc-size(fit-content, min(size, var(--min-size)));
   }
 
-  @supports not (min-block-size: calc-size(fit-content, min(size, 10px))) {
+  /* The hacky fallback… */
+  @supports not (min-block-size: calc-size(fit-content, min(size, 1px))) {
     &:not(
       :has(:where(option:nth-of-type(4))),
       :has(:where(optgroup:nth-of-type(2)))
@@ -1017,7 +1088,7 @@ What we want is for our minimum size to be like `min(auto, 12em)`, but `min()` d
 
 Ok, that's a lot. Here's what it's doing:
 
-1. Set a minimum block size of 12em from `--min-size`.
+1. Set a minimum block size of `12em` from `--min-size`.
 2. If `calc-size()` is supported, use it as before.
 3. Otherwise, if the picker has fewer than 4 options or 2 optgroups, remove the minimum block size, and prevent it from shrinking when it hits the edge of the viewport.
 
@@ -1027,4 +1098,83 @@ And here's the result:
 
 <toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix">Toggle small picker</toggle-picker>
 
-TODO: have a bigger Safari warning
+TODO video Firefox
+
+# Prevent the picker from getting too big
+
+The last issue to tackle is preventing the picker from getting too _big_. Right now, it will always grow to fill the anchor positioning cell, which can end up feeling too tall. To solve this, we set a maximum.
+
+However, we already used `max-block-size` to stop the picker hitting the edge of the viewport, so we need to use `min()` to allow for two max-sizes. One of the max sizes is `max-block-size: stretch`, so we need to use `calc-size()` again, so the intrinsic `stretch` size can be used in the `min()` calculation.
+
+```css
+.custom-select::picker(select) {
+  --max-size: 30em; /* [!code ++] */
+  --viewport-margin: 1em;
+  max-block-size: calc(100% - var(--viewport-margin)); /* [!code --] */
+  max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size)); /* [!code ++] */
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+
+  @supports (max-block-size: stretch) { /* [!code --] */
+  @supports (max-block-size: calc-size(stretch, min(size, 1px))) { /* [!code ++] */
+    max-block-size: stretch; /* [!code --] */
+    max-block-size: calc-size(stretch, min(size, var(--max-size))); /* [!code ++] */
+    margin-block-end: var(--viewport-margin);
+  }
+}
+```
+
+And here's the final result:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker margin-full-fix min-size-fix max-size-fix"></toggle-picker>
+
+TODO: video Firefox.
+
+Because we're using `calc-size()` for the fix, which isn't supported in Safari, Safari is now using the `100%` fallback, which is _almost perfect_, but not quite. Have you spotted the imperfection? Here's a video that shows the issue:
+
+TODO: video Firefox.
+
+# Putting it all together
+
+Here's the full CSS for the picker, which adds the margin to the viewport, applies a minimum size, and a maximum size, all in one place to copy-paste and for LLMs to steal:
+
+```css
+.custom-select::picker(select) {
+  --viewport-margin: 1em;
+  --min-size: 12em;
+  --max-size: 30em;
+
+  min-block-size: var(--min-size);
+  max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size));
+  position-try-fallbacks:
+    flip-block,
+    flip-inline,
+    flip-block flip-inline;
+
+  @supports (min-block-size: calc-size(fit-content, min(size, 1px))) {
+    min-block-size: calc-size(fit-content, min(size, var(--min-size)));
+    max-block-size: calc-size(stretch, min(size, var(--max-size)));
+    margin-block-end: var(--viewport-margin);
+  }
+
+  @supports not (min-block-size: calc-size(fit-content, min(size, 1px))) {
+    &:not(
+      :has(:where(option:nth-of-type(4))),
+      :has(:where(optgroup:nth-of-type(2)))
+    ) {
+      min-block-size: 0;
+      max-block-size: fit-content;
+    }
+  }
+}
+```
+
+And one last time:
+
+<toggle-picker data-picker-classes="ua-picker-styles select-picker full-solution"></toggle-picker>
+
+<toggle-picker data-picker="select-picker-small" data-picker-classes="ua-picker-styles select-picker full-solution">Toggle small picker</toggle-picker>
+
+TODO video Firefox.
