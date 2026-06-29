@@ -1069,7 +1069,9 @@ Here's the result:
   </video>
 </figure>
 
-That's that problem sorted, but we still have work to do.
+[The CSS Working Group has resolved to change the `position-try-fallbacks` defaults](https://github.com/w3c/csswg-drafts/issues/13541#issuecomment-4732677022) for select pickers to something similar to the above, so the above override won't be needed in future.
+
+Anyway, that's that problem sorted, but we still have work to do.
 
 # Prevent the picker from getting too small
 
