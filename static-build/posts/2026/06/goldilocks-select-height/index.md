@@ -1247,3 +1247,5 @@ And one last time:
     <source type="video/mp4" src="asset-url:./videos/7-avc.mp4" />
   </video>
 </figure>
+
+This doesn't work in the current version of Safari (26.5), but it does work in Safari Technology Preview, so it should be supported by the time Safari ships custom select.
