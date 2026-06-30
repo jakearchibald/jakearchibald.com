@@ -1249,3 +1249,13 @@ And one last time:
 </figure>
 
 This doesn't work in the current version of Safari (26.5), but it does work in Safari Technology Preview, so it should be supported by the time Safari ships custom select.
+
+If the CSS above looks scary, it's mostly due to fallbacks for things browsers don't support yet, and a workaround for something the CSS Working Group will change. Eventually we'll be able to do the same thing with:
+
+```css
+.custom-select::picker(select) {
+  min-block-size: calc-size(fit-content, min(size, 12em));
+  max-block-size: calc-size(stretch, min(size, 30em));
+  margin-block-end: 1em;
+}
+```
