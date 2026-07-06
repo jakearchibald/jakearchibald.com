@@ -1161,7 +1161,7 @@ However, we already used `max-block-size` to stop the picker hitting the edge of
   --max-size: 30em; /* [!code ++] */
   --viewport-margin: 1em;
   max-block-size: calc(100% - var(--viewport-margin)); /* [!code --] */
-  max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size)); /* [!code ++] */
+  max-block-size: min(100% - var(--viewport-margin), var(--max-size)); /* [!code ++] */
   position-try-fallbacks:
     flip-block,
     flip-inline,
@@ -1211,7 +1211,7 @@ Here's the full CSS for the picker, which adds the margin to the viewport, appli
   --max-size: 30em;
 
   min-block-size: var(--min-size);
-  max-block-size: min(calc(100% - var(--viewport-margin)), var(--max-size));
+  max-block-size: min(100% - var(--viewport-margin), var(--max-size));
   position-try-fallbacks:
     flip-block,
     flip-inline,
