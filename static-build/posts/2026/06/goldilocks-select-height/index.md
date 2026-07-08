@@ -1259,3 +1259,7 @@ If the CSS above looks scary, it's mostly due to fallbacks for things browsers d
   margin-block-end: 1em;
 }
 ```
+
+# So, everything's great?
+
+Well, not quite. The way the picker reacts to scrolling seems weird to me, and it's inconsistent across browsers and devices. [I've filed a CSSWG issue to discuss it](https://github.com/w3c/csswg-drafts/issues/14112), because none of the behaviours seem right to me.
