@@ -43,13 +43,6 @@ So, I adapted Scott's code for my toolbar demo:
 <div id="bold-tooltip" popover="hint">Bold (⌘B)</div>
 ```
 
-```html
-<button aria-describedby="bold-tooltip">
-  <svg>(bold icon)</svg>
-</button>
-<div id="bold-tooltip" popover="hint">Bold (⌘B)</div>
-```
-
 It's a very similar pattern, although I have `aria-label` on the button, because it contains an SVG icon rather than text.
 
 Like Scott, I added `aria-describedby` to the button, to connect the button to the tooltip.
