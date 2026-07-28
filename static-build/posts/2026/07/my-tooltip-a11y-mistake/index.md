@@ -79,7 +79,7 @@ I made the accessibility error when I created a tooltip like this:
   <img style="height:auto" src="asset-url:./images/toolbar.avif" width="1303" height="808" alt="A text formatting toolbar, featuring buttons like bold, italic, underline etc. A mouse pointer is over the bold button, and a tooltip is visible, saying 'Bold (⌘B)'." />
 </figure>
 
-That was part of a video on `popover="hint"`, which also covers how to show the tooltip for visual users. Oh ok, here's a link to that video too:
+That was part of a video on `popover="hint"`, which also covers how to show the tooltip for visual users. Oh ok, here are links to that video too:
 
 <ul class="social-links">
   <li>
