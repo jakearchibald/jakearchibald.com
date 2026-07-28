@@ -404,6 +404,34 @@ h2 + .max-figure {
         }
       }
     }
+
+    /* Words tagged with `// [!code word:...]` get a subtle boxed highlight.
+       A single highlighted phrase (e.g. `aria-describedby="foo"`) is split by
+       Shiki into several adjacent tokens, each wrapped in its own
+       `.highlighted-word`. To make the run read as one continuous box, the
+       background is drawn on every span but the border, radius, and edge
+       padding are applied only to the ends of a run using sibling selectors. */
+    & .highlighted-word {
+      background: rgba(200, 200, 255, 0.15);
+      border-block: 1px solid rgba(200, 200, 255, 0.3);
+      padding-block: 1px;
+
+      /* Left/leading end of a run (not preceded by another highlighted word). */
+      &:not(.highlighted-word + .highlighted-word) {
+        border-inline-start: 1px solid rgba(200, 200, 255, 0.3);
+        border-start-start-radius: 4px;
+        border-end-start-radius: 4px;
+        padding-inline-start: 3px;
+      }
+
+      /* Right/trailing end of a run (not followed by another highlighted word). */
+      &:not(:has(+ .highlighted-word)) {
+        border-inline-end: 1px solid rgba(200, 200, 255, 0.3);
+        border-start-end-radius: 4px;
+        border-end-end-radius: 4px;
+        padding-inline-end: 3px;
+      }
+    }
   }
 
   & code {
