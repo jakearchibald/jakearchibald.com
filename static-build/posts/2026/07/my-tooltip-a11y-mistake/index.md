@@ -11,15 +11,103 @@ I made an accessibility error, and I want you to learn from my mistakes.
 
 I've been making short videos recently about web platform features as they land in Firefox, and also about other web standards & development stuff. If you'd prefer to watch a 3 minute video version of this article, pick your platform, and give the account a follow if this kind of thing interests you:
 
-TODO
+<style>
+  .social-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.7em;
+    margin: 1.5em 0;
+    padding: 0;
+    list-style: none;
+  }
+  .social-links li {
+    margin: 0;
+  }
+  .social-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    padding: 0.35em 0.9em 0.35em 0.35em;
+    line-height: 1;
+  }
+  .social-links img {
+    display: block;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+  }
+</style>
+
+<ul class="social-links">
+  <li>
+    <a href="https://www.instagram.com/reel/DbTA45PjDWT/">
+      <img src="asset-url:./social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
+    </a>
+  </li>
+  <li>
+    <a href="https://www.tiktok.com/@firefoxwebdevs/video/7667190734281248032">
+      <img src="asset-url:./social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
+    </a>
+  </li>
+  <li>
+    <a href="https://www.youtube.com/shorts/hPrZiRSRCE4">
+      <img src="asset-url:./social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
+    </a>
+  </li>
+  <li>
+    <a href="https://mastodon.social/@firefoxwebdevs/116992048337520434">
+      <img src="asset-url:./social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
+    </a>
+  </li>
+  <li>
+    <a href="https://www.linkedin.com/posts/firefox-web-developers_i-made-an-accessibility-error-in-one-of-my-activity-7487491350968434690-fc6k">
+      <img src="asset-url:./social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
+    </a>
+  </li>
+</ul>
+
+The account is [also on BlueSky](https://bsky.app/profile/webdevs.firefox.com), but video uploading has been broken there for a while.
 
 Otherwise, here's the written version…
+
+# The mistake
 
 I made the accessibility error when I created a tooltip like this:
 
 <figure class="full-figure">
   <img style="height:auto" src="asset-url:./images/toolbar.avif" width="1303" height="808" alt="A text formatting toolbar, featuring buttons like bold, italic, underline etc. A mouse pointer is over the bold button, and a tooltip is visible, saying 'Bold (⌘B)'." />
 </figure>
+
+That was part of a video on `popover="hint"`. Oh ok, here's a link to that video too:
+
+<ul class="social-links">
+  <li>
+    <a href="https://www.instagram.com/reel/DbGK4PtCqbj/">
+      <img src="asset-url:./social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
+    </a>
+  </li>
+  <li>
+    <a href="https://www.tiktok.com/@firefoxwebdevs/video/7665339722767633697">
+      <img src="asset-url:./social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
+    </a>
+  </li>
+  <li>
+    <a href="https://www.youtube.com/shorts/HWetxbInaVc">
+      <img src="asset-url:./social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
+    </a>
+  </li>
+  <li>
+    <a href="https://mastodon.social/@firefoxwebdevs/116963801309656205">
+      <img src="asset-url:./social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
+    </a>
+  </li>
+  <li>
+    <a href="https://www.linkedin.com/feed/update/urn:li:activity:7485683643156406272">
+      <img src="asset-url:./social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
+    </a>
+  </li>
+</ul>
 
 I did try to get it right! I spoke to friends who know more about accessibility than me, and they pointed me towards [these demos by Scott O'Hara](https://scottaohara.github.io/a11y_tooltips/).
 
