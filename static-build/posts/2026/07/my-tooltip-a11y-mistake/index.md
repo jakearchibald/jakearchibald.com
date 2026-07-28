@@ -1,8 +1,8 @@
 ---
 title: Fixing my tooltip accessibility mistake
 date: 2026-07-28 01:00:00
-summary: aria-describedby isn't enough.
-meta: aria-describedby isn't enough.
+summary: aria-describedby isn't always enough.
+meta: aria-describedby isn't always enough.
 code: shiki
 image: './img.png'
 ---
