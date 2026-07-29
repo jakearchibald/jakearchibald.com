@@ -1,4 +1,4 @@
-// From https://github.com/jahilldev/minimal-analytics
+// From https://github.com/idarek/minimal-analytics-4
 (function () {
   /* --- The Control Centre (Config) --- */
   const config = {
