@@ -236,7 +236,9 @@ export default class App extends Component<Props, State> {
 
       try {
         const id = Math.random().toString();
-        const url = new URL('https://cors-playground.deno.dev/resource');
+        const url = new URL(
+          'https://cors-playground.jaffathecake.workers.dev/resource',
+        );
         const params = url.searchParams;
 
         params.set('id', id);
@@ -317,7 +319,7 @@ export default class App extends Component<Props, State> {
         let details: any;
 
         const detailsUrl = new URL(
-          'https://cors-playground.deno.dev/resource-details',
+          'https://cors-playground.jaffathecake.workers.dev/resource-details',
         );
         detailsUrl.searchParams.set('id', id);
 
