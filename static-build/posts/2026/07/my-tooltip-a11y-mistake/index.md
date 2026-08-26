@@ -42,27 +42,27 @@ I've been making short videos recently about web platform features as they land 
 <ul class="social-links">
   <li>
     <a href="https://www.instagram.com/reel/DbTA45PjDWT/">
-      <img src="asset-url:./social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
+      <img src="asset-url:static-build/imgs/social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
     </a>
   </li>
   <li>
     <a href="https://www.tiktok.com/@firefoxwebdevs/video/7667190734281248032">
-      <img src="asset-url:./social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
+      <img src="asset-url:static-build/imgs/social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
     </a>
   </li>
   <li>
     <a href="https://www.youtube.com/shorts/hPrZiRSRCE4">
-      <img src="asset-url:./social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
+      <img src="asset-url:static-build/imgs/social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
     </a>
   </li>
   <li>
     <a href="https://mastodon.social/@firefoxwebdevs/116992048337520434">
-      <img src="asset-url:./social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
+      <img src="asset-url:static-build/imgs/social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
     </a>
   </li>
   <li>
     <a href="https://www.linkedin.com/posts/firefox-web-developers_i-made-an-accessibility-error-in-one-of-my-activity-7487491350968434690-fc6k">
-      <img src="asset-url:./social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
+      <img src="asset-url:static-build/imgs/social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
     </a>
   </li>
 </ul>
@@ -84,27 +84,27 @@ That was part of a video on `popover="hint"`, which also covers how to show the 
 <ul class="social-links">
   <li>
     <a href="https://www.instagram.com/reel/DbGK4PtCqbj/">
-      <img src="asset-url:./social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
+      <img src="asset-url:static-build/imgs/social-icons/instagram.svg" alt="" width="28" height="28" />Instagram
     </a>
   </li>
   <li>
     <a href="https://www.tiktok.com/@firefoxwebdevs/video/7665339722767633697">
-      <img src="asset-url:./social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
+      <img src="asset-url:static-build/imgs/social-icons/tiktok.svg" alt="" width="28" height="28" />TikTok
     </a>
   </li>
   <li>
     <a href="https://www.youtube.com/shorts/HWetxbInaVc">
-      <img src="asset-url:./social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
+      <img src="asset-url:static-build/imgs/social-icons/youtube.svg" alt="" width="28" height="28" />YouTube
     </a>
   </li>
   <li>
     <a href="https://mastodon.social/@firefoxwebdevs/116963801309656205">
-      <img src="asset-url:./social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
+      <img src="asset-url:static-build/imgs/social-icons/mastodon.svg" alt="" width="28" height="28" />Mastodon
     </a>
   </li>
   <li>
     <a href="https://www.linkedin.com/feed/update/urn:li:activity:7485683643156406272">
-      <img src="asset-url:./social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
+      <img src="asset-url:static-build/imgs/social-icons/linkedin.svg" alt="" width="28" height="28" />LinkedIn
     </a>
   </li>
 </ul>
