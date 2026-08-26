@@ -117,11 +117,12 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
               </small>
             </p>
           </div>
-          <div class="comments" id="comments">
-            <div id="disqus_thread"></div>
-            <script
-              // prettier-ignore
-              dangerouslySetInnerHTML={{
+          {post.comments !== 'none' && (
+            <div class="comments" id="comments">
+              <div id="disqus_thread"></div>
+              <script
+                // prettier-ignore
+                dangerouslySetInnerHTML={{
                 __html:
                   `var disqus_shortname = 'jakearchibald';` +
                   `var disqus_identifier = ${JSON.stringify(
@@ -140,14 +141,15 @@ const PostPage: FunctionalComponent<Props> = ({ post }: Props) => {
                   `}, { rootMargin: '500px' });` +
                   `observer.observe(document.querySelector('#comments'));`
               }}
-            ></script>
-            <noscript>
-              I hate that Disqus doesn't work without JavaScript. It should.
-            </noscript>
-            <a href="http://disqus.com" class="dsq-brlink">
-              Comments powered by <span class="logo-disqus">Disqus</span>
-            </a>
-          </div>
+              ></script>
+              <noscript>
+                I hate that Disqus doesn't work without JavaScript. It should.
+              </noscript>
+              <a href="http://disqus.com" class="dsq-brlink">
+                Comments powered by <span class="logo-disqus">Disqus</span>
+              </a>
+            </div>
+          )}
         </div>
         <div class="side">
           <Who />

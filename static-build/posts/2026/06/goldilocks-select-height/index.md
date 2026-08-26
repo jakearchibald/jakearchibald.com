@@ -5,6 +5,7 @@ summary: The 'ideal' sizing is more complicated than you think…
 meta: The 'ideal' sizing is more complicated than you think…
 code: shiki
 image: './img.png'
+comments: none
 ---
 
 I recently gave a talk on customizable (as in fully-stylable) `<select>`, and as I was building demos I realised there's a sizing 'pattern' that's almost always the-one-you-want, but it took me a long time to figure out how to do it in CSS.

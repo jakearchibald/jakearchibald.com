@@ -5,6 +5,7 @@ summary: The default might not be what you expect, and it has a big impact on yo
 meta: The default might not be what you expect, and it has a big impact on your styles.
 code: shiki
 image: './img.png'
+comments: none
 ---
 
 When and how CSS custom properties are calculated might not be what you expect, and it has a big impact on your styles.

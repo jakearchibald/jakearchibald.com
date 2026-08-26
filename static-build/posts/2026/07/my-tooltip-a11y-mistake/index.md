@@ -5,6 +5,7 @@ summary: aria-describedby isn't always enough.
 meta: aria-describedby isn't always enough.
 code: shiki
 image: './img.png'
+comments: none
 ---
 
 I made an accessibility error, and I want you to learn from my mistakes.

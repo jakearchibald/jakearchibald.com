@@ -34,6 +34,7 @@ interface Post {
   summary: string;
   meta: string;
   image?: { src: string; width: number; height: number };
+  comments?: 'none';
   scripts: Script[];
 }
 
