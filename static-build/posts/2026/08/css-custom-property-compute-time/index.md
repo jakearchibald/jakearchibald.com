@@ -1,5 +1,5 @@
 ---
-title: Controlling when CSS custom properties are computed
+title: Controlling when CSS custom property values are computed
 date: 2026-08-26 01:00:00
 summary: The default might not be what you expect, and it has a big impact on your styles.
 meta: The default might not be what you expect, and it has a big impact on your styles.
@@ -8,7 +8,7 @@ image: './img.png'
 comments: none
 ---
 
-When and how CSS custom properties are calculated might not be what you expect, and it has a big impact on your styles.
+When and how CSS custom property values are calculated might not be what you expect, and it has a big impact on your styles.
 
 # The default
 
@@ -93,7 +93,7 @@ If the code is taken in isolation, the value of the custom property will be stor
 ```css
 .second-item {
   --index: sibling-index();
-  /* …Which is computed to: */
+  /* …Which computes to: */
   --index: sibling-index();
   /* (as in, no change) */
 
@@ -136,7 +136,7 @@ Custom properties you haven't registered behave as if they have `syntax: '*'`, m
 ```css
 .second-item {
   --index: sibling-index();
-  /* …Which is computed to: */
+  /* …Which computes to: */
   --index: 2;
 
   & > :first-child {
@@ -149,7 +149,7 @@ Custom properties you haven't registered behave as if they have `syntax: '*'`, m
 }
 ```
 
-Registering the custom property & giving it a syntax meant the value was computed earlier, in a different context, so the result was different.
+Registering the custom property & giving it a syntax meant the full value was computed earlier, in a different context, so the result was different.
 
 Again, this is reflected in `getComputedStyle()`:
 
@@ -159,7 +159,7 @@ console.log(getComputedStyle(div).getPropertyValue('--index'));
 // Logs: "2"
 ```
 
-And it's not just `sibling-index()` that behaves this way. This also impacts relative font units (`em`, `ex`, `ch`, `cap`, `lh` etc.), container query units (`cqw`, `cqi`, `cqb` etc.), and more.
+And it's not just `sibling-index()` that behaves this way. This also impacts relative font units (`em`, `ex`, `ch`, `cap`, `lh` etc.), container query units (`cqw`, `cqi`, `cqb` etc.), and more. In all these cases, `@property` controls which element the values are computed against.
 
 Another thing that's impacted, although slightly differently, is URLs. In CSS, URLs are generally resolved against the stylesheet's base URL at computed-value time - so if a token-stream custom property is defined in one stylesheet and `var()`'d from another, the URL resolves against the consuming stylesheet. Registering the custom property with `syntax: '<url>'` pins it to the stylesheet that declared it.
 
@@ -179,7 +179,7 @@ Here's a trickier example:
 }
 ```
 
-What happens here? Well, `var()` behaves differently to `sibling-index()`. `var()` is an ["arbitrary substitution function"](https://drafts.csswg.org/css-values-5/#arbitrary-substitution-function), along with a bunch of other functions like `if()`, `attr()`, and `ident()`. These are substituted immediately, regardless of the syntax of the custom property. So:
+What happens here? Well, `var()` behaves differently to `sibling-index()`. `var()` is an ["arbitrary substitution function"](https://drafts.csswg.org/css-values-5/#arbitrary-substitution-function), along with a bunch of other functions like `if()`, `attr()`, and `ident()`. These are substituted regardless of the syntax of the custom property. So:
 
 ```css
 .second-item {
