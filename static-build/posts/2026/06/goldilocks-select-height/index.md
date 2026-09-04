@@ -1039,12 +1039,12 @@ We need to fix the margin when the picker flips above the button. Now, there's a
   max-block-size: calc(100% - var(--viewport-margin));
   /* prettier-ignore */
   position-try-fallbacks: /* [!code ++] */
-    /* [!code ++] */
-    flip-block,
-    /* [!code ++] */
-    flip-inline,
-    /* [!code ++] */
-    flip-block flip-inline;
+    /* prettier-ignore */
+    flip-block, /* [!code ++] */
+    /* prettier-ignore */
+    flip-inline, /* [!code ++] */
+    /* prettier-ignore */
+    flip-block flip-inline; /* [!code ++] */
 
   @supports (max-block-size: stretch) {
     max-block-size: stretch;
@@ -1159,18 +1159,25 @@ However, we already used `max-block-size` to stop the picker hitting the edge of
 
 ```css
 .custom-select::picker(select) {
+  /* prettier-ignore */
   --max-size: 30em; /* [!code ++] */
   --viewport-margin: 1em;
+  /* prettier-ignore */
   max-block-size: calc(100% - var(--viewport-margin)); /* [!code --] */
+  /* prettier-ignore */
   max-block-size: min(100% - var(--viewport-margin), var(--max-size)); /* [!code ++] */
   position-try-fallbacks:
     flip-block,
     flip-inline,
     flip-block flip-inline;
 
+  /* prettier-ignore */
   @supports (max-block-size: stretch) { /* [!code --] */
+  /* prettier-ignore */
   @supports (max-block-size: calc-size(stretch, min(size, 1px))) { /* [!code ++] */
+    /* prettier-ignore */
     max-block-size: stretch; /* [!code --] */
+    /* prettier-ignore */
     max-block-size: calc-size(stretch, min(size, var(--max-size))); /* [!code ++] */
     margin-block-end: var(--viewport-margin);
   }

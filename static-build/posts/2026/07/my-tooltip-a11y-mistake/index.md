@@ -145,6 +145,7 @@ So I dropped the `aria-label`…
 ```html
 <!-- prettier-ignore -->
 <button aria-label="Bold" aria-describedby="bold-tooltip"> // [!code --]
+<!-- prettier-ignore -->
 <button aria-describedby="bold-tooltip"> // [!code ++]
   <svg>(bold icon)</svg>
 </button>
@@ -170,6 +171,7 @@ Léonie and Gez told me how to fix it: I switched from `aria-describedby` to `ar
 ```html
 <!-- prettier-ignore -->
 <button aria-describedby="bold-tooltip"> // [!code --]
+<!-- prettier-ignore -->
 <button aria-labelledby="bold-tooltip"> // [!code ++]
   <svg>(bold icon)</svg>
 </button>

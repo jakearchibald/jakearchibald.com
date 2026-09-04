@@ -320,30 +320,53 @@ h2 + .max-figure {
   }
 
   &.code-example--shiki {
-    padding-left: 0;
-    padding-right: 0;
+    /* The text area's inset from the block's edges. Unlike the other code
+       examples, this padding sits on the block itself rather than on each
+       `.line`, so that the block's *content box* is exactly the text area —
+       that's what the `@container` rules further down measure, and it's what
+       makes `Nch` there mean "N code characters fit". Each `.line` mirrors the
+       padding back out (below) so a highlighted line's background still spans
+       the full width. */
+    --code-pad-start: 20px;
+    --code-pad-end: 20px;
+
+    padding-inline: var(--code-pad-start) var(--code-pad-end);
+
+    /* `ch` resolves against *this* element's font, hence the font-family here
+       rather than only on the `pre`. */
+    container: code / inline-size;
+    font-family: Inconsolata, courier, monospace;
+
+    @media screen and (min-width: $mobile-boundry) {
+      --code-pad-start: 32px;
+      --code-pad-end: 32px;
+    }
 
     & pre.shiki {
       background: none !important;
-      /* Let lines wrap rather than scroll horizontally. */
+      /* Fill the block, so line backgrounds span the full width. */
       display: block;
       white-space: pre;
       padding-right: 0;
     }
 
     /* Each line is a two-column grid: the leading indent in an auto-sized
-       column, the rest of the line in the second. When a long line wraps, its
-       continuation stays within the second column, so it lines up under the
-       start of the line's content instead of the gutter. */
+       column, the rest of the line in the second. When a line Prettier
+       couldn't fit into the tier wraps, its continuation stays within the
+       second column, so it lines up under the start of the line's content
+       instead of the gutter. */
     & .line {
       display: grid;
       grid-template-columns: auto 1fr;
       /* Preserve height for blank lines (which have no content). */
       min-height: 1lh;
-      padding-inline: 20px;
-      @media screen and (min-width: $mobile-boundry) {
-        padding-inline: 32px;
-      }
+      /* Bleed back out over the block's padding, so a diff-highlighted line's
+         background reaches the block's edges. The negative margins cancel the
+         padding exactly, leaving the text area — and so the container query —
+         unchanged. */
+      margin-inline: calc(-1 * var(--code-pad-start))
+        calc(-1 * var(--code-pad-end));
+      padding-inline: var(--code-pad-start) var(--code-pad-end);
     }
 
     & .indent {
@@ -373,7 +396,9 @@ h2 + .max-figure {
     }
 
     & .line.diff {
-      /* The +/- glyph sits in the reserved gutter, out of the grid flow. */
+      /* Contain the +/- glyph, which sits in the line's leading padding. */
+      position: relative;
+
       &::before {
         position: absolute;
         inset-inline-start: 5px;
@@ -591,6 +616,77 @@ h2 + .max-figure {
 
   .language-bash {
     white-space: pre-wrap;
+  }
+}
+
+/* Width variants of one shiki code block. The markdown pipeline runs Prettier
+   over each block at every width in `TIERS` (lib/code-widths.mjs), dedupes the
+   identical results, and emits one `.code-variant` per distinct result tagged
+   with the widths that produce it. These rules then show the widest one that
+   fits, so the code is laid out for the space it's actually given. Blocks that
+   format the same at every width emit no `.code-variant` at all and are
+   untouched by this.
+
+   Getting the tier wrong is not fatal in either direction — too narrow just
+   means more line breaks than necessary, too wide means the indent wrapping
+   above catches the overflow. Which matters, because Inconsolata is a webfont:
+   until it loads these queries evaluate against the fallback's wider `ch` and
+   pick a narrower variant, and Chrome doesn't appear to re-evaluate them when
+   the font arrives (a forced reflow fixes it). If that ever needs to be exact,
+   the thresholds can move to `em` at half the character count — every glyph in
+   Inconsolata is exactly 0.5em wide, and `em` depends only on font-size.
+
+   The hide and show rules within each query have equal specificity, so source
+   order decides and the last matching query wins — hence the repetition rather
+   than a single `:not()`. Keep these thresholds in step with `TIERS`. */
+.code-example--shiki > .code-variant {
+  display: none;
+}
+/* Shown when nothing wider fits, i.e. below the narrowest tier. */
+.code-example--shiki > .code-variant--base {
+  display: block;
+}
+
+@container code (width >= 48ch) {
+  .code-example--shiki > .code-variant {
+    display: none;
+  }
+  .code-example--shiki > .code-variant--48 {
+    display: block;
+  }
+}
+@container code (width >= 56ch) {
+  .code-example--shiki > .code-variant {
+    display: none;
+  }
+  .code-example--shiki > .code-variant--56 {
+    display: block;
+  }
+}
+@container code (width >= 64ch) {
+  .code-example--shiki > .code-variant {
+    display: none;
+  }
+  .code-example--shiki > .code-variant--64 {
+    display: block;
+  }
+}
+@container code (width >= 72ch) {
+  .code-example--shiki > .code-variant {
+    display: none;
+  }
+  .code-example--shiki > .code-variant--72 {
+    display: block;
+  }
+}
+
+@media print {
+  /* Paper is wide; always print the widest variant. */
+  .code-example--shiki > .code-variant {
+    display: none;
+  }
+  .code-example--shiki > .code-variant:last-child {
+    display: block;
   }
 }
 
