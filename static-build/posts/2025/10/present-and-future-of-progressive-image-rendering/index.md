@@ -58,6 +58,8 @@ Unfortunately, Safari doesn't perform any progressive rendering of WebP. It does
 
 ## AVIF
 
+**Update:** Since I posted this article, progressive support in AVIF has been massively improved. You can now provide progressive up to three progressive frames, processed in whatever way you want, and fractionally scaled. I intend to post more on this in future.
+
 Regular AVIF doesn't support any kind of progressive rendering. You get nothing, then you get the whole image ([demo](https://random-stuff.jakearchibald.com/apps/partial-img-decode/?demo=fox.avif&density=2)).
 
 But, AVIF does have a little-known progressive rendering feature! I couldn't get good results with the `--progressive` flag it offers, but I got something interesting with the lower level `--layered` flag. It's experimental, and I had to compile libavif myself to get it working. Here's the command I used:
@@ -248,6 +250,8 @@ There's another JPEG XL rust decoder jxl-rs, [being developed for Firefox](https
 # A better 'progressive' feature for AVIF?
 
 This article got longer than I expected, but one last thing…
+
+**Update:** Since I posted this article, progressive support in AVIF has been massively improved. You can now provide progressive up to three progressive frames, processed in whatever way you want, and fractionally scaled. I intend to post more on this in future.
 
 In my experience AVIF results in smaller files at what I'd consider 'web quality' compared to JPEG XL (particularly when [optimising for high-density](/2021/serving-sharp-images-to-high-density-screens/)). And based on current implementations, AVIF decodes significantly quicker than JPEG XL. Smaller files and faster decode is a huge advantage, but that said, I'd like AVIF to have a better 'progressive' feature. It'd be great if it supported an early render that allows more control over the quality and scale of the initial pass, and ideally a configurable post-process blur effect to hide compression artefacts.
 
