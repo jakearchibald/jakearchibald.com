@@ -597,7 +597,7 @@ Ok there are a few things to cover here:
 - At "visually lossless" quality, the JPEG XL lossy file is larger than the JPEG XL lossless file (I'll look at lossless performance in more detail later in the article).
 - JPEG XL has a quality cliff with this image - it can't produce anything between ssimu ~41 and ~69. JPEG XL is actually two codecs, VarDCT and Modular - I think what we're seeing here is a switch between the two, but I'm not sure.
 - Similarly, AVIF can't produce anything lower than ~49, so some of the comparisons above aren't quite equivalent at the lower qualities.
-- JPEG XL's default effort mode produces better results than higher efforts for this image, which is very weird. In the example images, I've used
+- JPEG XL's default effort mode produces better results than higher efforts for this image, which is very weird. In the example images above, I've previously used the highest effort, but in this case I'm using JPEG XL's default effort.
 - AVIF with 4:2:0 chroma subsampling performs better than 4:4:4 here, which isn't what I'd expect for this kind of image. I guess because it's mostly purple, colour data isn't as important.
 - JPEG XL underperforms significantly here when it comes to decoding performance, but this is likely a side effect of it producing much larger files for a given quality.
 
