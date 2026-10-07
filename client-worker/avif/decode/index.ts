@@ -16,6 +16,9 @@ import webPDecWasm from 'asset-url:./webp/webp_dec.wasm';
 import type { AVIFModule } from './avif/avif_dec';
 import avifDec from './avif/avif_dec';
 import avifDecWasm from 'asset-url:./avif/avif_dec.wasm';
+import type { JXLModule } from './jxl/jxl_dec';
+import jxlDec from './jxl/jxl_dec';
+import jxlDecWasm from 'asset-url:./jxl/jxl_dec.wasm';
 
 type ModuleFactory<M extends EmscriptenWasm.Module> = (
   opts: EmscriptenWasm.ModuleOpts,
@@ -43,6 +46,11 @@ function initEmscriptenModule<T extends EmscriptenWasm.Module>(
 
 let webpModule: Promise<WebPModule>;
 let avifModule: Promise<AVIFModule>;
+let jxlModule: Promise<JXLModule>;
+
+// Newer Emscripten builds return a promise for the module, so there's no need
+// for the onRuntimeInitialized dance.
+const initJXLModule = () => jxlDec({ locateFile: () => jxlDecWasm });
 
 addEventListener('message', async (event) => {
   if (event.data.action === 'awake') {
@@ -50,6 +58,8 @@ addEventListener('message', async (event) => {
       if (!webpModule) webpModule = initEmscriptenModule(webpDec, webPDecWasm);
     } else if (event.data.type === 'image/avif') {
       if (!avifModule) avifModule = initEmscriptenModule(avifDec, avifDecWasm);
+    } else if (event.data.type === 'image/jxl') {
+      if (!jxlModule) jxlModule = initJXLModule();
     }
   } else if (event.data.action === 'image/webp') {
     if (!webpModule) webpModule = initEmscriptenModule(webpDec, webPDecWasm);
@@ -63,6 +73,15 @@ addEventListener('message', async (event) => {
   } else if (event.data.action === 'image/avif') {
     if (!avifModule) avifModule = initEmscriptenModule(avifDec, avifDecWasm);
     const module = await avifModule;
+    const buffer = await new Response(event.data.blob).arrayBuffer();
+    const result = module.decode(buffer);
+    postMessage({
+      id: event.data.id,
+      result,
+    });
+  } else if (event.data.action === 'image/jxl') {
+    if (!jxlModule) jxlModule = initJXLModule();
+    const module = await jxlModule;
     const buffer = await new Response(event.data.blob).arrayBuffer();
     const result = module.decode(buffer);
     postMessage({

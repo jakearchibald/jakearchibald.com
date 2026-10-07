@@ -1,0 +1,701 @@
+---
+title: 'JPEG XL: Where does it fit on the web?'
+date: 2026-10-06 01:00:00
+summary: TODO
+meta: TODO
+code: shiki
+#image: './img.png'
+comments: none
+---
+
+JPEG XL has now landed across all major browsers, so I figured I'd take a closer look at what it's good/bad at compared to other formats.
+
+# Methodology
+
+I 'created' (yes, sorry) [a benchmarking script](https://github.com/jakearchibald/image-codec-bench), that encodes images using various codecs at various settings, and records various details.
+
+I'm using the latest released versions of the image codecs, which at time of writing is:
+
+- [avifenc](https://github.com/aomediacodec/libavif) 1.4.2
+- [cjxl](https://github.com/libjxl/libjxl) 0.12.0
+- [cwebp](https://chromium.googlesource.com/webm/libwebp/) 1.6.0 (only lossless is used later in the article)
+
+I chose a selection of images, and encoded most of them to a width of 1598 pixels - which is 2x the maximum width images appear on this blog. This means they [look sharp on high density displays](/2021/serving-sharp-images-to-high-density-screens/), which most users have.
+
+I ran this script on a series of images, on my 2024 MacBook M4 Pro. Here are the results:
+
+# Lossy - F1 image
+
+<figure class="full-figure max-figure">
+  <img src="asset-url:./images/f1-targets/avif-q44-e0-d8-yuv444-ssimu70.2.avif" loading="lazy" width="1598" height="1032" alt="A side-on photo of an Alpine F1 car speeding up a hill" style="height:auto" />
+</figure>
+
+When I [first wrote about AVIF](https://jakearchibald.com/2020/avif-has-landed/), I used an F1 car as the first image, so I figured I'd do that again!
+
+## Image quality
+
+Ok, let's get to our first graph, the [SSIMULACRA2](https://github.com/cloudinary/ssimulacra2) score - a perceptual image quality metric by the folks behind JPEG XL.
+
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/QualityChart",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+There's going to be a lot of these graphs, so here's what's going on:
+
+- **The x-axis is visual quality** according to SSIMULACRA2. Higher is closer to the original. 50 is considered medium quality, 70 high, 80 very high, and 90 visually lossless. Although, I'm not sure if these ratings take high density displays into account.
+- **The y-axis is file size**. Lower is better, for a given visual quality.
+- **The orange lines represent JPEG XL.**
+- **The blue lines represent AVIF.**
+- **The dashed blue lines represent AVIF with its color data at half resolution.** Known as 4:2:0.
+- **The darker lines represent higher effort levels for that codec.** cjxl calls this 'effort', so the e10 line is the top effort. Annoyingly, avifenc calls this 'speed', so the s0 line is the top effort.
+
+Conclusions we can draw from this, for this image:
+
+- AVIF performs significantly better than JPEG XL across all of these qualities.
+- Even at AVIF's default effort, it beats JPEG XL's maximum effort.
+- At medium to high qualities, the equivalent JPEG XL image is 40-50% larger than the AVIF image.
+- At very high to visually lossless qualities, the equivalent JPEG XL image is 13-29% larger than the AVIF image.
+- AVIF with 4:2:0 chroma subsampling doesn't seem worth it.
+- Turning up the effort doesn't have much of an impact for JPEG XL.
+- Going up one level of effort from the default on AVIF (s6 to s5) is a significant improvement.
+
+Here's the quality results using a different quality metric, [ColorVideoVDP](https://github.com/gfxdisp/colorvideovdp):
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+The result is roughly the same except:
+
+- ColorVideoVDP records even more of a gap between AVIF and JPEG XL.
+- ColorVideoVDP suggests there's some advantage to AVIF with 4:2:0 chroma subsampling at lower qualities.
+
+## Examples
+
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.5484,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/f1-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/f1-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/f1-targets/avif-q26-e0-d8-yuv444-ssimu51.6.avif", "bytes": "asset-size:./images/f1-targets/avif-q26-e0-d8-yuv444-ssimu51.6.avif", "score": "51.6" },
+        "jxl": { "url": "asset-url:./images/f1-targets/jxl-q20.5-e10-ssimu50.4.jxl", "bytes": "asset-size:./images/f1-targets/jxl-q20.5-e10-ssimu50.4.jxl", "score": "50.4" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/f1-targets/avif-q34-e0-d8-yuv444-ssimu60.1.avif", "bytes": "asset-size:./images/f1-targets/avif-q34-e0-d8-yuv444-ssimu60.1.avif", "score": "60.1" },
+        "jxl": { "url": "asset-url:./images/f1-targets/jxl-q29.4-e10-ssimu60.1.jxl", "bytes": "asset-size:./images/f1-targets/jxl-q29.4-e10-ssimu60.1.jxl", "score": "60.1" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/f1-targets/avif-q44-e0-d8-yuv444-ssimu70.2.avif", "bytes": "asset-size:./images/f1-targets/avif-q44-e0-d8-yuv444-ssimu70.2.avif", "score": "70.2" },
+        "jxl": { "url": "asset-url:./images/f1-targets/jxl-q53-e10-ssimu70.0.jxl", "bytes": "asset-size:./images/f1-targets/jxl-q53-e10-ssimu70.0.jxl", "score": "70.0" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/f1-targets/avif-q58-e0-d8-yuv444-ssimu80.1.avif", "bytes": "asset-size:./images/f1-targets/avif-q58-e0-d8-yuv444-ssimu80.1.avif", "score": "80.1" },
+        "jxl": { "url": "asset-url:./images/f1-targets/jxl-q73.5-e10-ssimu80.1.jxl", "bytes": "asset-size:./images/f1-targets/jxl-q73.5-e10-ssimu80.1.jxl", "score": "80.1" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/f1-targets/avif-q86-e0-d8-yuv444-ssimu90.2.avif", "bytes": "asset-size:./images/f1-targets/avif-q86-e0-d8-yuv444-ssimu90.2.avif", "score": "90.2" },
+        "jxl": { "url": "asset-url:./images/f1-targets/jxl-q91.4-e10-ssimu90.0.jxl", "bytes": "asset-size:./images/f1-targets/jxl-q91.4-e10-ssimu90.0.jxl", "score": "90.0" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+For archival, I'd tend towards near-lossless qualities, but if I'm just displaying an illustrative image on my blog, performance is more important to me. I'm personally happy with the 70 result. If you zoom in, you can see the quality loss, but if I was really concerned about the zoom-in case, I'd use something like the [`VisualViewport` API](https://developer.mozilla.org/en-US/docs/Web/API/VisualViewport) to load in a higher resolution image when that happens, rather than make the download bigger for everyone.
+
+At lower qualities you can see the difference in strategy between the codecs. The detail loss is around the same, but AVIF tends to smooth things out compared to the original, whereas JPEG XL seems to introduce rougher patterns.
+
+## Encoding performance
+
+When it comes to images on my blog, I encode with maximum effort settings. I'm happy to wait a couple of seconds to get an image that's faster to load for every user. However, if you're doing a lot of encoding on a server, encode time becomes more of a concern.
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+Conclusions we can draw from this, for this image:
+
+- At default efforts, JPEG XL takes over twice as long to encode at medium and high quality compared to AVIF. Remember that JPEG XL produces bigger files at these qualities, so with JPEG XL you're spending more encode time to get a worse result.
+- At very high qualities, JPEG XL's encode time decreases, but it's still over 60% slower than AVIF.
+- Higher efforts increase encode time significantly. As we saw with the quality graph, this isn't really worth it for JPEG XL, but depending on your use-case, you might consider a higher effort for AVIF.
+- AVIF with 4:2:0 chroma subsampling is faster to encode than full-resolution chroma.
+
+I see a lot of folks saying that AVIF is slow to encode, but that just doesn't seem to be true. Maybe it was true for an earlier version.
+
+## Encoding memory usage
+
+Another thing that might be a concern if you're encoding images on a server is peak memory usage:
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+Conclusions we can draw from this, for this image:
+
+- At default efforts and medium/high quality, JPEG XL uses over 3x the memory compared to AVIF.
+- Higher JPEG XL efforts use orders of magnitude more. As we've already seen, this doesn't really produce better results.
+- The higher effort settings for AVIF don't change the memory usage much.
+- AVIF with 4:2:0 chroma subsampling uses ~30% less memory than full-resolution chroma.
+
+## Decoding performance
+
+It's worth considering decoding performance. If decoding is particularly slow, then it might make the file size benefit less valuable, especially when images are loaded from a cache.
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+Conclusions we can draw from this, for this image:
+
+- JPEG XL takes about twice as long to decode as AVIF.
+- Chrome is the fastest to decode both formats.
+- Safari's JPEG XL decoder is significantly slower than Firefox & Chrome's.
+- JPEG XL becomes suddenly faster to decode at very high quality settings (but still slower than AVIF). I think this is due to an edge preserving filter that does more work at lower quality settings.
+
+# Lossy - people
+
+I've heard people say that AVIF's tendency to smooth out details makes it bad for human faces, so I picked this image [from Unplash](https://unsplash.com/photos/two-smiling-women-looking-at-a-smartphone-together-_t15AWPJNmg).
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.5005,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/women-with-phones-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/women-with-phones-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/women-with-phones-targets/avif-q32-e0-d8-yuv444-ssimu50.4.avif", "bytes": "asset-size:./images/women-with-phones-targets/avif-q32-e0-d8-yuv444-ssimu50.4.avif", "score": "50.4" },
+        "jxl": { "url": "asset-url:./images/women-with-phones-targets/jxl-q31.2-e10-ssimu50.3.jxl", "bytes": "asset-size:./images/women-with-phones-targets/jxl-q31.2-e10-ssimu50.3.jxl", "score": "50.3" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/women-with-phones-targets/avif-q40-e0-d8-yuv444-ssimu61.3.avif", "bytes": "asset-size:./images/women-with-phones-targets/avif-q40-e0-d8-yuv444-ssimu61.3.avif", "score": "61.3" },
+        "jxl": { "url": "asset-url:./images/women-with-phones-targets/jxl-q52.5-e10-ssimu60.1.jxl", "bytes": "asset-size:./images/women-with-phones-targets/jxl-q52.5-e10-ssimu60.1.jxl", "score": "60.1" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/women-with-phones-targets/avif-q49-e0-d8-yuv444-ssimu70.7.avif", "bytes": "asset-size:./images/women-with-phones-targets/avif-q49-e0-d8-yuv444-ssimu70.7.avif", "score": "70.7" },
+        "jxl": { "url": "asset-url:./images/women-with-phones-targets/jxl-q69.6-e10-ssimu70.1.jxl", "bytes": "asset-size:./images/women-with-phones-targets/jxl-q69.6-e10-ssimu70.1.jxl", "score": "70.1" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/women-with-phones-targets/avif-q63-e0-d8-yuv444-ssimu80.2.avif", "bytes": "asset-size:./images/women-with-phones-targets/avif-q63-e0-d8-yuv444-ssimu80.2.avif", "score": "80.2" },
+        "jxl": { "url": "asset-url:./images/women-with-phones-targets/jxl-q82.4-e10-ssimu80.1.jxl", "bytes": "asset-size:./images/women-with-phones-targets/jxl-q82.4-e10-ssimu80.1.jxl", "score": "80.1" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/women-with-phones-targets/avif-q88-e0-d8-yuv444-ssimu90.3.avif", "bytes": "asset-size:./images/women-with-phones-targets/avif-q88-e0-d8-yuv444-ssimu90.3.avif", "score": "90.3" },
+        "jxl": { "url": "asset-url:./images/women-with-phones-targets/jxl-q94.1-e10-ssimu90.1.jxl", "bytes": "asset-size:./images/women-with-phones-targets/jxl-q94.1-e10-ssimu90.1.jxl", "score": "90.1" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+The data tells a similar story to the F1 example, except:
+
+- At medium-high qualities, the gap is even bigger this time, with JPEG XL being 50-60% larger than AVIF.
+- It gets much closer at "visually lossless", with JPEG XL being only 6% larger.
+- The highest effort setting on JPEG XL is slightly better than the other effort settings, but it still performs much worse than AVIF at default effort.
+
+At lower qualities, you can see the smoothing on the face, but it's the same for both AVIF and JPEG XL.
+
+I won't bore you with the graphs unless you actively want to be bored.
+
+<details>
+
+<summary>Bore away!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Lossy - red panda
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.4935,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/red-panda-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/red-panda-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/red-panda-targets/avif-q37-e0-d8-yuv444-ssimu51.6.avif", "bytes": "asset-size:./images/red-panda-targets/avif-q37-e0-d8-yuv444-ssimu51.6.avif", "score": "51.6" },
+        "jxl": { "url": "asset-url:./images/red-panda-targets/jxl-q40.9-e10-ssimu50.2.jxl", "bytes": "asset-size:./images/red-panda-targets/jxl-q40.9-e10-ssimu50.2.jxl", "score": "50.2" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/red-panda-targets/avif-q44-e0-d8-yuv444-ssimu60.6.avif", "bytes": "asset-size:./images/red-panda-targets/avif-q44-e0-d8-yuv444-ssimu60.6.avif", "score": "60.6" },
+        "jxl": { "url": "asset-url:./images/red-panda-targets/jxl-q58.7-e10-ssimu60.0.jxl", "bytes": "asset-size:./images/red-panda-targets/jxl-q58.7-e10-ssimu60.0.jxl", "score": "60.0" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/red-panda-targets/avif-q52-e0-d8-yuv444-ssimu70.3.avif", "bytes": "asset-size:./images/red-panda-targets/avif-q52-e0-d8-yuv444-ssimu70.3.avif", "score": "70.3" },
+        "jxl": { "url": "asset-url:./images/red-panda-targets/jxl-q71.9-e10-ssimu70.0.jxl", "bytes": "asset-size:./images/red-panda-targets/jxl-q71.9-e10-ssimu70.0.jxl", "score": "70.0" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/red-panda-targets/avif-q67-e0-d8-yuv444-ssimu80.7.avif", "bytes": "asset-size:./images/red-panda-targets/avif-q67-e0-d8-yuv444-ssimu80.7.avif", "score": "80.7" },
+        "jxl": { "url": "asset-url:./images/red-panda-targets/jxl-q84.5-e10-ssimu80.1.jxl", "bytes": "asset-size:./images/red-panda-targets/jxl-q84.5-e10-ssimu80.1.jxl", "score": "80.1" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/red-panda-targets/avif-q90-e0-d8-yuv444-ssimu90.3.avif", "bytes": "asset-size:./images/red-panda-targets/avif-q90-e0-d8-yuv444-ssimu90.3.avif", "score": "90.3" },
+        "jxl": { "url": "asset-url:./images/red-panda-targets/jxl-q95.6-e10-ssimu90.2.jxl", "bytes": "asset-size:./images/red-panda-targets/jxl-q95.6-e10-ssimu90.2.jxl", "score": "90.2" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+I threw this one in because it's the default image in [Squoosh](https://squoosh.app/), but I guess the sharp lines of the hairs makes it different to the previous image. In fact, even at low qualities, the difference between the original is much less perceptible to my eyes compared to the other images.
+
+The story is mostly the same compared to the other images, except:
+
+- The gap between AVIF and JPEG XL is smaller for this image, with JPEG XL being only ~22% larger at medium-high quality levels.
+- The encode times are closer too. At default efforts, JPEG XL is only ~50% slower. But remember that this also produces worse results.
+- The decode times are also closer. In Chrome, at very high quality, the JPEG XL decodes slightly faster.
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Lossy - outlier
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 0.8276,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/critter-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/critter-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "jxl",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/critter-targets/avif-q47-e0-d8-yuv444-ssimu50.4.avif", "bytes": "asset-size:./images/critter-targets/avif-q47-e0-d8-yuv444-ssimu50.4.avif", "score": "50.4" },
+        "jxl": { "url": "asset-url:./images/critter-targets/jxl-q64.4-e10-ssimu50.1.jxl", "bytes": "asset-size:./images/critter-targets/jxl-q64.4-e10-ssimu50.1.jxl", "score": "50.1" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/critter-targets/avif-q52-e0-d8-yuv444-ssimu60.1.avif", "bytes": "asset-size:./images/critter-targets/avif-q52-e0-d8-yuv444-ssimu60.1.avif", "score": "60.1" },
+        "jxl": { "url": "asset-url:./images/critter-targets/jxl-q73.7-e10-ssimu60.1.jxl", "bytes": "asset-size:./images/critter-targets/jxl-q73.7-e10-ssimu60.1.jxl", "score": "60.1" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/critter-targets/avif-q60-e0-d8-yuv444-ssimu70.5.avif", "bytes": "asset-size:./images/critter-targets/avif-q60-e0-d8-yuv444-ssimu70.5.avif", "score": "70.5" },
+        "jxl": { "url": "asset-url:./images/critter-targets/jxl-q80.1-e10-ssimu70.1.jxl", "bytes": "asset-size:./images/critter-targets/jxl-q80.1-e10-ssimu70.1.jxl", "score": "70.1" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/critter-targets/avif-q74-e0-d8-yuv444-ssimu80.5.avif", "bytes": "asset-size:./images/critter-targets/avif-q74-e0-d8-yuv444-ssimu80.5.avif", "score": "80.5" },
+        "jxl": { "url": "asset-url:./images/critter-targets/jxl-q87.2-e10-ssimu80.1.jxl", "bytes": "asset-size:./images/critter-targets/jxl-q87.2-e10-ssimu80.1.jxl", "score": "80.1" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/critter-targets/avif-q90-e0-d8-yuv444-ssimu90.2.avif", "bytes": "asset-size:./images/critter-targets/avif-q90-e0-d8-yuv444-ssimu90.2.avif", "score": "90.2" },
+        "jxl": { "url": "asset-url:./images/critter-targets/jxl-q95-e10-ssimu90.0.jxl", "bytes": "asset-size:./images/critter-targets/jxl-q95-e10-ssimu90.0.jxl", "score": "90.0" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+I've played with both codecs a lot, and for photos, most results similar, where AVIF significantly beats JPEG XL. However, every now and then there's an outlier, such as this image.
+
+Compared to previous results:
+
+- AVIF produces files around 5% larger than JPEG XL for a given quality.
+- Similar to the red panda image, at higher qualities in Chrome, JPEG XL decodes faster the equivalent AVIF. JPEG XL decodes slower than AVIF at lower qualities, and at all qualities in Firefox and Safari.
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Lossy - screenshot
+
+Ok, let's try something other than a photo:
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.6479,
+    "maxWidth": 730,
+    "lossless": "asset-url:./images/screenshot-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/screenshot-targets/lossless.jxl",
+    "initialQuality": 3,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 45,
+        "avif": { "url": "asset-url:./images/screenshot-targets/avif-q0-e0-d8-yuv444-ssimu49.6.avif", "bytes": "asset-size:./images/screenshot-targets/avif-q0-e0-d8-yuv444-ssimu49.6.avif", "score": "49.6" },
+        "jxl": { "url": "asset-url:./images/screenshot-targets/jxl-q17.5-e7-ssimu45.0.jxl", "bytes": "asset-size:./images/screenshot-targets/jxl-q17.5-e7-ssimu45.0.jxl", "score": "45.0" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/screenshot-targets/avif-q14-e0-d8-yuv444-ssimu61.5.avif", "bytes": "asset-size:./images/screenshot-targets/avif-q14-e0-d8-yuv444-ssimu61.5.avif", "score": "61.5" },
+        "jxl": { "url": "asset-url:./images/screenshot-targets/jxl-q18.1-e7-ssimu72.9.jxl", "bytes": "asset-size:./images/screenshot-targets/jxl-q18.1-e7-ssimu72.9.jxl", "score": "72.9" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/screenshot-targets/avif-q26-e0-d8-yuv444-ssimu70.3.avif", "bytes": "asset-size:./images/screenshot-targets/avif-q26-e0-d8-yuv444-ssimu70.3.avif", "score": "70.3" },
+        "jxl": { "url": "asset-url:./images/screenshot-targets/jxl-q18.1-e7-ssimu72.9.jxl", "bytes": "asset-size:./images/screenshot-targets/jxl-q18.1-e7-ssimu72.9.jxl", "score": "72.9" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/screenshot-targets/avif-q50-e0-d8-yuv444-ssimu80.4.avif", "bytes": "asset-size:./images/screenshot-targets/avif-q50-e0-d8-yuv444-ssimu80.4.avif", "score": "80.4" },
+        "jxl": { "url": "asset-url:./images/screenshot-targets/jxl-q39.4-e7-ssimu80.2.jxl", "bytes": "asset-size:./images/screenshot-targets/jxl-q39.4-e7-ssimu80.2.jxl", "score": "80.2" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/screenshot-targets/avif-q82-e0-d8-yuv444-ssimu90.1.avif", "bytes": "asset-size:./images/screenshot-targets/avif-q82-e0-d8-yuv444-ssimu90.1.avif", "score": "90.1" },
+        "jxl": { "url": "asset-url:./images/screenshot-targets/jxl-q81.9-e7-ssimu90.2.jxl", "bytes": "asset-size:./images/screenshot-targets/jxl-q81.9-e7-ssimu90.2.jxl", "score": "90.2" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+Ok there are a few things to cover here:
+
+- JPEG XL performs really badly with this kind of image - it ends up 64% larger than the equivalent AVIF in the best case.
+- At "visually lossless" quality, the JPEG XL lossy file is larger than the JPEG XL lossless file (I'll look at lossless performance in more detail later in the article).
+- JPEG XL has a quality cliff with this image - it can't produce anything between ssimu ~41 and ~69. JPEG XL is actually two codecs, VarDCT and Modular - I think what we're seeing here is a switch between the two, but I'm not sure.
+- Similarly, AVIF can't produce anything lower than ~49, so some of the comparisons above aren't quite equivalent at the lower qualities.
+- JPEG XL's default effort mode produces better results than higher efforts for this image, which is very weird. In the example images, I've used
+- AVIF with 4:2:0 chroma subsampling performs better than 4:4:4 here, which isn't what I'd expect for this kind of image. I guess because it's mostly purple, colour data isn't as important.
+- JPEG XL underperforms significantly here when it comes to decoding performance, but this is likely a side effect of it producing much larger files for a given quality.
+
+I previously said I'm happy with qualities around 70, but that isn't the case with this image. At 70 the artefacts are pretty noticeable around the Firefox logo (to me, anyway), so I'd go with 80. Thankfully, AVIF's "quality level 50", which I tend to use, produces an image with a ssimu quality around 80, whereas for photos it produces images with a ssimu quality around 70, so it handles this use-case well.
+
+Some developers, especially those who've been around as long as I have, seem to think that things like screenshots need to be delivered in a lossless format. But I think this is because they're used to formats like JPEG and WebP (and seemingly JPEG XL) which handle this kind of image badly, whereas lossy AVIF handles them really well.
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+You can really see that JPEG XL performance cliff!
+
+I'm not including the CVVDP chart because the metric doesn't support alpha channels.
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+As I noted above, the high JPEG XL decoding times here are likely a side effect of it producing much larger files for a given quality.
+
+</details>
+
+# Notes
+
+- Lossy
+  - F1 image
+    - That's what I did for AVIF article
+  - People
+  - Red Panda
+  - Critter (outlier)
+  - Screenshot
+  - Illustration
+  - Does resolution matter?
+- Lossless
+  - Do you really need lossless for web images?
+  - F1 image
+  - Screenshot
+- Progressive
+  - Pick a larger image from the set, but not critter
+  - Measure overhead
+  - Chrome only but looking to land it in Firefox
+  - Interop for JPEG XL
+- HDR
+  - Gain maps vs not
+- JPEG transcoding
+  - Talk about large vs small decoding time
+- Animation
+  - Just don't
+  - Originally pushed for it not to be supported
+- Misinformation & AI
+- Unsure of claims
+  - COVID layoff claims
+  - Conversations can get really weird (racism thing)
+  - Moving of goalposts
+- Please test your own images
+
+https://unsplash.com/photos/two-smiling-women-looking-at-a-smartphone-together-_t15AWPJNmg

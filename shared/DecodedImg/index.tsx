@@ -12,7 +12,7 @@
  */
 import { Component, h, VNode } from 'preact';
 import { abortable, canDecodeImageType, extensionTypes } from './utils';
-import Decoder from './decoder';
+import Decoder, { ImageTypes } from './decoder';
 
 const decodeCache = new Map<string, Promise<ImageData>>();
 
@@ -94,17 +94,13 @@ export default class DecodedImg extends Component<Props, State> {
       const addToCache = () => {
         if (!this._decoder) this._decoder = new Decoder();
 
-        this._decoder.awake(type as 'image/webp' | 'image/avif');
+        this._decoder.awake(type as ImageTypes);
 
         decodeCache.set(
           src,
           fetch(src, { signal }).then(async (response) => {
             const blob = await response.blob();
-            return this._decoder!.decode(
-              signal,
-              type as 'image/webp' | 'image/avif',
-              blob,
-            );
+            return this._decoder!.decode(signal, type as ImageTypes, blob);
           }),
         );
       };

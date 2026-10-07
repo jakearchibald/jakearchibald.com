@@ -264,6 +264,17 @@
   }
 }
 
+/* Spans the content and sidebar columns */
+.breakout {
+  @media screen and (min-width: $side-introduction-width) {
+    width: 100cqi;
+    box-sizing: border-box;
+    /* Paint over the sidebar */
+    position: relative;
+    z-index: 1;
+  }
+}
+
 h2 + .max-figure {
   margin-top: 0;
 }

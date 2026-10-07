@@ -28,6 +28,7 @@ export async function abortable<T>(
 export const extensionTypes: { [type: string]: string | undefined } = {
   webp: 'image/webp',
   avif: 'image/avif',
+  jxl: 'image/jxl',
   jpg: 'image/jpeg',
   png: 'image/png',
   svg: 'image/svg+xml',

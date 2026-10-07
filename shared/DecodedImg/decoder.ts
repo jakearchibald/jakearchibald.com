@@ -13,11 +13,11 @@
 import workerURL from 'entry-url:client-worker/avif/decode';
 import { abortable } from './utils';
 
-type ImageTypes = 'image/webp' | 'image/avif';
+export type ImageTypes = 'image/webp' | 'image/avif' | 'image/jxl';
 
 export default class Decoder {
   private _worker?: Worker;
-  private _queue = (Promise.resolve() as unknown) as Promise<ImageData>;
+  private _queue = Promise.resolve() as unknown as Promise<ImageData>;
   private _pendingId: number = 0;
 
   constructor() {
@@ -30,7 +30,8 @@ export default class Decoder {
   }
 
   private _initWorker() {
-    this._worker = new Worker(workerURL);
+    // Module worker, as the JXL decoder uses import.meta.
+    this._worker = new Worker(workerURL, { type: 'module' });
   }
 
   awake(type: ImageTypes) {

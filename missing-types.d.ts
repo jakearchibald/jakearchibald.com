@@ -32,6 +32,16 @@ declare module 'asset-pretty-size-br:*' {
   export default value;
 }
 
+declare module 'asset-size:*' {
+  const value: number;
+  export default value;
+}
+
+declare module 'asset-size-br:*' {
+  const value: number;
+  export default value;
+}
+
 declare module 'asset-string:*' {
   const value: string;
   export default value;
