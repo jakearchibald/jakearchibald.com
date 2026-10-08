@@ -664,6 +664,120 @@ As I noted above, the high JPEG XL decoding times here are likely a side effect 
 
 </details>
 
+# Lossy - illustration
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 0.7499,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/cat-illustration-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/cat-illustration-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/cat-illustration-targets/avif-q20-e0-d8-yuv444-ssimu51.5.avif", "bytes": "asset-size:./images/cat-illustration-targets/avif-q20-e0-d8-yuv444-ssimu51.5.avif", "score": "51.5" },
+        "jxl": { "url": "asset-url:./images/cat-illustration-targets/jxl-q18.1-e10-ssimu51.0.jxl", "bytes": "asset-size:./images/cat-illustration-targets/jxl-q18.1-e10-ssimu51.0.jxl", "score": "51.0" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/cat-illustration-targets/avif-q28-e0-d8-yuv444-ssimu60.3.avif", "bytes": "asset-size:./images/cat-illustration-targets/avif-q28-e0-d8-yuv444-ssimu60.3.avif", "score": "60.3" },
+        "jxl": { "url": "asset-url:./images/cat-illustration-targets/jxl-q23.3-e10-ssimu60.0.jxl", "bytes": "asset-size:./images/cat-illustration-targets/jxl-q23.3-e10-ssimu60.0.jxl", "score": "60.0" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/cat-illustration-targets/avif-q39-e0-d8-yuv444-ssimu71.5.avif", "bytes": "asset-size:./images/cat-illustration-targets/avif-q39-e0-d8-yuv444-ssimu71.5.avif", "score": "71.5" },
+        "jxl": { "url": "asset-url:./images/cat-illustration-targets/jxl-q44.9-e10-ssimu70.2.jxl", "bytes": "asset-size:./images/cat-illustration-targets/jxl-q44.9-e10-ssimu70.2.jxl", "score": "70.2" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/cat-illustration-targets/avif-q52-e0-d8-yuv444-ssimu80.2.avif", "bytes": "asset-size:./images/cat-illustration-targets/avif-q52-e0-d8-yuv444-ssimu80.2.avif", "score": "80.2" },
+        "jxl": { "url": "asset-url:./images/cat-illustration-targets/jxl-q72.1-e10-ssimu80.0.jxl", "bytes": "asset-size:./images/cat-illustration-targets/jxl-q72.1-e10-ssimu80.0.jxl", "score": "80.0" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/cat-illustration-targets/avif-q99-e0-d8-yuv444-ssimu86.6.avif", "bytes": "asset-size:./images/cat-illustration-targets/avif-q99-e0-d8-yuv444-ssimu86.6.avif", "score": "86.6" },
+        "jxl": { "url": "asset-url:./images/cat-illustration-targets/jxl-q97.4-e10-ssimu90.1.jxl", "bytes": "asset-size:./images/cat-illustration-targets/jxl-q97.4-e10-ssimu90.1.jxl", "score": "90.1" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+TODO
+
+From [here](https://unsplash.com/illustrations/hands-feeding-orange-cat-a-treat-on-bed-9tXfoalzAqY). Still 1.1 MB as compressed & minified SVG.
+
+- JPEG XL does really badly. Roughly double the size of the AVIF.
+- AVIF cannot reach ssimu 90.
+- Some cross-over in memory usage
+- JXL lossless better than "visually lossless" in both formats.
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
 # Notes
 
 - Lossy
@@ -675,6 +789,7 @@ As I noted above, the high JPEG XL decoding times here are likely a side effect 
   - Screenshot
   - Illustration
   - Does resolution matter?
+  - Quality stability - does AVIF q50 & JXL q70 vary from image to image
 - Lossless
   - Do you really need lossless for web images?
   - F1 image
@@ -696,6 +811,8 @@ As I noted above, the high JPEG XL decoding times here are likely a side effect 
   - COVID layoff claims
   - Conversations can get really weird (racism thing)
   - Moving of goalposts
+  - Claiming it was ripped out of Chrome.
+  - Both AVIF and JPEG XL have large Google contributions.
 - Please test your own images
 
 https://unsplash.com/photos/two-smiling-women-looking-at-a-smartphone-together-_t15AWPJNmg
