@@ -1,0 +1,141 @@
+{
+  "input": "/Users/jarchibald/dev/image-codec-bench/inputs/f1-small.png",
+  "reference": {
+    "path": "/Users/jarchibald/dev/image-codec-bench/out/f1-small-targets/.tmp/reference.png",
+    "width": 400,
+    "height": 258,
+    "depth": 8,
+    "channels": 3,
+    "hasAlpha": false,
+    "megapixels": 0.1032,
+    "strippedChunks": [],
+    "resized": false,
+    "source": {
+      "width": 400,
+      "height": 258,
+      "hasAlpha": false
+    }
+  },
+  "versions": {
+    "avifenc": "1.4.2",
+    "avifdec": "1.4.2",
+    "cjxl": "0.12.0",
+    "djxl": "0.12.0",
+    "ssimulacra2": "4dbb9a9c96d74608",
+    "cwebp": "1.6.0",
+    "dwebp": "1.6.0",
+    "magick": "7.1.2"
+  },
+  "results": [
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 50,
+      "quality": 30,
+      "score": 51.20367263,
+      "bytes": 4682,
+      "file": "avif-q30-e0-d8-yuv444-ssimu51.2.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 60,
+      "quality": 39,
+      "score": 60.74220416,
+      "bytes": 6079,
+      "file": "avif-q39-e0-d8-yuv444-ssimu60.7.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 70,
+      "quality": 47,
+      "score": 70.38151656,
+      "bytes": 8336,
+      "file": "avif-q47-e0-d8-yuv444-ssimu70.4.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 80,
+      "quality": 60,
+      "score": 80.60866798,
+      "bytes": 12925,
+      "file": "avif-q60-e0-d8-yuv444-ssimu80.6.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 90,
+      "quality": 84,
+      "score": 90.43770683,
+      "bytes": 25069,
+      "file": "avif-q84-e0-d8-yuv444-ssimu90.4.avif"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 50,
+      "quality": 28,
+      "score": 50.6632638,
+      "bytes": 6370,
+      "file": "jxl-q28-e10-ssimu50.7.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 60,
+      "quality": 43.5,
+      "score": 60.07738429,
+      "bytes": 7745,
+      "file": "jxl-q43.5-e10-ssimu60.1.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 70,
+      "quality": 62.8,
+      "score": 70.21290362,
+      "bytes": 10722,
+      "file": "jxl-q62.8-e10-ssimu70.2.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 80,
+      "quality": 78.5,
+      "score": 80.24175704,
+      "bytes": 16190,
+      "file": "jxl-q78.5-e10-ssimu80.2.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 90,
+      "quality": 93.1,
+      "score": 90.19378916,
+      "bytes": 31121,
+      "file": "jxl-q93.1-e10-ssimu90.2.jxl"
+    }
+  ]
+}

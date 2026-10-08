@@ -778,6 +778,237 @@ From [here](https://unsplash.com/illustrations/hands-feeding-orange-cat-a-treat-
 
 </details>
 
+# Lossy - small
+
+TODO
+
+The images so far have been a similar resolution, so let's see if smaller images behave differently.
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.5504,
+    "maxWidth": 200,
+    "lossless": "asset-url:./images/f1-small-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/f1-small-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/f1-small-targets/avif-q30-e0-d8-yuv444-ssimu51.2.avif", "bytes": "asset-size:./images/f1-small-targets/avif-q30-e0-d8-yuv444-ssimu51.2.avif", "score": "51.2" },
+        "jxl": { "url": "asset-url:./images/f1-small-targets/jxl-q28-e10-ssimu50.7.jxl", "bytes": "asset-size:./images/f1-small-targets/jxl-q28-e10-ssimu50.7.jxl", "score": "50.7" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/f1-small-targets/avif-q39-e0-d8-yuv444-ssimu60.7.avif", "bytes": "asset-size:./images/f1-small-targets/avif-q39-e0-d8-yuv444-ssimu60.7.avif", "score": "60.7" },
+        "jxl": { "url": "asset-url:./images/f1-small-targets/jxl-q43.5-e10-ssimu60.1.jxl", "bytes": "asset-size:./images/f1-small-targets/jxl-q43.5-e10-ssimu60.1.jxl", "score": "60.1" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/f1-small-targets/avif-q47-e0-d8-yuv444-ssimu70.4.avif", "bytes": "asset-size:./images/f1-small-targets/avif-q47-e0-d8-yuv444-ssimu70.4.avif", "score": "70.4" },
+        "jxl": { "url": "asset-url:./images/f1-small-targets/jxl-q62.8-e10-ssimu70.2.jxl", "bytes": "asset-size:./images/f1-small-targets/jxl-q62.8-e10-ssimu70.2.jxl", "score": "70.2" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/f1-small-targets/avif-q60-e0-d8-yuv444-ssimu80.6.avif", "bytes": "asset-size:./images/f1-small-targets/avif-q60-e0-d8-yuv444-ssimu80.6.avif", "score": "80.6" },
+        "jxl": { "url": "asset-url:./images/f1-small-targets/jxl-q78.5-e10-ssimu80.2.jxl", "bytes": "asset-size:./images/f1-small-targets/jxl-q78.5-e10-ssimu80.2.jxl", "score": "80.2" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/f1-small-targets/avif-q84-e0-d8-yuv444-ssimu90.4.avif", "bytes": "asset-size:./images/f1-small-targets/avif-q84-e0-d8-yuv444-ssimu90.4.avif", "score": "90.4" },
+        "jxl": { "url": "asset-url:./images/f1-small-targets/jxl-q93.1-e10-ssimu90.2.jxl", "bytes": "asset-size:./images/f1-small-targets/jxl-q93.1-e10-ssimu90.2.jxl", "score": "90.2" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+TODO
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Lossy - large
+
+TODO
+
+And now a large image!
+
+- JPEG XL significantly larger file size than AVIF, except at "visually lossless" where it crosses over.
+- In JPEG XL, effort seems to make little difference. Sometimes makes the file larger.
+- In AVIF, s5 is a decent improvement over s6
+- JXL default encoding almost 4x slower than AVIF
+- Anything more than default effort in JXL is orders of magnitude slower than AVIF. Even slower than AVIF at max effort.
+- JXL uses a lot more memory to encode than avif.
+- Slower to decode, except in Chrome where there's some cross-over.
+
+<figure class="full-figure super-breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 1.5486,
+    "maxWidth": 2650,
+    "lossless": "asset-url:./images/f1-large-targets/original.jpg",
+    "losslessBytes": "asset-size:./images/f1-large-targets/original.jpg",
+    "losslessLabel": "Original",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/f1-large-targets/avif-q16-e0-d8-yuv444-ssimu50.4.avif", "bytes": "asset-size:./images/f1-large-targets/avif-q16-e0-d8-yuv444-ssimu50.4.avif", "score": "50.4" },
+        "jxl": { "url": "asset-url:./images/f1-large-targets/jxl-q13.1-e10-ssimu50.0.jxl", "bytes": "asset-size:./images/f1-large-targets/jxl-q13.1-e10-ssimu50.0.jxl", "score": "50.0" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/f1-large-targets/avif-q26-e0-d8-yuv444-ssimu60.1.avif", "bytes": "asset-size:./images/f1-large-targets/avif-q26-e0-d8-yuv444-ssimu60.1.avif", "score": "60.1" },
+        "jxl": { "url": "asset-url:./images/f1-large-targets/jxl-q20.9-e10-ssimu60.0.jxl", "bytes": "asset-size:./images/f1-large-targets/jxl-q20.9-e10-ssimu60.0.jxl", "score": "60.0" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/f1-large-targets/avif-q39-e0-d8-yuv444-ssimu70.4.avif", "bytes": "asset-size:./images/f1-large-targets/avif-q39-e0-d8-yuv444-ssimu70.4.avif", "score": "70.4" },
+        "jxl": { "url": "asset-url:./images/f1-large-targets/jxl-q41.2-e10-ssimu70.0.jxl", "bytes": "asset-size:./images/f1-large-targets/jxl-q41.2-e10-ssimu70.0.jxl", "score": "70.0" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/f1-large-targets/avif-q59-e0-d8-yuv444-ssimu80.4.avif", "bytes": "asset-size:./images/f1-large-targets/avif-q59-e0-d8-yuv444-ssimu80.4.avif", "score": "80.4" },
+        "jxl": { "url": "asset-url:./images/f1-large-targets/jxl-q71.8-e10-ssimu80.0.jxl", "bytes": "asset-size:./images/f1-large-targets/jxl-q71.8-e10-ssimu80.0.jxl", "score": "80.0" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/f1-large-targets/avif-q90-e0-d8-yuv444-ssimu90.5.avif", "bytes": "asset-size:./images/f1-large-targets/avif-q90-e0-d8-yuv444-ssimu90.5.avif", "score": "90.5" },
+        "jxl": { "url": "asset-url:./images/f1-large-targets/jxl-q93.3-e10-ssimu90.0.jxl", "bytes": "asset-size:./images/f1-large-targets/jxl-q93.3-e10-ssimu90.0.jxl", "score": "90.0" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+TODO
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
 # Notes
 
 - Lossy

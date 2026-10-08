@@ -29,6 +29,9 @@ body {
   margin: 0;
   padding: 0;
   -webkit-text-size-adjust: 100%;
+  /* 100vw includes the scrollbar, so .super-breakout would otherwise cause
+     horizontal scrolling */
+  overflow-x: clip;
 }
 
 figure {

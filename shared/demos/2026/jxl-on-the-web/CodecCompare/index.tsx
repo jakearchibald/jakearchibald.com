@@ -28,6 +28,8 @@ interface Props {
   lossless: string;
   /** Via asset-size, see Encoding.bytes */
   losslessBytes: string;
+  /** What to call the lossless image, in case it's something else, like the original */
+  losslessLabel?: string;
   qualities: Quality[];
   initialQuality?: number;
   initialCodec?: Codec;
@@ -59,6 +61,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
   maxWidth,
   lossless,
   losslessBytes,
+  losslessLabel = 'Lossless',
   qualities,
   initialQuality = 0,
   initialCodec = 'avif',
@@ -119,7 +122,13 @@ const CodecCompare: FunctionalComponent<Props> = ({
         class="codec-compare-preview"
         onPointerDown={onPointerDown}
         onLostPointerCapture={() => setHolding(false)}
-        onContextMenu={(event) => event.preventDefault()}
+        onContextMenu={(event) => {
+          // Long-press is how touch users hold for lossless, so don't let it
+          // open a menu. Right-click is left alone.
+          if ('pointerType' in event && event.pointerType === 'touch') {
+            event.preventDefault();
+          }
+        }}
       >
         <AsyncContent loading={holding ? !losslessLoaded : loading}>
           <div style={{ maxWidth, margin: '0 auto' }}>
@@ -159,8 +168,8 @@ const CodecCompare: FunctionalComponent<Props> = ({
           aria-pressed={holding ? 'true' : 'false'}
         >
           {holding
-            ? `Lossless (${formatBytes(Number(losslessBytes))})`
-            : 'Hold for lossless'}
+            ? `${losslessLabel} (${formatBytes(Number(losslessBytes))})`
+            : `Hold for ${losslessLabel.toLowerCase()}`}
         </button>
       </div>
       {/*

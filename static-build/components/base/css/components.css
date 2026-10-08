@@ -275,6 +275,24 @@
   }
 }
 
+/* Spans the full width of the window */
+.super-breakout {
+  width: 100vw;
+  box-sizing: border-box;
+  /* The page is centred, and .content-n-side has equal padding on each side,
+     so the content's left edge is half the difference from the window's. */
+  margin-left: calc((100cqi - 100vw) / 2);
+  margin-right: 0;
+  /* Paint over the sidebar */
+  position: relative;
+  z-index: 1;
+
+  /* Except here, where .content-n-side's padding is 32px left, 64px right */
+  @media screen and ($mobile-boundry <= width < $side-introduction-width) {
+    margin-left: -32px;
+  }
+}
+
 h2 + .max-figure {
   margin-top: 0;
 }
