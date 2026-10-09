@@ -434,7 +434,7 @@ The story is mostly the same compared to the other images, except:
 
 </details>
 
-# Lossy - outlier
+# Lossy - weasel (outlier)
 
 <figure class="full-figure max-figure">
 <script type="component">{
@@ -444,7 +444,7 @@ The story is mostly the same compared to the other images, except:
     "maxWidth": 799,
     "lossless": "asset-url:./images/critter-targets/lossless.jxl",
     "losslessBytes": "asset-size:./images/critter-targets/lossless.jxl",
-    "initialQuality": 2,
+    "initialQuality": 1,
     "initialCodec": "jxl",
     "qualities": [
       {
@@ -483,6 +483,8 @@ Compared to previous results:
 
 - AVIF produces files around 5% larger than JPEG XL for a given quality.
 - Similar to the red panda image, at higher qualities in Chrome, JPEG XL decodes faster the equivalent AVIF. JPEG XL decodes slower than AVIF at lower qualities, and at all qualities in Firefox and Safari.
+
+TODO: Both AVIF and JPEG XL tend towards a lower ssimu quality. Which seems ok if you're happy losing the noise. But even then JXL is more efficient.
 
 <details>
 
@@ -674,7 +676,7 @@ As I noted above, the high JPEG XL decoding times here are likely a side effect 
     "maxWidth": 799,
     "lossless": "asset-url:./images/cat-illustration-targets/lossless.jxl",
     "losslessBytes": "asset-size:./images/cat-illustration-targets/lossless.jxl",
-    "initialQuality": 2,
+    "initialQuality": 3,
     "initialCodec": "avif",
     "qualities": [
       {
@@ -1009,6 +1011,77 @@ TODO
 
 </details>
 
+# Quality stability
+
+Another criticism I've heard levelled at AVIF, is that its quality is unreliable. As in, a single quality setting is great for some images, but no good for others, meaning for automatically encoded images, you need to pick a higher quality setting to be safe, resulting in larger file sizes than necessary for some images.
+
+For the images I've looked at so far, I encoded them with `avifenc -q 50` and `cjxl -q 70`, and recorded the resulting SSIMULACRA2 scores:
+
+<style>
+  /* Codec colours, matching the charts */
+  .data-table thead .avif {
+    background: #dbe8f8;
+    color: #0b3d7a;
+  }
+  .data-table thead .jxl {
+    background: #fbe1d6;
+    color: #8a3410;
+  }
+</style>
+
+<div class="data-table">
+<table>
+<thead>
+<tr><th class="row-heading" rowspan="2" scope="col">Image</th><th class="avif" colspan="4" scope="colgroup">AVIF</th><th class="jxl group-start" colspan="2" scope="colgroup">JPEG XL</th></tr>
+<tr><th class="avif" scope="col">s6 4:4:4</th><th class="avif" scope="col">s0 4:4:4</th><th class="avif" scope="col">s6 4:2:0</th><th class="avif" scope="col">s0 4:2:0</th><th class="jxl group-start" scope="col">e7</th><th class="jxl" scope="col">e10</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="#lossy---f1-image">F1</a></th><td class="avif">74.6</td><td class="avif">75.9</td><td class="avif">73.4</td><td class="avif">73.8</td><td class="jxl group-start">79.2</td><td class="jxl">78.0</td></tr>
+<tr><th scope="row"><a href="#lossy---small">F1 (small)</a></th><td class="avif">70.9</td><td class="avif">73.5</td><td class="avif">68.4</td><td class="avif">69.5</td><td class="jxl group-start">75.6</td><td class="jxl">73.9</td></tr>
+<tr><th scope="row"><a href="#lossy---large">F1 (large)</a></th><td class="avif">77.0</td><td class="avif">77.4</td><td class="avif">76.2</td><td class="avif">76.6</td><td class="jxl group-start">80.1</td><td class="jxl">79.2</td></tr>
+<tr><th scope="row"><a href="#lossy---people">People</a></th><td class="avif">70.7</td><td class="avif">72.0</td><td class="avif">69.8</td><td class="avif">70.5</td><td class="jxl group-start">69.6</td><td class="jxl">70.3</td></tr>
+<tr><th scope="row"><a href="#lossy---red-panda">Red panda</a></th><td class="avif">67.5</td><td class="avif">68.8</td><td class="avif">67.0</td><td class="avif">67.2</td><td class="jxl group-start">69.5</td><td class="jxl">68.4</td></tr>
+<tr><th scope="row"><a href="#lossy---weasel-outlier">Weasel</a></th><td class="avif">56.7</td><td class="avif">57.2</td><td class="avif">56.0</td><td class="avif">56.3</td><td class="jxl group-start">56.6</td><td class="jxl">55.4</td></tr>
+<tr><th scope="row"><a href="#lossy---screenshot">Screenshot</a></th><td class="avif">80.2</td><td class="avif">80.4</td><td class="avif">82.3</td><td class="avif">81.9</td><td class="jxl group-start">86.5</td><td class="jxl">87.6</td></tr>
+<tr><th scope="row"><a href="#lossy---illustration">Illustration</a></th><td class="avif">78.6</td><td class="avif">79.7</td><td class="avif">76.8</td><td class="avif">77.9</td><td class="jxl group-start">80.3</td><td class="jxl">78.5</td></tr>
+</tbody>
+</table>
+</div>
+
+The behaviour of the codecs here seems really similar. Both produce a range of SSIMULACRA2 scores, and they both go higher or lower for the same image.
+
+And I think this is ok? Like, both codecs go for a lower quality for the Weasel picture, which removed noise without reducing quality of the image subject. With the screenshot, both codecs go for a higher quality, which seems justified to my eyes.
+
+Obviously this is a small sample size, but I haven't seen anything that suggests using a single quality setting is a risk, for either AVIF or JPEG XL.
+
+# Progressive
+
+Here's a progressive demo:
+
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/ProgressiveDemo",
+  "exportName": "Styles",
+  "staticOnly": true
+}</script>
+
+<figure class="full-figure super-breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/ProgressiveDemo",
+  "props": {
+    "page": "/2026/jxl-on-the-web/demos/progressive/",
+    "ratio": 1.5486,
+    "maxWidth": 2650,
+    "initialBytes": 13000,
+    "images": [
+      { "label": "AVIF", "url": "asset-url:./images/progressive/f1-large.avif", "bytes": "asset-size:./images/progressive/f1-large.avif" },
+      { "label": "JPEG XL", "url": "asset-url:./images/progressive/f1-large.jxl", "bytes": "asset-size:./images/progressive/f1-large.jxl" }
+    ]
+  }
+}</script>
+</figure>
+
+TODO: Show example where JXL looks potentially loaded, but parts like the apecoin logo are blurry. Although I accept that blurring out the apecoin logo may be a societal good.
+
 # Notes
 
 - Lossy
@@ -1021,10 +1094,6 @@ TODO
   - Illustration
   - Does resolution matter?
   - Quality stability - does AVIF q50 & JXL q70 vary from image to image
-- Lossless
-  - Do you really need lossless for web images?
-  - F1 image
-  - Screenshot
 - Progressive
   - Pick a larger image from the set, but not critter
   - Measure overhead
@@ -1034,6 +1103,10 @@ TODO
   - Gain maps vs not
 - JPEG transcoding
   - Talk about large vs small decoding time
+- Lossless
+  - Do you really need lossless for web images?
+  - F1 image
+  - Screenshot
 - Animation
   - Just don't
   - Originally pushed for it not to be supported

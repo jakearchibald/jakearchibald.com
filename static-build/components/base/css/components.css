@@ -293,6 +293,86 @@
   }
 }
 
+/* Tables of numbers. Scrolls horizontally if it doesn't fit. */
+.data-table {
+  margin: 1em -20px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.3;
+
+  @media screen and (min-width: $mobile-boundry) {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  & table {
+    border-collapse: collapse;
+    min-width: 100%;
+    font-variant-numeric: tabular-nums;
+  }
+
+  & caption {
+    caption-side: bottom;
+    text-align: left;
+    padding: 6px 20px;
+    background: #ffe454;
+    color: #000;
+    font-size: 0.8rem;
+    line-height: 1.4;
+
+    @media screen and (min-width: $mobile-boundry) {
+      padding: 6px 10px;
+    }
+  }
+
+  & th,
+  & td {
+    padding: 0.5em 0.8em;
+    white-space: nowrap;
+  }
+
+  & td {
+    text-align: right;
+  }
+
+  & thead th {
+    background: #eee;
+    text-align: center;
+  }
+
+  & thead tr:last-child th {
+    text-align: right;
+    font-weight: normal;
+  }
+
+  & tbody tr:nth-child(even) {
+    background: #f7f7f7;
+  }
+
+  /* Row labels, which stay visible while scrolling */
+  & .row-heading,
+  & tbody th {
+    position: sticky;
+    left: 0;
+    text-align: left;
+    background: #fff;
+    box-shadow: inset -1px 0 #ddd;
+  }
+
+  & thead .row-heading {
+    background: #eee;
+  }
+
+  & tbody tr:nth-child(even) th {
+    background: #f7f7f7;
+  }
+
+  /* The first column of a group of columns */
+  & .group-start {
+    border-left: 2px solid #ccc;
+  }
+}
+
 h2 + .max-figure {
   margin-top: 0;
 }
