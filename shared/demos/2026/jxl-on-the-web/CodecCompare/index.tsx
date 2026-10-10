@@ -243,10 +243,8 @@ const CodecCompare: FunctionalComponent<Props> = ({
             {formats.map((f, i) => {
               const bytes = sizes[i];
               const { score } = getEncoding(f.key);
-              const larger =
-                bytes === maxBytes && bytes !== minBytes
-                  ? Math.round((bytes / minBytes - 1) * 100)
-                  : 0;
+              // Relative to the smallest
+              const larger = Math.round((bytes / minBytes - 1) * 100);
 
               return (
                 <label class="codec-compare-codec">
