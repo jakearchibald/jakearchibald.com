@@ -15,6 +15,7 @@ const rows = jobs
     effort: job.effort,
     effortLabel: job.effortLabel,
     yuv: job.yuv,
+    hdrMode: job.hdrMode ?? null,
     quality: job.quality,
     bytes: job.bytes,
     ssimulacra2: job.score,

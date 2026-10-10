@@ -5,8 +5,6 @@ import AsyncContent, {
 } from 'shared/AsyncContent';
 import DecodedImg from 'shared/DecodedImg';
 
-type Codec = 'avif' | 'jxl';
-
 interface Encoding {
   url: string;
   /** Via asset-size. It's substituted into the props JSON, so it arrives as a string. */
@@ -18,8 +16,20 @@ interface Encoding {
 interface Quality {
   /** Target SSIMULACRA2 score */
   target: number;
-  avif: Encoding;
-  jxl: Encoding;
+  /** Encodings, keyed by Format.key */
+  [format: string]: Encoding | number;
+}
+
+interface Format {
+  /** The key of this format's encodings in each Quality */
+  key: string;
+  label: string;
+  /** Bar colour */
+  color?: string;
+  /** Overrides the lossless image, for formats that need a different reference */
+  lossless?: string;
+  /** Via asset-size, see Encoding.bytes */
+  losslessBytes?: string;
 }
 
 interface Props {
@@ -31,15 +41,17 @@ interface Props {
   /** What to call the lossless image, in case it's something else, like the original */
   losslessLabel?: string;
   qualities: Quality[];
+  formats?: Format[];
   initialQuality?: number;
-  initialCodec?: Codec;
+  /** Format.key of the initially selected format */
+  initialCodec?: string;
 }
 
-const codecs: Codec[] = ['avif', 'jxl'];
-const codecNames: Record<Codec, string> = {
-  avif: 'AVIF',
-  jxl: 'JPEG XL',
-};
+// Same hues as the charts
+const defaultFormats: Format[] = [
+  { key: 'avif', label: 'AVIF', color: '#2a78d6' },
+  { key: 'jxl', label: 'JPEG XL', color: '#eb6834' },
+];
 
 // SSIMULACRA2's own quality descriptions.
 const qualityDescriptions: Record<number, string> = {
@@ -63,16 +75,21 @@ const CodecCompare: FunctionalComponent<Props> = ({
   losslessBytes,
   losslessLabel = 'Lossless',
   qualities,
+  formats = defaultFormats,
   initialQuality = 0,
-  initialCodec = 'avif',
+  initialCodec = formats[0].key,
 }) => {
   const [qualityIndex, setQualityIndex] = useState(initialQuality);
-  const [codec, setCodec] = useState<Codec>(initialCodec);
+  const [codec, setCodec] = useState(initialCodec);
   const [holding, setHolding] = useState(false);
   const [loading, setLoading] = useState(false);
-  // The lossless image is only fetched once the user first asks for it.
-  const [losslessRequested, setLosslessRequested] = useState(false);
-  const [losslessLoaded, setLosslessLoaded] = useState(false);
+  // Lossless images are only fetched once the user first asks for them.
+  const [losslessRequested, setLosslessRequested] = useState<string[]>([]);
+  const [losslessLoaded, setLosslessLoaded] = useState<string[]>([]);
+
+  const format = formats.find((f) => f.key === codec)!;
+  const currentLossless = format.lossless ?? lossless;
+  const currentLosslessBytes = format.losslessBytes ?? losslessBytes;
 
   // Pointer capture doesn't reliably end if the window loses focus mid-hold.
   useEffect(() => {
@@ -83,17 +100,16 @@ const CodecCompare: FunctionalComponent<Props> = ({
   }, [holding]);
 
   useEffect(() => {
-    if (holding) setLosslessRequested(true);
-  }, [holding]);
+    if (!holding || losslessRequested.includes(currentLossless)) return;
+    setLosslessRequested([...losslessRequested, currentLossless]);
+  }, [holding, currentLossless]);
 
   const quality = qualities[qualityIndex];
-  const encoding = quality[codec];
-  const sizes: Record<Codec, number> = {
-    avif: Number(quality.avif.bytes),
-    jxl: Number(quality.jxl.bytes),
-  };
-  const maxBytes = Math.max(sizes.avif, sizes.jxl);
-  const minBytes = Math.min(sizes.avif, sizes.jxl);
+  const getEncoding = (key: string) => quality[key] as Encoding;
+  const encoding = getEncoding(codec);
+  const sizes = formats.map((f) => Number(getEncoding(f.key).bytes));
+  const maxBytes = Math.max(...sizes);
+  const minBytes = Math.min(...sizes);
   const description = qualityDescriptions[quality.target];
 
   const onPointerDown = (event: PointerEvent) => {
@@ -130,7 +146,11 @@ const CodecCompare: FunctionalComponent<Props> = ({
           }
         }}
       >
-        <AsyncContent loading={holding ? !losslessLoaded : loading}>
+        <AsyncContent
+          loading={
+            holding ? !losslessLoaded.includes(currentLossless) : loading
+          }
+        >
           <div style={{ maxWidth, margin: '0 auto' }}>
             <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
           </div>
@@ -145,19 +165,24 @@ const CodecCompare: FunctionalComponent<Props> = ({
               />
             </div>
           )}
-          {losslessRequested && (
+          {losslessRequested.map((url) => (
             // Kept around after the first hold, so later holds are instant.
             <div
+              key={url}
               class="codec-compare-layer"
-              style={{ visibility: holding ? '' : 'hidden' }}
+              style={{
+                visibility: holding && url === currentLossless ? '' : 'hidden',
+              }}
             >
               <DecodedImg
-                src={lossless}
+                src={url}
                 renderWidth={maxWidth}
-                onLoadEnd={() => setLosslessLoaded(true)}
+                onLoadEnd={() =>
+                  setLosslessLoaded((loaded) => [...loaded, url])
+                }
               />
             </div>
-          )}
+          ))}
         </AsyncContent>
         <button
           class="codec-compare-hold"
@@ -168,7 +193,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
           aria-pressed={holding ? 'true' : 'false'}
         >
           {holding
-            ? `${losslessLabel} (${formatBytes(Number(losslessBytes))})`
+            ? `${losslessLabel} (${formatBytes(Number(currentLosslessBytes))})`
             : `Hold for ${losslessLabel.toLowerCase()}`}
         </button>
       </div>
@@ -177,7 +202,9 @@ const CodecCompare: FunctionalComponent<Props> = ({
         its own Preact root, so useId() isn't unique across instances.
       */}
       <form
-        class="codec-compare-controls"
+        class={`codec-compare-controls${
+          formats.length > 2 ? ' codec-compare-controls-many' : ''
+        }`}
         onSubmit={(event) => event.preventDefault()}
       >
         <label class="codec-compare-quality">
@@ -213,32 +240,35 @@ const CodecCompare: FunctionalComponent<Props> = ({
         <fieldset class="codec-compare-codecs">
           <legend class="codec-compare-heading">Format</legend>
           <div class="codec-compare-codec-options">
-            {codecs.map((c) => {
-              const bytes = sizes[c];
-              const { score } = quality[c];
+            {formats.map((f, i) => {
+              const bytes = sizes[i];
+              const { score } = getEncoding(f.key);
               const larger =
                 bytes === maxBytes && bytes !== minBytes
                   ? Math.round((bytes / minBytes - 1) * 100)
                   : 0;
 
               return (
-                <label class={`codec-compare-codec codec-compare-codec-${c}`}>
+                <label class="codec-compare-codec">
                   <input
                     type="radio"
                     name="codec"
-                    checked={c === codec}
-                    onChange={() => setCodec(c)}
+                    checked={f.key === codec}
+                    onChange={() => setCodec(f.key)}
                   />
                   <span class="codec-compare-codec-inner">
-                    <span class="codec-compare-codec-name">
-                      {codecNames[c]}
-                    </span>
+                    <span class="codec-compare-codec-name">{f.label}</span>
                     <span class="codec-compare-codec-size">
                       {formatBytes(bytes)}
                       {larger > 0 && ` (+${larger}%)`}
                     </span>
                     <span class="codec-compare-bar">
-                      <span style={{ width: (bytes / maxBytes) * 100 + '%' }} />
+                      <span
+                        style={{
+                          width: (bytes / maxBytes) * 100 + '%',
+                          background: f.color,
+                        }}
+                      />
                     </span>
                     <span class="codec-compare-codec-score">
                       SSIMULACRA2: {score}
@@ -315,6 +345,10 @@ const styles = `
   font-size: 0.9rem;
   line-height: 1.3;
 }
+/* Give the formats more room. The slider has few steps, so it can spare it. */
+.codec-compare-controls-many {
+  grid-template-columns: 1fr 3fr;
+}
 @media (max-width: 600px) {
   .codec-compare-controls {
     grid-template-columns: 1fr;
@@ -376,7 +410,7 @@ const styles = `
 }
 .codec-compare-codec-options {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(7em, 1fr));
   gap: 0.5rem;
 }
 .codec-compare-codec {
@@ -413,13 +447,6 @@ const styles = `
   display: block;
   height: 100%;
   transition: width 200ms ease-out;
-}
-/* Same hues as the charts */
-.codec-compare-codec-avif .codec-compare-bar span {
-  background: #2a78d6;
-}
-.codec-compare-codec-jxl .codec-compare-bar span {
-  background: #eb6834;
 }
 .codec-compare-codec-score {
   font-size: 0.8rem;

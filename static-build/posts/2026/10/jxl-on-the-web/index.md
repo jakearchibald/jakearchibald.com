@@ -1082,6 +1082,117 @@ Here's a progressive demo:
 
 TODO: Show example where JXL looks potentially loaded, but parts like the apecoin logo are blurry. Although I accept that blurring out the apecoin logo may be a societal good.
 
+# Lossy - HDR
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "props": {
+    "ratio": 0.7516,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/neon-hdr-10bit-targets/jxl-lossless-e10.jxl",
+    "losslessBytes": "asset-size:./images/neon-hdr-10bit-targets/jxl-lossless-e10.jxl",
+    "formats": [
+      { "key": "avif", "label": "AVIF (gain map)", "color": "#2a78d6", "lossless": "asset-url:./images/neon-hdr-10bit-targets/avif-lossless-s0-d10-yuv444.avif", "losslessBytes": "asset-size:./images/neon-hdr-10bit-targets/avif-lossless-s0-d10-yuv444.avif" },
+      { "key": "avifPq", "label": "AVIF (PQ)", "color": "#0b3d7a" },
+      { "key": "jxl", "label": "JPEG XL", "color": "#eb6834" }
+    ],
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q39-e0-d10-yuv444-ssimu50.1.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q39-e0-d10-yuv444-ssimu50.1.avif", "score": "50.1" },
+        "avifPq": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q49-e0-d10-yuv444-pq-ssimu50.8.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q49-e0-d10-yuv444-pq-ssimu50.8.avif", "score": "50.8" },
+        "jxl": { "url": "asset-url:./images/neon-hdr-10bit-targets/jxl-q51.3-e10-ssimu50.1.jxl", "bytes": "asset-size:./images/neon-hdr-10bit-targets/jxl-q51.3-e10-ssimu50.1.jxl", "score": "50.1" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q49-e0-d10-yuv444-ssimu61.5.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q49-e0-d10-yuv444-ssimu61.5.avif", "score": "61.5" },
+        "avifPq": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q59-e0-d10-yuv444-pq-ssimu60.2.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q59-e0-d10-yuv444-pq-ssimu60.2.avif", "score": "60.2" },
+        "jxl": { "url": "asset-url:./images/neon-hdr-10bit-targets/jxl-q66.7-e10-ssimu60.2.jxl", "bytes": "asset-size:./images/neon-hdr-10bit-targets/jxl-q66.7-e10-ssimu60.2.jxl", "score": "60.2" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q62-e0-d10-yuv444-ssimu70.2.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q62-e0-d10-yuv444-ssimu70.2.avif", "score": "70.2" },
+        "avifPq": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q75-e0-d10-yuv444-pq-ssimu70.5.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q75-e0-d10-yuv444-pq-ssimu70.5.avif", "score": "70.5" },
+        "jxl": { "url": "asset-url:./images/neon-hdr-10bit-targets/jxl-q78.2-e10-ssimu70.0.jxl", "bytes": "asset-size:./images/neon-hdr-10bit-targets/jxl-q78.2-e10-ssimu70.0.jxl", "score": "70.0" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q84-e0-d10-yuv444-ssimu80.7.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q84-e0-d10-yuv444-ssimu80.7.avif", "score": "80.7" },
+        "avifPq": { "url": "asset-url:./images/neon-hdr-10bit-targets/avif-q90-e0-d10-yuv444-pq-ssimu80.7.avif", "bytes": "asset-size:./images/neon-hdr-10bit-targets/avif-q90-e0-d10-yuv444-pq-ssimu80.7.avif", "score": "80.7" },
+        "jxl": { "url": "asset-url:./images/neon-hdr-10bit-targets/jxl-q89.6-e10-ssimu80.0.jxl", "bytes": "asset-size:./images/neon-hdr-10bit-targets/jxl-q89.6-e10-ssimu80.0.jxl", "score": "80.0" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+TODO
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "props": {
+    "metric": "jod"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
 # Notes
 
 - Lossy

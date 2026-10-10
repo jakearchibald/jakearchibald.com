@@ -7,6 +7,8 @@ export interface Row {
   effort: number;
   effortLabel: string;
   yuv: string | null;
+  /** How an HDR AVIF stores its HDR data. Null for SDR. */
+  hdrMode?: 'gainmap' | 'pq' | 'gainmap-hdr' | null;
   quality: number;
   bytes: number;
   /** Best-of-N multi-threaded encode time */
@@ -104,6 +106,8 @@ const yAxes: Record<
 
 function seriesLabel(row: Row): string {
   const parts = [row.codec.toUpperCase(), row.effortLabel];
+  if (row.hdrMode === 'pq') parts.splice(1, 0, 'PQ');
+  if (row.hdrMode === 'gainmap') parts.splice(1, 0, 'gain map');
   if (row.yuv && row.yuv !== '444') parts.push(row.yuv.split('').join(':'));
   return parts.join(' ');
 }
@@ -141,6 +145,7 @@ function createSeries(
     ([a], [b]) =>
       a.codec.localeCompare(b.codec) ||
       (b.yuv ?? '').localeCompare(a.yuv ?? '') ||
+      Number(a.hdrMode === 'pq') - Number(b.hdrMode === 'pq') ||
       a.effort - b.effort,
   );
 
@@ -165,7 +170,8 @@ function createSeries(
       id: first.seriesId,
       label: seriesLabel(first),
       color,
-      dashed: first.yuv === '420',
+      // 4:2:0 and PQ never appear in the same dataset, so they share dashes.
+      dashed: first.yuv === '420' || first.hdrMode === 'pq',
       points: seriesRows
         .map((row) => ({ x: row[metric]!, y: getY(row)!, row }))
         .sort((a, b) => a.x - b.x),
