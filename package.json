@@ -2,9 +2,9 @@
   "name": "jakearchibald.com",
   "private": true,
   "scripts": {
-    "build": "node --experimental-import-meta-resolve node_modules/rollup/dist/bin/rollup -c && node lib/move-output.mjs",
+    "build": "tsc -b static-build && node --experimental-import-meta-resolve node_modules/rollup/dist/bin/rollup -c && node lib/move-output.mjs",
     "debug": "node --experimental-import-meta-resolve --inspect-brk node_modules/rollup/dist/bin/rollup -c",
-    "dev": "node --experimental-import-meta-resolve node_modules/rollup/dist/bin/rollup -cw & npm run serve",
+    "dev": "tsc -b static-build --watch --preserveWatchOutput & node --experimental-import-meta-resolve node_modules/rollup/dist/bin/rollup -cw & npm run serve",
     "serve": "serve -C -c ./../../../serve.json .tmp/build/static",
     "prepare": "husky install"
   },
@@ -30,6 +30,7 @@
     "lint-staged": "^17.4.1",
     "lodash.camelcase": "^4.3.0",
     "marked": "^18.0.11",
+    "oxc-transform": "^0.153.0",
     "pinch-zoom-element": "^1.1.1",
     "postcss": "^8.5.27",
     "postcss-import": "^17.0.0",
