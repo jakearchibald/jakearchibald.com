@@ -317,6 +317,10 @@ const styles = `
   height: 100%;
   transform: translateX(-50%);
 }
+.codec-compare-layer img {
+  /* Holding the image shows lossless, so don't let a long-press start a drag */
+  -webkit-user-drag: none;
+}
 .codec-compare-hold {
   position: absolute;
   right: 10px;

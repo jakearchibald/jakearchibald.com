@@ -371,6 +371,17 @@
   & .group-start {
     border-left: 2px solid #ccc;
   }
+
+  /* Groups of rows */
+  & tbody + tbody {
+    border-top: 2px solid #ccc;
+  }
+
+  /* A secondary value, such as a change from a previous row */
+  & .change {
+    color: #777;
+    font-size: 0.85em;
+  }
 }
 
 h2 + .max-figure {

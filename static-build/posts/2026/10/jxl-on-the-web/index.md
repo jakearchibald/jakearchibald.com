@@ -1082,6 +1082,39 @@ Here's a progressive demo:
 
 TODO: Show example where JXL looks potentially loaded, but parts like the apecoin logo are blurry. Although I accept that blurring out the apecoin logo may be a societal good.
 
+<div class="data-table breakout">
+<table>
+<thead>
+<tr><th class="row-heading" rowspan="2" scope="col">Encoding</th><th rowspan="2" scope="col">Quality</th><th rowspan="2" scope="col">File size</th><th rowspan="2" scope="col">SSIMU2</th><th class="group-start" colspan="2" scope="colgroup">Encode</th><th class="group-start" colspan="3" scope="colgroup">Decode</th></tr>
+<tr><th class="group-start" scope="col">Time</th><th scope="col">Memory</th><th class="group-start" scope="col">Firefox</th><th scope="col">Chrome</th><th scope="col">Safari</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">AVIF s6</th><td>41</td><td>175 kB</td><td>69.9</td><td class="group-start">404 ms</td><td>380 MB</td><td class="group-start">48 ms</td><td>41 ms</td><td>55 ms</td></tr>
+<tr><th scope="row">AVIF s6 progressive</th><td>42</td><td>181 kB</td><td>70.4</td><td class="group-start">836 ms</td><td>774 MB</td><td class="group-start">52 ms</td><td>58 ms</td><td>59 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>+3%</td><td>+0.5</td><td class="group-start">+107%</td><td>+103%</td><td class="group-start">+8%</td><td>+43%</td><td>+6%</td></tr>
+<tr><th scope="row">AVIF s6 progressive (keyframe)</th><td>42</td><td>177 kB</td><td>70.3</td><td class="group-start">1.07 s</td><td>732 MB</td><td class="group-start">47 ms</td><td>38 ms</td><td>56 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>+1%</td><td>+0.4</td><td class="group-start">+164%</td><td>+92%</td><td class="group-start">−4%</td><td>−6%</td><td>+2%</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="row">AVIF s0</th><td>41</td><td>145 kB</td><td>69.9</td><td class="group-start">8.06 s</td><td>449 MB</td><td class="group-start">48 ms</td><td>45 ms</td><td>56 ms</td></tr>
+<tr><th scope="row">AVIF s0 progressive</th><td>42</td><td>169 kB</td><td>70.4</td><td class="group-start">8.36 s</td><td>843 MB</td><td class="group-start">52 ms</td><td>60 ms</td><td>65 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>+17%</td><td>+0.4</td><td class="group-start">+4%</td><td>+88%</td><td class="group-start">+7%</td><td>+34%</td><td>+16%</td></tr>
+<tr><th scope="row">AVIF s0 progressive (keyframe)</th><td>41</td><td>148 kB</td><td>69.6</td><td class="group-start">10.73 s</td><td>799 MB</td><td class="group-start">47 ms</td><td>41 ms</td><td>60 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>±0</td><td>+2%</td><td>−0.3</td><td class="group-start">+33%</td><td>+78%</td><td class="group-start">−2%</td><td>−8%</td><td>+8%</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="row">JPEG XL e7</th><td>35.5</td><td>258 kB</td><td>70.0</td><td class="group-start">1.65 s</td><td>2.49 GB</td><td class="group-start">132 ms</td><td>107 ms</td><td>168 ms</td></tr>
+<tr><th scope="row">JPEG XL e7 progressive</th><td>25.3</td><td>233 kB</td><td>70.0</td><td class="group-start">1.41 s</td><td>1.90 GB</td><td class="group-start">119 ms</td><td>121 ms</td><td>185 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>−10.2</td><td>−9%</td><td>±0.0</td><td class="group-start">−15%</td><td>−24%</td><td class="group-start">−10%</td><td>+14%</td><td>+10%</td></tr>
+</tbody>
+<tbody>
+<tr><th scope="row">JPEG XL e10</th><td>41.2</td><td>258 kB</td><td>70.0</td><td class="group-start">22.68 s</td><td>6.42 GB</td><td class="group-start">136 ms</td><td>109 ms</td><td>167 ms</td></tr>
+<tr><th scope="row">JPEG XL e10 progressive</th><td>30.2</td><td>242 kB</td><td>70.0</td><td class="group-start">25.18 s</td><td>6.09 GB</td><td class="group-start">120 ms</td><td>125 ms</td><td>192 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>−11</td><td>−6%</td><td>±0.0</td><td class="group-start">+11%</td><td>−5%</td><td class="group-start">−12%</td><td>+15%</td><td>+15%</td></tr>
+</tbody>
+</table>
+</div>
+
 # Lossy - HDR
 
 <figure class="full-figure max-figure">
@@ -1213,16 +1246,18 @@ TODO
 }</script>
 </figure>
 
+## Lossless
+
+TODO
+
+## Animation
+
 # Notes
 
 - Progressive
   - No filesize overhead really
   - Chrome only but looking to land it in Firefox
   - Interop for JPEG XL
-- HDR
-  - Gain maps vs not
-- JPEG transcoding
-  - Talk about large vs small decoding time
 - Lossless
   - Do you really need lossless for web images?
   - F1 image
