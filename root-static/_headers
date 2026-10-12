@@ -2,6 +2,10 @@
   X-Frame-Options: DENY
   Access-Control-Allow-Origin: *
 
+# Shown in an iframe on the post. frame-ancestors overrides X-Frame-Options.
+/2026/jxl-on-the-web/demos/progressive/*
+  Content-Security-Policy: frame-ancestors 'self'
+
 /c/*
   Cache-Control: max-age=31536000
 

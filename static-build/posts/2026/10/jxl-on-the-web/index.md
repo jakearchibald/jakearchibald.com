@@ -1193,21 +1193,30 @@ TODO
 
 </details>
 
+# JPEG transcoding
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large-transcode",
+  "props": {
+    "y": "bytes"
+  }
+}</script>
+</figure>
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large-transcode",
+  "props": {
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
 # Notes
 
-- Lossy
-  - F1 image
-    - That's what I did for AVIF article
-  - People
-  - Red Panda
-  - Critter (outlier)
-  - Screenshot
-  - Illustration
-  - Does resolution matter?
-  - Quality stability - does AVIF q50 & JXL q70 vary from image to image
 - Progressive
-  - Pick a larger image from the set, but not critter
-  - Measure overhead
+  - No filesize overhead really
   - Chrome only but looking to land it in Firefox
   - Interop for JPEG XL
 - HDR
