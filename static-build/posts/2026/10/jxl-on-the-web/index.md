@@ -1018,14 +1018,21 @@ Another criticism I've heard levelled at AVIF, is that its quality is unreliable
 For the images I've looked at so far, I encoded them with `avifenc -q 50` and `cjxl -q 70`, and recorded the resulting SSIMULACRA2 scores:
 
 <style>
-  /* Codec colours, matching the charts */
-  .data-table thead .avif {
+  /* Codec colours, matching the charts. Column headings, or row headings for
+     groups of rows. */
+  .data-table thead .avif,
+  .data-table tbody.avif tr th[scope='row'] {
     background: #dbe8f8;
     color: #0b3d7a;
   }
-  .data-table thead .jxl {
+  .data-table thead .jxl,
+  .data-table tbody.jxl tr th[scope='row'] {
     background: #fbe1d6;
     color: #8a3410;
+  }
+  .data-table thead .webp {
+    background: #d6f2e8;
+    color: #0b5c40;
   }
 </style>
 
@@ -1071,7 +1078,7 @@ Here's a progressive demo:
     "page": "/2026/jxl-on-the-web/demos/progressive/",
     "ratio": 1.5486,
     "maxWidth": 2650,
-    "initialBytes": 13000,
+    "initialBytes": 11500,
     "images": [
       { "label": "AVIF", "url": "asset-url:./images/progressive/f1-large.avif", "bytes": "asset-size:./images/progressive/f1-large.avif" },
       { "label": "JPEG XL", "url": "asset-url:./images/progressive/f1-large.jxl", "bytes": "asset-size:./images/progressive/f1-large.jxl" }
@@ -1079,6 +1086,12 @@ Here's a progressive demo:
   }
 }</script>
 </figure>
+
+TODO: improve the layout of this on mobile. Remove complete? It kinda self-explains.
+
+TODO: If the image fires an error event, reload it (unless JXL isn't supported).
+
+TODO: re-encode the above, or the table below, to match. Use 420 or 444, whatever's bigger. Use e7 for JPEG XL, like the table below.
 
 TODO: Show example where JXL looks potentially loaded, but parts like the apecoin logo are blurry. Although I accept that blurring out the apecoin logo may be a societal good.
 
@@ -1088,32 +1101,34 @@ TODO: Show example where JXL looks potentially loaded, but parts like the apecoi
 <tr><th class="row-heading" rowspan="2" scope="col">Encoding</th><th rowspan="2" scope="col">Quality</th><th rowspan="2" scope="col">File size</th><th rowspan="2" scope="col">SSIMU2</th><th class="group-start" colspan="2" scope="colgroup">Encode</th><th class="group-start" colspan="3" scope="colgroup">Decode</th></tr>
 <tr><th class="group-start" scope="col">Time</th><th scope="col">Memory</th><th class="group-start" scope="col">Firefox</th><th scope="col">Chrome</th><th scope="col">Safari</th></tr>
 </thead>
-<tbody>
-<tr><th scope="row">AVIF s6</th><td>41</td><td>175 kB</td><td>69.9</td><td class="group-start">404 ms</td><td>380 MB</td><td class="group-start">48 ms</td><td>41 ms</td><td>55 ms</td></tr>
-<tr><th scope="row">AVIF s6 progressive</th><td>42</td><td>181 kB</td><td>70.4</td><td class="group-start">836 ms</td><td>774 MB</td><td class="group-start">52 ms</td><td>58 ms</td><td>59 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>+1</td><td>+3%</td><td>+0.5</td><td class="group-start">+107%</td><td>+103%</td><td class="group-start">+8%</td><td>+43%</td><td>+6%</td></tr>
-<tr><th scope="row">AVIF s6 progressive (keyframe)</th><td>42</td><td>177 kB</td><td>70.3</td><td class="group-start">1.07 s</td><td>732 MB</td><td class="group-start">47 ms</td><td>38 ms</td><td>56 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>+1</td><td>+1%</td><td>+0.4</td><td class="group-start">+164%</td><td>+92%</td><td class="group-start">−4%</td><td>−6%</td><td>+2%</td></tr>
+<tbody class="avif">
+<tr><th scope="row">AVIF s6</th><td>41</td><td>175 kB</td><td>69.9</td><td class="group-start">396 ms</td><td>381 MB</td><td class="group-start">51 ms</td><td>38 ms</td><td>57 ms</td></tr>
+<tr><th scope="row">AVIF s6 prog</th><td>42</td><td>173 kB</td><td>70.2</td><td class="group-start">832 ms</td><td>772 MB</td><td class="group-start">53 ms</td><td>55 ms</td><td>60 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>−1%</td><td>+0.2</td><td class="group-start">+110%</td><td>+103%</td><td class="group-start">+4%</td><td>+44%</td><td>+5%</td></tr>
+<tr><th scope="row">AVIF s6 prog <code>-k</code></th><td>42</td><td>181 kB</td><td>70.3</td><td class="group-start">1.07 s</td><td>730 MB</td><td class="group-start">49 ms</td><td>36 ms</td><td>57 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>+3%</td><td>+0.4</td><td class="group-start">+171%</td><td>+92%</td><td class="group-start">−4%</td><td>−6%</td><td>−1%</td></tr>
 </tbody>
-<tbody>
-<tr><th scope="row">AVIF s0</th><td>41</td><td>145 kB</td><td>69.9</td><td class="group-start">8.06 s</td><td>449 MB</td><td class="group-start">48 ms</td><td>45 ms</td><td>56 ms</td></tr>
-<tr><th scope="row">AVIF s0 progressive</th><td>42</td><td>169 kB</td><td>70.4</td><td class="group-start">8.36 s</td><td>843 MB</td><td class="group-start">52 ms</td><td>60 ms</td><td>65 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>+1</td><td>+17%</td><td>+0.4</td><td class="group-start">+4%</td><td>+88%</td><td class="group-start">+7%</td><td>+34%</td><td>+16%</td></tr>
-<tr><th scope="row">AVIF s0 progressive (keyframe)</th><td>41</td><td>148 kB</td><td>69.6</td><td class="group-start">10.73 s</td><td>799 MB</td><td class="group-start">47 ms</td><td>41 ms</td><td>60 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>±0</td><td>+2%</td><td>−0.3</td><td class="group-start">+33%</td><td>+78%</td><td class="group-start">−2%</td><td>−8%</td><td>+8%</td></tr>
+<tbody class="avif">
+<tr><th scope="row">AVIF s0</th><td>41</td><td>145 kB</td><td>69.9</td><td class="group-start">7.98 s</td><td>450 MB</td><td class="group-start">50 ms</td><td>43 ms</td><td>59 ms</td></tr>
+<tr><th scope="row">AVIF s0 prog</th><td>42</td><td>165 kB</td><td>70.5</td><td class="group-start">8.70 s</td><td>847 MB</td><td class="group-start">54 ms</td><td>61 ms</td><td>60 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>+1</td><td>+14%</td><td>+0.5</td><td class="group-start">+9%</td><td>+88%</td><td class="group-start">+9%</td><td>+44%</td><td>+2%</td></tr>
+<tr><th scope="row">AVIF s0 prog <code>-k</code></th><td>41</td><td>152 kB</td><td>69.6</td><td class="group-start">10.79 s</td><td>798 MB</td><td class="group-start">49 ms</td><td>41 ms</td><td>57 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>±0</td><td>+5%</td><td>−0.3</td><td class="group-start">+35%</td><td>+77%</td><td class="group-start">−1%</td><td>−4%</td><td>−3%</td></tr>
 </tbody>
-<tbody>
-<tr><th scope="row">JPEG XL e7</th><td>35.5</td><td>258 kB</td><td>70.0</td><td class="group-start">1.65 s</td><td>2.49 GB</td><td class="group-start">132 ms</td><td>107 ms</td><td>168 ms</td></tr>
-<tr><th scope="row">JPEG XL e7 progressive</th><td>25.3</td><td>233 kB</td><td>70.0</td><td class="group-start">1.41 s</td><td>1.90 GB</td><td class="group-start">119 ms</td><td>121 ms</td><td>185 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>−10.2</td><td>−9%</td><td>±0.0</td><td class="group-start">−15%</td><td>−24%</td><td class="group-start">−10%</td><td>+14%</td><td>+10%</td></tr>
+<tbody class="jxl">
+<tr><th scope="row">JPEG XL e7</th><td>35.5</td><td>258 kB</td><td>70.0</td><td class="group-start">1.63 s</td><td>2.49 GB</td><td class="group-start">133 ms</td><td>106 ms</td><td>169 ms</td></tr>
+<tr><th scope="row">JPEG XL e7 prog</th><td>25.3</td><td>233 kB</td><td>70.0</td><td class="group-start">1.40 s</td><td>1.90 GB</td><td class="group-start">119 ms</td><td>121 ms</td><td>192 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>−10.2</td><td>−9%</td><td>±0.0</td><td class="group-start">−14%</td><td>−24%</td><td class="group-start">−10%</td><td>+15%</td><td>+14%</td></tr>
 </tbody>
-<tbody>
-<tr><th scope="row">JPEG XL e10</th><td>41.2</td><td>258 kB</td><td>70.0</td><td class="group-start">22.68 s</td><td>6.42 GB</td><td class="group-start">136 ms</td><td>109 ms</td><td>167 ms</td></tr>
-<tr><th scope="row">JPEG XL e10 progressive</th><td>30.2</td><td>242 kB</td><td>70.0</td><td class="group-start">25.18 s</td><td>6.09 GB</td><td class="group-start">120 ms</td><td>125 ms</td><td>192 ms</td></tr>
-<tr class="change"><th scope="row">Change</th><td>−11</td><td>−6%</td><td>±0.0</td><td class="group-start">+11%</td><td>−5%</td><td class="group-start">−12%</td><td>+15%</td><td>+15%</td></tr>
+<tbody class="jxl">
+<tr><th scope="row">JPEG XL e10</th><td>41.2</td><td>258 kB</td><td>70.0</td><td class="group-start">22.84 s</td><td>5.54 GB</td><td class="group-start">135 ms</td><td>108 ms</td><td>169 ms</td></tr>
+<tr><th scope="row">JPEG XL e10 prog</th><td>30.2</td><td>242 kB</td><td>70.0</td><td class="group-start">25.44 s</td><td>6.07 GB</td><td class="group-start">121 ms</td><td>125 ms</td><td>189 ms</td></tr>
+<tr class="change"><th scope="row">Change</th><td>−11</td><td>−6%</td><td>±0.0</td><td class="group-start">+11%</td><td>+10%</td><td class="group-start">−10%</td><td>+16%</td><td>+12%</td></tr>
 </tbody>
 </table>
 </div>
+
+TODO: improve the layout of this table on mobile. Shorten first column names.
 
 # Lossy - HDR
 
@@ -1246,11 +1261,67 @@ TODO
 }</script>
 </figure>
 
-## Lossless
+# Lossless
+
+<div class="data-table">
+<table>
+<thead>
+<tr><th class="row-heading" rowspan="2" scope="col">Image</th><th class="group-start" colspan="3" scope="colgroup">Default effort</th><th class="group-start" colspan="3" scope="colgroup">Highest effort</th></tr>
+<tr><th class="jxl group-start" scope="col">JPEG XL</th><th class="webp" scope="col">WebP</th><th class="avif" scope="col">AVIF</th><th class="jxl group-start" scope="col">JPEG XL</th><th class="webp" scope="col">WebP</th><th class="avif" scope="col">AVIF</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="#lossy---f1-image">F1</a></th><td class="group-start">1.07 MB</td><td>+16%</td><td>+49%</td><td class="group-start">1.01 MB</td><td>+20%</td><td>+47%</td></tr>
+<tr><th scope="row"><a href="#lossy---people">People</a></th><td class="group-start">1.39 MB</td><td>+17%</td><td>+49%</td><td class="group-start">1.34 MB</td><td>+19%</td><td>+44%</td></tr>
+<tr><th scope="row"><a href="#lossy---red-panda">Red panda</a></th><td class="group-start">1.78 MB</td><td>+9%</td><td>+40%</td><td class="group-start">1.74 MB</td><td>+11%</td><td>+31%</td></tr>
+<tr><th scope="row"><a href="#lossy---weasel-outlier">Weasel</a></th><td class="group-start">2.91 MB</td><td>+13%</td><td>+96%</td><td class="group-start">2.79 MB</td><td>+17%</td><td>+29%</td></tr>
+<tr><th scope="row"><a href="#lossy---screenshot">Screenshot</a></th><td class="group-start">92 kB</td><td>+9%</td><td>+122%</td><td class="group-start">68 kB</td><td>+44%</td><td>+176%</td></tr>
+<tr><th scope="row"><a href="#lossy---illustration">Illustration</a></th><td class="group-start">361 kB</td><td>−1%</td><td>+100%</td><td class="group-start">273 kB</td><td>+5%</td><td>+139%</td></tr>
+</tbody>
+</table>
+</div>
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "props": {
+    "x": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "props": {
+    "x": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "props": {
+    "x": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Animation
 
 TODO
-
-## Animation
 
 # Notes
 
@@ -1273,5 +1344,5 @@ TODO
   - Claiming it was ripped out of Chrome.
   - Both AVIF and JPEG XL have large Google contributions.
 - Please test your own images
-
-https://unsplash.com/photos/two-smiling-women-looking-at-a-smartphone-together-_t15AWPJNmg
+- https://giannirosato.com/blog/post/case-against-jxl/
+- https://unsplash.com/photos/two-smiling-women-looking-at-a-smartphone-together-_t15AWPJNmg

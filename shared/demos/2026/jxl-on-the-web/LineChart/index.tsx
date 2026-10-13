@@ -21,6 +21,12 @@ interface Props {
   xTitle: string;
   yTitle: string;
   formatYTick: (value: number) => string;
+  /** Defaults to plain numbers, with enough decimal places for the ticks */
+  formatXTick?: (value: number) => string;
+  /** Allow the x-axis to be switched to a log scale */
+  xLogToggle?: boolean;
+  /** Allow the y-axis to be switched to a log scale. Defaults to true. */
+  yLogToggle?: boolean;
   /** Extra controls, shown before the scale control */
   controls?: ComponentChildren;
 }
@@ -180,9 +186,13 @@ const LineChart: FunctionalComponent<Props> = ({
   xTitle,
   yTitle,
   formatYTick,
+  formatXTick,
+  xLogToggle = false,
+  yLogToggle = true,
   controls,
 }) => {
   const [scaleType, setScaleType] = useState<'linear' | 'log'>('linear');
+  const [xScaleType, setXScaleType] = useState<'linear' | 'log'>('linear');
   const [hiddenSeries, setHiddenSeries] = useState<ReadonlySet<string>>(
     new Set(),
   );
@@ -210,7 +220,10 @@ const LineChart: FunctionalComponent<Props> = ({
 
   const xValues = scaledPoints.map((p) => p.x);
   const yValues = scaledPoints.map((p) => p.y);
-  const xScale = linearScale(Math.min(...xValues), Math.max(...xValues));
+  const xScale = (xScaleType === 'log' ? logScale : linearScale)(
+    Math.min(...xValues),
+    Math.max(...xValues),
+  );
   const yScale = (scaleType === 'log' ? logScale : linearScale)(
     Math.min(...yValues),
     Math.max(...yValues),
@@ -254,15 +267,28 @@ const LineChart: FunctionalComponent<Props> = ({
     <div class="line-chart">
       <div class="line-chart-controls">
         {controls}
-        <Segmented
-          label="Scale"
-          options={scaleOptions}
-          value={scaleType}
-          onChange={(value) => {
-            setScaleType(value);
-            setHovered(null);
-          }}
-        />
+        {xLogToggle && (
+          <Segmented
+            label="X scale"
+            options={scaleOptions}
+            value={xScaleType}
+            onChange={(value) => {
+              setXScaleType(value);
+              setHovered(null);
+            }}
+          />
+        )}
+        {yLogToggle && (
+          <Segmented
+            label={xLogToggle ? 'Y scale' : 'Scale'}
+            options={scaleOptions}
+            value={scaleType}
+            onChange={(value) => {
+              setScaleType(value);
+              setHovered(null);
+            }}
+          />
+        )}
       </div>
       <div class="line-chart-graph">
         <div class="line-chart-y-title">{yTitle}</div>
@@ -357,7 +383,7 @@ const LineChart: FunctionalComponent<Props> = ({
         <div class="line-chart-x-ticks" aria-hidden="true">
           {xScale.ticks.map((tick) => (
             <span style={{ left: `${xScale.toFraction(tick) * 100}%` }}>
-              {formatTick(tick, xScale.ticks)}
+              {formatXTick ? formatXTick(tick) : formatTick(tick, xScale.ticks)}
             </span>
           ))}
         </div>
@@ -575,6 +601,9 @@ const styles = `
   display: flex;
   align-items: center;
   gap: 0.6em;
+  /* Fieldsets default to min-content, which stops the options scrolling */
+  min-width: 0;
+  max-width: 100%;
   margin: 0;
   padding: 0;
   border: none;
@@ -591,10 +620,12 @@ const styles = `
   display: flex;
   border: 1px solid #999;
   border-radius: 4px;
-  overflow: hidden;
+  /* Scrolls if there are too many options to fit */
+  overflow-x: auto;
 
   & label {
     position: relative;
+    flex-shrink: 0;
     cursor: pointer;
 
     & + label {
@@ -613,6 +644,7 @@ const styles = `
   & span {
     display: block;
     padding: 0.3em 0.8em;
+    white-space: nowrap;
   }
 
   & label:hover span {
