@@ -133,7 +133,7 @@ import jxlProgressiveDemoScript, {
   imports as jxlProgressiveDemoScriptImports,
 } from 'client-bundle:client/demos/2026/jxl-on-the-web/progressive';
 import jxlProgressiveDemoStyles from 'css-bundle:client/demos/2026/jxl-on-the-web/progressive/styles.css';
-toOutput['2026/jxl-on-the-web/demos/progressive/index.html'] = renderPage(
+toOutput['2026/jpeg-xl-vs-avif/demos/progressive/index.html'] = renderPage(
   <ClientDemo
     title="Progressive image loading"
     script={jxlProgressiveDemoScript}
