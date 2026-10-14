@@ -35,6 +35,8 @@ interface Format {
 interface Props {
   ratio: number;
   maxWidth: number;
+  /** Space around the image, in px */
+  padding?: number;
   lossless: string;
   /** Via asset-size, see Encoding.bytes */
   losslessBytes: string;
@@ -50,7 +52,8 @@ interface Props {
 // Same hues as the charts
 const defaultFormats: Format[] = [
   { key: 'avif', label: 'AVIF', color: '#2a78d6' },
-  { key: 'jxl', label: 'JPEG XL', color: '#eb6834' },
+  { key: 'jxl', label: 'JPEG XL (libjxl)', color: '#eb6834' },
+  { key: 'jixel', label: 'JPEG XL (jixel)', color: '#1baf7a' },
 ];
 
 // SSIMULACRA2's own quality descriptions.
@@ -71,6 +74,7 @@ const holdKeys = new Set([' ', 'Enter']);
 const CodecCompare: FunctionalComponent<Props> = ({
   ratio,
   maxWidth,
+  padding = 0,
   lossless,
   losslessBytes,
   losslessLabel = 'Lossless',
@@ -136,6 +140,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
     <div class="codec-compare">
       <div
         class="codec-compare-preview"
+        style={{ padding }}
         onPointerDown={onPointerDown}
         onLostPointerCapture={() => setHolding(false)}
         onContextMenu={(event) => {
@@ -155,7 +160,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
             <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
           </div>
           {!__PRERENDER__ && (
-            <div class="codec-compare-layer">
+            <div class="codec-compare-layer" style={{ inset: padding }}>
               <DecodedImg
                 src={encoding.url}
                 renderWidth={maxWidth}
@@ -171,6 +176,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
               key={url}
               class="codec-compare-layer"
               style={{
+                inset: padding,
                 visibility: holding && url === currentLossless ? '' : 'hidden',
               }}
             >

@@ -15,9 +15,11 @@ import LineChart, {
 export { Styles } from '../LineChart';
 export type { Browser } from '../LineChart';
 
+type Codec = 'avif' | 'jxl' | 'jixel';
+
 export interface Row {
   seriesId: string;
-  codec: 'avif' | 'jxl';
+  codec: Codec;
   effort: number;
   effortLabel: string;
   yuv: string | null;
@@ -59,6 +61,25 @@ const metricTitles: Record<Metric, string> = {
 // Codec is identified by hue, effort by lightness (darker = more effort).
 const avifColors = ['#0b3d7a', '#1d5aa8', '#2a78d6', '#5d9be6', '#93bdf0'];
 const jxlColors = ['#8a3410', '#c04a1c', '#eb6834', '#f39a72'];
+const jixelColors = ['#0b5c40', '#0e7a54', '#13956a', '#1baf7a'];
+
+const codecColors: Record<Codec, string[]> = {
+  avif: avifColors,
+  jxl: jxlColors,
+  jixel: jixelColors,
+};
+
+const codecOrder: Codec[] = ['avif', 'jxl', 'jixel'];
+
+const codecLabels: Record<Codec, string> = {
+  avif: 'AVIF',
+  jxl: 'libjxl',
+  jixel: 'jixel',
+};
+
+// Series at these efforts are shown initially. The rest start toggled off.
+const defaultEfforts: Record<Codec, number> = { avif: 6, jxl: 7, jixel: 3 };
+const maxEfforts: Record<Codec, number> = { avif: 0, jxl: 10, jixel: 6 };
 
 const yAxes: Record<
   YAxis,
@@ -91,7 +112,7 @@ const yAxes: Record<
 };
 
 function seriesLabel(row: Row): string {
-  const parts = [row.codec.toUpperCase(), row.effortLabel];
+  const parts = [codecLabels[row.codec], row.effortLabel.replace('+', ' + ')];
   if (row.hdrMode === 'pq') parts.splice(1, 0, 'PQ');
   if (row.hdrMode === 'gainmap') parts.splice(1, 0, 'gain map');
   if (row.yuv && row.yuv !== '444') parts.push(row.yuv.split('').join(':'));
@@ -116,9 +137,11 @@ function createSeries(
 
   const series = [...bySeries.values()].sort(
     ([a], [b]) =>
-      a.codec.localeCompare(b.codec) ||
+      codecOrder.indexOf(a.codec) - codecOrder.indexOf(b.codec) ||
       (b.yuv ?? '').localeCompare(a.yuv ?? '') ||
       Number(a.hdrMode === 'pq') - Number(b.hdrMode === 'pq') ||
+      Number(a.seriesId.endsWith('-patches')) -
+        Number(b.seriesId.endsWith('-patches')) ||
       a.effort - b.effort,
   );
 
@@ -126,25 +149,28 @@ function createSeries(
   // color regardless of subsampling or filtering.
   const effortsFor = (codec: Row['codec']) =>
     [...new Set(rows.filter((r) => r.codec === codec).map((r) => r.effort))]
-      // Lower AVIF speed = more effort. Higher JXL effort = more effort.
+      // Lower AVIF speed = more effort. Higher JXL/jixel effort = more effort.
       .sort((a, b) => (codec === 'avif' ? a - b : b - a));
-
-  const avifEfforts = effortsFor('avif');
-  const jxlEfforts = effortsFor('jxl');
 
   return series.map((seriesRows) => {
     const first = seriesRows[0];
+    const colors = codecColors[first.codec];
     const color =
-      first.codec === 'avif'
-        ? avifColors[avifEfforts.indexOf(first.effort) % avifColors.length]
-        : jxlColors[jxlEfforts.indexOf(first.effort) % jxlColors.length];
+      colors[effortsFor(first.codec).indexOf(first.effort) % colors.length];
 
     return {
       id: first.seriesId,
       label: seriesLabel(first),
       color,
-      // 4:2:0 and PQ never appear in the same dataset, so they share dashes.
-      dashed: first.yuv === '420' || first.hdrMode === 'pq',
+      // 4:2:0, PQ, and jixel patches never appear in the same series, so they
+      // share dashes.
+      dashed:
+        first.yuv === '420' ||
+        first.hdrMode === 'pq' ||
+        first.seriesId.endsWith('-patches'),
+      hidden:
+        first.effort !== defaultEfforts[first.codec] &&
+        first.effort !== maxEfforts[first.codec],
       points: seriesRows
         .map((row) => ({
           x: row[metric]!,

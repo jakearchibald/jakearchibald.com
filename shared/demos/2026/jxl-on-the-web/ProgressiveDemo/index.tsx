@@ -98,7 +98,6 @@ const ProgressiveDemo: FunctionalComponent<Props> = ({
             return (
               <li>
                 {image.label}: {formatBytes(loaded)} of {formatBytes(sizes[i])}
-                {loaded === sizes[i] && ' (complete)'}
               </li>
             );
           })}

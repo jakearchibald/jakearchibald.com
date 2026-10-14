@@ -9,6 +9,9 @@ const { jobs } = JSON.parse(readFileSync(resultsPath, 'utf8'));
 
 const rows = jobs
   .filter((job) => !job.lossless)
+  // jixel's speeds below its default (fast) aren't charted. Every encoder's
+  // default is its fastest setting shown.
+  .filter((job) => job.codec !== 'jixel' || job.effort >= 3)
   .map((job) => ({
     seriesId: job.seriesId,
     codec: job.codec,

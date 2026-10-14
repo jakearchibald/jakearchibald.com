@@ -32,7 +32,8 @@
         "sdr": "/Users/jarchibald/dev/image-codec-bench/inputs/neon-10bit.png",
         "hdr": "/Users/jarchibald/dev/image-codec-bench/out/neon-hdr-10bit-targets/.tmp/reference.png"
       },
-      "jxl": "/Users/jarchibald/dev/image-codec-bench/out/neon-hdr-10bit-targets/.tmp/reference.png"
+      "jxl": "/Users/jarchibald/dev/image-codec-bench/out/neon-hdr-10bit-targets/.tmp/reference.png",
+      "jixel": "/Users/jarchibald/dev/image-codec-bench/out/neon-hdr-10bit-targets/.tmp/reference.png"
     }
   },
   "versions": {
@@ -45,7 +46,8 @@
     "dwebp": "1.6.0",
     "magick": "7.1.2",
     "avifgainmaputil": "Version: 1.4.2 (dav1d [dec]:1.5.3-0-gb546257, aom [enc/dec]:3.15.1)",
-    "hdr-ssim2": "220e3ad5af4398f1"
+    "hdr-ssim2": "220e3ad5af4398f1",
+    "cjixel": "cjixel: jixel 0.4.0 (git b45195a)"
   },
   "results": [
     {
@@ -221,6 +223,68 @@
       "score": 100,
       "bytes": 3692494,
       "file": "jxl-q100-e10-ssimu100.0.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 50,
+      "quality": 63.7,
+      "score": 50.02357497,
+      "bytes": 64177,
+      "file": "jixel-q63.7-e6-ssimu50.0.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 60,
+      "quality": 76.2,
+      "score": 61.08900174,
+      "bytes": 90079,
+      "file": "jixel-q76.2-e6-ssimu61.1.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 70,
+      "quality": 83.7,
+      "score": 70.09061553,
+      "bytes": 135296,
+      "file": "jixel-q83.7-e6-ssimu70.1.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 80,
+      "quality": 91.7,
+      "score": 80.21338633,
+      "bytes": 290295,
+      "file": "jixel-q91.7-e6-ssimu80.2.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 90,
+      "file": null
     }
   ]
 }

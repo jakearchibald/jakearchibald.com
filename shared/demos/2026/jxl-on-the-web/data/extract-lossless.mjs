@@ -14,12 +14,17 @@ const images = inputs.map((input) => {
 
   const rows = lossless
     .filter((row) => !row.skipped && !row.isSource)
+    // jixel's speeds below its default (fast) aren't charted. Every encoder's
+    // default is its fastest setting shown.
+    .filter((row) => row.codec !== 'jixel' || row.effort >= 3)
     .map((row) => {
       if (!row.bitExact) throw Error(`${label} ${row.label} isn't lossless`);
       return {
         codec: row.codec,
         effort: row.effort,
         effortLabel: row.effortLabel,
+        // Only jixel has a patches setting
+        patches: row.patches ?? undefined,
         bytes: row.bytes,
         encodeMs: row.timings.multi.bestMs,
         encodeMemory: row.peakMemory.multi,

@@ -11,7 +11,7 @@ import LineChart, {
   Segmented,
 } from '../LineChart';
 
-/** A JPEG at a particular resolution & quality, and the JPEG XL transcoded from it */
+/** A JPEG at a particular resolution & quality, and the JPEG XLs transcoded from it */
 export interface TranscodeRow {
   width: number;
   height: number;
@@ -22,6 +22,8 @@ export interface TranscodeRow {
   /** Mean decode time per browser */
   jpegDecodeMs: Partial<Record<Browser, number>>;
   jxlDecodeMs: Partial<Record<Browser, number>>;
+  jixelBytes: number;
+  jixelDecodeMs: Partial<Record<Browser, number>>;
 }
 
 type YAxis = 'bytes' | 'decodeMs';
@@ -37,21 +39,41 @@ interface Props extends TranscodeChartProps {
   data: TranscodeRow[];
 }
 
-const formats = [
+interface Format {
+  id: string;
+  label: string;
+  color: string;
+  /** Whether this is a JPEG XL, so its saving is shown */
+  transcoded: boolean;
+  bytes: (row: TranscodeRow) => number;
+  decodeMs: (row: TranscodeRow) => Partial<Record<Browser, number>>;
+}
+
+// Same hues as the other charts
+const formats: Format[] = [
   {
     id: 'jpeg',
     label: 'JPEG',
     color: '#52514e',
-    bytes: (row: TranscodeRow) => row.jpegBytes,
-    decodeMs: (row: TranscodeRow) => row.jpegDecodeMs,
+    transcoded: false,
+    bytes: (row) => row.jpegBytes,
+    decodeMs: (row) => row.jpegDecodeMs,
   },
   {
     id: 'jxl',
-    label: 'JPEG XL',
-    // Same hue as the other charts
+    label: 'libjxl',
     color: '#eb6834',
-    bytes: (row: TranscodeRow) => row.jxlBytes,
-    decodeMs: (row: TranscodeRow) => row.jxlDecodeMs,
+    transcoded: true,
+    bytes: (row) => row.jxlBytes,
+    decodeMs: (row) => row.jxlDecodeMs,
+  },
+  {
+    id: 'jixel',
+    label: 'jixel',
+    color: '#1baf7a',
+    transcoded: true,
+    bytes: (row) => row.jixelBytes,
+    decodeMs: (row) => row.jixelDecodeMs,
   },
 ];
 
@@ -97,7 +119,7 @@ const TranscodeChart: FunctionalComponent<Props> = ({
               `Size: ${formatBytes(bytes)}`,
             ];
 
-            if (format.id === 'jxl') {
+            if (format.transcoded) {
               const saving = Math.round((1 - bytes / row.jpegBytes) * 100);
               details.push(`${saving}% smaller than the JPEG`);
             }

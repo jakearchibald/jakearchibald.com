@@ -13,6 +13,8 @@ export interface ChartSeries {
   label: string;
   color: string;
   dashed?: boolean;
+  /** Start with this series toggled off in the legend */
+  hidden?: boolean;
   points: ChartPoint[];
 }
 
@@ -194,7 +196,7 @@ const LineChart: FunctionalComponent<Props> = ({
   const [scaleType, setScaleType] = useState<'linear' | 'log'>('linear');
   const [xScaleType, setXScaleType] = useState<'linear' | 'log'>('linear');
   const [hiddenSeries, setHiddenSeries] = useState<ReadonlySet<string>>(
-    new Set(),
+    () => new Set(allSeries.filter((s) => s.hidden).map((s) => s.id)),
   );
   const [hovered, setHovered] = useState<Hovered | null>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
