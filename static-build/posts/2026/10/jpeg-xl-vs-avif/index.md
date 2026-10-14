@@ -4,7 +4,7 @@ date: 2026-10-14 01:00:00
 summary: JPEG XL has landed, but how does it compare?
 meta: JPEG XL has landed, but how does it compare?
 code: shiki
-#image: './img.png'
+image: './img.jpg'
 comments: none
 ---
 
