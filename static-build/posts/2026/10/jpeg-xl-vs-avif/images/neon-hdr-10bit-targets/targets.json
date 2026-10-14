@@ -47,7 +47,7 @@
     "magick": "7.1.2",
     "avifgainmaputil": "Version: 1.4.2 (dav1d [dec]:1.5.3-0-gb546257, aom [enc/dec]:3.15.1)",
     "hdr-ssim2": "220e3ad5af4398f1",
-    "cjixel": "cjixel: jixel 0.4.0 (git b45195a)"
+    "cjixel": "cjixel: jixel 0.4.2 (git f487299)"
   },
   "results": [
     {
@@ -232,10 +232,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 50,
-      "quality": 63.7,
-      "score": 50.02357497,
-      "bytes": 64177,
-      "file": "jixel-q63.7-e6-ssimu50.0.jxl"
+      "quality": 63.6,
+      "score": 50.04435005,
+      "bytes": 65495,
+      "file": "jixel-q63.6-e6-ssimu50.0.jxl"
     },
     {
       "codec": "jixel",
@@ -246,9 +246,9 @@
       "patches": false,
       "target": 60,
       "quality": 76.2,
-      "score": 61.08900174,
-      "bytes": 90079,
-      "file": "jixel-q76.2-e6-ssimu61.1.jxl"
+      "score": 61.00407353,
+      "bytes": 88835,
+      "file": "jixel-q76.2-e6-ssimu61.0.jxl"
     },
     {
       "codec": "jixel",
@@ -258,10 +258,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 70,
-      "quality": 83.7,
-      "score": 70.09061553,
-      "bytes": 135296,
-      "file": "jixel-q83.7-e6-ssimu70.1.jxl"
+      "quality": 83.5,
+      "score": 70.0367501,
+      "bytes": 134498,
+      "file": "jixel-q83.5-e6-ssimu70.0.jxl"
     },
     {
       "codec": "jixel",
@@ -271,10 +271,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 80,
-      "quality": 91.7,
-      "score": 80.21338633,
-      "bytes": 290295,
-      "file": "jixel-q91.7-e6-ssimu80.2.jxl"
+      "quality": 91.6,
+      "score": 80.03175403,
+      "bytes": 284971,
+      "file": "jixel-q91.6-e6-ssimu80.0.jxl"
     },
     {
       "codec": "jixel",

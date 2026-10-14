@@ -25,7 +25,7 @@
     "cwebp": "1.6.0",
     "dwebp": "1.6.0",
     "magick": "7.1.2",
-    "cjixel": "cjixel: jixel 0.4.0 (git b45195a)"
+    "cjixel": "cjixel: jixel 0.4.2 (git f487299)"
   },
   "results": [
     {
@@ -146,10 +146,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 50,
-      "quality": 11.5,
-      "score": 50.23882658,
-      "bytes": 122480,
-      "file": "jixel-q11.5-e6-ssimu50.2.jxl"
+      "quality": 15.8,
+      "score": 50.00619402,
+      "bytes": 109346,
+      "file": "jixel-q15.8-e6-ssimu50.0.jxl"
     },
     {
       "codec": "jixel",
@@ -159,10 +159,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 60,
-      "quality": 19.6,
-      "score": 60.04150043,
-      "bytes": 147196,
-      "file": "jixel-q19.6-e6-ssimu60.0.jxl"
+      "quality": 48.3,
+      "score": 60.12963245,
+      "bytes": 143458,
+      "file": "jixel-q48.3-e6-ssimu60.1.jxl"
     },
     {
       "codec": "jixel",
@@ -172,10 +172,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 70,
-      "quality": 63.9,
-      "score": 70.06666741,
-      "bytes": 190087,
-      "file": "jixel-q63.9-e6-ssimu70.1.jxl"
+      "quality": 64.9,
+      "score": 70.06811111,
+      "bytes": 184669,
+      "file": "jixel-q64.9-e6-ssimu70.1.jxl"
     },
     {
       "codec": "jixel",
@@ -185,10 +185,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 80,
-      "quality": 81.5,
-      "score": 80.06422954,
-      "bytes": 303361,
-      "file": "jixel-q81.5-e6-ssimu80.1.jxl"
+      "quality": 81.8,
+      "score": 80.02416978,
+      "bytes": 298348,
+      "file": "jixel-q81.8-e6-ssimu80.0.jxl"
     },
     {
       "codec": "jixel",
@@ -198,10 +198,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 90,
-      "quality": 92.4,
-      "score": 90.03913191,
-      "bytes": 1014137,
-      "file": "jixel-q92.4-e6-ssimu90.0.jxl"
+      "quality": 92.5,
+      "score": 90.09189367,
+      "bytes": 1019481,
+      "file": "jixel-q92.5-e6-ssimu90.1.jxl"
     }
   ]
 }

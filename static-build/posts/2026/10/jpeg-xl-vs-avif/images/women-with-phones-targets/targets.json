@@ -25,7 +25,7 @@
     "cwebp": "1.6.0",
     "dwebp": "1.6.0",
     "magick": "7.1.2",
-    "cjixel": "cjixel: jixel 0.4.0 (git b45195a)"
+    "cjixel": "cjixel: jixel 0.4.2 (git f487299)"
   },
   "results": [
     {
@@ -146,10 +146,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 50,
-      "quality": 44.1,
-      "score": 50.06639452,
-      "bytes": 36842,
-      "file": "jixel-q44.1-e6-ssimu50.1.jxl"
+      "quality": 48.6,
+      "score": 50.01256032,
+      "bytes": 36233,
+      "file": "jixel-q48.6-e6-ssimu50.0.jxl"
     },
     {
       "codec": "jixel",
@@ -159,10 +159,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 60,
-      "quality": 65.9,
-      "score": 60.17510657,
-      "bytes": 49295,
-      "file": "jixel-q65.9-e6-ssimu60.2.jxl"
+      "quality": 66.6,
+      "score": 60.11855881,
+      "bytes": 49241,
+      "file": "jixel-q66.6-e6-ssimu60.1.jxl"
     },
     {
       "codec": "jixel",
@@ -172,10 +172,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 70,
-      "quality": 78.7,
-      "score": 70.03144335,
-      "bytes": 71341,
-      "file": "jixel-q78.7-e6-ssimu70.0.jxl"
+      "quality": 78.4,
+      "score": 70.09180586,
+      "bytes": 70937,
+      "file": "jixel-q78.4-e6-ssimu70.1.jxl"
     },
     {
       "codec": "jixel",
@@ -186,9 +186,9 @@
       "patches": false,
       "target": 80,
       "quality": 86,
-      "score": 80.08826219,
-      "bytes": 121640,
-      "file": "jixel-q86-e6-ssimu80.1.jxl"
+      "score": 80.18219009,
+      "bytes": 121919,
+      "file": "jixel-q86-e6-ssimu80.2.jxl"
     },
     {
       "codec": "jixel",
@@ -199,9 +199,9 @@
       "patches": false,
       "target": 90,
       "quality": 93.2,
-      "score": 90.03359775,
-      "bytes": 301126,
-      "file": "jixel-q93.2-e6-ssimu90.0.jxl"
+      "score": 90.12303395,
+      "bytes": 301531,
+      "file": "jixel-q93.2-e6-ssimu90.1.jxl"
     }
   ]
 }

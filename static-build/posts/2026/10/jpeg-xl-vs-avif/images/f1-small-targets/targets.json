@@ -25,7 +25,7 @@
     "cwebp": "1.6.0",
     "dwebp": "1.6.0",
     "magick": "7.1.2",
-    "cjixel": "cjixel: jixel 0.4.0 (git b45195a)"
+    "cjixel": "cjixel: jixel 0.4.2 (git f487299)"
   },
   "results": [
     {
@@ -146,10 +146,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 50,
-      "quality": 45,
-      "score": 50.45668025,
-      "bytes": 5166,
-      "file": "jixel-q45-e6-ssimu50.5.jxl"
+      "quality": 43.3,
+      "score": 50.50036994,
+      "bytes": 4990,
+      "file": "jixel-q43.3-e6-ssimu50.5.jxl"
     },
     {
       "codec": "jixel",
@@ -159,10 +159,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 60,
-      "quality": 65.6,
-      "score": 60.08149409,
-      "bytes": 6894,
-      "file": "jixel-q65.6-e6-ssimu60.1.jxl"
+      "quality": 65.8,
+      "score": 60.21195722,
+      "bytes": 6982,
+      "file": "jixel-q65.8-e6-ssimu60.2.jxl"
     },
     {
       "codec": "jixel",
@@ -172,10 +172,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 70,
-      "quality": 78.9,
-      "score": 72.29761455,
-      "bytes": 10311,
-      "file": "jixel-q78.9-e6-ssimu72.3.jxl"
+      "quality": 78.7,
+      "score": 70.07850335,
+      "bytes": 9538,
+      "file": "jixel-q78.7-e6-ssimu70.1.jxl"
     },
     {
       "codec": "jixel",
@@ -185,10 +185,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 80,
-      "quality": 85.1,
-      "score": 80.20393243,
-      "bytes": 15180,
-      "file": "jixel-q85.1-e6-ssimu80.2.jxl"
+      "quality": 84.7,
+      "score": 80.24377743,
+      "bytes": 15137,
+      "file": "jixel-q84.7-e6-ssimu80.2.jxl"
     },
     {
       "codec": "jixel",
@@ -198,10 +198,10 @@
       "hdrMode": null,
       "patches": false,
       "target": 90,
-      "quality": 92,
-      "score": 90.0625535,
-      "bytes": 27089,
-      "file": "jixel-q92-e6-ssimu90.1.jxl"
+      "quality": 92.3,
+      "score": 90.59702436,
+      "bytes": 28647,
+      "file": "jixel-q92.3-e6-ssimu90.6.jxl"
     }
   ]
 }
