@@ -18,7 +18,7 @@ import terser from '@rollup/plugin-terser';
 import commonjs from '@rollup/plugin-commonjs';
 import replace from '@rollup/plugin-replace';
 
-import simpleTS from './lib/simple-ts.mjs';
+import oxcPlugin from './lib/oxc-plugin.mjs';
 import clientBundlePlugin from './lib/client-bundle-plugin.mjs';
 import nodeExternalPlugin from './lib/node-external-plugin.mjs';
 import cssPlugin from './lib/css-plugin.mjs';
@@ -56,12 +56,11 @@ export default async function ({ watch }) {
   const production = !watch;
   await deleteAsync('.tmp/build');
 
-  const tsPluginInstance = simpleTS('static-build', { watch });
   const commonPlugins = () => [
     prefixDefaultPlugin({
       'entry-url:': '',
     }),
-    tsPluginInstance,
+    oxcPlugin(),
     resolveDirsPlugin([
       'static-build',
       'client',
@@ -89,8 +88,7 @@ export default async function ({ watch }) {
       exports: 'named',
       preserveModules: true,
     },
-    // Don't watch the ts files. Instead we watch the output from the ts compiler.
-    watch: { clearScreen: false, exclude: ['**/*.ts', '**/*.tsx'] },
+    watch: { clearScreen: false },
     plugins: [
       { resolveFileUrl },
       clientBundlePlugin(

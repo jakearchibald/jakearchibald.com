@@ -1,0 +1,207 @@
+{
+  "input": "/Users/jarchibald/dev/image-codec-bench/inputs/critter.png",
+  "reference": {
+    "path": "/Users/jarchibald/dev/image-codec-bench/out/critter-targets/.tmp/reference.png",
+    "width": 1598,
+    "height": 1931,
+    "depth": 8,
+    "channels": 3,
+    "hasAlpha": false,
+    "megapixels": 3.085738,
+    "strippedChunks": [],
+    "resized": false,
+    "source": {
+      "width": 1598,
+      "height": 1931,
+      "hasAlpha": false
+    }
+  },
+  "versions": {
+    "avifenc": "1.4.2",
+    "avifdec": "1.4.2",
+    "cjxl": "0.12.0",
+    "djxl": "0.12.0",
+    "ssimulacra2": "4dbb9a9c96d74608",
+    "cwebp": "1.6.0",
+    "dwebp": "1.6.0",
+    "magick": "7.1.2",
+    "cjixel": "cjixel: jixel 0.4.2 (git f487299)"
+  },
+  "results": [
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 50,
+      "quality": 47,
+      "score": 50.41408397,
+      "bytes": 140908,
+      "file": "avif-q47-e0-d8-yuv444-ssimu50.4.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 60,
+      "quality": 52,
+      "score": 60.07746827,
+      "bytes": 223024,
+      "file": "avif-q52-e0-d8-yuv444-ssimu60.1.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 70,
+      "quality": 60,
+      "score": 70.49507017,
+      "bytes": 368453,
+      "file": "avif-q60-e0-d8-yuv444-ssimu70.5.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 80,
+      "quality": 74,
+      "score": 80.52244736,
+      "bytes": 618000,
+      "file": "avif-q74-e0-d8-yuv444-ssimu80.5.avif"
+    },
+    {
+      "codec": "avif",
+      "effort": 0,
+      "depth": 8,
+      "yuv": "444",
+      "target": 90,
+      "quality": 90,
+      "score": 90.22266098,
+      "bytes": 1136713,
+      "file": "avif-q90-e0-d8-yuv444-ssimu90.2.avif"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 50,
+      "quality": 64.4,
+      "score": 50.06618365,
+      "bytes": 133673,
+      "file": "jxl-q64.4-e10-ssimu50.1.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 60,
+      "quality": 73.7,
+      "score": 60.10266725,
+      "bytes": 212966,
+      "file": "jxl-q73.7-e10-ssimu60.1.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 70,
+      "quality": 80.1,
+      "score": 70.06021397,
+      "bytes": 351630,
+      "file": "jxl-q80.1-e10-ssimu70.1.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 80,
+      "quality": 87.2,
+      "score": 80.06138453,
+      "bytes": 598983,
+      "file": "jxl-q87.2-e10-ssimu80.1.jxl"
+    },
+    {
+      "codec": "jxl",
+      "effort": 10,
+      "depth": 8,
+      "yuv": null,
+      "target": 90,
+      "quality": 95,
+      "score": 90.00001531,
+      "bytes": 1130634,
+      "file": "jxl-q95-e10-ssimu90.0.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 50,
+      "quality": 71.6,
+      "score": 50.00843692,
+      "bytes": 99970,
+      "file": "jixel-q71.6-e6-ssimu50.0.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 60,
+      "quality": 79.5,
+      "score": 60.31428107,
+      "bytes": 172015,
+      "file": "jixel-q79.5-e6-ssimu60.3.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 70,
+      "quality": 84.9,
+      "score": 70.04530329,
+      "bytes": 296070,
+      "file": "jixel-q84.9-e6-ssimu70.0.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 80,
+      "quality": 90.5,
+      "score": 80.32844525,
+      "bytes": 531054,
+      "file": "jixel-q90.5-e6-ssimu80.3.jxl"
+    },
+    {
+      "codec": "jixel",
+      "effort": 6,
+      "depth": 8,
+      "yuv": null,
+      "hdrMode": null,
+      "patches": false,
+      "target": 90,
+      "quality": 93.8,
+      "score": 90.12291807,
+      "bytes": 1022594,
+      "file": "jixel-q93.8-e6-ssimu90.1.jxl"
+    }
+  ]
+}

@@ -29,6 +29,9 @@
 }
 
 .content-n-side {
+  /* Allows .breakout to size itself against the full two-column width */
+  container-type: inline-size;
+
   & > .side {
     display: none;
   }

@@ -10,6 +10,8 @@
     "skipLibCheck": true,
     "outDir": ".tmp/ts",
     "composite": true,
+    "emitDeclarationOnly": true,
+    "isolatedModules": true,
     "declarationMap": true,
     "rootDir": "./",
     "allowSyntheticDefaultImports": true
