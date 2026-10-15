@@ -14,9 +14,9 @@ JPEG XL has now landed in all major browsers, so I figured I'd take a closer loo
 
 I'll go into full detail, with examples and benchmarks, but for those of you who don't have the time, here are the headlines:
 
-**For lossy photos, AVIF usually produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. At maximum effort settings, the gap narrows a little, to typically 6–20%. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both. See the [F1 image](#lossy---f1-image) for a typical example, and the [weasel](#lossy---weasel) for an outlier.
+**For lossy photos on the web, AVIF almost always produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. At maximum effort settings, the gap narrows a little, to typically 6–20%. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both. See the [F1 image](#lossy---f1-image) for a typical example, and the [weasel](#lossy---weasel) for an outlier.
 
-**The JPEG XL encoder matters a lot.** [jixel](https://github.com/awxkee/jixel), a newer JPEG XL encoder, usually produces much smaller files than [libjxl](https://github.com/libjxl/libjxl). The [people image](#lossy---people) is one example.
+**The JPEG XL encoder matters a lot.** [jixel](https://github.com/awxkee/jixel), a newer JPEG XL encoder, usually produces much smaller files than [libjxl](https://github.com/libjxl/libjxl), except when the image has detailed transparency. The [people image](#lossy---people) is one example.
 
 **For screenshots and illustrations, AVIF is much better than JPEG XL.** The equivalent JPEG XL is 40–90% larger at default effort settings, and 20–70% larger at maximum effort settings. Lossy AVIF handles these well - you don't need to use lossless formats unless you really need bit-exact results. See the [screenshot](#lossy---screenshot) and [illustration](#lossy---illustration) examples.
 
