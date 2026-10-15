@@ -804,6 +804,8 @@ The high JPEG XL decoding times here are likely a side effect of it producing mu
 
 In many cases, for largely flat-colour images, you'd use SVG. But sometimes that isn't possible (it's a screenshot), or undesirable, such as this case. This image, [also from Unsplash](https://unsplash.com/illustrations/hands-feeding-orange-cat-a-treat-on-bed-9tXfoalzAqY), is still 1.1 MB as a compressed and minified SVG. This is due to the complexity of the shaded areas. As a result, a raster format wins on file size and decode/draw time.
 
+At quality 50 in the demo above, the jixel has some pretty severe colour blocks, e.g. on the cat's face. Again, it makes me question the metric a bit.
+
 The results of the benchmark:
 
 - **File size: <span class="winner-avif">AVIF wins</span>, by a lot.** At default efforts, the best JPEG XL image (jixel) is 32–65% larger than the AVIF image up to SSIMULACRA2 80, and ~90% larger beyond that. At maximum efforts, the best JPEG XL image (jixel 'extraslow') is 22–55% larger than AVIF (s0) up to SSIMULACRA2 80, and more beyond that. ColorVideoVDP agrees, and puts the gap at 27–58%.
