@@ -42,7 +42,7 @@ I'll go into full detail, with examples and benchmarks, but for those of you who
 
 **For lossless, JPEG XL is the clear winner.** Lossless WebP is 9–17% larger for photos, and lossless AVIF is 30–120% larger. But lossless images are almost never what you want on the web. If you do use them on the web (like I do on this page), watch out for jixel's higher efforts - it often produces files that are too slow to decode. [See the data](#lossless).
 
-**Animated image formats continue to be a dumb idea.** Please don't use them.
+**Animated image formats continue to be a dumb idea.** Please don't use them. [Learn more](#animation), if you must.
 
 For web use-cases, I'd currently default to AVIF 4:4:4, with the highest effort level I can be bothered with. If I felt AVIF was producing an unusually large file, I'd take a look at JPEG XL via jixel, and see if it did better.
 
@@ -1710,9 +1710,17 @@ The results:
 
 # Animation
 
-Animated image formats are dumb and animated JPEG XL is no exception. The only interesting animated format is AVIF, because it supports transparency, whereas AV1 video doesn't. But really, that just highlights that [it's dumb that AV1 _didn't_ support transparency](/2024/video-with-transparency/).
+Animated image formats are dumb and animated JPEG XL is no exception. Video formats are better at video. They're built for it. They're optimised for it. Not just in terms of encoding, but also in terms of playback.
 
-I encoded a short clip, and the animated AVIF was 725 kB, and the JPEG XL was 2.17 MB for the same ColorVideoVDP score (9.5). The JPEG XL is super noisy compared to the AVIF. The AVIF plays like shit in Chrome and Safari.
+I encoded a short clip, and the animated AVIF was 725 kB, and the JPEG XL was 2.17 MB for the same ColorVideoVDP score (9.5).
+
+The JPEG XL is super noisy compared to the AVIF, because each frame is encoded individually, and arttifacts land in different places per frame.
+
+AVIF is basically the keyframe format of AV1 video, with a bunch of still-image-specific optimisations thrown in. Animated AVIF however, is pretty much just a repackaging of AV1 video. You can convert an AV1 MP4 to AVIF and back losslessly - it's just a container change. That's why it performs so much better, because it's built for motion.
+
+However, animated AVIF plays like shit in Chrome and Safari. It's fine in Firefox, so this is purely an implementation problem. But… `<video muted autoplay>` is right there.
+
+The interesting detail of animated AVIF is that it supports transparency, whereas AV1 video doesn't. But really, that just highlights that [it's dumb that AV1 _didn't_ support transparency](/2024/video-with-transparency/).
 
 No, I'm not adding a demo. I don't want it on my server. Use video formats for video.
 
