@@ -233,6 +233,13 @@ const styles = `
     min-height: 0;
   }
 
+  /* In a flex column, auto margins stop it stretching, so it'd shrink to fit
+     its content */
+  & .progressive-demo-controls {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
   & .progressive-demo-scroller {
     position: absolute;
     inset: 0;
