@@ -1,6 +1,6 @@
 ---
 title: JPEG XL vs AVIF for web use-cases
-date: 2026-10-14 01:00:00
+date: 2026-10-15 01:00:00
 summary: JPEG XL has landed, but how does it compare?
 meta: JPEG XL has landed, but how does it compare?
 code: shiki
