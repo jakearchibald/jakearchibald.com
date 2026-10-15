@@ -184,6 +184,10 @@ async function main() {
   addEventListener('message', (event) => {
     if (event.origin !== location.origin || event.source !== parent) return;
     if (typeof event.data?.bytes === 'number') setBytes(event.data.bytes);
+    // In fullscreen, the parent shows the labels, so they don't scroll away.
+    if (typeof event.data?.labels === 'boolean') {
+      document.body.classList.toggle('hide-labels', !event.data.labels);
+    }
   });
 
   // The parent may have changed the value before this page was ready.

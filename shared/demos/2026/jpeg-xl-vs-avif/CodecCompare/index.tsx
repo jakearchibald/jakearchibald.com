@@ -1,5 +1,5 @@
 import { Fragment, FunctionalComponent, h } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
+import { useEffect, useRef, useState } from 'preact/hooks';
 import AsyncContent, {
   Styles as AsyncContentStyles,
 } from 'shared/AsyncContent';
@@ -90,6 +90,9 @@ const CodecCompare: FunctionalComponent<Props> = ({
   // Lossless images are only fetched once the user first asks for them.
   const [losslessRequested, setLosslessRequested] = useState<string[]>([]);
   const [losslessLoaded, setLosslessLoaded] = useState<string[]>([]);
+  const [canFullscreen, setCanFullscreen] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const root = useRef<HTMLDivElement>(null);
 
   const format = formats.find((f) => f.key === codec)!;
   const currentLossless = format.lossless ?? lossless;
@@ -102,6 +105,24 @@ const CodecCompare: FunctionalComponent<Props> = ({
     addEventListener('blur', release);
     return () => removeEventListener('blur', release);
   }, [holding]);
+
+  // Client-only, so the prerendered markup doesn't include a button that
+  // might not work.
+  useEffect(() => {
+    setCanFullscreen(document.fullscreenEnabled);
+    const update = () =>
+      setFullscreen(document.fullscreenElement === root.current);
+    document.addEventListener('fullscreenchange', update);
+    return () => document.removeEventListener('fullscreenchange', update);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (fullscreen) {
+      document.exitFullscreen();
+    } else {
+      root.current!.requestFullscreen();
+    }
+  };
 
   useEffect(() => {
     if (!holding || losslessRequested.includes(currentLossless)) return;
@@ -138,10 +159,9 @@ const CodecCompare: FunctionalComponent<Props> = ({
   };
 
   return (
-    <div class="codec-compare">
+    <div class="codec-compare" ref={root}>
       <div
         class="codec-compare-preview"
-        style={{ padding }}
         onPointerDown={onPointerDown}
         onLostPointerCapture={() => setHolding(false)}
         onContextMenu={(event) => {
@@ -152,55 +172,84 @@ const CodecCompare: FunctionalComponent<Props> = ({
           }
         }}
       >
-        <AsyncContent
-          loading={
-            holding ? !losslessLoaded.includes(currentLossless) : loading
-          }
-        >
-          <div style={{ maxWidth, margin: '0 auto' }}>
-            <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
+        <div class="codec-compare-scroller" style={{ padding }}>
+          <div
+            class="codec-compare-frame"
+            style={{ '--max-width': maxWidth + 'px' }}
+          >
+            <AsyncContent
+              loading={
+                holding ? !losslessLoaded.includes(currentLossless) : loading
+              }
+            >
+              <div style={{ maxWidth, margin: '0 auto' }}>
+                <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
+              </div>
+              {!__PRERENDER__ && (
+                <div
+                  class="codec-compare-layer"
+                  style={{
+                    inset: padding,
+                    // Hidden rather than just covered, as images with alpha would
+                    // show the lossy version through the lossless one.
+                    visibility: showingLossless ? 'hidden' : '',
+                  }}
+                >
+                  <DecodedImg
+                    src={encoding.url}
+                    renderWidth={maxWidth}
+                    lazy={true}
+                    onLoadStart={() => setLoading(true)}
+                    onLoadEnd={() => setLoading(false)}
+                  />
+                </div>
+              )}
+              {losslessRequested.map((url) => (
+                // Kept around after the first hold, so later holds are instant.
+                <div
+                  key={url}
+                  class="codec-compare-layer"
+                  style={{
+                    inset: padding,
+                    visibility:
+                      holding && url === currentLossless ? '' : 'hidden',
+                  }}
+                >
+                  <DecodedImg
+                    src={url}
+                    renderWidth={maxWidth}
+                    onLoadEnd={() =>
+                      setLosslessLoaded((loaded) => [...loaded, url])
+                    }
+                  />
+                </div>
+              ))}
+            </AsyncContent>
           </div>
-          {!__PRERENDER__ && (
-            <div
-              class="codec-compare-layer"
-              style={{
-                inset: padding,
-                // Hidden rather than just covered, as images with alpha would
-                // show the lossy version through the lossless one.
-                visibility: showingLossless ? 'hidden' : '',
-              }}
-            >
-              <DecodedImg
-                src={encoding.url}
-                renderWidth={maxWidth}
-                lazy={true}
-                onLoadStart={() => setLoading(true)}
-                onLoadEnd={() => setLoading(false)}
-              />
-            </div>
-          )}
-          {losslessRequested.map((url) => (
-            // Kept around after the first hold, so later holds are instant.
-            <div
-              key={url}
-              class="codec-compare-layer"
-              style={{
-                inset: padding,
-                visibility: holding && url === currentLossless ? '' : 'hidden',
-              }}
-            >
-              <DecodedImg
-                src={url}
-                renderWidth={maxWidth}
-                onLoadEnd={() =>
-                  setLosslessLoaded((loaded) => [...loaded, url])
+        </div>
+        {canFullscreen && (
+          <button
+            class="codec-compare-button codec-compare-fullscreen"
+            type="button"
+            // Otherwise the preview's pointerdown starts a hold
+            onPointerDown={(event) => event.stopPropagation()}
+            onClick={toggleFullscreen}
+            aria-label={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+            title={fullscreen ? 'Exit fullscreen' : 'Fullscreen'}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path
+                d={
+                  fullscreen
+                    ? 'M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5'
+                    : 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'
                 }
               />
-            </div>
-          ))}
-        </AsyncContent>
+            </svg>
+          </button>
+        )}
         <button
-          class="codec-compare-hold"
+          class="codec-compare-button codec-compare-hold"
           type="button"
           // Pointer presses are handled by the preview's pointerdown.
           onKeyDown={onKeyDown}
@@ -336,10 +385,8 @@ const styles = `
   /* Holding the image shows lossless, so don't let a long-press start a drag */
   -webkit-user-drag: none;
 }
-.codec-compare-hold {
+.codec-compare-button {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
   font: inherit;
   font-size: 0.9rem;
   padding: 0.5em 0.9em;
@@ -350,9 +397,56 @@ const styles = `
   cursor: pointer;
   touch-action: manipulation;
 }
+.codec-compare-hold {
+  right: 10px;
+  bottom: 10px;
+}
+.codec-compare-fullscreen {
+  right: 10px;
+  top: 10px;
+  display: grid;
+  padding: 0.45em;
+}
+.codec-compare-fullscreen svg {
+  width: 1.3em;
+  height: 1.3em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
 .codec-compare-hold[aria-pressed=true] {
   background: #ffe454;
   color: #000;
+}
+.codec-compare:fullscreen {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+.codec-compare:fullscreen .codec-compare-preview {
+  flex: 1;
+  min-height: 0;
+}
+.codec-compare:fullscreen .codec-compare-scroller {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  display: flex;
+}
+/* Shown at its 2x size, or smaller if it doesn't fit the width */
+.codec-compare:fullscreen .codec-compare-frame {
+  flex: none;
+  /* Centres, but unlike align/justify-content, it doesn't clip when scrolled */
+  margin: auto;
+  width: var(--max-width);
+  max-width: 100%;
+}
+.codec-compare:fullscreen .codec-compare-layer img,
+.codec-compare:fullscreen .codec-compare-layer canvas {
+  /* Overrides DecodedImg's inline width, so it shrinks with the frame */
+  width: 100% !important;
 }
 .codec-compare-controls {
   display: grid;
