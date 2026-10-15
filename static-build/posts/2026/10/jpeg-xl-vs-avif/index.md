@@ -36,7 +36,7 @@ I'll go into full detail, with examples and benchmarks, but for those of you who
 
 **AVIF supports progressive rendering!** It's Chrome-only for now, but it's in progress for Firefox. It's more complex than progressive JPEG XL, but it gives you more control over what the preview looks like, the files are usually smaller, and they're much faster to decode. [See for yourself](#progressive).
 
-**For HDR, JPEG XL lacks gain maps, which is a significant limitation compared to AVIF.** The JPEG XL format supports gain maps, but they aren't supported by browser decoders, and the encoding story is messy/experimental. When comparing non-gain mapped HDR content, the two quality metrics I used disagree a lot, but both have JPEG XL ahead of AVIF on file size. [See the examples](#lossy---hdr).
+**For HDR, JPEG XL lacks gain maps, which is a significant limitation compared to AVIF.** The JPEG XL format supports gain maps, but they aren't supported by browser decoders, and the encoding story is messy/experimental. When comparing non-gain mapped HDR content, the two quality metrics I used disagree a lot, but they agree that JPEG XL produces smaller files compared to AVIF. [See the examples](#lossy---hdr).
 
 **JPEG XL can make existing JPEGs 9–20% smaller, without further loss.** It's also as fast or faster to decode, except for small images. [See the data](#jpeg-transcoding).
 
