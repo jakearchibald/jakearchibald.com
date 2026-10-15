@@ -14,31 +14,31 @@ JPEG XL has now landed in all major browsers, so I figured I'd take a closer loo
 
 I'll go into full detail, with examples and benchmarks, but for those of you who don't have the time, here are the headlines:
 
-**For lossy photos, AVIF usually produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both.
+**For lossy photos, AVIF usually produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both. See the [F1 image](#lossy---f1-image) for a typical example, and the [weasel](#lossy---weasel) for an outlier.
 
-**The JPEG XL encoder matters a lot.** [jixel](https://github.com/awxkee/jixel), a newer JPEG XL encoder, usually produces much smaller files than [libjxl](https://github.com/libjxl/libjxl).
+**The JPEG XL encoder matters a lot.** [jixel](https://github.com/awxkee/jixel), a newer JPEG XL encoder, usually produces much smaller files than [libjxl](https://github.com/libjxl/libjxl). The [people image](#lossy---people) is one example.
 
-**For screenshots and illustrations, AVIF is much better than JPEG XL.** The equivalent JPEG XL is 40–90% larger at default effort settings. Lossy AVIF handles these well - you don't need to use lossless formats for them.
+**For screenshots and illustrations, AVIF is much better than JPEG XL.** The equivalent JPEG XL is 40–90% larger at default effort settings. Lossy AVIF handles these well - you don't need to use lossless formats for them. See the [screenshot](#lossy---screenshot) and [illustration](#lossy---illustration) examples.
 
-**AVIF is generally faster to encode, and uses less memory, when you factor in file size.** libjxl takes 1.5–2x as long as AVIF, and uses 2–3x the memory. jixel is faster than AVIF and uses less memory, but its files are typically much larger, so it's not a good tradeoff.
+**AVIF is generally faster to encode, and uses less memory, when you factor in file size.** libjxl takes 1.5–2x as long as AVIF, and uses 2–3x the memory. jixel is faster than AVIF and uses less memory, but its files are typically much larger, so it's not a good tradeoff. See the [F1 image](#lossy---f1-image) for one example.
 
-**AVIF is faster to decode.** JPEG XL typically takes 2–3x as long to decode at medium quality, but the gap narrows at very high qualities, where Chrome can sometimes decode JPEG XL faster.
+**AVIF is faster to decode.** JPEG XL typically takes 2–3x as long to decode at medium quality, but the gap narrows at very high qualities, where Chrome can sometimes decode JPEG XL faster. The [people image](#lossy---people) is one example.
 
-**Higher effort settings are worth it for AVIF and jixel, but not libjxl.** libjxl's higher efforts are much slower, use a lot more memory, and barely improve the result. Sometimes they produce larger files than the default effort.
+**Higher effort settings are worth it for AVIF and jixel, but not libjxl.** libjxl's higher efforts are much slower, use a lot more memory, and barely improve the result. Sometimes they produce larger files than the default effort. The [F1 image](#lossy---f1-image) is one example, and the [screenshot](#lossy---screenshot) is where libjxl's higher efforts produce larger files.
 
-**AVIF's 4:2:0 mode (half colour resolution) isn't worth it.** It rarely reduces file size, and it makes higher qualities harder to reach. Stick with 4:4:4 if you don't have time to check both.
+**AVIF's 4:2:0 mode (half colour resolution) isn't worth it.** It rarely reduces file size, and it makes higher qualities harder to reach. Stick with 4:4:4 if you don't have time to check both. The [F1 image](#lossy---f1-image) is one example, and the [screenshot](#lossy---screenshot) is an exception.
 
-**Quality settings are reliable for all the encoders.** With a single quality setting, the resulting quality varies a bit between images, but all the encoders vary in the same direction, and in ways that seem reasonable.
+**Quality settings are reliable for all the encoders.** With a single quality setting, the resulting quality varies a bit between images, but all the encoders vary in the same direction, and in ways that seem reasonable. [See the data](#quality-stability).
 
-**Progressive JPEG XL is basically free at high effort.** libjxl's progressive files were actually smaller. jixel recently added support for early progressive previews, and at its slowest setting they cost little or nothing, but at its default setting the files are 12% bigger. Firefox and Chrome support progressive JPEG XL. Safari still renders the final image, but doesn't show progressive previews.
+**Progressive JPEG XL is basically free at high effort.** libjxl's progressive files were actually smaller. jixel recently added support for early progressive previews, and at its slowest setting they cost little or nothing, but at its default setting the files are 12% bigger. Firefox and Chrome support progressive JPEG XL. Safari still renders the final image, but doesn't show progressive previews. [See the data](#progressive-overhead).
 
-**AVIF supports progressive rendering!** It's Chrome-only for now, but it's in progress for Firefox. It's more complex than progressive JPEG XL, but it gives you more control over what the preview looks like, the files are usually smaller, and they're much faster to decode.
+**AVIF supports progressive rendering!** It's Chrome-only for now, but it's in progress for Firefox. It's more complex than progressive JPEG XL, but it gives you more control over what the preview looks like, the files are usually smaller, and they're much faster to decode. [See for yourself](#progressive).
 
-**For HDR, JPEG XL looks competitive, but it's complicated.** The two quality metrics I used disagree a lot, but both have JPEG XL ahead of AVIF on file size. However, gain maps could be the best way to deliver HDR, and JPEG XL doesn't support them yet (in decoders, and the encoding story is messy). AVIF supports gain maps.
+**For HDR, JPEG XL looks competitive, but it's complicated.** The two quality metrics I used disagree a lot, but both have JPEG XL ahead of AVIF on file size. However, gain maps could be the best way to deliver HDR, and JPEG XL doesn't support them yet (in decoders, and the encoding story is messy). AVIF supports gain maps. [See the examples](#lossy---hdr).
 
-**JPEG XL can make existing JPEGs 9–20% smaller, without further loss.** It's also as fast or faster to decode, except for small images.
+**JPEG XL can make existing JPEGs 9–20% smaller, without further loss.** It's also as fast or faster to decode, except for small images. [See the data](#jpeg-transcoding).
 
-**For lossless, JPEG XL is the clear winner.** Lossless WebP is 9–17% larger for photos, and lossless AVIF is 40–120% larger. But lossless images are almost never what you want on the web.
+**For lossless, JPEG XL is the clear winner.** Lossless WebP is 9–17% larger for photos, and lossless AVIF is 40–120% larger. But lossless images are almost never what you want on the web. [See the data](#lossless).
 
 **Animated image formats continue to be a dumb idea.** Please don't use them.
 
@@ -62,7 +62,7 @@ I chose a selection of images, and encoded most of them to a width of 1598 pixel
 I ran these benchmarks on my 2024 MacBook M4 Pro.
 
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "exportName": "Styles",
   "staticOnly": true
 }</script>
@@ -86,7 +86,7 @@ I ran these benchmarks on my 2024 MacBook M4 Pro.
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.5484,
     "maxWidth": 799,
@@ -165,14 +165,14 @@ Here's the full data, so you can make up your own mind:
 Ok, let's get to our first graph, the SSIMULACRA2 scores:
 
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/QualityChart",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/QualityChart",
   "exportName": "Styles",
   "staticOnly": true
 }</script>
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -194,7 +194,7 @@ Here are the quality results using a different quality metric, [ColorVideoVDP](h
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1",
   "props": {
     "metric": "jod"
   }
@@ -211,7 +211,7 @@ When it comes to images on my blog, I encode with maximum effort settings. I'm h
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -225,7 +225,7 @@ Another thing that might be a concern if you're encoding images on a server is p
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -239,7 +239,7 @@ It's worth considering decoding performance. If decoding is particularly slow, t
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -257,7 +257,7 @@ I've heard people say that AVIF's tendency to smooth out details makes it bad fo
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.5005,
     "maxWidth": 799,
@@ -323,7 +323,7 @@ At lower qualities, you can see the smoothing on the face, but it's the same for
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/women-with-phones",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -332,7 +332,7 @@ At lower qualities, you can see the smoothing on the face, but it's the same for
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/women-with-phones",
   "props": {
     "metric": "jod"
   }
@@ -343,7 +343,7 @@ At lower qualities, you can see the smoothing on the face, but it's the same for
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/women-with-phones",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -355,7 +355,7 @@ At lower qualities, you can see the smoothing on the face, but it's the same for
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/women-with-phones",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -367,7 +367,7 @@ At lower qualities, you can see the smoothing on the face, but it's the same for
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/women-with-phones",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/women-with-phones",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -383,7 +383,7 @@ It's interesting that, at lower qualities, jixel decodes much slower in Safari.
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.4935,
     "maxWidth": 799,
@@ -448,7 +448,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-panda",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -457,7 +457,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-panda",
   "props": {
     "metric": "jod"
   }
@@ -468,7 +468,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-panda",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -480,7 +480,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-panda",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -492,7 +492,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/red-panda",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-panda",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -506,7 +506,7 @@ The results are much closer than the previous two:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 0.8276,
     "maxWidth": 799,
@@ -572,7 +572,7 @@ I've played with both codecs a lot, and for photos, what I've shown so far is re
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/critter",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -581,7 +581,7 @@ I've played with both codecs a lot, and for photos, what I've shown so far is re
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/critter",
   "props": {
     "metric": "jod"
   }
@@ -592,7 +592,7 @@ I've played with both codecs a lot, and for photos, what I've shown so far is re
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/critter",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -604,7 +604,7 @@ I've played with both codecs a lot, and for photos, what I've shown so far is re
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/critter",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -616,7 +616,7 @@ I've played with both codecs a lot, and for photos, what I've shown so far is re
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/critter",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/critter",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -632,7 +632,7 @@ Ok, let's try something other than a photo:
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.6479,
     "maxWidth": 730,
@@ -701,7 +701,7 @@ Some developers, especially those who've been around as long as I have, seem to 
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/screenshot",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -714,7 +714,7 @@ I'm not including the ColorVideoVDP chart because the metric doesn't support alp
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/screenshot",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -726,7 +726,7 @@ I'm not including the ColorVideoVDP chart because the metric doesn't support alp
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/screenshot",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -738,7 +738,7 @@ I'm not including the ColorVideoVDP chart because the metric doesn't support alp
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/screenshot",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/screenshot",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -754,7 +754,7 @@ The high JPEG XL decoding times here are likely a side effect of it producing mu
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 0.7499,
     "maxWidth": 799,
@@ -822,7 +822,7 @@ The results of the benchmark:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -831,7 +831,7 @@ The results of the benchmark:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
   "props": {
     "metric": "jod"
   }
@@ -842,7 +842,7 @@ The results of the benchmark:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -854,7 +854,7 @@ The results of the benchmark:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -866,7 +866,7 @@ The results of the benchmark:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/cat-illustration",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -882,7 +882,7 @@ The images so far have been a similar resolution. Are the results different with
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.5504,
     "maxWidth": 200,
@@ -940,7 +940,7 @@ Not really. The results are pretty similar to the full-size F1 image:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-small",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -949,7 +949,7 @@ Not really. The results are pretty similar to the full-size F1 image:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-small",
   "props": {
     "metric": "jod"
   }
@@ -960,7 +960,7 @@ Not really. The results are pretty similar to the full-size F1 image:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-small",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -972,7 +972,7 @@ Not really. The results are pretty similar to the full-size F1 image:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-small",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -984,7 +984,7 @@ Not really. The results are pretty similar to the full-size F1 image:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-small",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-small",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -1002,7 +1002,7 @@ What about an 18 megapixel image?
 
 <figure class="full-figure super-breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 1.5486,
     "maxWidth": 2650,
@@ -1063,7 +1063,7 @@ Mostly the same story as the regular F1 image, but with a few differences:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -1072,7 +1072,7 @@ Mostly the same story as the regular F1 image, but with a few differences:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large",
   "props": {
     "metric": "jod"
   }
@@ -1083,7 +1083,7 @@ Mostly the same story as the regular F1 image, but with a few differences:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -1095,7 +1095,7 @@ Mostly the same story as the regular F1 image, but with a few differences:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -1107,7 +1107,7 @@ Mostly the same story as the regular F1 image, but with a few differences:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -1177,14 +1177,14 @@ Obviously this is a small sample size, but I haven't seen anything that suggests
 Both AVIF and JPEG XL are capable of showing something progressively as the image loads. Chrome and Firefox support progressive JPEG XL, whereas only Chrome supports progressive AVIF. So, and I say this through gritted teeth, this next demo is best viewed in Chrome (I have [a Firefox patch in progress](https://bugzilla.mozilla.org/show_bug.cgi?id=2072679)):
 
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/ProgressiveDemo",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/ProgressiveDemo",
   "exportName": "Styles",
   "staticOnly": true
 }</script>
 
 <figure class="full-figure super-breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/ProgressiveDemo",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/ProgressiveDemo",
   "props": {
     "page": "/2026/jpeg-xl-vs-avif/demos/progressive/",
     "ratio": 1.5486,
@@ -1336,7 +1336,7 @@ AVIF supports gain maps, and you encode them by providing two images: the SDR im
 
 <figure class="full-figure max-figure">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/CodecCompare",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
   "props": {
     "ratio": 0.7516,
     "maxWidth": 799,
@@ -1409,7 +1409,7 @@ I'm still not sure what the best option is. On my MacBook Pro, at higher brightn
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/neon-hdr-10bit",
   "props": {
     "metric": "ssimulacra2"
   }
@@ -1418,7 +1418,7 @@ I'm still not sure what the best option is. On my MacBook Pro, at higher brightn
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/neon-hdr-10bit",
   "props": {
     "metric": "jod"
   }
@@ -1429,7 +1429,7 @@ I'm still not sure what the best option is. On my MacBook Pro, at higher brightn
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/neon-hdr-10bit",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMs"
@@ -1441,7 +1441,7 @@ I'm still not sure what the best option is. On my MacBook Pro, at higher brightn
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/neon-hdr-10bit",
   "props": {
     "metric": "ssimulacra2",
     "y": "encodeMemory"
@@ -1453,7 +1453,7 @@ I'm still not sure what the best option is. On my MacBook Pro, at higher brightn
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/neon-hdr-10bit",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/neon-hdr-10bit",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -1480,7 +1480,7 @@ Of course, if you have the original, you'd be way better off creating a proper n
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large-transcode",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large-transcode",
   "props": {
     "y": "bytes"
   }
@@ -1489,7 +1489,7 @@ Of course, if you have the original, you'd be way better off creating a proper n
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/f1-large-transcode",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/f1-large-transcode",
   "props": {
     "y": "decodeMs"
   }
@@ -1542,7 +1542,7 @@ The results:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/lossless",
   "props": {
     "x": "encodeMs"
   }
@@ -1553,7 +1553,7 @@ The results:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/lossless",
   "props": {
     "x": "encodeMemory"
   }
@@ -1564,7 +1564,7 @@ The results:
 
 <figure class="full-figure breakout">
 <script type="component">{
-  "module": "shared/demos/2026/jxl-on-the-web/data/lossless",
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/lossless",
   "props": {
     "x": "decodeMs"
   }

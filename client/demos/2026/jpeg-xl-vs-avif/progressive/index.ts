@@ -1,5 +1,5 @@
 import 'two-up-element';
-import workerURL from 'static-entry-url:client-worker/jxl-on-the-web/partial-image-sw';
+import workerURL from 'static-entry-url:client-worker/jpeg-xl-vs-avif/partial-image-sw';
 
 // This page is shown in an iframe, so the service worker's scope can be
 // limited to it. The images are configured via the URL, and the parent page

@@ -131,8 +131,8 @@ toOutput['2021/cors/playground/index.html'] = renderPage(
 
 import jxlProgressiveDemoScript, {
   imports as jxlProgressiveDemoScriptImports,
-} from 'client-bundle:client/demos/2026/jxl-on-the-web/progressive';
-import jxlProgressiveDemoStyles from 'css-bundle:client/demos/2026/jxl-on-the-web/progressive/styles.css';
+} from 'client-bundle:client/demos/2026/jpeg-xl-vs-avif/progressive';
+import jxlProgressiveDemoStyles from 'css-bundle:client/demos/2026/jpeg-xl-vs-avif/progressive/styles.css';
 toOutput['2026/jpeg-xl-vs-avif/demos/progressive/index.html'] = renderPage(
   <ClientDemo
     title="Progressive image loading"
