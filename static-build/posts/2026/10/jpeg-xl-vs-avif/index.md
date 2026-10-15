@@ -30,7 +30,7 @@ I'll go into full detail, with examples and benchmarks, but for those of you who
 
 **Quality settings are reliable for all the encoders.** With a single quality setting, the resulting quality varies a bit between images, but all the encoders vary in the same direction, and in ways that seem reasonable. [See the data](#quality-stability).
 
-**Progressive JPEG XL is basically free at high effort.** libjxl's progressive files were actually smaller. jixel recently added support for early progressive previews, and at its slowest setting they cost little or nothing, but at its default setting the files are 12% bigger. Firefox and Chrome support progressive JPEG XL. Safari still renders the final image, but doesn't show progressive previews. [See the data](#progressive-overhead).
+**Progressive JPEG XL is basically free at high effort.** jixel recently added support for early progressive previews, and at its slowest setting they cost little or nothing, but at its default setting the files are 12% bigger. Firefox and Chrome support progressive JPEG XL. Safari still renders the final image, but doesn't show progressive previews. However, is this type of progressive rendering a good user experience? [See the examples and data](#progressive).
 
 **AVIF supports progressive rendering!** It's Chrome-only for now, but it's in progress for Firefox. It's more complex than progressive JPEG XL, but it gives you more control over what the preview looks like, the files are usually smaller, and they're much faster to decode. [See for yourself](#progressive).
 
@@ -1200,7 +1200,7 @@ Both AVIF and JPEG XL are capable of showing something progressively as the imag
 
 This is the 18 megapixel image again, so if you're viewing this on a device with a smaller screen, you're not getting the full effect.
 
-Progressive AVIF and JPEG XL work very differently. With libjxl, you can opt into the data being stored in such a way that a decoder can render low resolution versions, before it brings in the higher resolution tiles. jixel recently added support for this too. It's called "progressive DC", and it's the most important kind of progressive rendering for JPEG XL.
+Progressive AVIF and JPEG XL work very differently. With JPEG XL, you can opt into the data being stored in such a way that a decoder can render low resolution versions, before it brings in the higher resolution tiles. jixel recently (like, yesterday at time of writing) added support for this too. It's called "progressive DC", and it's the most important kind of progressive rendering for JPEG XL.
 
 With AVIF, progressions work more like frames of a video. You provide up to four frames, so that's three phases before the final image. Again, like a video, each frame can use data from the previous frame as an optimisation. An advantage of this is you can choose exactly how those frames look. In the example above, I went with a single preview frame: a 1/8th resolution version, with a bit of blurring. But, your preview frames can be completely different images if you really want.
 
@@ -1212,7 +1212,7 @@ I think that it's nice to have a _representative_ preview for images that may ta
 
 The preview frame I chose for the AVIF is enough to tell it's an open-wheel race car. If you know F1, you'll know what team it is. You might even know where the photo was taken. And it delivers that in ~11.5 kB.
 
-The JPEG XL gets a BlurHash-like preview on screen in ~3 kB, but it takes until ~75 kB to match the preview quality of the AVIF. After that, it continues to improve gradually, providing a more detailed and higher quality image as more data arrives.
+The JPEG XL gets a BlurHash-like preview on screen in ~2 kB, but it takes until ~63 kB to match the preview quality of the AVIF. After that, it continues to improve gradually, providing a more detailed and higher quality image as more data arrives.
 
 However, I'm not convinced this is a good user experience, as it presents the user with something they may mistake for fully-loaded, but poor quality. For example:
 
@@ -1249,7 +1249,7 @@ I encoded the large F1 image with and without progressive rendering enabled, adj
 - **But ColorVideoVDP is less kind to progressive jixel.** It rates jixel's progressive files slightly lower than the non-progressive versions, whereas it rates libjxl's progressive files slightly higher. Taking that into account, progressive jixel at 'extraslow' is only ~2% smaller than non-progressive, and at 'fast' it's around 18% bigger.
 - **Regular progressive AVIF has a bigger cost when it comes to encoding.** It uses around twice the memory, and at default effort (s6), it takes twice as long to encode. At s0, encode time is only 9% longer, but the file is 14% bigger. And this is pure encode time - it doesn't factor in how you might generate the preview frame, e.g. adding some blur.
 - **Regular progressive AVIF is 32–43% slower to decode in Chrome**, although the difference is smaller in other browsers (6–16%). Since Chrome is the only browser that supports rendering the progressive frames, that might explain it. Although Firefox and Safari are still having to decode the progressive frame, as the main image builds upon it.
-- **Making the final frame a keyframe fixes the decoding overhead**, at the cost of a longer encode time. At maximum effort, it results in a smaller file too, only 3–5% bigger than the non-progressive version. You could call this cheating, as there's now no 'progression' in terms of data - it's just two images in one. But, if it's a better user experience, who cares?
+- **With AVIF, making the final frame a keyframe fixes the decoding overhead**, at the cost of a longer encode time. At maximum effort, it results in a smaller file too, only 3–5% bigger than the non-progressive version. You could call this cheating, as there's now no 'progression' in terms of data - it's just two images in one. But, if it's a better user experience, who cares?
 - **Even with the overhead, progressive AVIF wins on decoding time, and usually on file size.** The progressive AVIFs are 152–181 kB. jixel's 'extraslow' progressive JPEG XL is in that range at 166 kB, but jixel's default produces 252 kB, and libjxl's progressive files are 233–242 kB. The AVIFs decode 1.6–6x faster, with the biggest gap in Safari, which is particularly slow to decode jixel's files.
 
 <details>
