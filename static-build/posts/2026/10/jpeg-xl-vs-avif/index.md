@@ -14,19 +14,21 @@ JPEG XL has now landed in all major browsers, so I figured I'd take a closer loo
 
 I'll go into full detail, with examples and benchmarks, but for those of you who don't have the time, here are the headlines:
 
-**For lossy photos, AVIF usually produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both. See the [F1 image](#lossy---f1-image) for a typical example, and the [weasel](#lossy---weasel) for an outlier.
+**For lossy photos, AVIF usually produces smaller files than JPEG XL.** At default effort settings, the best JPEG XL version is typically 15–25% larger than the equivalent AVIF. At maximum effort settings, the gap narrows a little, to typically 6–20%. There are outliers, where JPEG XL is close to, or even beats AVIF, so if you want the absolute best result for a particular image, it's worth trying both. See the [F1 image](#lossy---f1-image) for a typical example, and the [weasel](#lossy---weasel) for an outlier.
 
 **The JPEG XL encoder matters a lot.** [jixel](https://github.com/awxkee/jixel), a newer JPEG XL encoder, usually produces much smaller files than [libjxl](https://github.com/libjxl/libjxl). The [people image](#lossy---people) is one example.
 
-**For screenshots and illustrations, AVIF is much better than JPEG XL.** The equivalent JPEG XL is 40–90% larger at default effort settings. Lossy AVIF handles these well - you don't need to use lossless formats for them. See the [screenshot](#lossy---screenshot) and [illustration](#lossy---illustration) examples.
+**For screenshots and illustrations, AVIF is much better than JPEG XL.** The equivalent JPEG XL is 40–90% larger at default effort settings, and 20–70% larger at maximum effort settings. Lossy AVIF handles these well - you don't need to use lossless formats unless you really need bit-exact results. See the [screenshot](#lossy---screenshot) and [illustration](#lossy---illustration) examples.
 
-**AVIF is generally faster to encode, and uses less memory, when you factor in file size.** libjxl takes 1.5–2x as long as AVIF, and uses 2–3x the memory. jixel is faster than AVIF and uses less memory, but its files are typically much larger, so it's not a good tradeoff. See the [F1 image](#lossy---f1-image) for one example.
+**For images with transparency, AVIF is much better than JPEG XL.** The libjxl version is 31–44% larger at default effort settings, and 61–70% larger at maximum effort settings. jixel always encodes transparency losslessly, which makes its files 2–3x the size of AVIF's. [See the data](#lossy---alpha).
+
+**AVIF is generally faster to encode, and uses less memory, when you factor in file size.** jixel is faster than AVIF and uses less memory, but its files are typically significantly larger, so AVIF is better on balance. See the [F1 image](#lossy---f1-image) for one example.
 
 **AVIF is faster to decode.** JPEG XL typically takes 2–3x as long to decode at medium quality, but the gap narrows at very high qualities, where Chrome can sometimes decode JPEG XL faster. The [people image](#lossy---people) is one example.
 
-**Higher effort settings are worth it for AVIF and jixel, but not libjxl.** libjxl's higher efforts are much slower, use a lot more memory, and barely improve the result. Sometimes they produce larger files than the default effort. The [F1 image](#lossy---f1-image) is one example, and the [screenshot](#lossy---screenshot) is where libjxl's higher efforts produce larger files.
+**Higher effort settings are worth it for AVIF and jixel, but not libjxl.** libjxl's higher efforts are much slower, use a lot more memory, and barely improve the result. Sometimes they produce larger files than the default effort. The [screenshot](#lossy---screenshot) is an example of this.
 
-**AVIF's 4:2:0 mode (half colour resolution) isn't worth it.** It rarely reduces file size, and it makes higher qualities harder to reach. Stick with 4:4:4 if you don't have time to check both. The [F1 image](#lossy---f1-image) is one example, and the [screenshot](#lossy---screenshot) is an exception.
+**AVIF's 4:2:0 mode (half colour resolution) shouldn't be your default.** It rarely reduces file size, and it makes higher qualities harder to reach. Although, it is quicker to encode and decode. Stick with 4:4:4 if you don't have time to check both. The [F1 image](#lossy---f1-image) is one example, and the [screenshot](#lossy---screenshot) is an exception.
 
 **Quality settings are reliable for all the encoders.** With a single quality setting, the resulting quality varies a bit between images, but all the encoders vary in the same direction, and in ways that seem reasonable. [See the data](#quality-stability).
 
@@ -34,17 +36,19 @@ I'll go into full detail, with examples and benchmarks, but for those of you who
 
 **AVIF supports progressive rendering!** It's Chrome-only for now, but it's in progress for Firefox. It's more complex than progressive JPEG XL, but it gives you more control over what the preview looks like, the files are usually smaller, and they're much faster to decode. [See for yourself](#progressive).
 
-**For HDR, JPEG XL looks competitive, but it's complicated.** The two quality metrics I used disagree a lot, but both have JPEG XL ahead of AVIF on file size. However, gain maps could be the best way to deliver HDR, and JPEG XL doesn't support them yet (in decoders, and the encoding story is messy). AVIF supports gain maps. [See the examples](#lossy---hdr).
+**For HDR, JPEG XL lacks gain maps, which is a significant limitation compared to AVIF.** The JPEG XL format supports gain maps, but they aren't supported by browser decoders, and the encoding story is messy/experimental. When comparing non-gain mapped HDR content, the two quality metrics I used disagree a lot, but both have JPEG XL ahead of AVIF on file size. [See the examples](#lossy---hdr).
 
 **JPEG XL can make existing JPEGs 9–20% smaller, without further loss.** It's also as fast or faster to decode, except for small images. [See the data](#jpeg-transcoding).
 
-**For lossless, JPEG XL is the clear winner.** Lossless WebP is 9–17% larger for photos, and lossless AVIF is 40–120% larger. But lossless images are almost never what you want on the web. [See the data](#lossless).
+**For lossless, JPEG XL is the clear winner.** Lossless WebP is 9–17% larger for photos, and lossless AVIF is 30–120% larger. But lossless images are almost never what you want on the web. If you do use them on the web (like I do on this page), watch out for jixel's higher efforts - it often produces files that are too slow to decode. [See the data](#lossless).
 
 **Animated image formats continue to be a dumb idea.** Please don't use them.
 
 For web use-cases, I'd currently default to AVIF 4:4:4, with the highest effort level I can be bothered with. If I felt AVIF was producing an unusually large file, I'd take a look at JPEG XL via jixel, and see if it did better.
 
-Both AVIF and JPEG XL have seen massive improvements recently, so it's possible that this recommendation could change in future. There's been a lot of misinformation around this stuff, and your AI will happily deliver that misinformation to you. Instead, test things with your own images.
+Both AVIF and JPEG XL (via jixel) have seen massive improvements recently, so it's possible that this recommendation could change in future. There's been a lot of misinformation around this stuff, and your AI will happily deliver that misinformation to you. Instead, test things with your own images.
+
+[AVIF folks suggest](https://giannirosato.com/blog/post/case-against-jxl/) that JPEG XL is technically limited compared to AVIF. That might be true, but in this article I'm focusing on results with today's implementations.
 
 # Methodology
 
@@ -513,7 +517,7 @@ The results are much closer than the previous two:
     "lossless": "asset-url:./images/critter-targets/lossless.jxl",
     "losslessBytes": "asset-size:./images/critter-targets/lossless.jxl",
     "initialQuality": 1,
-    "initialCodec": "jxl",
+    "initialCodec": "jixel",
     "qualities": [
       {
         "target": 50,
@@ -679,7 +683,7 @@ Ok, let's try something other than a photo:
 
 The results of the benchmark:
 
-- **File size: <span class="winner-avif">AVIF wins</span>, by a lot.** At default efforts, the best JPEG XL image is 73–89% larger than the AVIF image at medium/high quality (jixel), and 33–39% larger at very high quality (libjxl). At maximum efforts, the best JPEG XL image (jixel 'extraslow' with patches) is over 20% larger than AVIF (s0).
+- **File size: <span class="winner-avif">AVIF wins</span>, by a lot.** At default efforts, the best JPEG XL image is 73–89% larger than the AVIF image at medium/high quality (jixel), and 33–39% larger at very high quality (libjxl). At maximum efforts, the best JPEG XL image (jixel 'extraslow' with patches) is 23–73% larger than AVIF (s0).
 - **libjxl can't produce anything between SSIMULACRA2 ~45 and ~78** at its default effort (~45 and ~72 at higher efforts). jixel doesn't have this problem.
 - **jixel's patches feature helps a lot with this image**, but it's off by default. With patches, jixel's files are 10–29% smaller at its higher efforts, from SSIMULACRA2 ~65 upwards. Patches have no effect at jixel's default 'fast' setting.
 - **Encode time: <span class="winner-avif">AVIF wins</span>.** At default efforts, jixel is ~50% faster than AVIF, but its files are 70–98% larger. libjxl's default takes 1.7–1.8x as long as AVIF's default, and still produces much bigger files.
@@ -867,6 +871,125 @@ The results of the benchmark:
 <figure class="full-figure breakout">
 <script type="component">{
   "module": "shared/demos/2026/jpeg-xl-vs-avif/data/cat-illustration",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "decodeMs"
+  }
+}</script>
+</figure>
+
+</details>
+
+# Lossy - alpha
+
+So far, all the images have been mostly opaque. What about an image with transparency?
+
+<figure class="full-figure max-figure">
+<script type="component">{
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/CodecCompare",
+  "props": {
+    "ratio": 4.4389,
+    "maxWidth": 799,
+    "lossless": "asset-url:./images/red-bull-alpha-targets/lossless.jxl",
+    "losslessBytes": "asset-size:./images/red-bull-alpha-targets/lossless.jxl",
+    "initialQuality": 2,
+    "initialCodec": "avif",
+    "qualities": [
+      {
+        "target": 50,
+        "avif": { "url": "asset-url:./images/red-bull-alpha-targets/avif-q34-e0-d8-yuv444-ssimu52.5.avif", "bytes": "asset-size:./images/red-bull-alpha-targets/avif-q34-e0-d8-yuv444-ssimu52.5.avif", "score": "52.5" },
+        "jxl": { "url": "asset-url:./images/red-bull-alpha-targets/jxl-q43.3-e10-ssimu50.0.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jxl-q43.3-e10-ssimu50.0.jxl", "score": "50.0" },
+        "jixel": { "url": "asset-url:./images/red-bull-alpha-targets/jixel-q59.3-e6-ssimu50.5.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jixel-q59.3-e6-ssimu50.5.jxl", "score": "50.5" }
+      },
+      {
+        "target": 60,
+        "avif": { "url": "asset-url:./images/red-bull-alpha-targets/avif-q42-e0-d8-yuv444-ssimu61.0.avif", "bytes": "asset-size:./images/red-bull-alpha-targets/avif-q42-e0-d8-yuv444-ssimu61.0.avif", "score": "61.0" },
+        "jxl": { "url": "asset-url:./images/red-bull-alpha-targets/jxl-q60.8-e10-ssimu60.2.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jxl-q60.8-e10-ssimu60.2.jxl", "score": "60.2" },
+        "jixel": { "url": "asset-url:./images/red-bull-alpha-targets/jixel-q72.7-e6-ssimu60.1.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jixel-q72.7-e6-ssimu60.1.jxl", "score": "60.1" }
+      },
+      {
+        "target": 70,
+        "avif": { "url": "asset-url:./images/red-bull-alpha-targets/avif-q52-e0-d8-yuv444-ssimu71.4.avif", "bytes": "asset-size:./images/red-bull-alpha-targets/avif-q52-e0-d8-yuv444-ssimu71.4.avif", "score": "71.4" },
+        "jxl": { "url": "asset-url:./images/red-bull-alpha-targets/jxl-q74.3-e10-ssimu70.2.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jxl-q74.3-e10-ssimu70.2.jxl", "score": "70.2" },
+        "jixel": { "url": "asset-url:./images/red-bull-alpha-targets/jixel-q80.3-e6-ssimu70.3.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jixel-q80.3-e6-ssimu70.3.jxl", "score": "70.3" }
+      },
+      {
+        "target": 80,
+        "avif": { "url": "asset-url:./images/red-bull-alpha-targets/avif-q66-e0-d8-yuv444-ssimu80.7.avif", "bytes": "asset-size:./images/red-bull-alpha-targets/avif-q66-e0-d8-yuv444-ssimu80.7.avif", "score": "80.7" },
+        "jxl": { "url": "asset-url:./images/red-bull-alpha-targets/jxl-q85.3-e10-ssimu80.0.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jxl-q85.3-e10-ssimu80.0.jxl", "score": "80.0" },
+        "jixel": { "url": "asset-url:./images/red-bull-alpha-targets/jixel-q86.3-e6-ssimu80.0.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jixel-q86.3-e6-ssimu80.0.jxl", "score": "80.0" }
+      },
+      {
+        "target": 90,
+        "avif": { "url": "asset-url:./images/red-bull-alpha-targets/avif-q90-e0-d8-yuv444-ssimu90.1.avif", "bytes": "asset-size:./images/red-bull-alpha-targets/avif-q90-e0-d8-yuv444-ssimu90.1.avif", "score": "90.1" },
+        "jxl": { "url": "asset-url:./images/red-bull-alpha-targets/jxl-q95.5-e10-ssimu90.4.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jxl-q95.5-e10-ssimu90.4.jxl", "score": "90.4" },
+        "jixel": { "url": "asset-url:./images/red-bull-alpha-targets/jixel-q93-e6-ssimu90.1.jxl", "bytes": "asset-size:./images/red-bull-alpha-targets/jixel-q93-e6-ssimu90.1.jxl", "score": "90.1" }
+      }
+    ]
+  }
+}</script>
+</figure>
+
+There are a few things that make this one different:
+
+- **jixel always encodes the alpha channel losslessly.** It doesn't have a setting for alpha quality. This puts jixel at a big disadvantage with this image. AVIF by default compresses the alpha channel lossily, tracking the main quality setting. libjxl compresses the alpha channel losslessly by default, so watch out for that. For this benchmark, I set libjxl's alpha quality to the same as the main quality.
+- **SSIMULACRA2 scores fully-transparent pixels as perfect**, so with lots of transparency, the scores will be higher than they would be for an opaque image.
+
+The results of the benchmark:
+
+- **File size: <span class="winner-avif">AVIF wins</span>, by a lot.** At default efforts, the best JPEG XL image (libjxl) is 31–44% larger than the AVIF image for the same quality. At maximum efforts, it's 61–70% larger. Due to its lossless alpha, jixel is 1.9–3.1x the size of AVIF at default efforts.
+- **Encode time: <span class="winner-avif">AVIF wins</span>.** libjxl's default takes 1.2–1.35x as long as AVIF's default, and produces much bigger files. jixel's default is ~2x faster than AVIF, but its files are around 2–3x the size.
+- **Encode memory: <span class="winner-avif">AVIF wins</span>.** libjxl's default uses 2.4–2.7x the memory of AVIF's default, although in absolute terms, that's ~120 MB vs ~46 MB. jixel's default uses about the same memory as AVIF, but again, its files are much bigger.
+- **Decode time: <span class="winner-avif">AVIF wins</span>.** libjxl's output takes 2–3x as long to decode at medium quality, narrowing to 1.4–1.8x at very high quality. jixel's output decodes faster than libjxl's, and at very high quality it's around the same speed as AVIF. Although, it's slow in Safari at lower qualities, taking ~2.4x as long as AVIF.
+- **Higher effort is worth it for AVIF.** AVIF's s5 gets you 4–7% smaller files for 2.3–2.9x the encode time, and s0 gets you 10–15% smaller files for 24–29x the encode time.
+- **Higher effort barely helps jixel on this image.** 'extraslow' only gets you 5–8% smaller files than its default 'fast', for 21–26x the encode time.
+- **Higher effort is harmful for libjxl.** libjxl's maximum effort produces files up to 8% _larger_ than its default effort, and takes ~6.5x longer.
+- **AVIF's 4:2:0 mode is harmful.** It produces files 4–27% larger than 4:4:4, and can't get beyond SSIMULACRA2 ~79.
+
+<details>
+
+<summary>Show me the graphs!</summary>
+
+## Image quality
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-bull-alpha",
+  "props": {
+    "metric": "ssimulacra2"
+  }
+}</script>
+</figure>
+
+## Encoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-bull-alpha",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMs"
+  }
+}</script>
+</figure>
+
+## Encoding memory usage
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-bull-alpha",
+  "props": {
+    "metric": "ssimulacra2",
+    "y": "encodeMemory"
+  }
+}</script>
+</figure>
+
+## Decoding performance
+
+<figure class="full-figure breakout">
+<script type="component">{
+  "module": "shared/demos/2026/jpeg-xl-vs-avif/data/red-bull-alpha",
   "props": {
     "metric": "ssimulacra2",
     "y": "decodeMs"
@@ -1162,6 +1285,7 @@ For the images I've looked at so far, I encoded them with `avifenc -q 50`, `cjxl
 <tr><th scope="row"><a href="#lossy---weasel">Weasel</a></th><td class="avif">56.7</td><td class="avif">57.2</td><td class="avif">56.0</td><td class="avif">56.3</td><td class="jxl group-start">56.6</td><td class="jxl">55.4</td><td class="jixel group-start">54.9</td><td class="jixel">59.4</td></tr>
 <tr><th scope="row"><a href="#lossy---screenshot">Screenshot</a></th><td class="avif">80.2</td><td class="avif">80.4</td><td class="avif">82.3</td><td class="avif">81.9</td><td class="jxl group-start">86.5</td><td class="jxl">87.6</td><td class="jixel group-start">76.6</td><td class="jixel">80.3</td></tr>
 <tr><th scope="row"><a href="#lossy---illustration">Illustration</a></th><td class="avif">78.6</td><td class="avif">79.7</td><td class="avif">76.8</td><td class="avif">77.9</td><td class="jxl group-start">80.3</td><td class="jxl">78.5</td><td class="jixel group-start">75.4</td><td class="jixel">77.7</td></tr>
+<tr><th scope="row"><a href="#lossy---alpha">Alpha</a></th><td class="avif">67.3</td><td class="avif">69.8</td><td class="avif">63.6</td><td class="avif">64.9</td><td class="jxl group-start">69.4</td><td class="jxl">66.9</td><td class="jixel group-start">66.8</td><td class="jixel">69.6</td></tr>
 </tbody>
 </table>
 </div>
@@ -1171,6 +1295,8 @@ The behaviour of the codecs here seems really similar. All produce a range of SS
 And I think this is ok? Like, all three go for a lower quality for the Weasel picture, which removed noise without reducing quality of the image subject. With the screenshot, all go for a higher quality, which seems justified to my eyes.
 
 Obviously this is a small sample size, but I haven't seen anything that suggests using a single quality setting is a risk, for any of the three codecs.
+
+Also see [Halide Compression's deeper dive into this](https://halide.cx/blog/consistency/).
 
 # Progressive
 
@@ -1384,9 +1510,15 @@ AVIF supports gain maps, and you encode them by providing two images: the SDR im
 }</script>
 </figure>
 
+At medium brightnesses, on an HDR screen, the gain map and PR images look the same. At maximum brightnesses, on my Pixel 10 Pro and 2024 MacBook Pro, the PQ images get a bit blown out, and the gain map image looks better. At low brightness on my Pixel 10 Pro, again the gain map image looks better.
+
+This is because, at extreme brightness levels, the device doesn't have the full HDR headroom to display the image, and gain maps can handle these cases better. So, although gain maps seem to add a lot to the file size, I think it's worth it.
+
+Maybe there's a future where tone mapping gets much better, and the advantage of a gain map becomes less significant.
+
 Regular SSIMULACRA2 only understands SDR, so for this image, the scores come from an experimental HDR mode in [fast-ssim2](https://github.com/imazen/fast-ssim2). That means these scores can't be compared to the SSIMULACRA2 scores elsewhere in this article. ColorVideoVDP handles HDR natively, and here it's modelling a 1,500 nit HDR monitor.
 
-This time **the two metrics disagree a lot**. And remember that the gain mapped AVIF is more compatible across devices and displays.
+**The two metrics disagree a lot with this image**. And they don't factor in the benefits of gain maps, so treat these results as a comparison between the PQ variants:
 
 - **File size: <span class="winner-jxl">JPEG XL wins</span>, but the metrics disagree on how much, and with which encoder.**
   - According to HDR SSIMULACRA2, jixel's default ranges from 8% smaller to 3% larger than PQ AVIF's default, and libjxl is 5–33% larger. At maximum efforts, jixel 'extraslow' is up to 15% smaller than PQ AVIF s0.
@@ -1399,7 +1531,9 @@ This time **the two metrics disagree a lot**. And remember that the gain mapped 
 - **Higher effort is worth it for jixel, up to 'slow'.** 'slow' gets you 7–32% smaller files than its default 'fast', for ~3.8x the encode time. 'extraslow' saves another 1–9%, but takes ~10x longer than 'slow' and uses ~8.5x the memory. jixel only has a few data points for this image, so these numbers are rough.
 - **Higher effort isn't worth it for libjxl.** libjxl's maximum effort gets you 2–7% smaller files than its default, but takes ~15x longer.
 
-I'm still not sure what the best option is. On my MacBook Pro, at higher brightness, the gain map AVIF looks better, as the PQ versions need to be tone-mapped. It will be interesting to see how JPEG XL handles gain maps once they're fully supported.
+It will be interesting to see how JPEG XL handles gain maps once they're fully supported.
+
+By the way, these are signs that [indicate whether my cats are inside or outside](https://www.tiktok.com/@jaffathejake/video/7524298335885217046), and the little display indicates how long until their next automated feed.
 
 <details>
 
@@ -1504,13 +1638,13 @@ It is very rare to need lossless images on the web. As we've already seen, even 
 
 The results:
 
-- **File size: <span class="winner-jxl">JPEG XL wins</span>.** At default efforts, libjxl produces the smallest files for every image except the illustration, where WebP matches it. WebP is 9–17% larger for photos, and AVIF is 40–122% larger. At highest efforts, libjxl and jixel are within a few percent of each other, WebP is 5–44% larger, and AVIF is 29–176% larger.
+- **File size: <span class="winner-jxl">JPEG XL wins</span>.** At default efforts, libjxl produces the smallest files for every image except the illustration, where WebP matches it. WebP is 9–17% larger for photos, and AVIF is 33–122% larger. At highest efforts, libjxl and jixel are within a few percent of each other, WebP is 5–44% larger, and AVIF is 29–176% larger.
 - **Encode time: <span class="winner-jxl">JPEG XL wins</span>.** libjxl's default takes 0.1–0.5 seconds, which is faster than WebP's default, and similar to AVIF's default, while producing smaller files than both.
 - **Encode memory: <span class="winner-jxl">JPEG XL wins</span> or <span class="winner-webp">WebP wins</span>, depending on the image.** WebP's default uses around half the memory of libjxl's default (55–110 MB vs 110–250 MB), but libjxl's files are smaller. For photos, WebP can't match libjxl's default file size even at its maximum effort, which uses more memory than libjxl's default. For the screenshot, they use around the same memory, but libjxl's file is smaller. The illustration is the exception: WebP's maximum effort produces a file 20% smaller than libjxl's default, using the same memory.
 - **Decode time: <span class="winner-webp">WebP wins</span> or <span class="winner-jxl">JPEG XL wins</span>, depending on the image.** WebP decodes photos in 17–39 ms in all browsers, and the screenshot in ~5 ms. libjxl's output takes 1–2.2x as long in Chrome, 1.4–2.7x as long in Firefox, and 2.1–3.2x as long in Safari. But for photos, JPEG XL's smaller files more than make up for this on a first load, unless the connection is really fast. For the screenshot and illustration, WebP's decode advantage wins. Lossless AVIF is particularly slow to decode, taking up to 4x as long as libjxl's output in Chrome.
 - **Lossless AVIF is bad.** It's significantly larger than the others, and slower to decode.
 - **jixel's 'medium' setting is the sweet spot for file size.** It beats libjxl's default on every image (0.5–23% smaller), and is within 2–3% of the best result for photos, taking 0.4–0.7 seconds. But it uses 470–670 MB of memory, and its output is slower to decode than libjxl's, particularly in Safari.
-- **jixel's 'slow' and 'extraslow' output is very slow to decode for photos.** ~200–290 ms, compared to 22–95 ms for libjxl's output. That's 2–10x slower, depending on the browser. This doesn't happen with the screenshot and illustration. This means, for my use-case on this page, I'd avoid it.
+- **jixel's 'slow' and 'extraslow' output is very slow to decode for photos.** ~200–290 ms, compared to 22–95 ms for libjxl's output. That's 2–10x slower, depending on the browser. It's also slow for the alpha image, at 80–123 ms compared to 14–27 ms for libjxl's output. This doesn't happen with the screenshot and illustration. This means, for my use-case on this page, I'd avoid it.
 - **libjxl's maximum effort is very slow.** It produces files 3–5% smaller than its default for photos, and ~25% smaller for the screenshot and illustration, but takes 9–46 seconds, which is 50–180x as long as its default. jixel gets the same results in a couple of seconds.
 - **jixel's default 'fast' setting isn't great for lossless.** It's the fastest encoder by far (40–80 ms), but its files are 16–32% larger than libjxl's default for photos, and ~80% larger for the screenshot and illustration.
 - **jixel's patches feature helps a bit with the screenshot** (4–9% smaller), but makes no difference to the illustration.
@@ -1534,6 +1668,7 @@ The results:
 <tr><th scope="row"><a href="#lossy---weasel">Weasel</a></th><td class="group-start">2.91 MB</td><td>+16%</td><td>+13%</td><td>+96%</td><td class="group-start">2.79 MB</td><td>−2%</td><td>+17%</td><td>+29%</td></tr>
 <tr><th scope="row"><a href="#lossy---screenshot">Screenshot</a></th><td class="group-start">92 kB</td><td>+81%</td><td>+9%</td><td>+122%</td><td class="group-start">68 kB</td><td>+6%</td><td>+44%</td><td>+176%</td></tr>
 <tr><th scope="row"><a href="#lossy---illustration">Illustration</a></th><td class="group-start">361 kB</td><td>+78%</td><td>−1%</td><td>+100%</td><td class="group-start">273 kB</td><td>−6%</td><td>+5%</td><td>+139%</td></tr>
+<tr><th scope="row"><a href="#lossy---alpha">Alpha</a></th><td class="group-start">522 kB</td><td>+21%</td><td>+12%</td><td>+33%</td><td class="group-start">487 kB</td><td>−3%</td><td>+13%</td><td>+32%</td></tr>
 </tbody>
 </table>
 </div>

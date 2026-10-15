@@ -115,6 +115,7 @@ const CodecCompare: FunctionalComponent<Props> = ({
   const maxBytes = Math.max(...sizes);
   const minBytes = Math.min(...sizes);
   const description = qualityDescriptions[quality.target];
+  const showingLossless = holding && losslessLoaded.includes(currentLossless);
 
   const onPointerDown = (event: PointerEvent) => {
     // Only track the first pointer, so other fingers don't end the hold.
@@ -160,7 +161,15 @@ const CodecCompare: FunctionalComponent<Props> = ({
             <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
           </div>
           {!__PRERENDER__ && (
-            <div class="codec-compare-layer" style={{ inset: padding }}>
+            <div
+              class="codec-compare-layer"
+              style={{
+                inset: padding,
+                // Hidden rather than just covered, as images with alpha would
+                // show the lossy version through the lossless one.
+                visibility: showingLossless ? 'hidden' : '',
+              }}
+            >
               <DecodedImg
                 src={encoding.url}
                 renderWidth={maxWidth}
