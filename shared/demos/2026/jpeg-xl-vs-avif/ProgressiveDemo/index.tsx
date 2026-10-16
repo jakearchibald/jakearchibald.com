@@ -233,6 +233,12 @@ const styles = `
     min-height: 0;
   }
 
+  /* Avoids notches etc when the preview reaches the edges of the screen */
+  & .progressive-demo-fullscreen {
+    top: max(10px, env(safe-area-inset-top));
+    right: max(10px, env(safe-area-inset-right));
+  }
+
   /* In a flex column, auto margins stop it stretching, so it'd shrink to fit
      its content */
   & .progressive-demo-controls {

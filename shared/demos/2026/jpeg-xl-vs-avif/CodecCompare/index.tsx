@@ -425,6 +425,11 @@ const styles = `
   flex-direction: column;
   background: #fff;
 }
+/* Avoids notches etc when the preview reaches the edges of the screen */
+.codec-compare:fullscreen .codec-compare-fullscreen {
+  top: max(10px, env(safe-area-inset-top));
+  right: max(10px, env(safe-area-inset-right));
+}
 .codec-compare:fullscreen .codec-compare-preview {
   flex: 1;
   min-height: 0;
