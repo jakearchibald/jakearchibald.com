@@ -40,6 +40,7 @@ const BasePage: FunctionalComponent<Props> = ({
   return (
     <html lang="en" class={pageClass ? pageClass : ''}>
       <head>
+        <meta charset="utf-8" />
         <title>{title} - JakeArchibald.com</title>
         <meta
           name="viewport"

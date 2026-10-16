@@ -38,6 +38,7 @@ const ClientDemo: FunctionalComponent<Props> = ({
   return (
     <html lang="en">
       <head>
+        <meta charset="utf-8" />
         <title>{title} - JakeArchibald.com</title>
         <meta
           name="viewport"

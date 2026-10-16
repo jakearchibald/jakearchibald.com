@@ -5,7 +5,7 @@
       "headers": [
         {
           "key": "Content-Type",
-          "value": "text/xml"
+          "value": "text/xml; charset=utf-8"
         }
       ]
     }
