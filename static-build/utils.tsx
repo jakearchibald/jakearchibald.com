@@ -59,9 +59,12 @@ export function getPostUrl(post: Post): string {
  * Origin of the site, depending on the environment.
  */
 export const siteOrigin = (() => {
-  // https://docs.netlify.com/configure-builds/environment-variables/#build-metadata
-  if (process.env.CONTEXT === 'production') return 'https://jakearchibald.com';
-  if (process.env.DEPLOY_PRIME_URL) return process.env.DEPLOY_PRIME_URL;
+  // https://developers.cloudflare.com/workers/ci-cd/builds/configuration/#environment-variables
+  if (process.env.WORKERS_CI_BRANCH === 'main') {
+    return 'https://jakearchibald.com';
+  }
+  // Preview URLs aren't known at build time, but can be set as a build variable.
+  if (process.env.SITE_ORIGIN) return process.env.SITE_ORIGIN;
   console.warn(
     'Unable to determine site origin, defaulting to https://jakearchibald.com',
   );

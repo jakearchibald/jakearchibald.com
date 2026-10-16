@@ -6,7 +6,9 @@
     "debug": "node --experimental-import-meta-resolve --inspect-brk node_modules/rollup/dist/bin/rollup -c",
     "dev": "tsc -b static-build --watch --preserveWatchOutput & node --experimental-import-meta-resolve node_modules/rollup/dist/bin/rollup -cw & npm run serve",
     "serve": "serve -C -c ./../../../serve.json .tmp/build/static",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "deploy": "npm run build && wrangler deploy",
+    "preview-cf": "wrangler dev"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^29.0.3",
@@ -49,7 +51,8 @@
     "shiki": "^4.4.3",
     "stacked-alpha-video": "^1.0.10",
     "two-up-element": "^1.0.1",
-    "typescript": "^7.0.2"
+    "typescript": "^7.0.2",
+    "wrangler": "^4.151.0"
   },
   "dependencies": {
     "@rollup/plugin-terser": "^1.0.0"
