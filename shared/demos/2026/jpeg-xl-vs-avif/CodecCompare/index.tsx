@@ -93,6 +93,14 @@ const CodecCompare: FunctionalComponent<Props> = ({
   const [canFullscreen, setCanFullscreen] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const root = useRef<HTMLDivElement>(null);
+  const scroller = useRef<HTMLDivElement>(null);
+  // In fullscreen, the image is shown at half its pixel size, as if on a 2x
+  // screen. Until it's been measured, this assumes it's 2x maxWidth, which is
+  // how they're encoded.
+  const [pixelSize, setPixelSize] = useState({
+    width: maxWidth * 2,
+    height: Math.round((maxWidth * 2) / ratio),
+  });
 
   const format = formats.find((f) => f.key === codec)!;
   const currentLossless = format.lossless ?? lossless;
@@ -115,6 +123,34 @@ const CodecCompare: FunctionalComponent<Props> = ({
     document.addEventListener('fullscreenchange', update);
     return () => document.removeEventListener('fullscreenchange', update);
   }, []);
+
+  const measurePixelSize = () => {
+    const output = root.current?.querySelector<
+      HTMLImageElement | HTMLCanvasElement
+    >('.codec-compare-layer img, .codec-compare-layer canvas');
+    if (!output) return;
+    const isImg = output instanceof HTMLImageElement;
+    const width = isImg ? output.naturalWidth : output.width;
+    const height = isImg ? output.naturalHeight : output.height;
+    if (!width || !height) return;
+    // Every encoding is the same size, so only update if it's changed, else
+    // the scroll position would be reset.
+    setPixelSize((size) =>
+      size.width === width && size.height === height ? size : { width, height },
+    );
+  };
+
+  useEffect(() => {
+    if (fullscreen) measurePixelSize();
+  }, [fullscreen]);
+
+  // Start in the middle of the image, if it overflows.
+  useEffect(() => {
+    if (!fullscreen) return;
+    const el = scroller.current!;
+    el.scrollLeft = (el.scrollWidth - el.clientWidth) / 2;
+    el.scrollTop = (el.scrollHeight - el.clientHeight) / 2;
+  }, [fullscreen, pixelSize]);
 
   const toggleFullscreen = () => {
     if (fullscreen) {
@@ -172,17 +208,27 @@ const CodecCompare: FunctionalComponent<Props> = ({
           }
         }}
       >
-        <div class="codec-compare-scroller" style={{ padding }}>
+        <div class="codec-compare-scroller" ref={scroller} style={{ padding }}>
           <div
             class="codec-compare-frame"
-            style={{ '--max-width': maxWidth + 'px' }}
+            style={
+              fullscreen
+                ? {
+                    width: pixelSize.width / 2 + padding * 2,
+                    height: pixelSize.height / 2 + padding * 2,
+                  }
+                : undefined
+            }
           >
             <AsyncContent
               loading={
                 holding ? !losslessLoaded.includes(currentLossless) : loading
               }
             >
-              <div style={{ maxWidth, margin: '0 auto' }}>
+              <div
+                class="codec-compare-spacer"
+                style={{ maxWidth, margin: '0 auto' }}
+              >
                 <div style={{ paddingTop: (1 / ratio) * 100 + '%' }}></div>
               </div>
               {!__PRERENDER__ && (
@@ -200,7 +246,11 @@ const CodecCompare: FunctionalComponent<Props> = ({
                     renderWidth={maxWidth}
                     lazy={true}
                     onLoadStart={() => setLoading(true)}
-                    onLoadEnd={() => setLoading(false)}
+                    onLoadEnd={() => {
+                      setLoading(false);
+                      // After the output is rendered
+                      requestAnimationFrame(measurePixelSize);
+                    }}
                   />
                 </div>
               )}
@@ -440,17 +490,21 @@ const styles = `
   overflow: auto;
   display: flex;
 }
-/* Shown at its 2x size, or smaller if it doesn't fit the width */
+/* Sized inline, so the image is shown at half its pixel size */
 .codec-compare:fullscreen .codec-compare-frame {
   flex: none;
   /* Centres, but unlike align/justify-content, it doesn't clip when scrolled */
   margin: auto;
-  width: var(--max-width);
-  max-width: 100%;
+}
+.codec-compare:fullscreen .codec-compare-spacer {
+  display: none;
+}
+.codec-compare:fullscreen .async-content {
+  height: 100%;
 }
 .codec-compare:fullscreen .codec-compare-layer img,
 .codec-compare:fullscreen .codec-compare-layer canvas {
-  /* Overrides DecodedImg's inline width, so it shrinks with the frame */
+  /* Overrides DecodedImg's inline width, so it matches the frame */
   width: 100% !important;
 }
 .codec-compare-controls {
