@@ -1720,7 +1720,7 @@ The JPEG XL is super noisy compared to the AVIF, because each frame is encoded i
 
 AVIF is basically the keyframe format of AV1 video, with a bunch of still-image-specific optimisations thrown in. Animated AVIF however, is pretty much just a repackaging of AV1 video. You can convert an AV1 MP4 to AVIF and back losslessly - it's just a container change. That's why it performs so much better, because it's built for motion.
 
-However, animated AVIF plays like shit in Chrome and Safari. It's fine in Firefox, so this is purely an implementation problem. But… `<video muted autoplay>` is right there.
+However, animated AVIF plays like shit in Chrome and Safari. It's fine in Firefox, so this is purely an implementation problem. But… `<video muted autoplay playsinline>` is right there.
 
 The interesting detail of animated AVIF is that it supports transparency, whereas AV1 video doesn't. But really, that just highlights that [it's dumb that AV1 _didn't_ support transparency](/2024/video-with-transparency/).
 
