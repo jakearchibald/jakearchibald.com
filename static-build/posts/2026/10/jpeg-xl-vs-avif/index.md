@@ -1512,7 +1512,7 @@ AVIF supports gain maps, and you encode them by providing two images: the SDR im
 }</script>
 </figure>
 
-At medium brightnesses, on an HDR screen, the gain map and PQ images look the same. At maximum brightnesses, on my Pixel 10 Pro and 2024 MacBook Pro, the PQ images get a bit blown out, and the gain map image looks better. At low brightness on my Pixel 10 Pro, again the gain map image looks better.
+At medium brightnesses, on an HDR screen, the gain map and PQ images look the same. At maximum brightnesses, on my Pixel 10 Pro and 2024 MacBook Pro, the PQ images get a bit blown out, and the gain map image looks better. [Here's a video of this in action](https://www.youtube.com/watch?v=zCJ6NhRAFZA). At low brightness on my Pixel 10 Pro, again the gain map image looks better.
 
 This is because, at extreme brightness levels, the device doesn't have the full HDR headroom to display the image, and gain maps can handle these cases better. So, although gain maps seem to add a lot to the file size, I think it's worth it.
 
